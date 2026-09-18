@@ -337,7 +337,16 @@ def segment(req: SegmentRequest):
         cks = sorted(SEG_DIR.glob("*/best_model.pth"), key=lambda p: p.stat().st_mtime)
         if not cks:
             raise HTTPException(404, "no trained checkpoint under outputs/segmentation - run scripts/train.py")
-        req.checkpoint = str(cks[-1])
+        # prefer: full-mode experiments, then experiments with a threshold calibration, then newest
+        def _rank(p: Path):
+            exp = p.parent
+            mode = "development"
+            try:
+                mode = json.loads((exp / "experiment.json").read_text()).get("mode", mode)
+            except (OSError, ValueError):
+                pass
+            return (mode == "full", (exp / "threshold_calibration.json").exists(), p.stat().st_mtime)
+        req.checkpoint = str(max(cks, key=_rank))
         tc = cks[-1].parent / "threshold_calibration.json"
         if req.threshold is None and tc.exists():
             req.threshold = json.loads(tc.read_text()).get("selected_threshold")
