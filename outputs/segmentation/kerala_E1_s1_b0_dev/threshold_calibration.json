@@ -1,10 +1,12 @@
 {
- "scope": "test-split tiles only (48 tiles)",
+ "scope": "test-split tiles only (48 tiles pooled over 1 raster(s))",
  "reference": "Global Mangrove Watch v3 (weak label) - agreement, not field-truth accuracy",
  "criterion": "f1",
  "selected_threshold": 0.7,
  "mmu_ha": 2.0,
- "probability_raster": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/kerala_E1_s1_b0_dev/predictions/kerala-coast_prob.tif",
+ "probability_rasters": [
+  "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/kerala_E1_s1_b0_dev/predictions/kerala-coast_prob.tif"
+ ],
  "rows": [
   {
    "threshold": 0.3,

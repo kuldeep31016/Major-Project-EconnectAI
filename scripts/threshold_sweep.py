@@ -32,8 +32,14 @@ from ecoconnect.geospatial.raster_processing.io import RasterMeta, pixel_area_ha
 def test_mask_from_split(prob_meta: RasterMeta, tiles_dir: Path, test_ids: list[str]) -> np.ndarray:
     """Boolean (H, W) mask of pixels covered by TEST tiles (so the sweep is held-out)."""
     m = np.zeros((prob_meta.height, prob_meta.width), bool)
+    rb = prob_meta.bounds
     for tid in test_ids:
         with rasterio.open(tiles_dir / f"{tid}.tif") as t:
+            if t.crs != prob_meta.crs:
+                continue                                     # tile belongs to another study area
+            tb = t.bounds
+            if tb.right <= rb[0] or tb.left >= rb[2] or tb.top <= rb[1] or tb.bottom >= rb[3]:
+                continue                                     # outside this raster
             win = from_bounds(*t.bounds, transform=prob_meta.transform).round_offsets().round_lengths()
         r0, c0 = max(int(win.row_off), 0), max(int(win.col_off), 0)
         r1, c1 = min(r0 + int(win.height), m.shape[0]), min(c0 + int(win.width), m.shape[1])
@@ -43,7 +49,8 @@ def test_mask_from_split(prob_meta: RasterMeta, tiles_dir: Path, test_ids: list[
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--prob", required=True); ap.add_argument("--label", required=True)
+    ap.add_argument("--prob", required=True, action="append", help="probability raster (repeat with --label to pool several areas)")
+    ap.add_argument("--label", required=True, action="append", help="aligned label raster, one per --prob")
     ap.add_argument("--experiment", required=True, help="experiment dir (for output + split files)")
     ap.add_argument("--dataset-root", default=None, help="canonical dataset root; default from experiment.json")
     ap.add_argument("--thresholds", default="0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70")
@@ -53,44 +60,54 @@ def main() -> int:
     a = ap.parse_args()
     exp = Path(a.experiment)
 
-    with rasterio.open(a.prob) as s:
-        prob = s.read(1).astype(np.float32)
-        meta = RasterMeta(s.crs, s.transform, s.width, s.height, s.nodata, 1, "float32")
-    with rasterio.open(a.label) as s:
-        if (s.width, s.height) != (meta.width, meta.height):
-            sys.exit("label raster must be on the probability grid (use the aligned label from acquisition)")
-        label = s.read(1)
-    valid = np.isfinite(prob) & (label != 255)
-
+    if len(a.prob) != len(a.label):
+        sys.exit("give one --label per --prob")
     ds_root = a.dataset_root
     if not ds_root and (exp / "experiment.json").exists():
         ds_root = json.loads((exp / "experiment.json").read_text())["dataset"]["root"]
-    scope = "all labelled pixels"
+    test_ids = []
     if not a.all_pixels and ds_root and (Path(ds_root) / "splits" / "test.txt").exists():
-        ids = [l.strip() for l in (Path(ds_root) / "splits" / "test.txt").read_text().splitlines() if l.strip()]
-        valid &= test_mask_from_split(meta, Path(ds_root) / "tiles" / "images", ids)
-        scope = f"test-split tiles only ({len(ids)} tiles)"
+        test_ids = [l.strip() for l in (Path(ds_root) / "splits" / "test.txt").read_text().splitlines() if l.strip()]
+    scope = f"test-split tiles only ({len(test_ids)} tiles pooled over {len(a.prob)} raster(s))" if test_ids else "all labelled pixels"
+    thresholds = [float(x) for x in a.thresholds.split(",")]
 
-    area = np.broadcast_to(pixel_area_ha(meta)[:, None], prob.shape)
-    ref = label[valid] == 1
+    # pooled pixel counts over all rasters
+    agg = {t: {"tp": 0, "fp": 0, "fn": 0, "n_components": 0, "n_patches_ge_mmu": 0, "habitat_area_ha": 0.0} for t in thresholds}
+    for prob_path, label_path in zip(a.prob, a.label):
+        with rasterio.open(prob_path) as s:
+            prob = s.read(1).astype(np.float32)
+            meta = RasterMeta(s.crs, s.transform, s.width, s.height, s.nodata, 1, "float32")
+        with rasterio.open(label_path) as s:
+            if (s.width, s.height) != (meta.width, meta.height):
+                sys.exit(f"{label_path} is not on the grid of {prob_path}")
+            label = s.read(1)
+        valid = np.isfinite(prob) & (label != 255)
+        if test_ids:
+            # only the test tiles that belong to this raster (their bounds fall inside it)
+            valid &= test_mask_from_split(meta, Path(ds_root) / "tiles" / "images", test_ids)
+        area = np.broadcast_to(pixel_area_ha(meta)[:, None], prob.shape)
+        ref = label[valid] == 1
+        for t in thresholds:
+            pred = prob[valid] >= t
+            agg[t]["tp"] += int((pred & ref).sum()); agg[t]["fp"] += int((pred & ~ref).sum()); agg[t]["fn"] += int((~pred & ref).sum())
+            binary = np.isfinite(prob) & (prob >= t)
+            lab, n = ndimage.label(binary, structure=np.ones((3, 3)))
+            areas = ndimage.sum(area, lab, np.arange(1, n + 1)) if n else np.array([])
+            agg[t]["n_components"] += int(n); agg[t]["n_patches_ge_mmu"] += int((areas >= a.mmu_ha).sum())
+            agg[t]["habitat_area_ha"] += float(areas.sum())
     rows = []
-    for t in [float(x) for x in a.thresholds.split(",")]:
-        pred = prob[valid] >= t
-        tp = int((pred & ref).sum()); fp = int((pred & ~ref).sum()); fn = int((~pred & ref).sum())
+    for t in thresholds:
+        tp, fp, fn = agg[t]["tp"], agg[t]["fp"], agg[t]["fn"]
         prec = tp / (tp + fp) if tp + fp else 0.0
         rec = tp / (tp + fn) if tp + fn else 0.0
         f1 = 2 * prec * rec / (prec + rec) if prec + rec else 0.0
         iou = tp / (tp + fp + fn) if tp + fp + fn else 0.0
-        binary = np.isfinite(prob) & (prob >= t)
-        lab, n = ndimage.label(binary, structure=np.ones((3, 3)))
-        areas = ndimage.sum(area, lab, np.arange(1, n + 1)) if n else np.array([])
         rows.append({"threshold": t, "iou": iou, "dice": f1, "precision": prec, "recall": rec, "f1": f1,
-                     "tp": tp, "fp": fp, "fn": fn, "n_components": int(n),
-                     "n_patches_ge_mmu": int((areas >= a.mmu_ha).sum()), "habitat_area_ha": float(areas.sum())})
+                     "tp": tp, "fp": fp, "fn": fn, **{k: agg[t][k] for k in ("n_components", "n_patches_ge_mmu", "habitat_area_ha")}})
     best = max(rows, key=lambda r: r[a.criterion])
     out = {"scope": scope, "reference": "Global Mangrove Watch v3 (weak label) - agreement, not field-truth accuracy",
            "criterion": a.criterion, "selected_threshold": best["threshold"], "mmu_ha": a.mmu_ha,
-           "probability_raster": str(Path(a.prob).resolve()), "rows": rows}
+           "probability_rasters": [str(Path(p).resolve()) for p in a.prob], "rows": rows}
     (exp / "threshold_calibration.json").write_text(json.dumps(out, indent=1))
     with (exp / "threshold_calibration.csv").open("w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(rows)

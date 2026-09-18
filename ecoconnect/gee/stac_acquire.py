@@ -141,6 +141,19 @@ def sentinel2_composite(aoi: AOI, grid: TargetGrid, cfg: dict, acq: dict, log=pr
         it["_overlap"] = ov
         tile = it["properties"].get("s2:mgrs_tile") or it["properties"].get("grid:code") or it["id"].split("_")[1]
         by_tile.setdefault(tile, []).append(it)
+    # greedy coverage: add granules by decreasing AOI overlap until >= 98 % of the AOI is covered,
+    # so a sliver granule is only fetched when it is actually needed
+    from shapely.ops import unary_union as _union
+    covered, needed = None, []
+    for tile, its in sorted(by_tile.items(), key=lambda kv: -max(i["_overlap"] for i in kv[1])):
+        geom = _union([_shape(i["geometry"]) for i in its]).intersection(aoi_geom)
+        new_cov = geom if covered is None else covered.union(geom)
+        if covered is not None and (new_cov.area - covered.area) / aoi_geom.area < 0.01:
+            continue
+        covered, needed = new_cov, needed + [tile]
+        if covered.area / aoi_geom.area >= 0.98:
+            break
+    by_tile = {t: by_tile[t] for t in needed}
     chosen = []
     for tile, its in by_tile.items():
         best = max(i["_overlap"] for i in its)
