@@ -1,0 +1,1609 @@
+{
+ "provenance": {
+  "runId": "odisha-coast_kerala_E1_s1_b0_dev_ui_20260918T201251Z",
+  "studyAreaId": "odisha-coast",
+  "resultKind": "development",
+  "resultLabel": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+  "dataSource": {
+   "type": "probability_raster",
+   "path": "outputs/segmentation/kerala_E1_s1_b0_dev/predictions/odisha-coast_2020_s12_10m_prob.tif",
+   "scene_year": 2020,
+   "crs": "EPSG:32645",
+   "width": 2502,
+   "height": 2659,
+   "pixel_size": [
+    10.0,
+    10.0
+   ],
+   "threshold": 0.7,
+   "mmu_ha": 2.0,
+   "connectivity": 8,
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "extraction_report": {
+    "threshold": 0.7,
+    "mmu_ha": 2.0,
+    "connectivity": 8,
+    "n_components_total": 69,
+    "n_patches_kept": 2,
+    "n_dropped_below_mmu": 67,
+    "habitat_pixels": 4236,
+    "valid_pixels": 6652818,
+    "habitat_coverage_pct": 0.06367226639899062,
+    "habitat_area_ha": 4.8499999999999845,
+    "landscape_area_ha": 66528.17999999996,
+    "mean_confidence_habitat": 0.8327059149742126,
+    "crs": "EPSG:32645"
+   },
+   "model": "outputs/segmentation/kerala_E1_s1_b0_dev/best_model.pth",
+   "model_info": {
+    "checkpoint": "outputs/segmentation/kerala_E1_s1_b0_dev/best_model.pth"
+   }
+  },
+  "timestamp": "2026-09-18T20:12:52.500625+00:00",
+  "landscapeAreaHa": 66528.17999999996,
+  "parameters": {
+   "k": 3,
+   "tauKm": 5.0,
+   "metric": "iic",
+   "threshold": 0.7,
+   "mmuHa": 2.0
+  }
+ },
+ "habitatMask": {
+  "sceneId": "odisha-coast",
+  "generatedAt": "2026-09-18T20:12:52.500625+00:00",
+  "modelVersion": "outputs/segmentation/kerala_E1_s1_b0_dev/best_model.pth",
+  "classes": [
+   {
+    "habitatClass": "mangrove",
+    "label": "Mangrove",
+    "color": "#00c896",
+    "areaHa": 4.85,
+    "coveragePct": 0.01,
+    "meanConfidence": 0.8583
+   }
+  ],
+  "patches": [
+   {
+    "id": "P1",
+    "name": "P1",
+    "habitatClass": "mangrove",
+    "areaHa": 2.75,
+    "center": [
+     20.735535,
+     86.79523
+    ],
+    "polygon": [
+     [
+      20.736056,
+      86.796274
+     ],
+     [
+      20.735513,
+      86.795411
+     ],
+     [
+      20.735963,
+      86.794161
+     ],
+     [
+      20.735962,
+      86.793585
+     ],
+     [
+      20.735691,
+      86.793297
+     ],
+     [
+      20.73533,
+      86.793586
+     ],
+     [
+      20.735059,
+      86.794259
+     ],
+     [
+      20.735152,
+      86.796179
+     ],
+     [
+      20.735334,
+      86.796852
+     ],
+     [
+      20.735695,
+      86.797139
+     ],
+     [
+      20.735966,
+      86.797043
+     ],
+     [
+      20.736056,
+      86.796274
+     ]
+    ],
+    "confidence": 0.8664,
+    "quality": 0.8664,
+    "connectivityContribution": 0.6317,
+    "bridgeScore": 0.0,
+    "sensitivity": "critical",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P1 ranks #1 of 2 by criticality (S = 0.632): removing it lowers IIC by 63.2%. It holds 2.7 ha, 56.7% of mapped habitat (#1 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 87%.",
+    "criticalityRank": 1,
+    "criticalityScore": 0.631656,
+    "deltaConnectivity": 1.7086539003533013e-09,
+    "deltaPct": 63.166,
+    "degree": 0,
+    "isCutVertex": false,
+    "componentCountAfter": 1,
+    "rankByArea": 1,
+    "perimeterKm": 0.920527225618566,
+    "neighbourIds": [],
+    "neighbourDistancesKm": []
+   },
+   {
+    "id": "P2",
+    "name": "P2",
+    "habitatClass": "mangrove",
+    "areaHa": 2.1,
+    "center": [
+     20.695446,
+     86.999732
+    ],
+    "polygon": [
+     [
+      20.695786,
+      86.998079
+     ],
+     [
+      20.695515,
+      86.997983
+     ],
+     [
+      20.695243,
+      86.99856
+     ],
+     [
+      20.694972,
+      87.0
+     ],
+     [
+      20.695334,
+      87.001248
+     ],
+     [
+      20.695605,
+      87.001248
+     ],
+     [
+      20.695786,
+      87.000768
+     ],
+     [
+      20.695786,
+      86.998079
+     ]
+    ],
+    "confidence": 0.8475,
+    "quality": 0.8475,
+    "connectivityContribution": 0.3683,
+    "bridgeScore": 0.0,
+    "sensitivity": "critical",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P2 ranks #2 of 2 by criticality (S = 0.368): removing it lowers IIC by 36.8%. It holds 2.1 ha, 43.3% of mapped habitat (#2 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 85%.",
+    "criticalityRank": 2,
+    "criticalityScore": 0.368344,
+    "deltaConnectivity": 9.963852827184308e-10,
+    "deltaPct": 36.834,
+    "degree": 0,
+    "isCutVertex": false,
+    "componentCountAfter": 1,
+    "rankByArea": 2,
+    "perimeterKm": 0.7604737781572523,
+    "neighbourIds": [],
+    "neighbourDistancesKm": []
+   }
+  ],
+  "totals": {
+   "habitatAreaHa": 4.85,
+   "patchCount": 2,
+   "meanPatchSizeHa": 2.42,
+   "largestPatchIndex": 56.7,
+   "edgeDensity": 34.66,
+   "meanConfidence": 0.8583
+  }
+ },
+ "graph": {
+  "sceneId": "odisha-coast",
+  "nodes": [
+   {
+    "id": "P1",
+    "patchId": "P1",
+    "label": "P1",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 60,
+     "y": 60
+    },
+    "areaHa": 2.75,
+    "quality": 0.8664,
+    "connectivity": 1.0,
+    "sensitivity": "critical",
+    "bridgeScore": 0.0,
+    "importance": 0.6317,
+    "degree": 0,
+    "isHub": false,
+    "explanation": "P1 ranks #1 of 2 by criticality (S = 0.632): removing it lowers IIC by 63.2%. It holds 2.7 ha, 56.7% of mapped habitat (#1 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 87%.",
+    "criticalityRank": 1,
+    "isCutVertex": false
+   },
+   {
+    "id": "P2",
+    "patchId": "P2",
+    "label": "P2",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 1040,
+     "y": 252
+    },
+    "areaHa": 2.1,
+    "quality": 0.8475,
+    "connectivity": 0.5831,
+    "sensitivity": "critical",
+    "bridgeScore": 0.0,
+    "importance": 0.3683,
+    "degree": 0,
+    "isHub": false,
+    "explanation": "P2 ranks #2 of 2 by criticality (S = 0.368): removing it lowers IIC by 36.8%. It holds 2.1 ha, 43.3% of mapped habitat (#2 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 85%.",
+    "criticalityRank": 2,
+    "isCutVertex": false
+   }
+  ],
+  "edges": [],
+  "clusters": [
+   {
+    "id": "c1",
+    "label": "Component 1",
+    "nodeIds": [
+     "P1"
+    ],
+    "color": "#00c896"
+   },
+   {
+    "id": "c2",
+    "label": "Component 2",
+    "nodeIds": [
+     "P2"
+    ],
+    "color": "#38bdf8"
+   }
+  ]
+ },
+ "connectivity": {
+  "sceneId": "odisha-coast",
+  "score": 61.1,
+  "previousScore": null,
+  "pcIndex": 2.8333313450500803e-09,
+  "iicIndex": 2.7050391830717324e-09,
+  "equivalentConnectedArea": 3.5,
+  "ecaPctOfHabitat": 73.0,
+  "meanPatchIsolationM": null,
+  "linkDensity": 0.0,
+  "networkDiameterKm": 0.0,
+  "fragmentationIndex": 1.0,
+  "resilienceIndex": 1.0,
+  "confidence": 0.8583,
+  "grade": null,
+  "interpretation": null,
+  "components": [
+   {
+    "label": "Structural",
+    "value": 50.9,
+    "weight": 0.3,
+    "delta": null
+   },
+   {
+    "label": "Functional",
+    "value": 53.3,
+    "weight": 0.28,
+    "delta": null
+   },
+   {
+    "label": "Quality",
+    "value": 85.8,
+    "weight": 0.22,
+    "delta": null
+   },
+   {
+    "label": "Redundancy",
+    "value": 100.0,
+    "weight": 0.12,
+    "delta": null
+   },
+   {
+    "label": "Protection",
+    "value": 0.0,
+    "weight": 0.08,
+    "delta": null
+   }
+  ],
+  "composition": [
+   {
+    "name": "Mangrove",
+    "value": 4.85,
+    "color": "#00c896"
+   }
+  ],
+  "health": [],
+  "trend": [],
+  "research": {
+   "iic": 2.7050391830717324e-09,
+   "pc": 2.8333313450500803e-09,
+   "ecaHa": 3.541231557878223,
+   "nPatches": 2,
+   "nEdges": 0,
+   "nComponents": 2,
+   "meanDegree": 0.0,
+   "tauKm": 5.0,
+   "k": 3,
+   "spearmanAreaVsCriticality": 1.0,
+   "labels": {
+    "iic": "RESEARCH METRIC - Integral Index of Connectivity (Pascual-Hortal & Saura 2006)",
+    "pc": "RESEARCH METRIC - Probability of Connectivity (Saura & Pascual-Hortal 2007), p(tau)=0.5",
+    "eca_ha": "RESEARCH METRIC - Equivalent Connected Area = sqrt(PC)*A_L"
+   },
+   "interfaceScoreLabel": "INTERFACE SCORE (Eq. 7) - design choice, not a research metric"
+  }
+ },
+ "heatmap": {
+  "sceneId": "odisha-coast",
+  "resolutionM": 300,
+  "generatedAt": "2026-09-18T20:12:52.500625+00:00",
+  "cells": [],
+  "legend": [
+   {
+    "band": "critical",
+    "label": "Critical",
+    "color": "#ef4444",
+    "range": [
+     0.25,
+     1.0
+    ],
+    "description": "S_i >= 0.25"
+   },
+   {
+    "band": "high",
+    "label": "High",
+    "color": "#f97316",
+    "range": [
+     0.1,
+     0.25
+    ],
+    "description": "S_i >= 0.1"
+   },
+   {
+    "band": "medium",
+    "label": "Medium",
+    "color": "#f59e0b",
+    "range": [
+     0.03,
+     0.1
+    ],
+    "description": "S_i >= 0.03"
+   },
+   {
+    "band": "low",
+    "label": "Low",
+    "color": "#22c55e",
+    "range": [
+     0.0,
+     0.03
+    ],
+    "description": "S_i < 0.03"
+   }
+  ]
+ },
+ "restoration": {
+  "sceneId": "odisha-coast",
+  "currency": null,
+  "baselineScore": 61.1,
+  "budgetBands": [],
+  "actions": [
+   {
+    "id": "C01",
+    "rank": 1,
+    "name": "C01",
+    "patchId": null,
+    "location": "C01",
+    "center": [
+     20.695136182305554,
+     86.87239991789514
+    ],
+    "polygon": [
+     [
+      20.69827,
+      86.874299
+     ],
+     [
+      20.697004,
+      86.872764
+     ],
+     [
+      20.69619,
+      86.872381
+     ],
+     [
+      20.69601,
+      86.872477
+     ],
+     [
+      20.696009,
+      86.872285
+     ],
+     [
+      20.695648,
+      86.872573
+     ],
+     [
+      20.695106,
+      86.872477
+     ],
+     [
+      20.695015,
+      86.872093
+     ],
+     [
+      20.695286,
+      86.871901
+     ],
+     [
+      20.695105,
+      86.871421
+     ],
+     [
+      20.69384,
+      86.870942
+     ],
+     [
+      20.693116,
+      86.870175
+     ],
+     [
+      20.692755,
+      86.870079
+     ],
+     [
+      20.692755,
+      86.869887
+     ],
+     [
+      20.692484,
+      86.869983
+     ],
+     [
+      20.692575,
+      86.870751
+     ],
+     [
+      20.693388,
+      86.871519
+     ],
+     [
+      20.693479,
+      86.871999
+     ],
+     [
+      20.694203,
+      86.872766
+     ],
+     [
+      20.694925,
+      86.872862
+     ],
+     [
+      20.695106,
+      86.87267
+     ],
+     [
+      20.695016,
+      86.872958
+     ],
+     [
+      20.695287,
+      86.873438
+     ],
+     [
+      20.696281,
+      86.873341
+     ],
+     [
+      20.696643,
+      86.873725
+     ],
+     [
+      20.696915,
+      86.874589
+     ],
+     [
+      20.697909,
+      86.874492
+     ],
+     [
+      20.69818,
+      86.874684
+     ],
+     [
+      20.69827,
+      86.874299
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 5.53,
+    "costLakh": null,
+    "connectivityGain": 255.4262,
+    "connectivityGainAbs": 6.909378388272852e-09,
+    "scoreAfter": null,
+    "confidence": 0.4612,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 255.43%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C03",
+    "rank": 2,
+    "name": "C03",
+    "patchId": "P1",
+    "location": "C03",
+    "center": [
+     20.7321128843584,
+     86.80099820089637
+    ],
+    "polygon": [
+     [
+      20.733532,
+      86.801368
+     ],
+     [
+      20.73335,
+      86.800984
+     ],
+     [
+      20.732266,
+      86.800506
+     ],
+     [
+      20.732084,
+      86.799641
+     ],
+     [
+      20.731813,
+      86.799642
+     ],
+     [
+      20.731271,
+      86.799931
+     ],
+     [
+      20.731362,
+      86.800891
+     ],
+     [
+      20.730731,
+      86.801468
+     ],
+     [
+      20.730551,
+      86.802141
+     ],
+     [
+      20.730731,
+      86.80214
+     ],
+     [
+      20.730821,
+      86.801756
+     ],
+     [
+      20.732086,
+      86.801274
+     ],
+     [
+      20.732447,
+      86.801274
+     ],
+     [
+      20.732357,
+      86.801754
+     ],
+     [
+      20.7329,
+      86.802042
+     ],
+     [
+      20.733442,
+      86.801849
+     ],
+     [
+      20.733532,
+      86.801368
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 3.62,
+    "costLakh": null,
+    "connectivityGain": 192.603,
+    "connectivityGainAbs": 5.2099879338587345e-09,
+    "scoreAfter": null,
+    "confidence": 0.4373,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P1"
+    ],
+    "componentsBefore": 2,
+    "componentsAfter": 2,
+    "rationale": "Adds 1 link(s) to P1; recomputed IIC rises by 192.60%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C02",
+    "rank": 3,
+    "name": "C02",
+    "patchId": null,
+    "location": "C02",
+    "center": [
+     20.69709297585494,
+     86.87144551104308
+    ],
+    "polygon": [
+     [
+      20.700529,
+      86.874394
+     ],
+     [
+      20.699986,
+      86.873914
+     ],
+     [
+      20.699624,
+      86.87305
+     ],
+     [
+      20.698991,
+      86.872378
+     ],
+     [
+      20.698268,
+      86.871995
+     ],
+     [
+      20.698087,
+      86.871419
+     ],
+     [
+      20.697544,
+      86.870843
+     ],
+     [
+      20.69655,
+      86.870556
+     ],
+     [
+      20.696008,
+      86.870076
+     ],
+     [
+      20.695646,
+      86.870076
+     ],
+     [
+      20.695375,
+      86.869692
+     ],
+     [
+      20.694923,
+      86.869693
+     ],
+     [
+      20.69438,
+      86.869021
+     ],
+     [
+      20.693386,
+      86.86835
+     ],
+     [
+      20.693296,
+      86.868926
+     ],
+     [
+      20.693839,
+      86.869886
+     ],
+     [
+      20.694743,
+      86.870461
+     ],
+     [
+      20.696279,
+      86.870844
+     ],
+     [
+      20.698087,
+      86.871995
+     ],
+     [
+      20.699082,
+      86.87305
+     ],
+     [
+      20.700168,
+      86.874874
+     ],
+     [
+      20.700529,
+      86.87497
+     ],
+     [
+      20.700529,
+      86.874394
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 4.71,
+    "costLakh": null,
+    "connectivityGain": 185.2921,
+    "connectivityGainAbs": 5.01222465994409e-09,
+    "scoreAfter": null,
+    "confidence": 0.4668,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 185.29%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C06",
+    "rank": 4,
+    "name": "C06",
+    "patchId": "P2",
+    "location": "C06",
+    "center": [
+     20.695474768482963,
+     87.00017531405086
+    ],
+    "polygon": [
+     [
+      20.695966,
+      86.997791
+     ],
+     [
+      20.695786,
+      86.997407
+     ],
+     [
+      20.695243,
+      86.997983
+     ],
+     [
+      20.694792,
+      86.999904
+     ],
+     [
+      20.695243,
+      87.002305
+     ],
+     [
+      20.695605,
+      87.002689
+     ],
+     [
+      20.695786,
+      87.002497
+     ],
+     [
+      20.695695,
+      87.001248
+     ],
+     [
+      20.695876,
+      87.001056
+     ],
+     [
+      20.695966,
+      86.997791
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 2.18,
+    "costLakh": null,
+    "connectivityGain": 77.9319,
+    "connectivityGainAbs": 2.108089170493433e-09,
+    "scoreAfter": null,
+    "confidence": 0.5107,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P2"
+    ],
+    "componentsBefore": 2,
+    "componentsAfter": 2,
+    "rationale": "Adds 1 link(s) to P2; recomputed IIC rises by 77.93%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C08",
+    "rank": 5,
+    "name": "C08",
+    "patchId": "P1",
+    "location": "C08",
+    "center": [
+     20.70759497589009,
+     86.80789842901987
+    ],
+    "polygon": [
+     [
+      20.709325,
+      86.810043
+     ],
+     [
+      20.709325,
+      86.809563
+     ],
+     [
+      20.708782,
+      86.809179
+     ],
+     [
+      20.707786,
+      86.807452
+     ],
+     [
+      20.707334,
+      86.807068
+     ],
+     [
+      20.707153,
+      86.806492
+     ],
+     [
+      20.706158,
+      86.806206
+     ],
+     [
+      20.706068,
+      86.806494
+     ],
+     [
+      20.707153,
+      86.807165
+     ],
+     [
+      20.707335,
+      86.808221
+     ],
+     [
+      20.707879,
+      86.809373
+     ],
+     [
+      20.708693,
+      86.810044
+     ],
+     [
+      20.709325,
+      86.810043
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 1.85,
+    "costLakh": null,
+    "connectivityGain": 71.0796,
+    "connectivityGainAbs": 1.922729876628988e-09,
+    "scoreAfter": null,
+    "confidence": 0.4943,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P1"
+    ],
+    "componentsBefore": 2,
+    "componentsAfter": 2,
+    "rationale": "Adds 1 link(s) to P1; recomputed IIC rises by 71.08%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C04",
+    "rank": 6,
+    "name": "C04",
+    "patchId": null,
+    "location": "C04",
+    "center": [
+     20.677514335347958,
+     86.87720656667517
+    ],
+    "polygon": [
+     [
+      20.67975,
+      86.879115
+     ],
+     [
+      20.679659,
+      86.878347
+     ],
+     [
+      20.678664,
+      86.877964
+     ],
+     [
+      20.678122,
+      86.877196
+     ],
+     [
+      20.676404,
+      86.876238
+     ],
+     [
+      20.675681,
+      86.875278
+     ],
+     [
+      20.675319,
+      86.875086
+     ],
+     [
+      20.675048,
+      86.875279
+     ],
+     [
+      20.677038,
+      86.877389
+     ],
+     [
+      20.678122,
+      86.877965
+     ],
+     [
+      20.678846,
+      86.878828
+     ],
+     [
+      20.67975,
+      86.879115
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 2.88,
+    "costLakh": null,
+    "connectivityGain": 69.2788,
+    "connectivityGainAbs": 1.8740177072516234e-09,
+    "scoreAfter": null,
+    "confidence": 0.4804,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 69.28%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C09",
+    "rank": 7,
+    "name": "C09",
+    "patchId": "P1",
+    "location": "C09",
+    "center": [
+     20.731049701128597,
+     86.79614231419993
+    ],
+    "polygon": [
+     [
+      20.731811,
+      86.797817
+     ],
+     [
+      20.731355,
+      86.794744
+     ],
+     [
+      20.730994,
+      86.794744
+     ],
+     [
+      20.730814,
+      86.795129
+     ],
+     [
+      20.730272,
+      86.795322
+     ],
+     [
+      20.730363,
+      86.79609
+     ],
+     [
+      20.73154,
+      86.798105
+     ],
+     [
+      20.731811,
+      86.797817
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 1.79,
+    "costLakh": null,
+    "connectivityGain": 67.8772,
+    "connectivityGainAbs": 1.8361053602130588e-09,
+    "scoreAfter": null,
+    "confidence": 0.4982,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P1"
+    ],
+    "componentsBefore": 2,
+    "componentsAfter": 2,
+    "rationale": "Adds 1 link(s) to P1; recomputed IIC rises by 67.88%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C05",
+    "rank": 8,
+    "name": "C05",
+    "patchId": null,
+    "location": "C05",
+    "center": [
+     20.717083931233425,
+     86.93880961902714
+    ],
+    "polygon": [
+     [
+      20.717731,
+      86.936517
+     ],
+     [
+      20.717551,
+      86.936421
+     ],
+     [
+      20.717369,
+      86.935077
+     ],
+     [
+      20.716917,
+      86.934693
+     ],
+     [
+      20.716647,
+      86.93671
+     ],
+     [
+      20.716828,
+      86.938535
+     ],
+     [
+      20.716648,
+      86.938919
+     ],
+     [
+      20.716648,
+      86.940263
+     ],
+     [
+      20.71692,
+      86.942376
+     ],
+     [
+      20.717101,
+      86.942376
+     ],
+     [
+      20.717191,
+      86.941608
+     ],
+     [
+      20.717372,
+      86.941512
+     ],
+     [
+      20.717551,
+      86.939014
+     ],
+     [
+      20.71728,
+      86.93815
+     ],
+     [
+      20.717551,
+      86.93767
+     ],
+     [
+      20.717731,
+      86.936517
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 2.85,
+    "costLakh": null,
+    "connectivityGain": 67.843,
+    "connectivityGainAbs": 1.8351790156191308e-09,
+    "scoreAfter": null,
+    "confidence": 0.4895,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 67.84%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C07",
+    "rank": 9,
+    "name": "C07",
+    "patchId": null,
+    "location": "C07",
+    "center": [
+     20.836902775463138,
+     86.85661431810537
+    ],
+    "polygon": [
+     [
+      20.838765,
+      86.857555
+     ],
+     [
+      20.837137,
+      86.856019
+     ],
+     [
+      20.836414,
+      86.855923
+     ],
+     [
+      20.836052,
+      86.855635
+     ],
+     [
+      20.835149,
+      86.855732
+     ],
+     [
+      20.834968,
+      86.855925
+     ],
+     [
+      20.834969,
+      86.856309
+     ],
+     [
+      20.83524,
+      86.856501
+     ],
+     [
+      20.836505,
+      86.856404
+     ],
+     [
+      20.836867,
+      86.856884
+     ],
+     [
+      20.83777,
+      86.857075
+     ],
+     [
+      20.838404,
+      86.858036
+     ],
+     [
+      20.838765,
+      86.858132
+     ],
+     [
+      20.838765,
+      86.857555
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 2.07,
+    "costLakh": null,
+    "connectivityGain": 35.7895,
+    "connectivityGainAbs": 9.681204757188678e-10,
+    "scoreAfter": null,
+    "confidence": 0.494,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 35.79%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C10",
+    "rank": 10,
+    "name": "C10",
+    "patchId": null,
+    "location": "C10",
+    "center": [
+     20.699370004028896,
+     86.86965903898253
+    ],
+    "polygon": [
+     [
+      20.700345,
+      86.869688
+     ],
+     [
+      20.69917,
+      86.869113
+     ],
+     [
+      20.698898,
+      86.868729
+     ],
+     [
+      20.698537,
+      86.868922
+     ],
+     [
+      20.698899,
+      86.870074
+     ],
+     [
+      20.699532,
+      86.870553
+     ],
+     [
+      20.699803,
+      86.870553
+     ],
+     [
+      20.699893,
+      86.870073
+     ],
+     [
+      20.700164,
+      86.870073
+     ],
+     [
+      20.700345,
+      86.869688
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 1.71,
+    "costLakh": null,
+    "connectivityGain": 24.4235,
+    "connectivityGainAbs": 6.606644456228959e-10,
+    "scoreAfter": null,
+    "confidence": 0.4902,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 24.42%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C11",
+    "rank": 11,
+    "name": "C11",
+    "patchId": null,
+    "location": "C11",
+    "center": [
+     20.715420840179338,
+     86.95191598103075
+    ],
+    "polygon": [
+     [
+      20.715748,
+      86.95054
+     ],
+     [
+      20.715387,
+      86.950444
+     ],
+     [
+      20.715206,
+      86.950828
+     ],
+     [
+      20.715116,
+      86.953805
+     ],
+     [
+      20.715297,
+      86.953805
+     ],
+     [
+      20.715478,
+      86.952653
+     ],
+     [
+      20.715748,
+      86.952269
+     ],
+     [
+      20.715748,
+      86.95054
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 1.68,
+    "costLakh": null,
+    "connectivityGain": 23.574,
+    "connectivityGainAbs": 6.376865809397973e-10,
+    "scoreAfter": null,
+    "confidence": 0.4402,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 23.57%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C12",
+    "rank": 12,
+    "name": "C12",
+    "patchId": null,
+    "location": "C12",
+    "center": [
+     20.688759445137975,
+     86.86085394969899
+    ],
+    "polygon": [
+     [
+      20.689856,
+      86.860959
+     ],
+     [
+      20.688952,
+      86.860096
+     ],
+     [
+      20.68859,
+      86.860096
+     ],
+     [
+      20.687958,
+      86.859617
+     ],
+     [
+      20.687596,
+      86.859713
+     ],
+     [
+      20.687596,
+      86.860097
+     ],
+     [
+      20.68823,
+      86.861345
+     ],
+     [
+      20.689767,
+      86.862015
+     ],
+     [
+      20.689676,
+      86.861439
+     ],
+     [
+      20.689856,
+      86.861343
+     ],
+     [
+      20.689856,
+      86.860959
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 1.65,
+    "costLakh": null,
+    "connectivityGain": 22.7396,
+    "connectivityGainAbs": 6.151154041271958e-10,
+    "scoreAfter": null,
+    "confidence": 0.4805,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 2,
+    "componentsAfter": 3,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 22.74%, components 2 -> 3.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   }
+  ],
+  "rankingBasis": "raw_gain"
+ },
+ "criticality": [
+  {
+   "rank": 1,
+   "patch_id": "P1",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 2.7499999999999853,
+   "area_pct": 56.70103092783493,
+   "degree": 0,
+   "confidence": 0.8664382325519215,
+   "quality": 0.8664382325519215,
+   "c_before": 2.7050391830717324e-09,
+   "c_after": 9.96385282718431e-10,
+   "delta_connectivity": 1.7086539003533013e-09,
+   "criticality_score": 0.6316558780538711,
+   "delta_pct": 63.16558780538711,
+   "component_count_before": 2,
+   "component_count_after": 1,
+   "is_cut_vertex": false,
+   "rank_by_area": 1,
+   "neighbour_ids": [],
+   "neighbour_distances_km": []
+  },
+  {
+   "rank": 2,
+   "patch_id": "P2",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 2.099999999999999,
+   "area_pct": 43.29896907216507,
+   "degree": 0,
+   "confidence": 0.8475311372961317,
+   "quality": 0.8475311372961317,
+   "c_before": 2.7050391830717324e-09,
+   "c_after": 1.7086539003533015e-09,
+   "delta_connectivity": 9.963852827184308e-10,
+   "criticality_score": 0.3683441219461288,
+   "delta_pct": 36.83441219461288,
+   "component_count_before": 2,
+   "component_count_after": 1,
+   "is_cut_vertex": false,
+   "rank_by_area": 2,
+   "neighbour_ids": [],
+   "neighbour_distances_km": []
+  }
+ ],
+ "explanations": {
+  "P1": {
+   "patch_id": "P1",
+   "text": "P1 ranks #1 of 2 by criticality (S = 0.632): removing it lowers IIC by 63.2%. It holds 2.7 ha, 56.7% of mapped habitat (#1 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 87%.",
+   "evidence": {
+    "area_ha": 2.7499999999999853,
+    "area_pct": 56.70103092783493,
+    "rank_by_area": 1,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "neighbours": [],
+    "confidence": 0.8664382325519215,
+    "quality": 0.8664382325519215,
+    "c_before": 2.7050391830717324e-09,
+    "c_after": 9.96385282718431e-10,
+    "delta_connectivity": 1.7086539003533013e-09,
+    "criticality_score": 0.6316558780538711,
+    "delta_pct": 63.16558780538711,
+    "components_before": 2,
+    "components_after": 1,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "critical"
+  },
+  "P2": {
+   "patch_id": "P2",
+   "text": "P2 ranks #2 of 2 by criticality (S = 0.368): removing it lowers IIC by 36.8%. It holds 2.1 ha, 43.3% of mapped habitat (#2 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 85%.",
+   "evidence": {
+    "area_ha": 2.099999999999999,
+    "area_pct": 43.29896907216507,
+    "rank_by_area": 2,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "neighbours": [],
+    "confidence": 0.8475311372961317,
+    "quality": 0.8475311372961317,
+    "c_before": 2.7050391830717324e-09,
+    "c_after": 1.7086539003533015e-09,
+    "delta_connectivity": 9.963852827184308e-10,
+    "criticality_score": 0.3683441219461288,
+    "delta_pct": 36.83441219461288,
+    "components_before": 2,
+    "components_after": 1,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "critical"
+  }
+ },
+ "whatIfExample": {
+  "removed_patch_ids": [
+   "P1"
+  ],
+  "metric": "iic",
+  "c_before": 2.7050391830717324e-09,
+  "c_after": 9.96385282718431e-10,
+  "delta_connectivity": 1.7086539003533013e-09,
+  "loss_fraction": 0.6316558780538711,
+  "loss_pct": 63.16558780538711,
+  "habitat_area_before_ha": 4.8499999999999845,
+  "habitat_area_removed_ha": 2.7499999999999853,
+  "habitat_area_removed_pct": 56.70103092783493,
+  "components_before": 2,
+  "components_after": 1,
+  "edges_before": 0,
+  "edges_after": 0,
+  "severed_edges": [],
+  "newly_isolated_patch_ids": [],
+  "affected_patch_ids": [],
+  "interface_score_before": 61.078326148277064,
+  "interface_score_after": 88.6456850205149,
+  "notes": []
+ }
+}

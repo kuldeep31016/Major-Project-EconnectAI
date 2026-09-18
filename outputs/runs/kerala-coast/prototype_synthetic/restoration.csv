@@ -1,9 +1,0 @@
-rank,candidate_id,name,area_ha,connectivity_gain,gain_pct,new_links,cost,cost_unit,gain_per_cost,ranking_basis,components_before,components_after
-1,kerala-coast-r7,Munambam Estuary Mouth,143,0.00018833280844641597,3.5034903669007003,2,,,,raw_gain,3,3
-2,kerala-coast-r8,Muhamma Marsh,101.7,0.00014665380359048068,2.7281501953218186,3,,,,raw_gain,3,3
-3,kerala-coast-r3,Chellanam Shoreline,69,9.854436478904868e-05,1.8331868759287904,3,,,,raw_gain,3,3
-4,kerala-coast-r5,Kumarakom North Fringe,53.4,7.285334806685865e-05,1.355265740760849,2,,,,raw_gain,3,3
-5,kerala-coast-r2,Panangad Channel Bank,34.6,4.501662003469475e-05,0.8374286771540123,3,,,,raw_gain,3,3
-6,kerala-coast-r1,Nettoor Channel Edge,23.8,3.0343690550787943e-05,0.5644732238522748,2,,,,raw_gain,3,3
-7,kerala-coast-r4,Kannamali Seagrass Bed,78.3,2.6944673068130844e-05,0.5012424723669097,2,,,,raw_gain,3,3
-8,kerala-coast-r6,Cherai Sand Spit,69.5,3.7663635285949126e-06,0.07006436345068755,1,,,,raw_gain,3,3

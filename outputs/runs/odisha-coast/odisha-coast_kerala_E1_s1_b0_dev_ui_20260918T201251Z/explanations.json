@@ -1,0 +1,50 @@
+[
+ {
+  "patch_id": "P1",
+  "text": "P1 ranks #1 of 2 by criticality (S = 0.632): removing it lowers IIC by 63.2%. It holds 2.7 ha, 56.7% of mapped habitat (#1 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 87%.",
+  "evidence": {
+   "area_ha": 2.7499999999999853,
+   "area_pct": 56.70103092783493,
+   "rank_by_area": 1,
+   "degree": 0,
+   "is_cut_vertex": false,
+   "neighbours": [],
+   "confidence": 0.8664382325519215,
+   "quality": 0.8664382325519215,
+   "c_before": 2.7050391830717324e-09,
+   "c_after": 9.96385282718431e-10,
+   "delta_connectivity": 1.7086539003533013e-09,
+   "criticality_score": 0.6316558780538711,
+   "delta_pct": 63.16558780538711,
+   "components_before": 2,
+   "components_after": 1,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "critical"
+ },
+ {
+  "patch_id": "P2",
+  "text": "P2 ranks #2 of 2 by criticality (S = 0.368): removing it lowers IIC by 36.8%. It holds 2.1 ha, 43.3% of mapped habitat (#2 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 85%.",
+  "evidence": {
+   "area_ha": 2.099999999999999,
+   "area_pct": 43.29896907216507,
+   "rank_by_area": 2,
+   "degree": 0,
+   "is_cut_vertex": false,
+   "neighbours": [],
+   "confidence": 0.8475311372961317,
+   "quality": 0.8475311372961317,
+   "c_before": 2.7050391830717324e-09,
+   "c_after": 1.7086539003533015e-09,
+   "delta_connectivity": 9.963852827184308e-10,
+   "criticality_score": 0.3683441219461288,
+   "delta_pct": 36.83441219461288,
+   "components_before": 2,
+   "components_after": 1,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "critical"
+ }
+]

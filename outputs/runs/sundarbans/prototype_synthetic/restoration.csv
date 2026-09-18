@@ -1,9 +1,0 @@
-rank,candidate_id,name,area_ha,connectivity_gain,gain_pct,new_links,cost,cost_unit,gain_per_cost,ranking_basis,components_before,components_after
-1,sundarbans-r1,Bhagabatpur Belt,130.7,1.2997414257431578e-05,2.3570256669793195,2,,,,raw_gain,12,12
-2,sundarbans-r7,Panchamukhani Creek,94.3,1.194067652681948e-05,2.1653907844568945,3,,,,raw_gain,12,12
-3,sundarbans-r2,Gosaba Fringe,161.5,1.1522867717704685e-05,2.0896229380630964,2,,,,raw_gain,12,12
-4,sundarbans-r5,Sajnekhali Core,148.9,7.318304728214965e-06,1.32714336417461,2,,,,raw_gain,12,12
-5,sundarbans-r6,Chandkhali Mudflat,107.3,7.3029989276113564e-06,1.324367722484514,2,,,,raw_gain,12,12
-6,sundarbans-r4,Khatuajhuri Creek,111.3,2.6031676711212384e-06,0.47207335972809267,1,,,,raw_gain,12,12
-7,sundarbans-r3,Chamta Block,99.2,1.0722333828283278e-06,0.1944449529931231,1,,,,raw_gain,12,12
-8,sundarbans-r8,Harinbhanga Fringe,26.9,5.454546005958984e-07,0.09891586651871043,2,,,,raw_gain,12,12
