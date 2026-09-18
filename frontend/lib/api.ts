@@ -96,6 +96,14 @@ export const postRestoration = (
     body: JSON.stringify(body),
   });
 
+/** Launch a real segmentation + graph run for a study area (backend auto-picks newest scene, checkpoint, threshold). */
+export const postSegment = (studyArea: string) =>
+  getJson<RunSummary & { scene?: string; checkpoint?: string; thresholdUsed?: number | null }>(
+    "/api/segment",
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ study_area: studyArea }) },
+    600000,
+  );
+
 export interface ModelInfo {
   experimentId: string;
   mode?: string;

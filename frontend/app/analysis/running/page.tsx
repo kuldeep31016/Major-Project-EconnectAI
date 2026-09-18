@@ -25,6 +25,7 @@ import { Starfield } from "@/components/landing/starfield";
 import { EASE } from "@/components/shared/motion";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { PIPELINE_STAGES, TOTAL_PIPELINE_MS, getScene } from "@/lib/data";
+import { postSegment } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const ICONS: Record<string, typeof Layers> = {
@@ -40,7 +41,11 @@ const ICONS: Record<string, typeof Layers> = {
 function RunningPipeline() {
   const router = useRouter();
   const params = useSearchParams();
-  const { sceneId, setSceneId, markRun } = useAnalysis();
+  const { sceneId, setSceneId, markRun, apiOnline, refreshBundle } = useAnalysis();
+  // Live mode: a REAL run is launched on the backend; the staged narration below is illustrative.
+  const liveRun = useRef<Promise<unknown> | null>(null);
+  const [liveState, setLiveState] = useState<"idle" | "running" | "done" | "failed">("idle");
+  const [liveMessage, setLiveMessage] = useState<string | null>(null);
 
   const requested = params.get("scene");
   const activeSceneId = requested ?? sceneId;
@@ -59,7 +64,27 @@ function RunningPipeline() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requested]);
 
-  // Drive the pipeline: each stage advances its own progress and emits logs.
+  // Launch the real run once the API is known to be online.
+  useEffect(() => {
+    if (apiOnline !== true || liveRun.current) return;
+    setLiveState("running");
+    liveRun.current = postSegment(activeSceneId)
+      .then((r) => {
+        setLiveState("done");
+        setLiveMessage(
+          `Real run ${r.runId}: ${r.nPatches} patches, ${r.nEdges} links, ${r.nComponents} components, IIC ${r.iic.toExponential(3)} ` +
+            `(threshold ${r.thresholdUsed ?? "0.5"}, checkpoint ${r.checkpoint?.split("/").slice(-2, -1)[0] ?? "?"}) — ${r.resultLabel}`,
+        );
+        return refreshBundle();
+      })
+      .catch((e: unknown) => {
+        setLiveState("failed");
+        setLiveMessage(`Backend could not run the pipeline: ${e instanceof Error ? e.message : String(e)}. Showing existing data.`);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiOnline, activeSceneId]);
+
+  // Drive the pipeline narration: each stage advances its own progress and emits logs.
   useEffect(() => {
     cancelled.current = false;
     let stage = 0;
@@ -97,11 +122,16 @@ function RunningPipeline() {
           emitted = 0;
           setStageProgress(0);
         } else {
-          setDone(true);
-          markRun();
-          window.setTimeout(() => {
-            if (!cancelled.current) router.push("/analysis");
-          }, 1400);
+          const finish = () => {
+            setDone(true);
+            markRun();
+            window.setTimeout(() => {
+              if (!cancelled.current) router.push("/analysis");
+            }, 1400);
+          };
+          // hold the last stage until the real backend run (if any) has finished
+          if (liveRun.current) liveRun.current.then(finish, finish);
+          else finish();
           return;
         }
       }
@@ -164,6 +194,24 @@ function RunningPipeline() {
             <X className="h-3.5 w-3.5" />
             Cancel
           </Button>
+        </div>
+
+        {/* live-run status: the backend actually runs inference + graph analysis; narration below is illustrative */}
+        <div
+          className={
+            "rounded-2xl border px-4 py-3 text-[12px] leading-relaxed " +
+            (liveState === "done"
+              ? "border-[#00c896]/30 bg-[#00c896]/8 text-[#00c896]"
+              : liveState === "failed"
+                ? "border-[#ef4444]/30 bg-[#ef4444]/8 text-[#ef4444]"
+                : liveState === "running"
+                  ? "border-[#38bdf8]/30 bg-[#38bdf8]/8 text-[#38bdf8]"
+                  : "border-[#f59e0b]/30 bg-[#f59e0b]/8 text-[#f59e0b]")
+          }
+        >
+          {liveState === "running" && "Real pipeline run in progress on the backend (segmentation → patches → graph → criticality → restoration). The stage narration below is illustrative; results arrive when the run finishes."}
+          {liveState === "idle" && (apiOnline === false ? "Backend offline — this is the prototype's simulated pipeline; no data is processed." : "Checking backend…")}
+          {(liveState === "done" || liveState === "failed") && liveMessage}
         </div>
 
         {/* overall progress */}

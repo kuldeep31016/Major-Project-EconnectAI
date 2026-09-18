@@ -13,6 +13,7 @@ import json
 import os
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -324,11 +325,27 @@ def segment(req: SegmentRequest):
     Synchronous: fine for the AOI sizes this project uses; returns the new run summary."""
     py = sys.executable
     prob = req.probability_tif
+    # Auto-discovery: newest scene of the study area + newest trained checkpoint (+ its calibrated threshold)
+    if not prob and not req.scene_tif:
+        scenes_dir = Path(os.environ.get("DATA_ROOT", REPO_ROOT / "data")) / "scenes" / req.study_area
+        scenes_ = sorted(scenes_dir.glob("*_s12_10m.tif"), key=lambda p: p.stat().st_mtime) or \
+                  sorted(scenes_dir.glob("*.tif"), key=lambda p: p.stat().st_mtime)
+        if not scenes_:
+            raise HTTPException(404, f"no scene for {req.study_area} under {scenes_dir} - run scripts/acquire_study_area.py")
+        req.scene_tif = str(scenes_[-1])
+    if req.scene_tif and not req.checkpoint:
+        cks = sorted(SEG_DIR.glob("*/best_model.pth"), key=lambda p: p.stat().st_mtime)
+        if not cks:
+            raise HTTPException(404, "no trained checkpoint under outputs/segmentation - run scripts/train.py")
+        req.checkpoint = str(cks[-1])
+        tc = cks[-1].parent / "threshold_calibration.json"
+        if req.threshold is None and tc.exists():
+            req.threshold = json.loads(tc.read_text()).get("selected_threshold")
     if req.scene_tif:
         if not req.checkpoint:
             raise HTTPException(400, "checkpoint is required to run inference on a scene")
         out = Path(req.scene_tif).with_suffix("").name + "_prob.tif"
-        prob_path = SEG_DIR / "predictions" / out
+        prob_path = Path(req.checkpoint).parent / "predictions" / out
         cmd = [py, str(REPO_ROOT / "scripts" / "predict.py"), "--checkpoint", req.checkpoint,
                "--input", req.scene_tif, "--output", str(prob_path)]
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT)
@@ -342,8 +359,10 @@ def segment(req: SegmentRequest):
     if req.threshold is not None:
         cmd += ["--threshold", str(req.threshold)]
     if req.checkpoint:
-        cmd += ["--model-checkpoint", req.checkpoint]
+        cmd += ["--model-checkpoint", req.checkpoint, "--run-id",
+                f"{req.study_area}_{Path(req.checkpoint).parent.name}_ui_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT)
     if r.returncode != 0:
         raise HTTPException(500, f"run_graph_analysis.py failed:\n{r.stderr[-2000:]}")
-    return _run_summary(_resolve_run(req.study_area, "latest"))
+    return {**_run_summary(_resolve_run(req.study_area, "latest")), "scene": req.scene_tif, "checkpoint": req.checkpoint,
+            "thresholdUsed": req.threshold}
