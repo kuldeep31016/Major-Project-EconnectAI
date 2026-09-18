@@ -197,7 +197,7 @@ export default function AnalysisPage() {
 
       {/* evidence chain for the selected patch */}
       {selectedPatchId && dataSource.mode === "live" && !evidenceFor && (
-        <button onClick={() => setEvidenceFor(selectedPatchId)} className="absolute right-3 top-3 z-[940] rounded-full bg-[#0f5132] px-3 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-[#0b3d26]">
+        <button onClick={() => setEvidenceFor(selectedPatchId)} className="absolute bottom-16 right-3 z-[940] rounded-full bg-[#0f5132] px-3 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-[#0b3d26]">
           Why is {selectedPatchId} ranked here? · Evidence
         </button>
       )}

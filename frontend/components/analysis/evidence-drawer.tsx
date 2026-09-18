@@ -34,7 +34,7 @@ export function EvidenceDrawer({ objectType, objectId, onClose }: { objectType: 
   const Row = ({ k, v }: { k: string; v: React.ReactNode }) => <div className="grid grid-cols-[130px_1fr] gap-2 border-t border-foreground/[0.06] py-1 text-[11.5px]"><span className="text-muted-foreground">{k}</span><span className="break-words">{v}</span></div>;
   const c = chain;
   return (
-    <div className="absolute right-3 top-3 z-[950] flex max-h-[calc(100%-1.5rem)] w-[380px] max-w-[calc(100%-1.5rem)] flex-col rounded-2xl border border-foreground/[0.1] bg-card shadow-2xl">
+    <div className="fixed right-4 top-20 z-[1100] flex max-h-[calc(100vh-6rem)] w-[400px] max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-foreground/[0.1] bg-card shadow-2xl">
       <div className="flex items-center justify-between border-b border-foreground/[0.08] px-4 py-2.5">
         <div className="flex items-center gap-2 text-[13px] font-semibold"><FileSearch className="h-4 w-4 text-[#0f5132]" /> Evidence — {objectId}</div>
         <button onClick={onClose} aria-label="close" className="rounded-md p-1 text-muted-foreground hover:text-foreground"><X className="h-4 w-4" /></button>
