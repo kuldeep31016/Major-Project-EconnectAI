@@ -1,0 +1,25 @@
+{
+ "checkpoint": "outputs/segmentation/kerala_E1_s1_b0_dev/best_model.pth",
+ "experiment_id": "kerala_E1_s1_b0_dev",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 1.0,
+ "habitat_fraction_at_threshold": 0.001171834251290205,
+ "outputs": {
+  "probability": "outputs/segmentation/kerala_E1_s1_b0_dev/predictions/odisha-coast_2020_s12_10m_prob.tif",
+  "confidence": "outputs/segmentation/kerala_E1_s1_b0_dev/predictions/odisha-coast_2020_s12_10m_confidence.tif",
+  "binary": "outputs/segmentation/kerala_E1_s1_b0_dev/predictions/odisha-coast_2020_s12_10m_binary_t0.50.tif"
+ }
+}

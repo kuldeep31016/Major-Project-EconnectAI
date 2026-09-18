@@ -1,0 +1,25 @@
+{
+ "checkpoint": "outputs/segmentation/kerala_E1_s1_b0_dev/best_model.pth",
+ "experiment_id": "kerala_E1_s1_b0_dev",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/sundarbans/sundarbans_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 0.9999694324478933,
+ "habitat_fraction_at_threshold": 0.0032096879014957783,
+ "outputs": {
+  "probability": "outputs/segmentation/kerala_E1_s1_b0_dev/predictions/sundarbans_2020_s12_10m_prob.tif",
+  "confidence": "outputs/segmentation/kerala_E1_s1_b0_dev/predictions/sundarbans_2020_s12_10m_confidence.tif",
+  "binary": "outputs/segmentation/kerala_E1_s1_b0_dev/predictions/sundarbans_2020_s12_10m_binary_t0.50.tif"
+ }
+}
