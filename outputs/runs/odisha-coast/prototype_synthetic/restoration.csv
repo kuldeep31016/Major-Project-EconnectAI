@@ -1,0 +1,9 @@
+rank,candidate_id,name,area_ha,connectivity_gain,gain_pct,new_links,cost,cost_unit,gain_per_cost,ranking_basis,components_before,components_after
+1,odisha-coast-r4,Rajnagar Buffer,127.9,4.499127810846538e-05,2.3596671607313855,3,,,,raw_gain,8,8
+2,odisha-coast-r5,Mahinsamunda Marsh,123,4.313414558531725e-05,2.2622657351165327,3,,,,raw_gain,8,8
+3,odisha-coast-r1,Gahirmatha Rookery Flat,168.9,3.5808367878401156e-05,1.8780491089483722,1,,,,raw_gain,8,8
+4,odisha-coast-r6,Habalikhati Dune Belt,67.2,3.337251984127012e-05,1.7502956673170122,3,,,,raw_gain,8,8
+5,odisha-coast-r3,Suajore Creek Bank,87.7,2.8514514833710702e-05,1.4955068423502973,2,,,,raw_gain,8,8
+6,odisha-coast-r2,Praharajpur Fringe,115.3,2.638257555626338e-05,1.3836925682694885,2,,,,raw_gain,8,8
+7,odisha-coast-r8,Bhitarkanika Core,80.2,1.3234534438775342e-05,0.6941144509711275,1,,,,raw_gain,8,8
+8,odisha-coast-r7,Jambu Estuary Mouth,34,7.167658730158292e-06,0.37592372646337,2,,,,raw_gain,8,8

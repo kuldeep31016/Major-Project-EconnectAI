@@ -1,0 +1,47 @@
+{
+ "removed_patch_ids": [
+  "kerala-coast-p16"
+ ],
+ "metric": "iic",
+ "c_before": 0.00537557660285566,
+ "c_after": 0.0031831658997894404,
+ "delta_connectivity": 0.00219241070306622,
+ "loss_fraction": 0.40784661163633096,
+ "loss_pct": 40.784661163633096,
+ "habitat_area_before_ha": 6959.7,
+ "habitat_area_removed_ha": 263,
+ "habitat_area_removed_pct": 3.778898515740621,
+ "components_before": 3,
+ "components_after": 5,
+ "edges_before": 18,
+ "edges_after": 15,
+ "severed_edges": [
+  {
+   "source": "kerala-coast-p02",
+   "target": "kerala-coast-p16",
+   "distance_km": 4.59652823888231,
+   "weight": 0.2577615979997245
+  },
+  {
+   "source": "kerala-coast-p15",
+   "target": "kerala-coast-p16",
+   "distance_km": 4.071636827752024,
+   "weight": 0.2916279572009701
+  },
+  {
+   "source": "kerala-coast-p16",
+   "target": "kerala-coast-p17",
+   "distance_km": 4.901770940201452,
+   "weight": 0.20502140853853998
+  }
+ ],
+ "newly_isolated_patch_ids": [],
+ "affected_patch_ids": [
+  "kerala-coast-p02",
+  "kerala-coast-p15",
+  "kerala-coast-p17"
+ ],
+ "interface_score_before": 45.8418139113007,
+ "interface_score_after": 45.21579387896769,
+ "notes": []
+}

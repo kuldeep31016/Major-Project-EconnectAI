@@ -1,0 +1,1617 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "id": "sundarbans-p01",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.84053,
+       21.97367
+      ],
+      [
+       88.83388,
+       21.97757
+      ],
+      [
+       88.83141,
+       21.98263
+      ],
+      [
+       88.82442,
+       21.9841
+      ],
+      [
+       88.8211,
+       21.97847
+      ],
+      [
+       88.81531,
+       21.97625
+      ],
+      [
+       88.81939,
+       21.97205
+      ],
+      [
+       88.82116,
+       21.96893
+      ],
+      [
+       88.82514,
+       21.96724
+      ],
+      [
+       88.82934,
+       21.96834
+      ],
+      [
+       88.83304,
+       21.9702
+      ],
+      [
+       88.84053,
+       21.97367
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p01",
+    "area_ha": 283.5,
+    "quality": 0.629,
+    "confidence": 0.872,
+    "habitat_class": "mudflat",
+    "name": "Sajnekhali Core",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.97367,
+    "centroid_lon": 88.82629,
+    "criticality_rank": 14,
+    "criticality_score": 0.02062502848624101,
+    "delta_connectivity": 1.137331863044805e-05,
+    "delta_pct": 2.062502848624101,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 13,
+    "criticality_level": "low"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p02",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.86847,
+       21.96729
+      ],
+      [
+       88.85945,
+       21.97084
+      ],
+      [
+       88.85843,
+       21.97982
+      ],
+      [
+       88.85079,
+       21.97358
+      ],
+      [
+       88.84378,
+       21.97285
+      ],
+      [
+       88.8405,
+       21.96729
+      ],
+      [
+       88.84165,
+       21.9605
+      ],
+      [
+       88.84973,
+       21.9584
+      ],
+      [
+       88.85764,
+       21.95671
+      ],
+      [
+       88.86382,
+       21.9612
+      ],
+      [
+       88.86847,
+       21.96729
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p02",
+    "area_ha": 377.9,
+    "quality": 0.471,
+    "confidence": 0.964,
+    "habitat_class": "estuary",
+    "name": "Netidhopani Block",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.96729,
+    "centroid_lon": 88.85334,
+    "criticality_rank": 13,
+    "criticality_score": 0.02749276283933156,
+    "delta_connectivity": 1.5160413087994106e-05,
+    "delta_pct": 2.749276283933156,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 12,
+    "criticality_level": "low"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p03",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.76865,
+       21.97365
+      ],
+      [
+       88.76691,
+       21.97791
+      ],
+      [
+       88.7609,
+       21.9781
+      ],
+      [
+       88.75769,
+       21.98254
+      ],
+      [
+       88.75191,
+       21.98167
+      ],
+      [
+       88.75023,
+       21.9771
+      ],
+      [
+       88.74597,
+       21.97365
+      ],
+      [
+       88.74679,
+       21.96862
+      ],
+      [
+       88.75426,
+       21.96889
+      ],
+      [
+       88.75769,
+       21.96469
+      ],
+      [
+       88.76385,
+       21.96513
+      ],
+      [
+       88.76677,
+       21.96946
+      ],
+      [
+       88.76865,
+       21.97365
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p03",
+    "area_ha": 216.2,
+    "quality": 0.932,
+    "confidence": 0.933,
+    "habitat_class": "water",
+    "name": "Pirkhali Compartment",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.97365,
+    "centroid_lon": 88.75769,
+    "criticality_rank": 11,
+    "criticality_score": 0.04740298164327365,
+    "delta_connectivity": 2.61395621645752e-05,
+    "delta_pct": 4.740298164327366,
+    "degree": 2,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 17,
+    "criticality_level": "medium"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p04",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.76162,
+       21.96964
+      ],
+      [
+       88.75245,
+       21.97473
+      ],
+      [
+       88.75081,
+       21.98411
+      ],
+      [
+       88.739,
+       21.98947
+      ],
+      [
+       88.73277,
+       21.97868
+      ],
+      [
+       88.72455,
+       21.97388
+      ],
+      [
+       88.72001,
+       21.96435
+      ],
+      [
+       88.72946,
+       21.95755
+      ],
+      [
+       88.74095,
+       21.96069
+      ],
+      [
+       88.75088,
+       21.95507
+      ],
+      [
+       88.75565,
+       21.96292
+      ],
+      [
+       88.76162,
+       21.96964
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p04",
+    "area_ha": 740.1,
+    "quality": 0.496,
+    "confidence": 0.886,
+    "habitat_class": "estuary",
+    "name": "Panchamukhani Creek",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.96964,
+    "centroid_lon": 88.74256,
+    "criticality_rank": 2,
+    "criticality_score": 0.18573261807354682,
+    "delta_connectivity": 0.00010241907044283334,
+    "delta_pct": 18.57326180735468,
+    "degree": 3,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 5,
+    "criticality_level": "high"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p05",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.73871,
+       22.08732
+      ],
+      [
+       88.73705,
+       22.08907
+      ],
+      [
+       88.73666,
+       22.09202
+      ],
+      [
+       88.73327,
+       22.09269
+      ],
+      [
+       88.72888,
+       22.09341
+      ],
+      [
+       88.72626,
+       22.09056
+      ],
+      [
+       88.72685,
+       22.08732
+      ],
+      [
+       88.72807,
+       22.08492
+      ],
+      [
+       88.73071,
+       22.08378
+      ],
+      [
+       88.73327,
+       22.08078
+      ],
+      [
+       88.73791,
+       22.0809
+      ],
+      [
+       88.73734,
+       22.08544
+      ],
+      [
+       88.73871,
+       22.08732
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p05",
+    "area_ha": 79,
+    "quality": 0.887,
+    "confidence": 0.888,
+    "habitat_class": "saltmarsh",
+    "name": "Chamta Block",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 22.08732,
+    "centroid_lon": 88.73327,
+    "criticality_rank": 20,
+    "criticality_score": 0.0006864856855006855,
+    "delta_connectivity": 3.7855077105223515e-07,
+    "delta_pct": 0.06864856855006855,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "component_count_after": 11,
+    "rank_by_area": 20,
+    "criticality_level": "low"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p06",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.7291,
+       21.97868
+      ],
+      [
+       88.71485,
+       21.98545
+      ],
+      [
+       88.70936,
+       21.99955
+      ],
+      [
+       88.69571,
+       21.99122
+      ],
+      [
+       88.69095,
+       21.9827
+      ],
+      [
+       88.68653,
+       21.97337
+      ],
+      [
+       88.69664,
+       21.96743
+      ],
+      [
+       88.7076,
+       21.96579
+      ],
+      [
+       88.71669,
+       21.97067
+      ],
+      [
+       88.7291,
+       21.97868
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p06",
+    "area_ha": 864.6,
+    "quality": 0.471,
+    "confidence": 0.846,
+    "habitat_class": "estuary",
+    "name": "Jhingakhali Forest",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.97868,
+    "centroid_lon": 88.70476,
+    "criticality_rank": 1,
+    "criticality_score": 0.21012292429816865,
+    "delta_connectivity": 0.00011586868697896941,
+    "delta_pct": 21.012292429816863,
+    "degree": 2,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 2,
+    "criticality_level": "high"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p07",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.73081,
+       21.98976
+      ],
+      [
+       88.7241,
+       21.99387
+      ],
+      [
+       88.72263,
+       22.00354
+      ],
+      [
+       88.71222,
+       22.00161
+      ],
+      [
+       88.70941,
+       21.99419
+      ],
+      [
+       88.70165,
+       21.98976
+      ],
+      [
+       88.70458,
+       21.98252
+      ],
+      [
+       88.71381,
+       21.98181
+      ],
+      [
+       88.72172,
+       21.97824
+      ],
+      [
+       88.72589,
+       21.98461
+      ],
+      [
+       88.73081,
+       21.98976
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p07",
+    "area_ha": 460.6,
+    "quality": 0.714,
+    "confidence": 0.932,
+    "habitat_class": "mudflat",
+    "name": "Bagmara Island",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.98976,
+    "centroid_lon": 88.71704,
+    "criticality_rank": 7,
+    "criticality_score": 0.11559038492727411,
+    "delta_connectivity": 6.374033758406835e-05,
+    "delta_pct": 11.559038492727412,
+    "degree": 3,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 11,
+    "criticality_level": "high"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p08",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.60404,
+       22.04246
+      ],
+      [
+       88.60356,
+       22.04516
+      ],
+      [
+       88.60199,
+       22.04838
+      ],
+      [
+       88.59772,
+       22.0518
+      ],
+      [
+       88.59153,
+       22.05103
+      ],
+      [
+       88.59052,
+       22.04579
+      ],
+      [
+       88.58888,
+       22.04246
+      ],
+      [
+       88.59121,
+       22.03945
+      ],
+      [
+       88.59157,
+       22.03394
+      ],
+      [
+       88.59772,
+       22.03618
+      ],
+      [
+       88.6036,
+       22.03431
+      ],
+      [
+       88.60678,
+       22.03827
+      ],
+      [
+       88.60404,
+       22.04246
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p08",
+    "area_ha": 217.5,
+    "quality": 0.424,
+    "confidence": 0.879,
+    "habitat_class": "mangrove",
+    "name": "Harinbhanga Fringe",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 22.04246,
+    "centroid_lon": 88.59772,
+    "criticality_rank": 17,
+    "criticality_score": 0.007354284520067325,
+    "delta_connectivity": 4.05539421201263e-06,
+    "delta_pct": 0.7354284520067325,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 16,
+    "criticality_level": "low"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p09",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.63778,
+       22.01647
+      ],
+      [
+       88.63621,
+       22.02012
+      ],
+      [
+       88.63233,
+       22.02209
+      ],
+      [
+       88.62789,
+       22.02335
+      ],
+      [
+       88.62452,
+       22.02073
+      ],
+      [
+       88.62381,
+       22.01772
+      ],
+      [
+       88.62091,
+       22.01454
+      ],
+      [
+       88.62388,
+       22.01163
+      ],
+      [
+       88.62827,
+       22.01169
+      ],
+      [
+       88.63138,
+       22.01252
+      ],
+      [
+       88.63539,
+       22.01325
+      ],
+      [
+       88.63778,
+       22.01647
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p09",
+    "area_ha": 89.9,
+    "quality": 0.834,
+    "confidence": 0.921,
+    "habitat_class": "saltmarsh",
+    "name": "Arbesi Block",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 22.01647,
+    "centroid_lon": 88.62913,
+    "criticality_rank": 18,
+    "criticality_score": 0.003039770934961161,
+    "delta_connectivity": 1.676229607631887e-06,
+    "delta_pct": 0.3039770934961161,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 19,
+    "criticality_level": "low"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p10",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.57671,
+       21.99035
+      ],
+      [
+       88.57183,
+       21.99534
+      ],
+      [
+       88.56594,
+       21.99734
+      ],
+      [
+       88.56049,
+       21.99575
+      ],
+      [
+       88.5537,
+       21.99346
+      ],
+      [
+       88.55167,
+       21.98664
+      ],
+      [
+       88.55781,
+       21.98123
+      ],
+      [
+       88.56593,
+       21.98336
+      ],
+      [
+       88.57147,
+       21.98559
+      ],
+      [
+       88.57671,
+       21.99035
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p10",
+    "area_ha": 274.3,
+    "quality": 0.655,
+    "confidence": 0.916,
+    "habitat_class": "mudflat",
+    "name": "Khatuajhuri Creek",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.99035,
+    "centroid_lon": 88.56439,
+    "criticality_rank": 15,
+    "criticality_score": 0.00827616076831693,
+    "delta_connectivity": 4.563747076406451e-06,
+    "delta_pct": 0.8276160768316929,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "component_count_after": 11,
+    "rank_by_area": 14,
+    "criticality_level": "low"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p11",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.62081,
+       21.91524
+      ],
+      [
+       88.61185,
+       21.91977
+      ],
+      [
+       88.60917,
+       21.92514
+      ],
+      [
+       88.60202,
+       21.92804
+      ],
+      [
+       88.59667,
+       21.92265
+      ],
+      [
+       88.59018,
+       21.9207
+      ],
+      [
+       88.58904,
+       21.91524
+      ],
+      [
+       88.58935,
+       21.90938
+      ],
+      [
+       88.59599,
+       21.90688
+      ],
+      [
+       88.60202,
+       21.90076
+      ],
+      [
+       88.60987,
+       21.90436
+      ],
+      [
+       88.61233,
+       21.91047
+      ],
+      [
+       88.62081,
+       21.91524
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p11",
+    "area_ha": 520.9,
+    "quality": 0.874,
+    "confidence": 0.897,
+    "habitat_class": "saltmarsh",
+    "name": "Gosaba Fringe",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.91524,
+    "centroid_lon": 88.60202,
+    "criticality_rank": 8,
+    "criticality_score": 0.05814496577508606,
+    "delta_connectivity": 3.2063045292650416e-05,
+    "delta_pct": 5.8144965775086055,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 9,
+    "criticality_level": "medium"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p12",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.69416,
+       21.92246
+      ],
+      [
+       88.6955,
+       21.93254
+      ],
+      [
+       88.68311,
+       21.93513
+      ],
+      [
+       88.67276,
+       21.93983
+      ],
+      [
+       88.66483,
+       21.93266
+      ],
+      [
+       88.65648,
+       21.92701
+      ],
+      [
+       88.65434,
+       21.9174
+      ],
+      [
+       88.66556,
+       21.91293
+      ],
+      [
+       88.6721,
+       21.90143
+      ],
+      [
+       88.6852,
+       21.90613
+      ],
+      [
+       88.69097,
+       21.9147
+      ],
+      [
+       88.69416,
+       21.92246
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p12",
+    "area_ha": 916.5,
+    "quality": 0.716,
+    "confidence": 0.879,
+    "habitat_class": "saltmarsh",
+    "name": "Dulibhasani West",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.92246,
+    "centroid_lon": 88.67588,
+    "criticality_rank": 3,
+    "criticality_score": 0.1595945738517077,
+    "delta_connectivity": 8.800569372870994e-05,
+    "delta_pct": 15.959457385170769,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 1,
+    "criticality_level": "high"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p13",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.60939,
+       21.89545
+      ],
+      [
+       88.60794,
+       21.9018
+      ],
+      [
+       88.60123,
+       21.9079
+      ],
+      [
+       88.59218,
+       21.90417
+      ],
+      [
+       88.58887,
+       21.89825
+      ],
+      [
+       88.58472,
+       21.89144
+      ],
+      [
+       88.58955,
+       21.88307
+      ],
+      [
+       88.60034,
+       21.887
+      ],
+      [
+       88.60598,
+       21.89041
+      ],
+      [
+       88.60939,
+       21.89545
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p13",
+    "area_ha": 493.9,
+    "quality": 0.527,
+    "confidence": 0.864,
+    "habitat_class": "estuary",
+    "name": "Chandkhali Mudflat",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.89545,
+    "centroid_lon": 88.59848,
+    "criticality_rank": 9,
+    "criticality_score": 0.05513111652200986,
+    "delta_connectivity": 3.0401109752428495e-05,
+    "delta_pct": 5.513111652200986,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 10,
+    "criticality_level": "medium"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p14",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.69895,
+       21.90388
+      ],
+      [
+       88.69123,
+       21.91384
+      ],
+      [
+       88.67926,
+       21.91691
+      ],
+      [
+       88.6657,
+       21.91868
+      ],
+      [
+       88.6636,
+       21.9076
+      ],
+      [
+       88.66344,
+       21.90011
+      ],
+      [
+       88.66526,
+       21.88846
+      ],
+      [
+       88.67822,
+       21.89555
+      ],
+      [
+       88.68752,
+       21.8964
+      ],
+      [
+       88.69895,
+       21.90388
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p14",
+    "area_ha": 666.6,
+    "quality": 0.942,
+    "confidence": 0.913,
+    "habitat_class": "estuary",
+    "name": "Matla Estuary Bank",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.90388,
+    "centroid_lon": 88.67638,
+    "criticality_rank": 6,
+    "criticality_score": 0.11607827924664309,
+    "delta_connectivity": 6.400937854834487e-05,
+    "delta_pct": 11.607827924664308,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 7,
+    "criticality_level": "high"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p15",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.69717,
+       21.8285
+      ],
+      [
+       88.69537,
+       21.83811
+      ],
+      [
+       88.68197,
+       21.83625
+      ],
+      [
+       88.67503,
+       21.83784
+      ],
+      [
+       88.66167,
+       21.83846
+      ],
+      [
+       88.66454,
+       21.8285
+      ],
+      [
+       88.66978,
+       21.82324
+      ],
+      [
+       88.67474,
+       21.81845
+      ],
+      [
+       88.68212,
+       21.82037
+      ],
+      [
+       88.69288,
+       21.82032
+      ],
+      [
+       88.69717,
+       21.8285
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p15",
+    "area_ha": 599.6,
+    "quality": 0.458,
+    "confidence": 0.977,
+    "habitat_class": "saltmarsh",
+    "name": "Bidyadhari Channel",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.8285,
+    "centroid_lon": 88.67882,
+    "criticality_rank": 12,
+    "criticality_score": 0.03954581693461912,
+    "delta_connectivity": 2.1806863287429255e-05,
+    "delta_pct": 3.954581693461912,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "component_count_after": 11,
+    "rank_by_area": 8,
+    "criticality_level": "medium"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p16",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.74932,
+       21.85703
+      ],
+      [
+       88.74467,
+       21.86501
+      ],
+      [
+       88.73422,
+       21.86648
+      ],
+      [
+       88.7274,
+       21.87437
+      ],
+      [
+       88.71846,
+       21.86942
+      ],
+      [
+       88.71763,
+       21.86155
+      ],
+      [
+       88.71362,
+       21.85703
+      ],
+      [
+       88.71012,
+       21.84905
+      ],
+      [
+       88.72153,
+       21.8489
+      ],
+      [
+       88.7274,
+       21.84603
+      ],
+      [
+       88.73645,
+       21.84449
+      ],
+      [
+       88.73864,
+       21.85184
+      ],
+      [
+       88.74932,
+       21.85703
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p16",
+    "area_ha": 677.9,
+    "quality": 0.695,
+    "confidence": 0.86,
+    "habitat_class": "water",
+    "name": "Jharkhali Buffer",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.85703,
+    "centroid_lon": 88.7274,
+    "criticality_rank": 10,
+    "criticality_score": 0.05054853473155794,
+    "delta_connectivity": 2.78741235284983e-05,
+    "delta_pct": 5.054853473155793,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "component_count_after": 11,
+    "rank_by_area": 6,
+    "criticality_level": "medium"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p17",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.77684,
+       21.79009
+      ],
+      [
+       88.77566,
+       21.79448
+      ],
+      [
+       88.77091,
+       21.79675
+      ],
+      [
+       88.76565,
+       21.7982
+      ],
+      [
+       88.76065,
+       21.79605
+      ],
+      [
+       88.76153,
+       21.7914
+      ],
+      [
+       88.76145,
+       21.78876
+      ],
+      [
+       88.76226,
+       21.78561
+      ],
+      [
+       88.76582,
+       21.78293
+      ],
+      [
+       88.77029,
+       21.78453
+      ],
+      [
+       88.77243,
+       21.78735
+      ],
+      [
+       88.77684,
+       21.79009
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p17",
+    "area_ha": 145,
+    "quality": 0.808,
+    "confidence": 0.81,
+    "habitat_class": "saltmarsh",
+    "name": "Datta Island",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.79009,
+    "centroid_lon": 88.76711,
+    "criticality_rank": 19,
+    "criticality_score": 0.0023126680880713856,
+    "delta_connectivity": 1.2752811987460548e-06,
+    "delta_pct": 0.23126680880713857,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "component_count_after": 11,
+    "rank_by_area": 18,
+    "criticality_level": "low"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p18",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.76574,
+       21.90855
+      ],
+      [
+       88.76346,
+       21.91374
+      ],
+      [
+       88.76374,
+       21.92451
+      ],
+      [
+       88.75222,
+       21.92398
+      ],
+      [
+       88.74083,
+       21.92433
+      ],
+      [
+       88.73085,
+       21.91842
+      ],
+      [
+       88.73252,
+       21.90855
+      ],
+      [
+       88.73824,
+       21.90209
+      ],
+      [
+       88.74324,
+       21.8961
+      ],
+      [
+       88.75222,
+       21.89604
+      ],
+      [
+       88.76192,
+       21.8951
+      ],
+      [
+       88.77215,
+       21.89934
+      ],
+      [
+       88.76574,
+       21.90855
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p18",
+    "area_ha": 752.5,
+    "quality": 0.558,
+    "confidence": 0.894,
+    "habitat_class": "urban",
+    "name": "Bhagabatpur Belt",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.90855,
+    "centroid_lon": 88.75222,
+    "criticality_rank": 5,
+    "criticality_score": 0.12488649667015173,
+    "delta_connectivity": 6.886651915257033e-05,
+    "delta_pct": 12.488649667015173,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 4,
+    "criticality_level": "high"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p19",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.79107,
+       21.92823
+      ],
+      [
+       88.79069,
+       21.9393
+      ],
+      [
+       88.77689,
+       21.94113
+      ],
+      [
+       88.76438,
+       21.94614
+      ],
+      [
+       88.7583,
+       21.93599
+      ],
+      [
+       88.75881,
+       21.92823
+      ],
+      [
+       88.75539,
+       21.91878
+      ],
+      [
+       88.76533,
+       21.91266
+      ],
+      [
+       88.7772,
+       21.91458
+      ],
+      [
+       88.78115,
+       21.92271
+      ],
+      [
+       88.79107,
+       21.92823
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p19",
+    "area_ha": 756.3,
+    "quality": 0.49,
+    "confidence": 0.874,
+    "habitat_class": "estuary",
+    "name": "Kalash Island",
+    "protected": false,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.92823,
+    "centroid_lon": 88.77165,
+    "criticality_rank": 4,
+    "criticality_score": 0.12551715273307076,
+    "delta_connectivity": 6.921428363466968e-05,
+    "delta_pct": 12.551715273307076,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "component_count_after": 12,
+    "rank_by_area": 3,
+    "criticality_level": "high"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "sundarbans-p20",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       88.85951,
+       21.91784
+      ],
+      [
+       88.85578,
+       21.92079
+      ],
+      [
+       88.85498,
+       21.92836
+      ],
+      [
+       88.8472,
+       21.92647
+      ],
+      [
+       88.84378,
+       21.92187
+      ],
+      [
+       88.83705,
+       21.91784
+      ],
+      [
+       88.84264,
+       21.91315
+      ],
+      [
+       88.84807,
+       21.91134
+      ],
+      [
+       88.85492,
+       21.90747
+      ],
+      [
+       88.85605,
+       21.91473
+      ],
+      [
+       88.85951,
+       21.91784
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "id": "sundarbans-p20",
+    "area_ha": 268,
+    "quality": 0.835,
+    "confidence": 0.868,
+    "habitat_class": "water",
+    "name": "Mayadwip Sand Flat",
+    "protected": true,
+    "perimeter_km": null,
+    "bbox": null,
+    "extra": {},
+    "centroid_lat": 21.91784,
+    "centroid_lon": 88.85071,
+    "criticality_rank": 16,
+    "criticality_score": 0.00790036017872287,
+    "delta_connectivity": 4.3565182791315904e-06,
+    "delta_pct": 0.790036017872287,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "component_count_after": 11,
+    "rank_by_area": 15,
+    "criticality_level": "low"
+   }
+  }
+ ]
+}

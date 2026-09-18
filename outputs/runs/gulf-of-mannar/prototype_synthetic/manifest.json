@@ -1,0 +1,98 @@
+{
+ "run_id": "prototype_synthetic",
+ "study_area_id": "gulf-of-mannar",
+ "study_area": {
+  "name": "Gulf of Mannar \u2014 Island Reef Chain",
+  "short_name": "Gulf of Mannar",
+  "state": "Tamil Nadu",
+  "protection": "Marine National Park / Biosphere Reserve",
+  "center": [
+   9.15,
+   79.1
+  ],
+  "bbox": [
+   9.0,
+   78.9,
+   9.3,
+   79.3
+  ],
+  "footprint_km2": 826,
+  "primary_habitat": "mangrove"
+ },
+ "timestamp_utc": "2026-09-18T14:57:35.353449+00:00",
+ "ecoconnect_version": "0.1.0",
+ "result_kind": "synthetic",
+ "result_label": "PROTOTYPE / SYNTHETIC RESULT - computed exactly, but over synthetic patch geometry",
+ "data_source": {
+  "type": "prototype_mock",
+  "path": "/Users/kuldeepraj/Major-Project-EconnectAI/frontend/mock-data",
+  "note": "synthetic patch geometry from the prototype's deterministic generator; site metadata only is real",
+  "model": "none (synthetic geometry)"
+ },
+ "landscape_area_ha": 82600.0,
+ "n_patches": 17,
+ "n_candidates": 8,
+ "config": {
+  "graph": {
+   "k_neighbors": 3,
+   "tau_km": 5.0,
+   "distance_mode": "haversine",
+   "tau_sensitivity_km": [
+    3.0,
+    5.0,
+    8.0
+   ]
+  },
+  "connectivity": {
+   "research_metric": "iic",
+   "pc_probability_at_tau": 0.5,
+   "interface_score_weights": {
+    "structural": 0.3,
+    "functional": 0.28,
+    "quality": 0.22,
+    "redundancy": 0.12,
+    "protection": 0.08
+   }
+  },
+  "criticality": {
+   "level_thresholds": [
+    0.25,
+    0.1,
+    0.03
+   ]
+  },
+  "restoration": {
+   "candidate_source": "sub_threshold",
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "candidate_max_count": 12,
+   "candidate_geojson": null,
+   "cost_csv": null,
+   "cost_unit": null,
+   "rebuild_edges_on_insert": false
+  },
+  "export": {
+   "heatmap_cell_m": 300,
+   "polygon_simplify_m": 15
+  }
+ },
+ "hardware": {
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.3"
+ },
+ "elapsed_s": 0.019,
+ "files": [
+  "criticality.csv",
+  "criticality.json",
+  "explanations.json",
+  "graph.json",
+  "metrics.json",
+  "patches.geojson",
+  "patches_input.json",
+  "restoration.csv",
+  "restoration.json",
+  "tau_sensitivity.json",
+  "what_if_top1.json"
+ ]
+}

@@ -1,0 +1,43 @@
+# The four demonstration landscapes of the paper (Table III).  Only the metadata below is real
+# (names, protection status, approximate centre/extent).  Nothing here is a measurement.
+#
+# DATASET TRAINING LOCATIONS vs DEPLOYMENT / DEMONSTRATION LOCATIONS:
+#   Until imagery for these AOIs is actually processed by the pipeline, they are demonstration
+#   locations only.  Runs record which AOI they were computed over in manifest.json.
+study_areas:
+  kerala-coast:
+    name: "Kerala Coast — Vembanad–Kol Wetland"
+    short_name: "Kerala Coast"
+    state: Kerala
+    protection: "Ramsar Site"
+    center: [9.878, 76.372]          # lat, lon
+    bbox: [9.778, 76.272, 9.978, 76.472]   # min_lat, min_lon, max_lat, max_lon  (~22 x 22 km)
+    footprint_km2: 486
+    primary_habitat: mangrove
+  sundarbans:
+    name: "Sundarbans — Western Delta Block"
+    short_name: "Sundarbans"
+    state: West Bengal
+    protection: "UNESCO World Heritage / Tiger Reserve"
+    center: [21.95, 88.75]
+    bbox: [21.80, 88.60, 22.10, 88.90]
+    footprint_km2: 1284
+    primary_habitat: mangrove
+  gulf-of-mannar:
+    name: "Gulf of Mannar — Island Reef Chain"
+    short_name: "Gulf of Mannar"
+    state: Tamil Nadu
+    protection: "Marine National Park / Biosphere Reserve"
+    center: [9.15, 79.10]
+    bbox: [9.00, 78.90, 9.30, 79.30]
+    footprint_km2: 826
+    primary_habitat: mangrove
+  odisha-coast:
+    name: "Odisha Coast — Bhitarkanika Delta"
+    short_name: "Odisha Coast"
+    state: Odisha
+    protection: "Ramsar Site / National Park"
+    center: [20.72, 86.90]
+    bbox: [20.60, 86.78, 20.84, 87.02]
+    footprint_km2: 672
+    primary_habitat: mangrove

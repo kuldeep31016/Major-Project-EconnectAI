@@ -1,0 +1,631 @@
+[
+ {
+  "patch_id": "kerala-coast-p16",
+  "text": "Kothad Mangrove Patch ranks #1 of 18 by criticality (S = 0.408): removing it lowers IIC by 40.8%. It holds 263.0 ha, 3.8% of mapped habitat (#11 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to kerala-coast-p15 (4.1 km), kerala-coast-p02 (4.6 km), kerala-coast-p17 (4.9 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 5 components. Segmentation confidence for this patch is 87%.",
+  "evidence": {
+   "area_ha": 263,
+   "area_pct": 3.778898515740621,
+   "rank_by_area": 11,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p15",
+     "distance_km": 4.071636827752024,
+     "weight": 0.2916279572009701
+    },
+    {
+     "id": "kerala-coast-p02",
+     "distance_km": 4.59652823888231,
+     "weight": 0.2577615979997245
+    },
+    {
+     "id": "kerala-coast-p17",
+     "distance_km": 4.901770940201452,
+     "weight": 0.20502140853853998
+    }
+   ],
+   "confidence": 0.872,
+   "quality": 0.507,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.0031831658997894404,
+   "delta_connectivity": 0.00219241070306622,
+   "criticality_score": 0.40784661163633096,
+   "delta_pct": 40.784661163633096,
+   "components_before": 3,
+   "components_after": 5,
+   "metric": "IIC",
+   "habitat_class": "estuary"
+  },
+  "level": "critical"
+ },
+ {
+  "patch_id": "kerala-coast-p15",
+  "text": "Perumbalam Island ranks #2 of 18 by criticality (S = 0.393): removing it lowers IIC by 39.3%. It holds 684.3 ha, 9.8% of mapped habitat (#2 by area). It maintains 3 links to kerala-coast-p13 (1.3 km), kerala-coast-p16 (4.1 km), kerala-coast-p14 (4.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 91%.",
+  "evidence": {
+   "area_ha": 684.3,
+   "area_pct": 9.832320358636148,
+   "rank_by_area": 2,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p13",
+     "distance_km": 1.2500435619645949,
+     "weight": 0.6298488934744562
+    },
+    {
+     "id": "kerala-coast-p16",
+     "distance_km": 4.071636827752024,
+     "weight": 0.2916279572009701
+    },
+    {
+     "id": "kerala-coast-p14",
+     "distance_km": 4.587292878368302,
+     "weight": 0.2943897760736722
+    }
+   ],
+   "confidence": 0.912,
+   "quality": 0.855,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.003262582424120728,
+   "delta_connectivity": 0.0021129941787349322,
+   "criticality_score": 0.39307302915420256,
+   "delta_pct": 39.30730291542026,
+   "components_before": 3,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "estuary"
+  },
+  "level": "critical"
+ },
+ {
+  "patch_id": "kerala-coast-p02",
+  "text": "Pathiramanal Island ranks #3 of 18 by criticality (S = 0.346): removing it lowers IIC by 34.6%. It holds 211.6 ha, 3.0% of mapped habitat (#12 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to kerala-coast-p03 (2.6 km), kerala-coast-p01 (4.3 km), kerala-coast-p16 (4.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 5 components. Segmentation confidence for this patch is 85%.",
+  "evidence": {
+   "area_ha": 211.6,
+   "area_pct": 3.040360935097777,
+   "rank_by_area": 12,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p03",
+     "distance_km": 2.584875567886424,
+     "weight": 0.372677640809933
+    },
+    {
+     "id": "kerala-coast-p01",
+     "distance_km": 4.259361625747965,
+     "weight": 0.3269978676775695
+    },
+    {
+     "id": "kerala-coast-p16",
+     "distance_km": 4.59652823888231,
+     "weight": 0.2577615979997245
+    }
+   ],
+   "confidence": 0.846,
+   "quality": 0.824,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.003516268244875726,
+   "delta_connectivity": 0.0018593083579799344,
+   "criticality_score": 0.34588072970483136,
+   "delta_pct": 34.58807297048314,
+   "components_before": 3,
+   "components_after": 5,
+   "metric": "IIC",
+   "habitat_class": "mudflat"
+  },
+  "level": "critical"
+ },
+ {
+  "patch_id": "kerala-coast-p03",
+  "text": "Vembanad Core Belt ranks #4 of 18 by criticality (S = 0.257): removing it lowers IIC by 25.7%. It holds 159.6 ha, 2.3% of mapped habitat (#14 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to kerala-coast-p05 (2.1 km), kerala-coast-p02 (2.6 km), kerala-coast-p06 (4.3 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 86%.",
+  "evidence": {
+   "area_ha": 159.6,
+   "area_pct": 2.293202293202293,
+   "rank_by_area": 14,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p05",
+     "distance_km": 2.1259465749287267,
+     "weight": 0.37946052036426176
+    },
+    {
+     "id": "kerala-coast-p02",
+     "distance_km": 2.584875567886424,
+     "weight": 0.372677640809933
+    },
+    {
+     "id": "kerala-coast-p06",
+     "distance_km": 4.260836551021665,
+     "weight": 0.2123481368315185
+    }
+   ],
+   "confidence": 0.857,
+   "quality": 0.474,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.0039949126287772314,
+   "delta_connectivity": 0.0013806639740784289,
+   "criticality_score": 0.2568401635919355,
+   "delta_pct": 25.684016359193553,
+   "components_before": 3,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "estuary"
+  },
+  "level": "critical"
+ },
+ {
+  "patch_id": "kerala-coast-p05",
+  "text": "Kadamakkudy Cluster ranks #5 of 18 by criticality (S = 0.248): removing it lowers IIC by 24.8%. It holds 657.2 ha, 9.4% of mapped habitat (#3 by area). It maintains 3 links to kerala-coast-p03 (2.1 km), kerala-coast-p09 (3.6 km), kerala-coast-p06 (3.7 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 93%.",
+  "evidence": {
+   "area_ha": 657.2,
+   "area_pct": 9.442935758725232,
+   "rank_by_area": 3,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p03",
+     "distance_km": 2.1259465749287267,
+     "weight": 0.37946052036426176
+    },
+    {
+     "id": "kerala-coast-p09",
+     "distance_km": 3.5734513682049385,
+     "weight": 0.3901373391686783
+    },
+    {
+     "id": "kerala-coast-p06",
+     "distance_km": 3.7304948217384437,
+     "weight": 0.2891738263581517
+    }
+   ],
+   "confidence": 0.933,
+   "quality": 0.711,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.004041888041721205,
+   "delta_connectivity": 0.0013336885611344553,
+   "criticality_score": 0.24810148932227322,
+   "delta_pct": 24.81014893222732,
+   "components_before": 3,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "estuary"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p14",
+  "text": "Muhamma Marsh ranks #6 of 18 by criticality (S = 0.245): removing it lowers IIC by 24.5%. It holds 820.6 ha, 11.8% of mapped habitat (#1 by area). It is large but structurally redundant: other patches carry its links. It maintains 3 links to kerala-coast-p12 (3.1 km), kerala-coast-p13 (4.0 km), kerala-coast-p15 (4.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 88%.",
+  "evidence": {
+   "area_ha": 820.6,
+   "area_pct": 11.79073810652758,
+   "rank_by_area": 1,
+   "degree": 3,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p12",
+     "distance_km": 3.101301094616799,
+     "weight": 0.4092688502062808
+    },
+    {
+     "id": "kerala-coast-p13",
+     "distance_km": 3.99029273023612,
+     "weight": 0.313779926860269
+    },
+    {
+     "id": "kerala-coast-p15",
+     "distance_km": 4.587292878368302,
+     "weight": 0.2943897760736722
+    }
+   ],
+   "confidence": 0.883,
+   "quality": 0.635,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.004058288965550404,
+   "delta_connectivity": 0.0013172876373052566,
+   "criticality_score": 0.24505048195303844,
+   "delta_pct": 24.505048195303843,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "saltmarsh"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p17",
+  "text": "Valanthakad Wetland ranks #7 of 18 by criticality (S = 0.194): removing it lowers IIC by 19.4%. It holds 355.2 ha, 5.1% of mapped habitat (#9 by area). Its structural importance exceeds what its size alone would suggest. It maintains 2 links to kerala-coast-p18 (3.6 km), kerala-coast-p16 (4.9 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 89%.",
+  "evidence": {
+   "area_ha": 355.2,
+   "area_pct": 5.103668261562999,
+   "rank_by_area": 9,
+   "degree": 2,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p18",
+     "distance_km": 3.5920301859785764,
+     "weight": 0.23870145941783474
+    },
+    {
+     "id": "kerala-coast-p16",
+     "distance_km": 4.901770940201452,
+     "weight": 0.20502140853853998
+    }
+   ],
+   "confidence": 0.888,
+   "quality": 0.589,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.004334012160270044,
+   "delta_connectivity": 0.0010415644425856166,
+   "criticality_score": 0.1937586457297079,
+   "delta_pct": 19.37586457297079,
+   "components_before": 3,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "seagrass"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p12",
+  "text": "Chellanam Shoreline ranks #8 of 18 by criticality (S = 0.159): removing it lowers IIC by 15.9%. It holds 610.1 ha, 8.8% of mapped habitat (#4 by area). It is large but structurally redundant: other patches carry its links. It maintains 2 links to kerala-coast-p14 (3.1 km), kerala-coast-p13 (4.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 87%.",
+  "evidence": {
+   "area_ha": 610.1,
+   "area_pct": 8.766182450392977,
+   "rank_by_area": 4,
+   "degree": 2,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p14",
+     "distance_km": 3.101301094616799,
+     "weight": 0.4092688502062808
+    },
+    {
+     "id": "kerala-coast-p13",
+     "distance_km": 4.709380568814823,
+     "weight": 0.32566908794636806
+    }
+   ],
+   "confidence": 0.866,
+   "quality": 0.912,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.004522067340481555,
+   "delta_connectivity": 0.0008535092623741056,
+   "criticality_score": 0.15877538828498827,
+   "delta_pct": 15.877538828498826,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "estuary"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p18",
+  "text": "Nettoor Channel Edge ranks #9 of 18 by criticality (S = 0.139): removing it lowers IIC by 13.9%. It holds 590.3 ha, 8.5% of mapped habitat (#6 by area). It is large but structurally redundant: other patches carry its links. It maintains 1 link to kerala-coast-p17 (3.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 89%.",
+  "evidence": {
+   "area_ha": 590.3,
+   "area_pct": 8.48168742905585,
+   "rank_by_area": 6,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p17",
+     "distance_km": 3.5920301859785764,
+     "weight": 0.23870145941783474
+    }
+   ],
+   "confidence": 0.892,
+   "quality": 0.407,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.004628924665985635,
+   "delta_connectivity": 0.0007466519368700252,
+   "criticality_score": 0.13889708807672507,
+   "delta_pct": 13.889708807672509,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "urban"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p01",
+  "text": "Kumarakom North Fringe ranks #10 of 18 by criticality (S = 0.133): removing it lowers IIC by 13.3%. It holds 531.7 ha, 7.6% of mapped habitat (#7 by area). It is large but structurally redundant: other patches carry its links. It maintains 1 link to kerala-coast-p02 (4.3 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 91%.",
+  "evidence": {
+   "area_ha": 531.7,
+   "area_pct": 7.639697113381325,
+   "rank_by_area": 7,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p02",
+     "distance_km": 4.259361625747965,
+     "weight": 0.3269978676775695
+    }
+   ],
+   "confidence": 0.908,
+   "quality": 0.713,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.004662201856035223,
+   "delta_connectivity": 0.0007133747468204372,
+   "criticality_score": 0.13270664703047336,
+   "delta_pct": 13.270664703047338,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p06",
+  "text": "Panangad Channel Bank ranks #11 of 18 by criticality (S = 0.125): removing it lowers IIC by 12.5%. It holds 146.6 ha, 2.1% of mapped habitat (#16 by area). Its structural importance exceeds what its size alone would suggest. It maintains 4 links to kerala-coast-p07 (3.3 km), kerala-coast-p05 (3.7 km), kerala-coast-p04 (3.9 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 5 components. Segmentation confidence for this patch is 89%.",
+  "evidence": {
+   "area_ha": 146.6,
+   "area_pct": 2.1064126327284223,
+   "rank_by_area": 16,
+   "degree": 4,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p07",
+     "distance_km": 3.3300110567437247,
+     "weight": 0.34913236547018756
+    },
+    {
+     "id": "kerala-coast-p05",
+     "distance_km": 3.7304948217384437,
+     "weight": 0.2891738263581517
+    },
+    {
+     "id": "kerala-coast-p04",
+     "distance_km": 3.924718944653221,
+     "weight": 0.3120797618957974
+    },
+    {
+     "id": "kerala-coast-p03",
+     "distance_km": 4.260836551021665,
+     "weight": 0.2123481368315185
+    }
+   ],
+   "confidence": 0.89,
+   "quality": 0.523,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.004702031756051675,
+   "delta_connectivity": 0.0006735448468039853,
+   "criticality_score": 0.12529722791898806,
+   "delta_pct": 12.529722791898807,
+   "components_before": 3,
+   "components_after": 5,
+   "metric": "IIC",
+   "habitat_class": "mudflat"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p09",
+  "text": "Munambam Estuary Mouth ranks #12 of 18 by criticality (S = 0.115): removing it lowers IIC by 11.5%. It holds 492.2 ha, 7.1% of mapped habitat (#8 by area). It is large but structurally redundant: other patches carry its links. It maintains 1 link to kerala-coast-p05 (3.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 85%.",
+  "evidence": {
+   "area_ha": 492.2,
+   "area_pct": 7.072143914249177,
+   "rank_by_area": 8,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p05",
+     "distance_km": 3.5734513682049385,
+     "weight": 0.3901373391686783
+    }
+   ],
+   "confidence": 0.85,
+   "quality": 0.894,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.00475714221279301,
+   "delta_connectivity": 0.0006184343900626508,
+   "criticality_score": 0.11504521947173456,
+   "delta_pct": 11.504521947173457,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "estuary"
+  },
+  "level": "high"
+ },
+ {
+  "patch_id": "kerala-coast-p07",
+  "text": "Puthenvelikkara Mangroves ranks #13 of 18 by criticality (S = 0.068): removing it lowers IIC by 6.8%. It holds 314.4 ha, 4.5% of mapped habitat (#10 by area). It is large but structurally redundant: other patches carry its links. It maintains 1 link to kerala-coast-p06 (3.3 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 83%.",
+  "evidence": {
+   "area_ha": 314.4,
+   "area_pct": 4.517436096383465,
+   "rank_by_area": 10,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p06",
+     "distance_km": 3.3300110567437247,
+     "weight": 0.34913236547018756
+    }
+   ],
+   "confidence": 0.829,
+   "quality": 0.883,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.005011208803957409,
+   "delta_connectivity": 0.00036436779889825136,
+   "criticality_score": 0.06778208661461335,
+   "delta_pct": 6.778208661461335,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "seagrass"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "kerala-coast-p13",
+  "text": "Thanneermukkom Bund North ranks #14 of 18 by criticality (S = 0.047): removing it lowers IIC by 4.7%. It holds 157.6 ha, 2.3% of mapped habitat (#15 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to kerala-coast-p15 (1.3 km), kerala-coast-p14 (4.0 km), kerala-coast-p12 (4.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 95%.",
+  "evidence": {
+   "area_ha": 157.6,
+   "area_pct": 2.2644654223601592,
+   "rank_by_area": 15,
+   "degree": 3,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p15",
+     "distance_km": 1.2500435619645949,
+     "weight": 0.6298488934744562
+    },
+    {
+     "id": "kerala-coast-p14",
+     "distance_km": 3.99029273023612,
+     "weight": 0.313779926860269
+    },
+    {
+     "id": "kerala-coast-p12",
+     "distance_km": 4.709380568814823,
+     "weight": 0.32566908794636806
+    }
+   ],
+   "confidence": 0.952,
+   "quality": 0.765,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.005122585460229157,
+   "delta_connectivity": 0.00025299114262650364,
+   "criticality_score": 0.04706307086985004,
+   "delta_pct": 4.706307086985004,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "saltmarsh"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "kerala-coast-p04",
+  "text": "Aroor Backwater Fringe ranks #15 of 18 by criticality (S = 0.037): removing it lowers IIC by 3.7%. It holds 172.3 ha, 2.5% of mapped habitat (#13 by area). It maintains 1 link to kerala-coast-p06 (3.9 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 93%.",
+  "evidence": {
+   "area_ha": 172.3,
+   "area_pct": 2.4756814230498443,
+   "rank_by_area": 13,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p06",
+     "distance_km": 3.924718944653221,
+     "weight": 0.3120797618957974
+    }
+   ],
+   "confidence": 0.926,
+   "quality": 0.895,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.0051793481488941,
+   "delta_connectivity": 0.00019622845396156073,
+   "criticality_score": 0.036503703408731734,
+   "delta_pct": 3.6503703408731734,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "saltmarsh"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "kerala-coast-p10",
+  "text": "Vypin Fringe Forest ranks #16 of 18 by criticality (S = 0.035): removing it lowers IIC by 3.5%. It holds 599.5 ha, 8.6% of mapped habitat (#5 by area). It is large but structurally redundant: other patches carry its links. It maintains 1 link to kerala-coast-p11 (3.5 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 97%.",
+  "evidence": {
+   "area_ha": 599.5,
+   "area_pct": 8.613877034929667,
+   "rank_by_area": 5,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p11",
+     "distance_km": 3.4566972690488833,
+     "weight": 0.36055117534829456
+    }
+   ],
+   "confidence": 0.97,
+   "quality": 0.771,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.005189149758201221,
+   "delta_connectivity": 0.00018642684465443923,
+   "criticality_score": 0.034680343789613925,
+   "delta_pct": 3.4680343789613928,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "seagrass"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "kerala-coast-p11",
+  "text": "Kannamali Seagrass Bed ranks #17 of 18 by criticality (S = 0.008): removing it lowers IIC by 0.8%. It holds 135.0 ha, 1.9% of mapped habitat (#17 by area). It maintains 1 link to kerala-coast-p10 (3.5 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 91%.",
+  "evidence": {
+   "area_ha": 135,
+   "area_pct": 1.939738781844045,
+   "rank_by_area": 17,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "kerala-coast-p10",
+     "distance_km": 3.4566972690488833,
+     "weight": 0.36055117534829456
+    }
+   ],
+   "confidence": 0.908,
+   "quality": 0.672,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.00533359557862155,
+   "delta_connectivity": 4.198102423411034e-05,
+   "criticality_score": 0.007809585340446794,
+   "delta_pct": 0.7809585340446794,
+   "components_before": 3,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "urban"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "kerala-coast-p08",
+  "text": "Cherai Sand Spit ranks #18 of 18 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 58.5 ha, 0.8% of mapped habitat (#18 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 82%.",
+  "evidence": {
+   "area_ha": 58.5,
+   "area_pct": 0.8405534721324195,
+   "rank_by_area": 18,
+   "degree": 0,
+   "is_cut_vertex": false,
+   "neighbours": [],
+   "confidence": 0.821,
+   "quality": 0.675,
+   "c_before": 0.00537557660285566,
+   "c_after": 0.00537412770024935,
+   "delta_connectivity": 1.448902606310254e-06,
+   "criticality_score": 0.0002695343613075024,
+   "delta_pct": 0.02695343613075024,
+   "components_before": 3,
+   "components_after": 2,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ }
+]

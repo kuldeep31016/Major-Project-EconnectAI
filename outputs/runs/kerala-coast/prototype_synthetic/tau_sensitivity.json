@@ -1,0 +1,44 @@
+{
+ "reference_tau_km": 5.0,
+ "results": {
+  "tau_3km": {
+   "tau_km": 3.0,
+   "edges": 3,
+   "components": 15,
+   "top5": [
+    "kerala-coast-p14",
+    "kerala-coast-p05",
+    "kerala-coast-p15",
+    "kerala-coast-p12",
+    "kerala-coast-p10"
+   ],
+   "spearman_vs_reference": 0.49226006191950467
+  },
+  "tau_5km": {
+   "tau_km": 5.0,
+   "edges": 18,
+   "components": 3,
+   "top5": [
+    "kerala-coast-p16",
+    "kerala-coast-p15",
+    "kerala-coast-p02",
+    "kerala-coast-p03",
+    "kerala-coast-p05"
+   ],
+   "spearman_vs_reference": 1.0
+  },
+  "tau_8km": {
+   "tau_km": 8.0,
+   "edges": 30,
+   "components": 1,
+   "top5": [
+    "kerala-coast-p14",
+    "kerala-coast-p15",
+    "kerala-coast-p12",
+    "kerala-coast-p09",
+    "kerala-coast-p05"
+   ],
+   "spearman_vs_reference": 0.49432404540763675
+  }
+ }
+}

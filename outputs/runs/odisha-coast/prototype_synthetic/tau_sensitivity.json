@@ -1,0 +1,44 @@
+{
+ "reference_tau_km": 5.0,
+ "results": {
+  "tau_3km": {
+   "tau_km": 3.0,
+   "edges": 4,
+   "components": 12,
+   "top5": [
+    "odisha-coast-p08",
+    "odisha-coast-p06",
+    "odisha-coast-p04",
+    "odisha-coast-p07",
+    "odisha-coast-p05"
+   ],
+   "spearman_vs_reference": 0.7617647058823529
+  },
+  "tau_5km": {
+   "tau_km": 5.0,
+   "edges": 10,
+   "components": 8,
+   "top5": [
+    "odisha-coast-p07",
+    "odisha-coast-p04",
+    "odisha-coast-p06",
+    "odisha-coast-p11",
+    "odisha-coast-p08"
+   ],
+   "spearman_vs_reference": 1.0
+  },
+  "tau_8km": {
+   "tau_km": 8.0,
+   "edges": 28,
+   "components": 1,
+   "top5": [
+    "odisha-coast-p07",
+    "odisha-coast-p16",
+    "odisha-coast-p06",
+    "odisha-coast-p09",
+    "odisha-coast-p08"
+   ],
+   "spearman_vs_reference": 0.1588235294117647
+  }
+ }
+}

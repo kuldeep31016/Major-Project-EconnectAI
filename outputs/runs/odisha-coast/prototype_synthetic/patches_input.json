@@ -1,0 +1,1255 @@
+{
+ "patches": [
+  {
+   "id": "odisha-coast-p01",
+   "area_ha": 665,
+   "centroid": [
+    20.70638,
+    87.00877
+   ],
+   "quality": 0.456,
+   "confidence": 0.897,
+   "habitat_class": "estuary",
+   "name": "Bhitarkanika Core",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       87.02775,
+       20.70638
+      ],
+      [
+       87.02258,
+       20.71441
+      ],
+      [
+       87.01229,
+       20.71506
+      ],
+      [
+       87.00339,
+       20.71963
+      ],
+      [
+       86.99807,
+       20.7126
+      ],
+      [
+       86.98975,
+       20.70638
+      ],
+      [
+       86.99061,
+       20.69582
+      ],
+      [
+       87.00375,
+       20.69403
+      ],
+      [
+       87.0134,
+       20.69499
+      ],
+      [
+       87.02482,
+       20.69705
+      ],
+      [
+       87.02775,
+       20.70638
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p02",
+   "area_ha": 345.2,
+   "centroid": [
+    20.73872,
+    86.93757
+   ],
+   "quality": 0.942,
+   "confidence": 0.984,
+   "habitat_class": "mudflat",
+   "name": "Dangmal Block",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.95121,
+       20.73872
+      ],
+      [
+       86.94999,
+       20.74594
+      ],
+      [
+       86.94162,
+       20.7487
+      ],
+      [
+       86.93284,
+       20.75035
+      ],
+      [
+       86.92615,
+       20.74536
+      ],
+      [
+       86.92712,
+       20.73872
+      ],
+      [
+       86.92823,
+       20.7333
+      ],
+      [
+       86.93346,
+       20.72861
+      ],
+      [
+       86.94158,
+       20.72885
+      ],
+      [
+       86.94747,
+       20.73297
+      ],
+      [
+       86.95121,
+       20.73872
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p03",
+   "area_ha": 334.9,
+   "centroid": [
+    20.73251,
+    86.92011
+   ],
+   "quality": 0.493,
+   "confidence": 0.824,
+   "habitat_class": "estuary",
+   "name": "Habalikhati Dune Belt",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.93046,
+       20.73251
+      ],
+      [
+       86.93331,
+       20.73861
+      ],
+      [
+       86.92711,
+       20.74221
+      ],
+      [
+       86.92011,
+       20.73943
+      ],
+      [
+       86.91325,
+       20.74202
+      ],
+      [
+       86.91076,
+       20.73683
+      ],
+      [
+       86.91217,
+       20.73251
+      ],
+      [
+       86.90937,
+       20.72755
+      ],
+      [
+       86.91481,
+       20.72517
+      ],
+      [
+       86.92011,
+       20.72289
+      ],
+      [
+       86.92566,
+       20.72482
+      ],
+      [
+       86.92779,
+       20.72896
+      ],
+      [
+       86.93046,
+       20.73251
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p04",
+   "area_ha": 566.1,
+   "centroid": [
+    20.74587,
+    86.90695
+   ],
+   "quality": 0.844,
+   "confidence": 0.956,
+   "habitat_class": "saltmarsh",
+   "name": "Ekakula Sand Ridge",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.92409,
+       20.74587
+      ],
+      [
+       86.91842,
+       20.75357
+      ],
+      [
+       86.90982,
+       20.7589
+      ],
+      [
+       86.90025,
+       20.75516
+      ],
+      [
+       86.88818,
+       20.75134
+      ],
+      [
+       86.88772,
+       20.74027
+      ],
+      [
+       86.89658,
+       20.73152
+      ],
+      [
+       86.90945,
+       20.7345
+      ],
+      [
+       86.91542,
+       20.74019
+      ],
+      [
+       86.92409,
+       20.74587
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p05",
+   "area_ha": 788.5,
+   "centroid": [
+    20.79021,
+    86.91972
+   ],
+   "quality": 0.424,
+   "confidence": 0.883,
+   "habitat_class": "mangrove",
+   "name": "Gahirmatha Rookery Flat",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.93945,
+       20.79021
+      ],
+      [
+       86.93666,
+       20.79804
+      ],
+      [
+       86.92591,
+       20.79879
+      ],
+      [
+       86.91972,
+       20.80707
+      ],
+      [
+       86.91076,
+       20.80262
+      ],
+      [
+       86.89732,
+       20.80056
+      ],
+      [
+       86.89969,
+       20.79021
+      ],
+      [
+       86.9082,
+       20.7849
+      ],
+      [
+       86.90753,
+       20.77332
+      ],
+      [
+       86.91972,
+       20.77627
+      ],
+      [
+       86.9308,
+       20.77486
+      ],
+      [
+       86.93895,
+       20.78133
+      ],
+      [
+       86.93945,
+       20.79021
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p06",
+   "area_ha": 804.6,
+   "centroid": [
+    20.7756,
+    86.86176
+   ],
+   "quality": 0.529,
+   "confidence": 0.932,
+   "habitat_class": "mangrove",
+   "name": "Kalibhanjadia Island",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.87776,
+       20.7756
+      ],
+      [
+       86.8752,
+       20.78181
+      ],
+      [
+       86.86982,
+       20.78676
+      ],
+      [
+       86.86176,
+       20.79547
+      ],
+      [
+       86.85234,
+       20.78865
+      ],
+      [
+       86.8475,
+       20.78219
+      ],
+      [
+       86.83826,
+       20.7756
+      ],
+      [
+       86.83931,
+       20.76523
+      ],
+      [
+       86.84933,
+       20.75836
+      ],
+      [
+       86.86176,
+       20.75865
+      ],
+      [
+       86.87077,
+       20.76312
+      ],
+      [
+       86.87895,
+       20.76766
+      ],
+      [
+       86.87776,
+       20.7756
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p07",
+   "area_ha": 790.4,
+   "centroid": [
+    20.74788,
+    86.86993
+   ],
+   "quality": 0.413,
+   "confidence": 0.893,
+   "habitat_class": "estuary",
+   "name": "Baunsagada Creek",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.8818,
+       20.74788
+      ],
+      [
+       86.8794,
+       20.75339
+      ],
+      [
+       86.87603,
+       20.76292
+      ],
+      [
+       86.86255,
+       20.76605
+      ],
+      [
+       86.84879,
+       20.76017
+      ],
+      [
+       86.85561,
+       20.74788
+      ],
+      [
+       86.85256,
+       20.73779
+      ],
+      [
+       86.86251,
+       20.72961
+      ],
+      [
+       86.87598,
+       20.73299
+      ],
+      [
+       86.88625,
+       20.7384
+      ],
+      [
+       86.8818,
+       20.74788
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p08",
+   "area_ha": 943.5,
+   "centroid": [
+    20.72285,
+    86.75754
+   ],
+   "quality": 0.592,
+   "confidence": 0.825,
+   "habitat_class": "estuary",
+   "name": "Thakurdia Mangroves",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.77585,
+       20.72285
+      ],
+      [
+       86.76838,
+       20.72916
+      ],
+      [
+       86.7624,
+       20.73481
+      ],
+      [
+       86.74996,
+       20.74151
+      ],
+      [
+       86.74461,
+       20.73037
+      ],
+      [
+       86.73843,
+       20.72285
+      ],
+      [
+       86.73932,
+       20.71226
+      ],
+      [
+       86.74998,
+       20.70425
+      ],
+      [
+       86.76244,
+       20.71079
+      ],
+      [
+       86.77852,
+       20.71066
+      ],
+      [
+       86.77585,
+       20.72285
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p09",
+   "area_ha": 55.1,
+   "centroid": [
+    20.72166,
+    86.82556
+   ],
+   "quality": 0.676,
+   "confidence": 0.857,
+   "habitat_class": "saltmarsh",
+   "name": "Kanika Sands",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.82963,
+       20.72166
+      ],
+      [
+       86.82942,
+       20.72365
+      ],
+      [
+       86.82838,
+       20.7266
+      ],
+      [
+       86.8249,
+       20.72531
+      ],
+      [
+       86.82074,
+       20.72611
+      ],
+      [
+       86.82052,
+       20.72285
+      ],
+      [
+       86.81812,
+       20.71992
+      ],
+      [
+       86.82175,
+       20.71814
+      ],
+      [
+       86.82462,
+       20.71644
+      ],
+      [
+       86.82786,
+       20.71762
+      ],
+      [
+       86.82936,
+       20.71971
+      ],
+      [
+       86.82963,
+       20.72166
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p10",
+   "area_ha": 464.6,
+   "centroid": [
+    20.66745,
+    86.83745
+   ],
+   "quality": 0.588,
+   "confidence": 0.882,
+   "habitat_class": "urban",
+   "name": "Suajore Creek Bank",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.85593,
+       20.66745
+      ],
+      [
+       86.85171,
+       20.67403
+      ],
+      [
+       86.8418,
+       20.67348
+      ],
+      [
+       86.83745,
+       20.67765
+      ],
+      [
+       86.82857,
+       20.67975
+      ],
+      [
+       86.82872,
+       20.67148
+      ],
+      [
+       86.8243,
+       20.66745
+      ],
+      [
+       86.82774,
+       20.66296
+      ],
+      [
+       86.8319,
+       20.65976
+      ],
+      [
+       86.83745,
+       20.65776
+      ],
+      [
+       86.8416,
+       20.6617
+      ],
+      [
+       86.84535,
+       20.6638
+      ],
+      [
+       86.85593,
+       20.66745
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p11",
+   "area_ha": 446.1,
+   "centroid": [
+    20.66519,
+    86.84222
+   ],
+   "quality": 0.862,
+   "confidence": 0.944,
+   "habitat_class": "mudflat",
+   "name": "Barunei Muhan",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.8547,
+       20.66519
+      ],
+      [
+       86.85063,
+       20.66951
+      ],
+      [
+       86.84578,
+       20.67143
+      ],
+      [
+       86.83967,
+       20.67937
+      ],
+      [
+       86.83204,
+       20.67458
+      ],
+      [
+       86.83075,
+       20.66788
+      ],
+      [
+       86.83181,
+       20.66274
+      ],
+      [
+       86.83625,
+       20.65968
+      ],
+      [
+       86.83981,
+       20.6518
+      ],
+      [
+       86.84583,
+       20.65887
+      ],
+      [
+       86.85551,
+       20.65835
+      ],
+      [
+       86.8547,
+       20.66519
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p12",
+   "area_ha": 263.5,
+   "centroid": [
+    20.6344,
+    86.87448
+   ],
+   "quality": 0.538,
+   "confidence": 0.913,
+   "habitat_class": "saltmarsh",
+   "name": "Mahinsamunda Marsh",
+   "protected": true,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.88663,
+       20.6344
+      ],
+      [
+       86.88375,
+       20.64063
+      ],
+      [
+       86.87625,
+       20.64246
+      ],
+      [
+       86.87112,
+       20.63905
+      ],
+      [
+       86.86561,
+       20.63698
+      ],
+      [
+       86.86674,
+       20.63214
+      ],
+      [
+       86.87077,
+       20.62926
+      ],
+      [
+       86.876,
+       20.62747
+      ],
+      [
+       86.88002,
+       20.63068
+      ],
+      [
+       86.88663,
+       20.6344
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p13",
+   "area_ha": 441.3,
+   "centroid": [
+    20.64597,
+    86.88015
+   ],
+   "quality": 0.92,
+   "confidence": 0.91,
+   "habitat_class": "mudflat",
+   "name": "Rajnagar Buffer",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.89397,
+       20.64597
+      ],
+      [
+       86.88743,
+       20.6502
+      ],
+      [
+       86.88343,
+       20.65406
+      ],
+      [
+       86.87742,
+       20.65267
+      ],
+      [
+       86.87219,
+       20.65059
+      ],
+      [
+       86.87046,
+       20.64597
+      ],
+      [
+       86.86717,
+       20.63842
+      ],
+      [
+       86.87594,
+       20.63562
+      ],
+      [
+       86.88564,
+       20.63245
+      ],
+      [
+       86.89403,
+       20.63789
+      ],
+      [
+       86.89397,
+       20.64597
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p14",
+   "area_ha": 277.8,
+   "centroid": [
+    20.61457,
+    86.91913
+   ],
+   "quality": 0.779,
+   "confidence": 0.843,
+   "habitat_class": "dune",
+   "name": "Jambu Estuary Mouth",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.92857,
+       20.61457
+      ],
+      [
+       86.92487,
+       20.61842
+      ],
+      [
+       86.92123,
+       20.6241
+      ],
+      [
+       86.9143,
+       20.62126
+      ],
+      [
+       86.9124,
+       20.61652
+      ],
+      [
+       86.9085,
+       20.61147
+      ],
+      [
+       86.91482,
+       20.60859
+      ],
+      [
+       86.92048,
+       20.60842
+      ],
+      [
+       86.92603,
+       20.60993
+      ],
+      [
+       86.92857,
+       20.61457
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p15",
+   "area_ha": 640.2,
+   "centroid": [
+    20.63928,
+    86.95128
+   ],
+   "quality": 0.507,
+   "confidence": 0.837,
+   "habitat_class": "mangrove",
+   "name": "Praharajpur Fringe",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.96229,
+       20.63928
+      ],
+      [
+       86.96216,
+       20.64487
+      ],
+      [
+       86.95577,
+       20.64714
+      ],
+      [
+       86.9483,
+       20.65585
+      ],
+      [
+       86.94462,
+       20.64542
+      ],
+      [
+       86.9314,
+       20.64394
+      ],
+      [
+       86.93069,
+       20.63444
+      ],
+      [
+       86.94348,
+       20.63208
+      ],
+      [
+       86.94853,
+       20.62398
+      ],
+      [
+       86.95909,
+       20.62559
+      ],
+      [
+       86.96977,
+       20.62977
+      ],
+      [
+       86.96229,
+       20.63928
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-p16",
+   "area_ha": 330.7,
+   "centroid": [
+    20.6868,
+    86.94375
+   ],
+   "quality": 0.512,
+   "confidence": 0.826,
+   "habitat_class": "mangrove",
+   "name": "Batighar Channel Edge",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       86.95534,
+       20.6868
+      ],
+      [
+       86.9547,
+       20.69186
+      ],
+      [
+       86.94784,
+       20.69247
+      ],
+      [
+       86.94375,
+       20.69286
+      ],
+      [
+       86.9376,
+       20.69531
+      ],
+      [
+       86.93712,
+       20.68986
+      ],
+      [
+       86.93191,
+       20.6868
+      ],
+      [
+       86.93045,
+       20.68065
+      ],
+      [
+       86.93605,
+       20.67614
+      ],
+      [
+       86.94375,
+       20.67458
+      ],
+      [
+       86.94886,
+       20.67971
+      ],
+      [
+       86.95617,
+       20.68106
+      ],
+      [
+       86.95534,
+       20.6868
+      ]
+     ]
+    ]
+   },
+   "extra": {}
+  }
+ ],
+ "candidates": [
+  {
+   "id": "odisha-coast-r1",
+   "area_ha": 168.9,
+   "centroid": [
+    20.79021,
+    86.91972
+   ],
+   "quality": 1.0,
+   "confidence": 0.823,
+   "habitat_class": "mangrove",
+   "name": "Gahirmatha Rookery Flat",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-r2",
+   "area_ha": 115.3,
+   "centroid": [
+    20.63928,
+    86.95128
+   ],
+   "quality": 1.0,
+   "confidence": 0.951,
+   "habitat_class": "mangrove",
+   "name": "Praharajpur Fringe",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-r3",
+   "area_ha": 87.7,
+   "centroid": [
+    20.66745,
+    86.83745
+   ],
+   "quality": 1.0,
+   "confidence": 0.841,
+   "habitat_class": "mangrove",
+   "name": "Suajore Creek Bank",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-r4",
+   "area_ha": 127.9,
+   "centroid": [
+    20.64597,
+    86.88015
+   ],
+   "quality": 1.0,
+   "confidence": 0.863,
+   "habitat_class": "mangrove",
+   "name": "Rajnagar Buffer",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-r5",
+   "area_ha": 123,
+   "centroid": [
+    20.6344,
+    86.87448
+   ],
+   "quality": 1.0,
+   "confidence": 0.853,
+   "habitat_class": "mangrove",
+   "name": "Mahinsamunda Marsh",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-r6",
+   "area_ha": 67.2,
+   "centroid": [
+    20.73251,
+    86.92011
+   ],
+   "quality": 1.0,
+   "confidence": 0.755,
+   "habitat_class": "mangrove",
+   "name": "Habalikhati Dune Belt",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-r7",
+   "area_ha": 34,
+   "centroid": [
+    20.61457,
+    86.91913
+   ],
+   "quality": 1.0,
+   "confidence": 0.888,
+   "habitat_class": "mangrove",
+   "name": "Jambu Estuary Mouth",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  },
+  {
+   "id": "odisha-coast-r8",
+   "area_ha": 80.2,
+   "centroid": [
+    20.70638,
+    87.00877
+   ],
+   "quality": 1.0,
+   "confidence": 0.764,
+   "habitat_class": "mangrove",
+   "name": "Bhitarkanika Core",
+   "protected": false,
+   "perimeter_km": null,
+   "bbox": null,
+   "geometry": null,
+   "extra": {}
+  }
+ ],
+ "landscape_area_ha": 67200.0
+}

@@ -1,0 +1,9 @@
+rank,candidate_id,name,area_ha,connectivity_gain,gain_pct,new_links,cost,cost_unit,gain_per_cost,ranking_basis,components_before,components_after
+1,gulf-of-mannar-r8,Vilanguchalli Shoal,166.9,3.8625878676664446e-05,4.775148449240784,3,,,,raw_gain,9,9
+2,gulf-of-mannar-r3,Pullivasal Reef,162.5,3.5304444242505954e-05,4.364534036548891,2,,,,raw_gain,9,9
+3,gulf-of-mannar-r4,Musal Island Shelf,103.7,2.328911662338013e-05,2.8791316324282743,2,,,,raw_gain,9,9
+4,gulf-of-mannar-r1,Krusadai Island Reef,65.4,1.3626198195451568e-05,1.684547288276136,3,,,,raw_gain,9,9
+5,gulf-of-mannar-r6,Poomarichan Meadow,52.6,1.2026290435737576e-05,1.4867576891920875,3,,,,raw_gain,9,9
+6,gulf-of-mannar-r5,Appa Island Reef,104.7,6.9669459280409345e-06,0.8612930549157399,1,,,,raw_gain,9,9
+7,gulf-of-mannar-r2,Talairi Seagrass Bed,54.7,5.304234649906956e-06,0.655739331522689,2,,,,raw_gain,9,9
+8,gulf-of-mannar-r7,Anaipar Reef Flat,67.8,4.0653606458383165e-06,0.502582756656029,1,,,,raw_gain,9,9

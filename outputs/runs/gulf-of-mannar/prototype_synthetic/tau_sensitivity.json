@@ -1,0 +1,44 @@
+{
+ "reference_tau_km": 5.0,
+ "results": {
+  "tau_3km": {
+   "tau_km": 3.0,
+   "edges": 6,
+   "components": 12,
+   "top5": [
+    "gulf-of-mannar-p02",
+    "gulf-of-mannar-p04",
+    "gulf-of-mannar-p07",
+    "gulf-of-mannar-p10",
+    "gulf-of-mannar-p12"
+   ],
+   "spearman_vs_reference": 0.7720588235294118
+  },
+  "tau_5km": {
+   "tau_km": 5.0,
+   "edges": 12,
+   "components": 9,
+   "top5": [
+    "gulf-of-mannar-p07",
+    "gulf-of-mannar-p04",
+    "gulf-of-mannar-p02",
+    "gulf-of-mannar-p11",
+    "gulf-of-mannar-p06"
+   ],
+   "spearman_vs_reference": 1.0
+  },
+  "tau_8km": {
+   "tau_km": 8.0,
+   "edges": 25,
+   "components": 1,
+   "top5": [
+    "gulf-of-mannar-p04",
+    "gulf-of-mannar-p13",
+    "gulf-of-mannar-p05",
+    "gulf-of-mannar-p01",
+    "gulf-of-mannar-p15"
+   ],
+   "spearman_vs_reference": 0.4264705882352941
+  }
+ }
+}
