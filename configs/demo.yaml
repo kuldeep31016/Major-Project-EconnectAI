@@ -1,0 +1,27 @@
+# End-to-end demonstration (scripts/run_pipeline.py).  Edit, don't fork.
+demo:
+  study_area: kerala-coast          # id from configs/study_areas.yaml
+  mode: development                 # development (laptop, subset, B0 encoder) | full (GPU, UNB7)
+  data_root: null                   # null -> $DATA_ROOT or ./data
+  source: raster                    # raster = real model output | prototype = synthetic geometry (labelled)
+  dataset_name: ecoconnect_tiles
+  tile_size: 256
+  tile_stride: 128
+  band_names: "s1_vv_db,s1_vh_db,s2_blue,s2_green,s2_red,s2_nir,s2_swir16,s2_swir22,s2_ndvi,s2_ndwi"
+  append_tiles: false
+  experiment_id: null               # null -> <study_area>_<mode>
+  smoke: false                      # true = 2 epochs x 3 batches, plumbing check only
+  n_panels: 8
+  rgb_bands: "4,3,2"                # 0-based indices of s2_red, s2_green, s2_blue for the qualitative panels
+  segmentation_threshold: 0.5       # paper: uncalibrated design value; configurable
+  mmu_ha: 2.0
+  bbox: null                        # override AOI, e.g. "9.80,76.30,9.95,76.45" for a smaller first run
+  date_range: null                  # e.g. "2020-01-01,2020-12-31"
+  stages:
+    acquire: true
+    tiles: true
+    train: true
+    evaluate: true
+    predict: true
+    analyse: true
+    serve: true
