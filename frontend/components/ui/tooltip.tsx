@@ -57,7 +57,7 @@ export function Tooltip({ content, children, side = "top", className, delay = 15
             exit={{ opacity: 0, scale: 0.94 }}
             transition={{ duration: 0.14 }}
             className={cn(
-              "pointer-events-none absolute z-[80] w-max max-w-[240px] rounded-lg border border-foreground/12 bg-[#111827]/95 px-2.5 py-1.5 text-[11px] leading-snug text-foreground shadow-xl backdrop-blur",
+              "pointer-events-none absolute z-[80] w-max max-w-[240px] rounded-lg border border-foreground/12 bg-popover/95 px-2.5 py-1.5 text-[11px] leading-snug text-foreground shadow-xl backdrop-blur",
               SIDE[side],
               className,
             )}

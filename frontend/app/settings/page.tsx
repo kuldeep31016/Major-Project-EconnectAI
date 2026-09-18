@@ -40,7 +40,7 @@ const EXPORTS = [
 ];
 
 export default function SettingsPage() {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const [basemap, setBasemap] = useState<string>("satellite");
   const [units, setUnits] = useState<Units>("metric");
   const [coordFormat, setCoordFormat] = useState<"dms" | "decimal">("dms");
@@ -86,7 +86,7 @@ export default function SettingsPage() {
           onClick={save}
           className={cn(
             "font-semibold transition-colors",
-            saved ? "bg-[#22c55e] text-[#04231b]" : "bg-gradient-eco text-[#04231b]",
+            saved ? "bg-[#22c55e] text-[#ffffff]" : "bg-gradient-eco text-[#ffffff]",
           )}
         >
           {saved ? (
@@ -123,14 +123,14 @@ export default function SettingsPage() {
                 className={cn(
                   "flex items-center gap-3 rounded-xl border p-3.5 text-left transition-all",
                   theme === t.id
-                    ? "border-[#00c896]/40 bg-[#00c896]/10"
+                    ? "border-[#15803d]/40 bg-[#15803d]/10"
                     : "border-foreground/[0.08] bg-foreground/[0.03] hover:bg-foreground/[0.08]",
                 )}
               >
                 <div
                   className={cn(
                     "grid h-8 w-8 shrink-0 place-items-center rounded-lg",
-                    theme === t.id ? "bg-[#00c896]/18 text-[#00c896]" : "bg-foreground/[0.06] text-muted-foreground",
+                    theme === t.id ? "bg-[#15803d]/18 text-[#15803d]" : "bg-foreground/[0.06] text-muted-foreground",
                   )}
                 >
                   <t.icon className="h-4 w-4" />
@@ -174,7 +174,7 @@ export default function SettingsPage() {
                 className={cn(
                   "overflow-hidden rounded-xl border text-left transition-all",
                   basemap === b.id
-                    ? "border-[#00c896]/40 ring-2 ring-[#00c896]/20"
+                    ? "border-[#15803d]/40 ring-2 ring-[#15803d]/20"
                     : "border-foreground/[0.08] hover:border-foreground/20",
                 )}
               >
@@ -193,8 +193,8 @@ export default function SettingsPage() {
                 >
                   <div className="absolute inset-0 bg-grid opacity-40" />
                   {basemap === b.id && (
-                    <span className="absolute right-2 top-2 grid h-5 w-5 place-items-center rounded-full bg-[#00c896]">
-                      <Check className="h-3 w-3 text-[#04231b]" strokeWidth={3} />
+                    <span className="absolute right-2 top-2 grid h-5 w-5 place-items-center rounded-full bg-[#15803d]">
+                      <Check className="h-3 w-3 text-[#ffffff]" strokeWidth={3} />
                     </span>
                   )}
                 </div>
@@ -206,7 +206,7 @@ export default function SettingsPage() {
           <div className="mt-5">
             <div className="mb-2 flex items-center justify-between">
               <span className="text-[11.5px] font-medium">Label density</span>
-              <span className="text-[11px] font-bold tabular text-[#00c896]">{labelDensity}%</span>
+              <span className="text-[11px] font-bold tabular text-[#15803d]">{labelDensity}%</span>
             </div>
             <Slider
               value={labelDensity}
@@ -254,7 +254,7 @@ export default function SettingsPage() {
                     className={cn(
                       "rounded-xl border p-3 text-left transition-all",
                       units === u.id
-                        ? "border-[#00c896]/40 bg-[#00c896]/10"
+                        ? "border-[#15803d]/40 bg-[#15803d]/10"
                         : "border-foreground/[0.08] bg-foreground/[0.03] hover:bg-foreground/[0.08]",
                     )}
                   >
@@ -280,7 +280,7 @@ export default function SettingsPage() {
                     className={cn(
                       "rounded-xl border p-3 text-left transition-all",
                       coordFormat === c.id
-                        ? "border-[#00c896]/40 bg-[#00c896]/10"
+                        ? "border-[#15803d]/40 bg-[#15803d]/10"
                         : "border-foreground/[0.08] bg-foreground/[0.03] hover:bg-foreground/[0.08]",
                     )}
                   >
@@ -295,7 +295,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="mt-4 flex items-center gap-2.5 rounded-xl border border-foreground/[0.08] bg-foreground/[0.03] px-3.5 py-3">
-            <Globe className="h-4 w-4 shrink-0 text-[#38bdf8]" />
+            <Globe className="h-4 w-4 shrink-0 text-[#1e5f8a]" />
             <div className="min-w-0 flex-1">
               <div className="text-[11.5px] font-medium">Projection</div>
               <div className="text-[10px] text-muted-foreground">
@@ -323,14 +323,14 @@ export default function SettingsPage() {
                   className={cn(
                     "flex items-center gap-3 rounded-xl border p-3.5 text-left transition-all",
                     on
-                      ? "border-[#00c896]/40 bg-[#00c896]/10"
+                      ? "border-[#15803d]/40 bg-[#15803d]/10"
                       : "border-foreground/[0.08] bg-foreground/[0.03] hover:bg-foreground/[0.08]",
                   )}
                 >
                   <div
                     className={cn(
                       "grid h-9 w-9 shrink-0 place-items-center rounded-xl",
-                      on ? "bg-[#00c896]/18 text-[#00c896]" : "bg-foreground/[0.06] text-muted-foreground",
+                      on ? "bg-[#15803d]/18 text-[#15803d]" : "bg-foreground/[0.06] text-muted-foreground",
                     )}
                   >
                     <e.icon className="h-[18px] w-[18px]" />
@@ -342,10 +342,10 @@ export default function SettingsPage() {
                   <span
                     className={cn(
                       "grid h-5 w-5 shrink-0 place-items-center rounded-md border transition-colors",
-                      on ? "border-[#00c896] bg-[#00c896]" : "border-foreground/20",
+                      on ? "border-[#15803d] bg-[#15803d]" : "border-foreground/20",
                     )}
                   >
-                    {on && <Check className="h-3 w-3 text-[#04231b]" strokeWidth={3} />}
+                    {on && <Check className="h-3 w-3 text-[#ffffff]" strokeWidth={3} />}
                   </span>
                 </button>
               );
@@ -407,7 +407,7 @@ function Section({
     >
       <Card>
         <CardHeader className="flex-row items-start gap-3 pb-4">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#00c896]/12 text-[#00c896]">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#15803d]/12 text-[#15803d]">
             <Icon className="h-[18px] w-[18px]" />
           </div>
           <div className="min-w-0">

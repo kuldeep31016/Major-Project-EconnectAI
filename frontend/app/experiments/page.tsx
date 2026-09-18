@@ -50,7 +50,7 @@ export default function ExperimentsPage() {
       <div className="grid gap-4 p-4 sm:p-6 lg:grid-cols-[300px_1fr]">
         <Card className="h-fit">
           <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2"><Cpu className="h-4 w-4 text-[#38bdf8]" />Trained models</CardTitle>
+            <CardTitle className="flex items-center gap-2"><Cpu className="h-4 w-4 text-[#1e5f8a]" />Trained models</CardTitle>
             <CardDescription>
               {models === null ? "Backend offline" : models.length === 0 ? "No experiment has been run (NOT AVAILABLE)" : `${models.length} experiment${models.length === 1 ? "" : "s"} in outputs/segmentation`}
             </CardDescription>
@@ -62,7 +62,7 @@ export default function ExperimentsPage() {
                 onClick={() => setActive(m.experimentId)}
                 className={cn(
                   "w-full rounded-xl border px-3 py-2 text-left text-[12px] transition",
-                  active === m.experimentId ? "border-[#38bdf8]/50 bg-[#38bdf8]/10" : "border-foreground/[0.08] hover:bg-foreground/[0.04]",
+                  active === m.experimentId ? "border-[#1e5f8a]/50 bg-[#1e5f8a]/10" : "border-foreground/[0.08] hover:bg-foreground/[0.04]",
                 )}
               >
                 <div className="truncate font-semibold">{m.experimentId}</div>
@@ -82,7 +82,7 @@ export default function ExperimentsPage() {
           <div className="space-y-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="flex items-center gap-2"><FlaskConical className="h-4 w-4 text-[#a78bfa]" />{detail.experimentId}</CardTitle>
+                <CardTitle className="flex items-center gap-2"><FlaskConical className="h-4 w-4 text-[#6d5bd0]" />{detail.experimentId}</CardTitle>
                 <CardDescription>
                   {detail.metrics.result_label} · {detail.metrics.model} · input: {input} · train/val/test {ds?.n_train ?? "—"}/{ds?.n_val ?? "—"}/{ds?.n_test ?? "—"} tiles ·{" "}
                   {String(detail.experiment?.hardware?.device ?? "")}
@@ -125,7 +125,7 @@ export default function ExperimentsPage() {
                     <thead className="text-[10px] uppercase tracking-wider text-muted-foreground"><tr><th className="text-left">thr</th><th>IoU</th><th>F1</th><th>P</th><th>R</th></tr></thead>
                     <tbody className="tabular">
                       {detail.calibration.rows.map((r) => (
-                        <tr key={r.threshold} className={cn("border-t border-foreground/[0.06] text-center", r.threshold === detail.calibration!.selected_threshold && "bg-[#00c896]/10")}>
+                        <tr key={r.threshold} className={cn("border-t border-foreground/[0.06] text-center", r.threshold === detail.calibration!.selected_threshold && "bg-[#15803d]/10")}>
                           <td className="py-1 text-left">{r.threshold.toFixed(2)}</td><td>{f(r.iou)}</td><td>{f(r.f1)}</td><td>{f(r.precision)}</td><td>{f(r.recall)}</td>
                         </tr>
                       ))}

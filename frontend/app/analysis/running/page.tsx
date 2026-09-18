@@ -170,7 +170,7 @@ function RunningPipeline() {
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-eco">
-              <Waves className="h-6 w-6 text-[#04231b]" strokeWidth={2.3} />
+              <Waves className="h-6 w-6 text-[#ffffff]" strokeWidth={2.3} />
             </div>
             <div>
               <div className="text-[15px] font-semibold tracking-tight">
@@ -201,11 +201,11 @@ function RunningPipeline() {
           className={
             "rounded-2xl border px-4 py-3 text-[12px] leading-relaxed " +
             (liveState === "done"
-              ? "border-[#00c896]/30 bg-[#00c896]/8 text-[#00c896]"
+              ? "border-[#15803d]/30 bg-[#15803d]/8 text-[#15803d]"
               : liveState === "failed"
                 ? "border-[#ef4444]/30 bg-[#ef4444]/8 text-[#ef4444]"
                 : liveState === "running"
-                  ? "border-[#38bdf8]/30 bg-[#38bdf8]/8 text-[#38bdf8]"
+                  ? "border-[#1e5f8a]/30 bg-[#1e5f8a]/8 text-[#1e5f8a]"
                   : "border-[#f59e0b]/30 bg-[#f59e0b]/8 text-[#f59e0b]")
           }
         >
@@ -255,7 +255,7 @@ function RunningPipeline() {
                   className={cn(
                     "relative flex items-center gap-3.5 overflow-hidden rounded-xl border px-3.5 py-3 transition-colors duration-300",
                     state === "active"
-                      ? "border-[#00c896]/30 bg-[#00c896]/8"
+                      ? "border-[#15803d]/30 bg-[#15803d]/8"
                       : state === "done"
                         ? "border-foreground/[0.08] bg-foreground/[0.03]"
                         : "border-transparent bg-transparent",
@@ -263,7 +263,7 @@ function RunningPipeline() {
                 >
                   {state === "active" && (
                     <motion.div
-                      className="absolute inset-y-0 left-0 bg-[#00c896]/8"
+                      className="absolute inset-y-0 left-0 bg-[#15803d]/8"
                       animate={{ width: `${stageProgress}%` }}
                       transition={{ duration: 0.15 }}
                     />
@@ -275,7 +275,7 @@ function RunningPipeline() {
                       state === "done"
                         ? "bg-[#22c55e]/15 text-[#22c55e]"
                         : state === "active"
-                          ? "bg-[#00c896]/18 text-[#00c896]"
+                          ? "bg-[#15803d]/18 text-[#15803d]"
                           : "bg-foreground/[0.05] text-muted-foreground/50",
                     )}
                   >
@@ -294,7 +294,7 @@ function RunningPipeline() {
                     )}
 
                     {state === "active" && (
-                      <span className="absolute inset-0 animate-pulse-ring rounded-xl ring-2 ring-[#00c896]/40" />
+                      <span className="absolute inset-0 animate-pulse-ring rounded-xl ring-2 ring-[#15803d]/40" />
                     )}
                   </div>
 
@@ -312,7 +312,7 @@ function RunningPipeline() {
                   </div>
 
                   {state === "active" && (
-                    <div className="relative shrink-0 text-[11px] font-semibold tabular text-[#00c896]">
+                    <div className="relative shrink-0 text-[11px] font-semibold tabular text-[#15803d]">
                       {stageProgress.toFixed(0)}%
                     </div>
                   )}
@@ -330,7 +330,7 @@ function RunningPipeline() {
         {/* console */}
         <div className="mt-4 overflow-hidden rounded-2xl border border-foreground/[0.08] bg-[#04101f]/80 backdrop-blur">
           <div className="flex items-center gap-2 border-b border-foreground/[0.08] px-4 py-2.5">
-            <Terminal className="h-3.5 w-3.5 text-[#00c896]" />
+            <Terminal className="h-3.5 w-3.5 text-[#15803d]" />
             <span className="text-[11px] font-medium">Processing log</span>
             <span className="ml-auto flex items-center gap-1.5 text-[10px] text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
@@ -347,15 +347,15 @@ function RunningPipeline() {
                   transition={{ duration: 0.25 }}
                   className="flex gap-2.5"
                 >
-                  <span className="shrink-0 text-[#00c896]/60">›</span>
+                  <span className="shrink-0 text-[#15803d]/60">›</span>
                   <span className="text-muted-foreground">{l.text}</span>
                 </motion.div>
               ))}
             </AnimatePresence>
             {!done && (
               <div className="flex gap-2.5">
-                <span className="shrink-0 text-[#00c896]/60">›</span>
-                <span className="inline-block h-3.5 w-2 animate-pulse bg-[#00c896]/70" />
+                <span className="shrink-0 text-[#15803d]/60">›</span>
+                <span className="inline-block h-3.5 w-2 animate-pulse bg-[#15803d]/70" />
               </div>
             )}
           </div>
@@ -393,7 +393,7 @@ export default function AnalysisRunningPage() {
     <Suspense
       fallback={
         <div className="grid min-h-screen place-items-center bg-background">
-          <Loader2 className="h-6 w-6 animate-spin text-[#00c896]" />
+          <Loader2 className="h-6 w-6 animate-spin text-[#15803d]" />
         </div>
       }
     >

@@ -131,7 +131,7 @@ export function ConnectivityGraph({
             type: "straight",
             animated: !severed && (e.critical || e.strength > 0.55),
             style: {
-              stroke: severed ? "#ef4444" : e.critical ? "#f59e0b" : "#38bdf8",
+              stroke: severed ? "#ef4444" : e.critical ? "#f59e0b" : "#1e5f8a",
               strokeWidth: severed ? 1 : 0.9 + e.strength * 3.2,
               strokeDasharray: severed ? "5 5" : undefined,
               opacity: dimmed ? 0.1 : severed ? 0.45 : 0.3 + e.strength * 0.55,

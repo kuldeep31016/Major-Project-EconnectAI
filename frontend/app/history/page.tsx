@@ -61,7 +61,7 @@ const STATUS_META = {
   completed: { icon: CheckCircle2, color: "#22c55e", variant: "success" as const },
   archived: { icon: Clock, color: "#94a3b8", variant: "secondary" as const },
   failed: { icon: XCircle, color: "#ef4444", variant: "danger" as const },
-  processing: { icon: Loader2, color: "#38bdf8", variant: "sky" as const },
+  processing: { icon: Loader2, color: "#1e5f8a", variant: "sky" as const },
 };
 
 export default function HistoryPage() {
@@ -129,7 +129,7 @@ export default function HistoryPage() {
           : `${history.length} demonstration entries (prototype) — backend offline or no runs yet`
       }
       actions={
-        <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#04231b]">
+        <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#ffffff]">
           <Link href="/upload">
             New analysis
             <ArrowRight className="h-3.5 w-3.5" />
@@ -141,10 +141,10 @@ export default function HistoryPage() {
         {/* ------------------------------------------------------ stats */}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            ["Total runs", stats.total, "#38bdf8", Clock],
+            ["Total runs", stats.total, "#1e5f8a", Clock],
             ["Completed", stats.completed, "#22c55e", CheckCircle2],
             ["Failed", stats.failed, "#ef4444", XCircle],
-            ["Avg. duration", fmtDuration(stats.avgDuration), "#a78bfa", SlidersHorizontal],
+            ["Avg. duration", fmtDuration(stats.avgDuration), "#6d5bd0", SlidersHorizontal],
           ].map(([label, value, color, Icon], i) => {
             const I = Icon as typeof Clock;
             return (
@@ -181,7 +181,7 @@ export default function HistoryPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search by name, region, analyst, run ID or tag…"
-                className="h-10 w-full rounded-xl border border-foreground/10 bg-foreground/[0.04] pl-10 pr-9 text-[13px] outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-[#00c896]/40"
+                className="h-10 w-full rounded-xl border border-foreground/10 bg-foreground/[0.04] pl-10 pr-9 text-[13px] outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-[#15803d]/40"
               />
               {query && (
                 <button
@@ -218,7 +218,7 @@ export default function HistoryPage() {
               className={cn(
                 "shrink-0 rounded-full border px-3 py-1 text-[11px] transition-colors",
                 !sceneFilter
-                  ? "border-[#00c896]/35 bg-[#00c896]/12 text-[#00c896]"
+                  ? "border-[#15803d]/35 bg-[#15803d]/12 text-[#15803d]"
                   : "border-foreground/10 bg-foreground/[0.04] text-muted-foreground hover:bg-foreground/[0.08]",
               )}
             >
@@ -231,7 +231,7 @@ export default function HistoryPage() {
                 className={cn(
                   "shrink-0 rounded-full border px-3 py-1 text-[11px] transition-colors",
                   sceneFilter === s.id
-                    ? "border-[#00c896]/35 bg-[#00c896]/12 text-[#00c896]"
+                    ? "border-[#15803d]/35 bg-[#15803d]/12 text-[#15803d]"
                     : "border-foreground/10 bg-foreground/[0.04] text-muted-foreground hover:bg-foreground/[0.08]",
                 )}
               >

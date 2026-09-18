@@ -74,7 +74,7 @@ export function LayerControl({
           >
             <div className="flex items-center justify-between border-b border-foreground/[0.08] px-3.5 py-2.5">
               <div className="flex items-center gap-2 text-[12px] font-semibold">
-                <LayersIcon className="h-3.5 w-3.5 text-[#00c896]" />
+                <LayersIcon className="h-3.5 w-3.5 text-[#15803d]" />
                 Layers
               </div>
               <Button
@@ -100,7 +100,7 @@ export function LayerControl({
                     className={cn(
                       "rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors",
                       basemap === b.id
-                        ? "border-[#00c896]/40 bg-[#00c896]/12 text-[#00c896]"
+                        ? "border-[#15803d]/40 bg-[#15803d]/12 text-[#15803d]"
                         : "border-foreground/[0.08] bg-foreground/[0.04] text-muted-foreground hover:bg-foreground/[0.08]",
                     )}
                   >
@@ -139,7 +139,7 @@ export function LayerControl({
                   <SlidersHorizontal className="h-3 w-3" />
                   Heatmap opacity
                 </span>
-                <span className="text-[11px] font-bold tabular text-[#00c896]">
+                <span className="text-[11px] font-bold tabular text-[#15803d]">
                   {Math.round(heatOpacity * 100)}%
                 </span>
               </div>
@@ -272,7 +272,7 @@ export function MapLegend({
                   <span className="text-[9.5px] text-muted-foreground">Critical corridor</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="h-0 w-4 shrink-0 border-t-2 border-[#38bdf8]" />
+                  <span className="h-0 w-4 shrink-0 border-t-2 border-[#1e5f8a]" />
                   <span className="text-[9.5px] text-muted-foreground">Functional link</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -302,8 +302,8 @@ export function NorthArrow({ className }: { className?: string }) {
       aria-label="North arrow"
     >
       <svg viewBox="0 0 32 32" className="h-7 w-7">
-        <path d="M16 4 L20.5 20 L16 16.5 L11.5 20 Z" fill="#00c896" />
-        <path d="M16 4 L11.5 20 L16 16.5 Z" fill="#00c896" fillOpacity="0.55" />
+        <path d="M16 4 L20.5 20 L16 16.5 L11.5 20 Z" fill="#15803d" />
+        <path d="M16 4 L11.5 20 L16 16.5 Z" fill="#15803d" fillOpacity="0.55" />
         <text
           x="16"
           y="30"
@@ -338,7 +338,7 @@ export function CoordinateReadout({
         className,
       )}
     >
-      <Crosshair className="h-3 w-3 shrink-0 text-[#00c896]" />
+      <Crosshair className="h-3 w-3 shrink-0 text-[#15803d]" />
       {cursor ? (
         <>
           <span className="tabular">{toDMS(cursor.lat, "lat")}</span>
@@ -424,7 +424,7 @@ export function MapToolbar({
             className={cn(
               "grid h-8 w-8 place-items-center rounded-lg transition-colors",
               t.active
-                ? "bg-[#00c896]/18 text-[#00c896]"
+                ? "bg-[#15803d]/18 text-[#15803d]"
                 : "text-muted-foreground hover:bg-foreground/[0.08] hover:text-foreground",
             )}
             aria-label={t.label}
@@ -465,14 +465,14 @@ export function MiniMap({
     >
       <div className="absolute inset-0 bg-[#04101f]" />
       <div className="absolute inset-0 bg-grid opacity-50" />
-      <div className="absolute inset-[18%] rounded-md border border-[#00c896]/50 bg-[#00c896]/10" />
+      <div className="absolute inset-[18%] rounded-md border border-[#15803d]/50 bg-[#15803d]/10" />
       <div className="absolute left-1.5 top-1.5 flex items-center gap-1 text-[8px] text-muted-foreground">
         <Satellite className="h-2.5 w-2.5" />
         Extent
       </div>
       {x !== null && y !== null && x >= 0 && x <= 100 && y >= 0 && y <= 100 && (
         <div
-          className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#00c896] ring-2 ring-[#00c896]/30"
+          className="absolute h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#15803d] ring-2 ring-[#15803d]/30"
           style={{ left: `${x}%`, top: `${y}%` }}
         />
       )}

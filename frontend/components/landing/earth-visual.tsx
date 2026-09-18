@@ -43,18 +43,18 @@ export function EarthVisual({ className }: { className?: string }) {
             <stop offset="100%" stopColor="#04101f" stopOpacity="1" />
           </radialGradient>
           <radialGradient id="rim" cx="50%" cy="50%">
-            <stop offset="78%" stopColor="#00c896" stopOpacity="0" />
-            <stop offset="96%" stopColor="#00c896" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#38bdf8" stopOpacity="0.1" />
+            <stop offset="78%" stopColor="#15803d" stopOpacity="0" />
+            <stop offset="96%" stopColor="#15803d" stopOpacity="0.45" />
+            <stop offset="100%" stopColor="#1e5f8a" stopOpacity="0.1" />
           </radialGradient>
           <radialGradient id="haze" cx="50%" cy="50%">
-            <stop offset="60%" stopColor="#00c896" stopOpacity="0" />
-            <stop offset="100%" stopColor="#00c896" stopOpacity="0.22" />
+            <stop offset="60%" stopColor="#15803d" stopOpacity="0" />
+            <stop offset="100%" stopColor="#15803d" stopOpacity="0.22" />
           </radialGradient>
           <linearGradient id="sweep" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#00c896" stopOpacity="0" />
-            <stop offset="50%" stopColor="#00c896" stopOpacity="0.5" />
-            <stop offset="100%" stopColor="#00c896" stopOpacity="0" />
+            <stop offset="0%" stopColor="#15803d" stopOpacity="0" />
+            <stop offset="50%" stopColor="#15803d" stopOpacity="0.5" />
+            <stop offset="100%" stopColor="#15803d" stopOpacity="0" />
           </linearGradient>
           <clipPath id="globeClip">
             <circle cx="190" cy="190" r="130" />
@@ -73,7 +73,7 @@ export function EarthVisual({ className }: { className?: string }) {
             rx={r}
             ry={r * 0.34}
             fill="none"
-            stroke={i === 0 ? "#00c896" : "#38bdf8"}
+            stroke={i === 0 ? "#15803d" : "#1e5f8a"}
             strokeOpacity={0.22}
             strokeWidth="1"
             style={{ transformOrigin: "190px 190px" }}
@@ -126,9 +126,9 @@ export function EarthVisual({ className }: { className?: string }) {
           {/* stylised coastal landmass */}
           <motion.path
             d="M118 132 q28 -16 54 -6 t46 4 q22 6 34 26 t-6 40 q-14 22 -42 24 t-56 -10 q-24 -12 -30 -34 t0 -44 z"
-            fill="#00c896"
+            fill="#15803d"
             fillOpacity="0.16"
-            stroke="#00c896"
+            stroke="#15803d"
             strokeOpacity="0.4"
             strokeWidth="1.1"
             animate={{ fillOpacity: [0.12, 0.22, 0.12] }}
@@ -137,7 +137,7 @@ export function EarthVisual({ className }: { className?: string }) {
           <path
             d="M132 216 q30 18 62 14 t58 -18"
             fill="none"
-            stroke="#38bdf8"
+            stroke="#1e5f8a"
             strokeOpacity="0.32"
             strokeWidth="1.4"
           />
@@ -150,7 +150,7 @@ export function EarthVisual({ className }: { className?: string }) {
               y1={nodes[a].y}
               x2={nodes[b].x}
               y2={nodes[b].y}
-              stroke="#00c896"
+              stroke="#15803d"
               strokeWidth="1.1"
               strokeDasharray="3 5"
               initial={{ opacity: 0.25 }}
@@ -169,13 +169,13 @@ export function EarthVisual({ className }: { className?: string }) {
                 cx={n.x}
                 cy={n.y}
                 r={n.r + 6}
-                fill="#00c896"
+                fill="#15803d"
                 fillOpacity="0.18"
                 animate={{ scale: [0.7, 1.5], opacity: [0.5, 0] }}
                 transition={{ duration: 2.6, repeat: Infinity, delay: n.delay }}
                 style={{ transformOrigin: `${n.x}px ${n.y}px` }}
               />
-              <circle cx={n.x} cy={n.y} r={n.r} fill="#00c896" />
+              <circle cx={n.x} cy={n.y} r={n.r} fill="#15803d" />
               <circle cx={n.x} cy={n.y} r={n.r * 0.4} fill="#ecfdf5" fillOpacity="0.9" />
             </g>
           ))}
@@ -198,7 +198,7 @@ export function EarthVisual({ className }: { className?: string }) {
           cy="190"
           r="130"
           fill="none"
-          stroke="#00c896"
+          stroke="#15803d"
           strokeOpacity="0.35"
           strokeWidth="1.2"
         />
@@ -211,11 +211,11 @@ export function EarthVisual({ className }: { className?: string }) {
         >
           <g transform="translate(190, 32)">
             <rect x="-4" y="-4" width="8" height="8" rx="1.5" fill="#f8fafc" />
-            <rect x="-15" y="-2.5" width="9" height="5" rx="1" fill="#38bdf8" />
-            <rect x="6" y="-2.5" width="9" height="5" rx="1" fill="#38bdf8" />
+            <rect x="-15" y="-2.5" width="9" height="5" rx="1" fill="#1e5f8a" />
+            <rect x="6" y="-2.5" width="9" height="5" rx="1" fill="#1e5f8a" />
             <motion.circle
               r="9"
-              fill="#38bdf8"
+              fill="#1e5f8a"
               fillOpacity="0.25"
               animate={{ scale: [0.6, 1.7], opacity: [0.6, 0] }}
               transition={{ duration: 2, repeat: Infinity }}

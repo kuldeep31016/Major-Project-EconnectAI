@@ -26,7 +26,7 @@ export function Slider({
   step = 1,
   onValueChange,
   className,
-  accent = "#00c896",
+  accent = "#15803d",
   ...props
 }: SliderProps) {
   const pct = ((value - min) / (max - min || 1)) * 100;

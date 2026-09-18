@@ -9,11 +9,31 @@ import type { FrontendBundle, RunSummary, WhatIfResult, RestorationAction, Timel
 export const API_URL =
   (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) || "http://localhost:8000";
 
+const TOKEN_KEY = "ecoconnect:token";
+export function getToken(): string | null {
+  try {
+    return typeof window !== "undefined" ? window.localStorage.getItem(TOKEN_KEY) : null;
+  } catch {
+    return null;
+  }
+}
+export function setToken(t: string | null) {
+  try {
+    if (t) window.localStorage.setItem(TOKEN_KEY, t);
+    else window.localStorage.removeItem(TOKEN_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 async function getJson<T>(path: string, init?: RequestInit, timeoutMs = 8000): Promise<T> {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(`${API_URL}${path}`, { ...init, signal: ctrl.signal, cache: "no-store" });
+    const token = getToken();
+    const headers = new Headers(init?.headers);
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+    const res = await fetch(`${API_URL}${path}`, { ...init, headers, signal: ctrl.signal, cache: "no-store" });
     if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${path}`);
     return (await res.json()) as T;
   } finally {
@@ -170,3 +190,45 @@ export interface ModelDetail {
 }
 export const fetchModelDetail = (id: string) => getJson<ModelDetail>(`/api/models/${encodeURIComponent(id)}`);
 export const modelAssetUrl = (id: string, name: string) => `${API_URL}/api/models/${encodeURIComponent(id)}/asset/${name}`;
+
+/* ------------------------------------------------------------------ platform: auth + workflow */
+
+export type Role = "state_admin" | "senior_officer" | "range_officer" | "field_officer" | "gis_officer" | "analyst";
+export interface SessionUser { id: number; username: string; fullName: string; role: Role; roleLabel: string; capabilities: string[]; orgId: number | null }
+
+export const login = (username: string, password: string) =>
+  getJson<{ token: string; user: SessionUser }>("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password }) });
+export const fetchMe = () => getJson<SessionUser>("/api/auth/me");
+export const fetchUsers = () => getJson<SessionUser[]>("/api/users");
+
+export interface AlertItem { id: number; study_area_id: string; run_id: string | null; type: string; severity: "low" | "medium" | "high" | "critical"; title: string; reason: string; lat: number | null; lon: number | null; object_type: string | null; object_id: string | null; evidence: Record<string, unknown> | null; status: string; created_at: string }
+export const fetchAlerts = (studyArea?: string, status?: string) => getJson<AlertItem[]>(`/api/alerts?${studyArea ? `study_area=${encodeURIComponent(studyArea)}&` : ""}${status ? `status=${status}` : ""}`);
+export const generateAlerts = (studyArea: string) => getJson<{ generated: number; run_id: string }>(`/api/alerts/generate/${encodeURIComponent(studyArea)}`, { method: "POST" });
+export const updateAlert = (id: number, status: string, reason?: string) => getJson<AlertItem>(`/api/alerts/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, reason }) });
+
+export interface DetectionItem { id: number; study_area_id: string; run_id: string; object_type: string; object_id: string; status: string; lat: number | null; lon: number | null; summary: string | null; updated_at: string }
+export const fetchDetections = (studyArea?: string) => getJson<DetectionItem[]>(`/api/detections${studyArea ? `?study_area=${encodeURIComponent(studyArea)}` : ""}`);
+export const setDetectionStatus = (id: number, status: string, reason?: string) => getJson<DetectionItem>(`/api/detections/${id}/status`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, reason }) });
+
+export interface FieldTaskItem { id: number; study_area_id: string; project_id: number | null; alert_id: number | null; detection_id: number | null; title: string; reason: string; lat: number; lon: number; object_type: string | null; object_id: string | null; run_id: string | null; evidence_required: string; assignee_id: number | null; assigneeName?: string | null; created_by: number | null; createdByName?: string | null; status: string; due_date: string | null; created_at: string; updated_at: string; evidenceCount?: number }
+export const fetchTasks = (studyArea?: string, mine = false) => getJson<FieldTaskItem[]>(`/api/field-tasks?${studyArea ? `study_area=${encodeURIComponent(studyArea)}&` : ""}${mine ? "mine=true" : ""}`);
+export const createTask = (body: Partial<FieldTaskItem> & { study_area_id: string; title: string; reason: string; lat: number; lon: number }) =>
+  getJson<FieldTaskItem>("/api/field-tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+export const setTaskStatus = (id: number, status: string, reason?: string) => getJson<FieldTaskItem>(`/api/field-tasks/${id}/status`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, reason }) });
+
+export interface EvidenceItem { id: number; task_id: number; user_id: number; lat: number; lon: number; observed_at: string; observation: string; notes: string | null; photo_path: string | null; verification: string; created_at: string }
+export const fetchEvidence = (taskId: number) => getJson<EvidenceItem[]>(`/api/field-tasks/${taskId}/evidence`);
+export const submitEvidence = (taskId: number, form: FormData) => getJson<EvidenceItem>(`/api/field-tasks/${taskId}/evidence`, { method: "POST", body: form }, 60000);
+export const verifyEvidence = (id: number, verification: "ACCEPTED" | "REJECTED", reason?: string) => getJson<EvidenceItem>(`/api/evidence/${id}/verify`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ verification, reason }) });
+export const evidencePhotoUrl = (name: string) => `${API_URL}/api/evidence/photo/${encodeURIComponent(name)}`;
+
+export interface ProjectItem { id: number; name: string; study_area_id: string; objectives: string | null; status: string; owner_id: number | null; run_id: string | null; priority_patches: string[]; candidates: string[]; responsible: number[]; created_at: string; updated_at: string; taskCount?: number; verifiedTasks?: number; reportCount?: number }
+export const fetchProjects = (studyArea?: string) => getJson<ProjectItem[]>(`/api/projects${studyArea ? `?study_area=${encodeURIComponent(studyArea)}` : ""}`);
+export const createProject = (body: { name: string; study_area_id: string; objectives?: string; run_id?: string; priority_patches?: string[]; candidates?: string[] }) =>
+  getJson<ProjectItem>("/api/projects", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+export const updateProject = (id: number, body: Record<string, unknown>) => getJson<ProjectItem>(`/api/projects/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+export interface AuditItem { id: number; username: string; role: string; action: string; object_type: string | null; object_id: string | null; old_state: unknown; new_state: unknown; reason: string | null; ts: string }
+export const fetchAudit = (limit = 200) => getJson<AuditItem[]>(`/api/audit?limit=${limit}`);
+export const fetchRegistry = (studyArea: string) => getJson<Record<string, unknown>>(`/api/registry/${encodeURIComponent(studyArea)}`);
+export const fetchModelCards = () => getJson<{ foundationPaper: Record<string, unknown>; prototype: Record<string, unknown>; ours: Record<string, unknown>[] }>("/api/model-cards");

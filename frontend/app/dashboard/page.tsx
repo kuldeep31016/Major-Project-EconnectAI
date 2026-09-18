@@ -83,7 +83,7 @@ export default function DashboardPage() {
               Export
             </Link>
           </Button>
-          <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#04231b]">
+          <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#ffffff]">
             <Link href="/analysis">
               Open Analysis
               <ArrowRight className="h-3.5 w-3.5" />
@@ -100,7 +100,7 @@ export default function DashboardPage() {
             label="Active projects"
             value={4}
             icon={FolderKanban}
-            accent="#a78bfa"
+            accent="#6d5bd0"
             hint="Coastal landscapes monitored"
             delta={1}
             deltaSuffix=""
@@ -111,7 +111,7 @@ export default function DashboardPage() {
             value={conn.score}
             decimals={1}
             icon={Network}
-            accent="#00c896"
+            accent="#15803d"
             delta={scoreDelta}
             hint={conn.grade ?? `Interface score · Eq. (7) · IIC ${conn.iicIndex.toExponential(2)}`}
             spark={sparkTrend}
@@ -146,7 +146,7 @@ export default function DashboardPage() {
             prefix="+"
             suffix=" pts"
             icon={Sprout}
-            accent="#38bdf8"
+            accent="#1e5f8a"
             hint={topAction ? `${topAction.costLakh != null ? fmtCurrency(topAction.costLakh) + " · " : ""}${topAction.location}` : "no candidates"}
           />
         </div>
@@ -186,7 +186,7 @@ export default function DashboardPage() {
                     <Progress
                       value={c.value}
                       height={4}
-                      color={c.value >= 75 ? "#22c55e" : c.value >= 55 ? "#00c896" : "#f59e0b"}
+                      color={c.value >= 75 ? "#22c55e" : c.value >= 55 ? "#15803d" : "#f59e0b"}
                     />
                   </div>
                 ))}
@@ -343,9 +343,9 @@ export default function DashboardPage() {
                   <div
                     className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl text-[13px] font-bold ${
                       i === 0
-                        ? "bg-[#00c896]/15 text-[#00c896]"
+                        ? "bg-[#15803d]/15 text-[#15803d]"
                         : i === 1
-                          ? "bg-[#38bdf8]/15 text-[#38bdf8]"
+                          ? "bg-[#1e5f8a]/15 text-[#1e5f8a]"
                           : "bg-foreground/[0.06] text-muted-foreground"
                     }`}
                   >
@@ -366,7 +366,7 @@ export default function DashboardPage() {
 
                   <div className="shrink-0 text-right">
                     <div className="text-[11px] text-muted-foreground">Gain</div>
-                    <div className="text-[13px] font-bold tabular text-[#00c896]">
+                    <div className="text-[13px] font-bold tabular text-[#15803d]">
                       +{a.connectivityGain}
                     </div>
                   </div>
@@ -401,9 +401,9 @@ export default function DashboardPage() {
                 >
                   <Link
                     href={`/reports?id=${r.id}`}
-                    className="group flex items-center gap-3.5 rounded-xl border border-foreground/[0.08] bg-foreground/[0.03] p-3.5 transition-colors hover:border-[#00c896]/25 hover:bg-foreground/[0.06]"
+                    className="group flex items-center gap-3.5 rounded-xl border border-foreground/[0.08] bg-foreground/[0.03] p-3.5 transition-colors hover:border-[#15803d]/25 hover:bg-foreground/[0.06]"
                   >
-                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#38bdf8]/12 text-[#38bdf8]">
+                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#1e5f8a]/12 text-[#1e5f8a]">
                       <FileText className="h-[18px] w-[18px]" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -454,7 +454,7 @@ export default function DashboardPage() {
                             ? "#ef4444"
                             : h.scoreDelta > 0
                               ? "#22c55e"
-                              : "#00c896",
+                              : "#15803d",
                       }}
                     />
                     <div className="text-[12px] font-medium leading-tight">{h.name}</div>

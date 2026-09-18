@@ -54,7 +54,7 @@ const GisMap = dynamic(() => import("@/components/maps/gis-map"), {
   ssr: false,
   loading: () => (
     <div className="grid h-full w-full place-items-center bg-[#04101f]">
-      <Loader2 className="h-6 w-6 animate-spin text-[#00c896]" />
+      <Loader2 className="h-6 w-6 animate-spin text-[#15803d]" />
     </div>
   ),
 });
@@ -370,7 +370,7 @@ export default function SimulationPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute inset-0 z-[1001] grid place-items-center bg-[#050816]/70 backdrop-blur-sm"
+                className="absolute inset-0 z-[1001] grid place-items-center bg-background/70 backdrop-blur-sm"
               >
                 <div className="flex flex-col items-center gap-3 rounded-2xl glass-strong px-8 py-6 shadow-2xl">
                   <Loader2 className="h-7 w-7 animate-spin text-[#ef4444]" />
@@ -619,7 +619,7 @@ export default function SimulationPage() {
                               </span>
                               <button
                                 onClick={() => togglePatchRemoved(p.id)}
-                                className="shrink-0 text-[10px] font-medium text-[#00c896] hover:underline"
+                                className="shrink-0 text-[10px] font-medium text-[#15803d] hover:underline"
                               >
                                 restore
                               </button>
@@ -733,11 +733,11 @@ export default function SimulationPage() {
                               ["Habitat loss", `${activeScenario.habitatLossPct}%`, "#ef4444"],
                               ["Patches isolated", activeScenario.isolatedPatches, "#f59e0b"],
                               ["Species at risk", activeScenario.speciesAtRisk, "#f97316"],
-                              ["Recovery", `${activeScenario.recoveryYears} yrs`, "#38bdf8"],
+                              ["Recovery", `${activeScenario.recoveryYears} yrs`, "#1e5f8a"],
                               [
                                 "Carbon loss",
                                 `${Math.round(activeScenario.carbonLossTonnes / 1000)} kt`,
-                                "#a78bfa",
+                                "#6d5bd0",
                               ],
                               ["Confidence", fmtRatio(activeScenario.confidence), "#22c55e"],
                             ].map(([k, v, c]) => (
@@ -816,7 +816,7 @@ export default function SimulationPage() {
                             ? "Cost data supplied — ranking is gain per unit cost (Eq. 12)."
                             : "No cost data supplied, so Priority_i reduces to R_i (paper Section IV-F). Candidate sites are marginal-probability components from the segmentation output; costs are never invented."}
                         </p>
-                        <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-dashed border-foreground/15 px-3 py-2 hover:border-[#00c896]/50">
+                        <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-dashed border-foreground/15 px-3 py-2 hover:border-[#15803d]/50">
                           <span>
                             <b className="text-foreground">Upload cost table</b> (CSV: <code>candidate_id,cost</code>) to switch to Eq. 12
                           </span>
@@ -844,9 +844,9 @@ export default function SimulationPage() {
                               }
                             }}
                           />
-                          <span className="rounded-lg bg-[#00c896]/15 px-2 py-1 text-[10.5px] font-semibold text-[#00c896]">Choose CSV</span>
+                          <span className="rounded-lg bg-[#15803d]/15 px-2 py-1 text-[10.5px] font-semibold text-[#15803d]">Choose CSV</span>
                         </label>
-                        {costNote && <p className="text-[11px] text-[#38bdf8]">{costNote}</p>}
+                        {costNote && <p className="text-[11px] text-[#1e5f8a]">{costNote}</p>}
                       </CardContent>
                     </Card>
                   )}
@@ -858,7 +858,7 @@ export default function SimulationPage() {
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-end justify-between">
-                        <div className="text-[28px] font-bold leading-none tabular text-[#00c896]">
+                        <div className="text-[28px] font-bold leading-none tabular text-[#15803d]">
                           {fmtCurrency(budgetLakh)}
                         </div>
                         <div className="text-right text-[10px] text-muted-foreground">
@@ -932,9 +932,9 @@ export default function SimulationPage() {
                             className={cn(
                               "grid h-8 w-8 shrink-0 place-items-center rounded-xl text-[12px] font-bold",
                               i === 0
-                                ? "bg-[#00c896]/15 text-[#00c896]"
+                                ? "bg-[#15803d]/15 text-[#15803d]"
                                 : i === 1
-                                  ? "bg-[#38bdf8]/15 text-[#38bdf8]"
+                                  ? "bg-[#1e5f8a]/15 text-[#1e5f8a]"
                                   : "bg-foreground/[0.06] text-muted-foreground",
                             )}
                           >
@@ -951,7 +951,7 @@ export default function SimulationPage() {
                                 </div>
                               </div>
                               <div className="shrink-0 text-right">
-                                <div className="text-[15px] font-bold tabular text-[#00c896]">
+                                <div className="text-[15px] font-bold tabular text-[#15803d]">
                                   +{band ? a.connectivityGain : a.connectivityGain.toFixed(2)}
                                 </div>
                                 <div className="text-[9px] uppercase tracking-wider text-muted-foreground">
@@ -1024,7 +1024,7 @@ export default function SimulationPage() {
                       </div>
                       <div className="mt-2 flex items-center justify-between text-[12px]">
                         <span className="text-muted-foreground">Expected gain</span>
-                        <span className="font-bold tabular text-[#00c896]">
+                        <span className="font-bold tabular text-[#15803d]">
                           +{band.totalGain} points
                         </span>
                       </div>
@@ -1057,7 +1057,7 @@ export default function SimulationPage() {
                         </div>
                       )}
                       {timeline.note && (
-                        <div className="mb-3 rounded-xl border border-[#00c896]/25 bg-[#00c896]/8 px-3 py-2 text-[10.5px] leading-relaxed text-[#00c896]">
+                        <div className="mb-3 rounded-xl border border-[#15803d]/25 bg-[#15803d]/8 px-3 py-2 text-[10.5px] leading-relaxed text-[#15803d]">
                           Each year is an actual segmentation + graph run; habitat change is the binary-mask
                           difference between consecutive runs at their thresholds. Years without a run are absent.
                         </div>
@@ -1071,7 +1071,7 @@ export default function SimulationPage() {
                             className={cn(
                               "flex-1 rounded-xl border py-2 text-[11px] font-semibold tabular transition-all",
                               y.year === year
-                                ? "border-[#00c896]/40 bg-[#00c896]/12 text-[#00c896]"
+                                ? "border-[#15803d]/40 bg-[#15803d]/12 text-[#15803d]"
                                 : "border-foreground/[0.08] bg-foreground/[0.03] text-muted-foreground hover:bg-foreground/[0.08]",
                             )}
                           >
@@ -1117,9 +1117,9 @@ export default function SimulationPage() {
 
                         <div className="mt-4 grid grid-cols-2 gap-2">
                           {[
-                            ["Connectivity", activeYear.connectivityScore.toFixed(1), "#00c896"],
-                            ["Habitat area", fmtArea(activeYear.habitatAreaHa), "#38bdf8"],
-                            ["Patches", activeYear.patchCount, "#a78bfa"],
+                            ["Connectivity", activeYear.connectivityScore.toFixed(1), "#15803d"],
+                            ["Habitat area", fmtArea(activeYear.habitatAreaHa), "#1e5f8a"],
+                            ["Patches", activeYear.patchCount, "#6d5bd0"],
                             ["Critical", activeYear.criticalPatches, "#ef4444"],
                             ["Lost", activeYear.lostHa != null ? `${activeYear.lostHa} ha` : "—", "#f97316"],
                             ["Gained", activeYear.gainedHa != null ? `${activeYear.gainedHa} ha` : "—", "#22c55e"],
@@ -1184,7 +1184,7 @@ export default function SimulationPage() {
                                       ? "#f59e0b"
                                       : y.eventType === "anthropogenic"
                                         ? "#ef4444"
-                                        : "#38bdf8",
+                                        : "#1e5f8a",
                               }}
                             />
                             <div

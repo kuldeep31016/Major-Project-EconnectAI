@@ -71,7 +71,7 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
           {/* header */}
           <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-foreground/[0.08] bg-sidebar px-4 py-3">
             <div className="flex min-w-0 items-center gap-2.5">
-              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#00c896]/12 text-[#00c896]">
+              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#15803d]/12 text-[#15803d]">
                 {patch ? <Leaf className="h-4 w-4" /> : <Crosshair className="h-4 w-4" />}
               </div>
               <div className="min-w-0">
@@ -133,15 +133,15 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                     <Bar
                       label="Habitat probability"
                       value={patch.confidence}
-                      color="#00c896"
+                      color="#15803d"
                     />
                     <Bar
                       label="Connectivity contribution"
                       value={patch.connectivityContribution}
-                      color="#38bdf8"
+                      color="#1e5f8a"
                     />
                     <Bar label="Bridge score" value={patch.bridgeScore} color="#f59e0b" />
-                    <Bar label="Habitat quality" value={patch.quality} color="#a78bfa" />
+                    <Bar label="Habitat quality" value={patch.quality} color="#6d5bd0" />
                     <Bar
                       label="Model confidence"
                       value={patch.confidence}
@@ -151,10 +151,10 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                 </div>
 
                 {/* natural-language explanation */}
-                <div className="rounded-2xl border border-[#00c896]/20 bg-[#00c896]/6 p-4">
+                <div className="rounded-2xl border border-[#15803d]/20 bg-[#15803d]/6 p-4">
                   <div className="mb-2 flex items-center gap-2">
-                    <Sparkles className="h-3.5 w-3.5 text-[#00c896]" />
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-[#00c896]">
+                    <Sparkles className="h-3.5 w-3.5 text-[#15803d]" />
+                    <span className="text-[10px] font-semibold uppercase tracking-widest text-[#15803d]">
                       Why this matters
                     </span>
                   </div>
@@ -164,7 +164,7 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                 {/* ------------------------------ explainability panel */}
                 <div className="rounded-2xl border border-foreground/[0.08] bg-foreground/[0.03] p-4">
                   <div className="mb-3 flex items-center gap-2">
-                    <BrainCircuit className="h-3.5 w-3.5 text-[#a78bfa]" />
+                    <BrainCircuit className="h-3.5 w-3.5 text-[#6d5bd0]" />
                     <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                       Explainability
                     </span>
@@ -181,7 +181,7 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                       icon={Network}
                       label="Functional links"
                       value={String(node.degree)}
-                      tone="#38bdf8"
+                      tone="#1e5f8a"
                     />
                     <Stat
                       icon={Gauge}
@@ -224,14 +224,14 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                         <AreaChart data={importanceSeries} margin={{ top: 6, bottom: 2, left: 0, right: 0 }}>
                           <defs>
                             <linearGradient id="impGrad" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.5} />
-                              <stop offset="100%" stopColor="#a78bfa" stopOpacity={0} />
+                              <stop offset="0%" stopColor="#6d5bd0" stopOpacity={0.5} />
+                              <stop offset="100%" stopColor="#6d5bd0" stopOpacity={0} />
                             </linearGradient>
                           </defs>
                           <Area
                             type="monotone"
                             dataKey="v"
-                            stroke="#a78bfa"
+                            stroke="#6d5bd0"
                             strokeWidth={1.8}
                             fill="url(#impGrad)"
                             dot={false}
@@ -302,7 +302,7 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                         >
                           <span
                             className="h-1.5 w-1.5 shrink-0 rounded-full"
-                            style={{ background: e.critical ? "#f59e0b" : "#38bdf8" }}
+                            style={{ background: e.critical ? "#f59e0b" : "#1e5f8a" }}
                           />
                           <span className="min-w-0 flex-1 truncate text-[11px]">
                             {other?.label ?? otherId}
@@ -375,20 +375,20 @@ function CellReadout({ cell }: { cell: HeatCell }) {
           </span>
         </div>
         <div className="mt-2.5 space-y-3">
-          <Bar label="Habitat probability" value={cell.habitatProbability} color="#00c896" />
+          <Bar label="Habitat probability" value={cell.habitatProbability} color="#15803d" />
           <Bar
             label="Connectivity contribution"
             value={cell.connectivityContribution}
-            color="#38bdf8"
+            color="#1e5f8a"
           />
           <Bar label="Confidence" value={cell.confidence} color="#22c55e" />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-[#00c896]/20 bg-[#00c896]/6 p-4">
+      <div className="rounded-2xl border border-[#15803d]/20 bg-[#15803d]/6 p-4">
         <div className="mb-2 flex items-center gap-2">
-          <Sparkles className="h-3.5 w-3.5 text-[#00c896]" />
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-[#00c896]">
+          <Sparkles className="h-3.5 w-3.5 text-[#15803d]" />
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-[#15803d]">
             Model explanation
           </span>
         </div>

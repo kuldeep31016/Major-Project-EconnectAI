@@ -50,7 +50,7 @@ const GisMap = dynamic(() => import("@/components/maps/gis-map"), {
   loading: () => (
     <div className="grid h-full w-full place-items-center bg-[#04101f]">
       <div className="flex flex-col items-center gap-3">
-        <Loader2 className="h-6 w-6 animate-spin text-[#00c896]" />
+        <Loader2 className="h-6 w-6 animate-spin text-[#15803d]" />
         <span className="text-[11px] text-muted-foreground">Loading map tiles…</span>
       </div>
     </div>
@@ -230,7 +230,7 @@ export default function AnalysisPage() {
               Graph
             </Link>
           </Button>
-          <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#04231b]">
+          <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#ffffff]">
             <Link href="/simulation">
               Simulate
               <ArrowRight className="h-3.5 w-3.5" />
@@ -406,7 +406,7 @@ export default function AnalysisPage() {
 
               {/* interpretation */}
               <div className="min-w-[320px] max-w-[420px] shrink-0 px-5 py-4">
-                <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-[#00c896]">
+                <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-[#15803d]">
                   <Sparkles className="h-3 w-3" />
                   Analysis summary
                 </div>

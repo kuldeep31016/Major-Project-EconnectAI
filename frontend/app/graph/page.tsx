@@ -37,7 +37,7 @@ const ConnectivityGraph = dynamic(
     loading: () => (
       <div className="grid h-full w-full place-items-center">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-6 w-6 animate-spin text-[#00c896]" />
+          <Loader2 className="h-6 w-6 animate-spin text-[#15803d]" />
           <span className="text-[11px] text-muted-foreground">Building network…</span>
         </div>
       </div>
@@ -82,7 +82,7 @@ export default function GraphPage() {
               Map
             </Link>
           </Button>
-          <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#04231b]">
+          <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#ffffff]">
             <Link href="/simulation">
               Simulate
               <ArrowRight className="h-3.5 w-3.5" />
@@ -110,7 +110,7 @@ export default function GraphPage() {
           {/* filter panel */}
           <div className="absolute left-4 top-4 z-10 w-[236px] overflow-hidden rounded-2xl glass-strong shadow-xl">
             <div className="flex items-center gap-2 border-b border-foreground/[0.08] px-3.5 py-2.5 text-[12px] font-semibold">
-              <Filter className="h-3.5 w-3.5 text-[#00c896]" />
+              <Filter className="h-3.5 w-3.5 text-[#15803d]" />
               Network filters
             </div>
             <div className="space-y-3.5 p-3.5">
@@ -119,7 +119,7 @@ export default function GraphPage() {
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
                     Min link strength
                   </span>
-                  <span className="text-[11px] font-bold tabular text-[#00c896]">
+                  <span className="text-[11px] font-bold tabular text-[#15803d]">
                     {fmtRatio(minStrength)}
                   </span>
                 </div>
@@ -178,9 +178,9 @@ export default function GraphPage() {
               <CardContent>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    ["Nodes", graph.nodes.length, "#38bdf8"],
-                    ["Links", graph.edges.length, "#00c896"],
-                    ["Clusters", graph.clusters.length, "#a78bfa"],
+                    ["Nodes", graph.nodes.length, "#1e5f8a"],
+                    ["Links", graph.edges.length, "#15803d"],
+                    ["Clusters", graph.clusters.length, "#6d5bd0"],
                     ["Critical links", criticalEdges.length, "#f59e0b"],
                     ["Hub patches", hubs.length, "#22c55e"],
                     ["Link density", conn.linkDensity, "#94a3b8"],
@@ -279,7 +279,7 @@ export default function GraphPage() {
                       onClick={() => setSelectedPatchId(active ? null : n.id)}
                       className={`flex w-full items-center gap-2.5 rounded-xl border px-2.5 py-2 text-left transition-colors ${
                         active
-                          ? "border-[#00c896]/35 bg-[#00c896]/10"
+                          ? "border-[#15803d]/35 bg-[#15803d]/10"
                           : "border-foreground/[0.08] bg-foreground/[0.03] hover:bg-foreground/[0.08]"
                       }`}
                     >
@@ -308,14 +308,14 @@ export default function GraphPage() {
               </CardHeader>
               <CardContent className="space-y-2.5 text-[11px] leading-relaxed text-muted-foreground">
                 <div className="flex gap-2.5">
-                  <Waypoints className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#38bdf8]" />
+                  <Waypoints className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#1e5f8a]" />
                   <span>
                     <b className="text-foreground">Node size</b> encodes patch area; the number is
                     ecological importance out of 100.
                   </span>
                 </div>
                 <div className="flex gap-2.5">
-                  <Network className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#00c896]" />
+                  <Network className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#15803d]" />
                   <span>
                     <b className="text-foreground">Ring colour</b> is connectivity sensitivity —
                     red rings are irreplaceable bridges.

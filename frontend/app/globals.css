@@ -125,7 +125,8 @@
 .light {
   --background: #f6f8fb;
   --foreground: #0b1120;
-  --eco-soft: #00c8961f;
+  --eco-soft: #0f51321a;
+  --eco: #15803d;
   --ink: #f6f8fb;
   --panel: #ffffff;
   --panel-2: #f1f5f9;
@@ -133,7 +134,7 @@
   --card-foreground: #0b1120;
   --popover: #ffffff;
   --popover-foreground: #0b1120;
-  --primary: #059f79;
+  --primary: #0f5132;
   --primary-foreground: #ffffff;
   --secondary: #e2e8f0;
   --secondary-foreground: #0b1120;

@@ -8,3 +8,5 @@
 [acquire] Sentinel-2 L2A (Earth Search) ...
   S2 granules covering the AOI: MGRS-45QXE (100%)
   S2 S2A_45QXE_20201115_1_L2A  cloud=0.0%  AOI overlap=100%
+ERROR 1: Request for https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/45/Q/XE/2020/11/S2A_45QXE_20201115_1_L2A/B02.tif range 166384230-171489509 failed with response_code=206
+  read failed (RasterioIOError); retry 1/4 in 2s: s2-l2a-cogs/45/Q/XE/2020/11/S2A_45QXE_20201115_1_L2A/B02.tif

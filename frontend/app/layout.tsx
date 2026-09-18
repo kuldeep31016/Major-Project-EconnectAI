@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AnalysisProvider } from "@/hooks/use-analysis";
+import { AuthProvider } from "@/hooks/use-auth";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AssistantLauncher } from "@/components/chat/assistant-launcher";
 import { BRAND } from "@/lib/constants";
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#050816",
+  themeColor: "#0f5132",
   width: "device-width",
   initialScale: 1,
 };
@@ -43,14 +44,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     // Font variables belong on <html> so the `font-sans` base rule can resolve them.
-    <html lang="en" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${mono.variable} light`} suppressHydrationWarning>
       <body className="antialiased scroll-slim">
-        <AnalysisProvider>
+        <AuthProvider>
+          <AnalysisProvider>
           <TooltipProvider delayDuration={200}>
             {children}
             <AssistantLauncher />
           </TooltipProvider>
         </AnalysisProvider>
+        </AuthProvider>
       </body>
     </html>
   );

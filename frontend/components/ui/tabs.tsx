@@ -64,7 +64,7 @@ export function Tabs({
             {item.icon && <item.icon className="relative h-3.5 w-3.5" />}
             <span className="relative">{item.label}</span>
             {item.badge !== undefined && (
-              <span className="relative rounded-full bg-[#00c896]/15 px-1.5 text-[9px] font-bold text-[#00c896]">
+              <span className="relative rounded-full bg-[#15803d]/15 px-1.5 text-[9px] font-bold text-[#15803d]">
                 {item.badge}
               </span>
             )}

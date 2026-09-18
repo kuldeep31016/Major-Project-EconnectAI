@@ -67,7 +67,7 @@ export function SensitivityExplorer() {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="flex items-center gap-2">
-            <SlidersHorizontal className="h-4 w-4 text-[#a78bfa]" />
+            <SlidersHorizontal className="h-4 w-4 text-[#6d5bd0]" />
             Sensitivity explorer
           </CardTitle>
           <CardDescription>Available on real pipeline runs — recomputes the graph exactly for any τ / k / metric.</CardDescription>
@@ -91,7 +91,7 @@ export function SensitivityExplorer() {
         <div className="flex items-start justify-between gap-2">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-[#a78bfa]" />
+              <SlidersHorizontal className="h-4 w-4 text-[#6d5bd0]" />
               Sensitivity explorer
             </CardTitle>
             <CardDescription>Exact recomputation over the same patches (paper §VI-F). Nothing is retrained.</CardDescription>

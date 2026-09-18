@@ -92,7 +92,7 @@ export function sensitivityColor(v: number) {
 }
 
 export const scoreGradeColor = (score: number) =>
-  score >= 80 ? "#22c55e" : score >= 70 ? "#00c896" : score >= 60 ? "#f59e0b" : "#ef4444";
+  score >= 80 ? "#22c55e" : score >= 70 ? "#15803d" : score >= 60 ? "#f59e0b" : "#ef4444";
 
 /** Connectivity indices (IIC, PC) are dimensionless fractions that can be ~1e-5 on real landscapes. */
 export function fmtIndex(v: number): string {

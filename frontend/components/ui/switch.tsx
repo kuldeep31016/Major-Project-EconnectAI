@@ -29,8 +29,8 @@ export function Switch({
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       className={cn(
-        "relative inline-flex h-[22px] w-[38px] shrink-0 items-center rounded-full border border-foreground/10 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#00c896]/50 disabled:opacity-50",
-        checked ? "bg-[#00c896]" : "bg-foreground/10",
+        "relative inline-flex h-[22px] w-[38px] shrink-0 items-center rounded-full border border-foreground/10 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#15803d]/50 disabled:opacity-50",
+        checked ? "bg-[#15803d]" : "bg-foreground/10",
         className,
       )}
       {...props}

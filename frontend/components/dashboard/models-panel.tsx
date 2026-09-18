@@ -31,7 +31,7 @@ export function ModelsPanel() {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2">
-          <Cpu className="h-4 w-4 text-[#38bdf8]" />
+          <Cpu className="h-4 w-4 text-[#1e5f8a]" />
           Segmentation models
         </CardTitle>
         <CardDescription>

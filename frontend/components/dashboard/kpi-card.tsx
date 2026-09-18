@@ -34,7 +34,7 @@ export function KpiCard({
   prefix,
   thousands,
   icon: Icon,
-  accent = "#00c896",
+  accent = "#15803d",
   delta,
   deltaSuffix = "",
   invertDelta = false,

@@ -114,8 +114,8 @@ export default function UploadPage() {
             className={cn(
               "group relative cursor-pointer overflow-hidden rounded-3xl border-2 border-dashed p-10 text-center transition-all duration-300 sm:p-16",
               dragging
-                ? "scale-[1.01] border-[#00c896] bg-[#00c896]/8"
-                : "border-foreground/12 bg-card/60 hover:border-[#00c896]/40 hover:bg-[#00c896]/4",
+                ? "scale-[1.01] border-[#15803d] bg-[#15803d]/8"
+                : "border-foreground/12 bg-card/60 hover:border-[#15803d]/40 hover:bg-[#15803d]/4",
             )}
           >
             <div className="pointer-events-none absolute inset-0 bg-grid opacity-30" />
@@ -127,7 +127,7 @@ export default function UploadPage() {
                   exit={{ opacity: 0 }}
                   className="pointer-events-none absolute inset-0"
                 >
-                  <div className="absolute inset-x-0 h-24 bg-gradient-to-b from-[#00c896]/25 to-transparent animate-scan" />
+                  <div className="absolute inset-x-0 h-24 bg-gradient-to-b from-[#15803d]/25 to-transparent animate-scan" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -148,7 +148,7 @@ export default function UploadPage() {
               <motion.div
                 animate={dragging ? { y: -6, scale: 1.06 } : { y: 0, scale: 1 }}
                 transition={{ duration: 0.25 }}
-                className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#00c896]/12 text-[#00c896]"
+                className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#15803d]/12 text-[#15803d]"
               >
                 <CloudUpload className="h-8 w-8" strokeWidth={1.7} />
               </motion.div>
@@ -205,7 +205,7 @@ export default function UploadPage() {
                       size="sm"
                       disabled={!ready}
                       onClick={() => startAnalysis(sceneId)}
-                      className="bg-gradient-eco font-semibold text-[#04231b]"
+                      className="bg-gradient-eco font-semibold text-[#ffffff]"
                     >
                       <Sparkles className="h-3.5 w-3.5" />
                       Run analysis
@@ -221,7 +221,7 @@ export default function UploadPage() {
                       <div
                         className={cn(
                           "grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-colors",
-                          f.done ? "bg-[#22c55e]/15 text-[#22c55e]" : "bg-[#38bdf8]/12 text-[#38bdf8]",
+                          f.done ? "bg-[#22c55e]/15 text-[#22c55e]" : "bg-[#1e5f8a]/12 text-[#1e5f8a]",
                         )}
                       >
                         {f.done ? (
@@ -280,7 +280,7 @@ export default function UploadPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: i * 0.07, ease: EASE }}
                 onClick={() => startAnalysis(s.id)}
-                className="group overflow-hidden rounded-2xl border border-foreground/[0.08] bg-card/80 text-left backdrop-blur transition-all hover:-translate-y-1 hover:border-[#00c896]/30"
+                className="group overflow-hidden rounded-2xl border border-foreground/[0.08] bg-card/80 text-left backdrop-blur transition-all hover:-translate-y-1 hover:border-[#15803d]/30"
               >
                 <div
                   className="relative h-28 overflow-hidden"
@@ -331,7 +331,7 @@ export default function UploadPage() {
                     <span className="text-[10px] text-muted-foreground">
                       {fmtDate(s.acquisitionDate)}
                     </span>
-                    <span className="flex items-center gap-1 text-[11px] font-medium text-[#00c896] transition-transform group-hover:translate-x-0.5">
+                    <span className="flex items-center gap-1 text-[11px] font-medium text-[#15803d] transition-transform group-hover:translate-x-0.5">
                       Analyse
                       <ArrowRight className="h-3.5 w-3.5" />
                     </span>
@@ -345,7 +345,7 @@ export default function UploadPage() {
         {/* ------------------------------------------------------ note */}
         <Card>
           <CardContent className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#38bdf8]/12 text-[#38bdf8]">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#1e5f8a]/12 text-[#1e5f8a]">
               <Database className="h-[18px] w-[18px]" />
             </div>
             <p className="flex-1 text-[12px] leading-relaxed text-muted-foreground">

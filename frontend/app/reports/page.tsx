@@ -85,7 +85,7 @@ function ReportsView() {
             size="sm"
             onClick={handleDownload}
             disabled={downloading}
-            className="bg-gradient-eco font-semibold text-[#04231b]"
+            className="bg-gradient-eco font-semibold text-[#ffffff]"
           >
             {downloading ? (
               <>
@@ -118,7 +118,7 @@ function ReportsView() {
               className={cn(
                 "w-full rounded-2xl border p-3.5 text-left transition-all",
                 r.id === activeId
-                  ? "border-[#00c896]/35 bg-[#00c896]/10"
+                  ? "border-[#15803d]/35 bg-[#15803d]/10"
                   : "border-foreground/[0.08] bg-card/70 hover:border-foreground/15 hover:bg-foreground/[0.06]",
               )}
             >
@@ -127,7 +127,7 @@ function ReportsView() {
                   className={cn(
                     "grid h-8 w-8 shrink-0 place-items-center rounded-lg",
                     r.id === activeId
-                      ? "bg-[#00c896]/18 text-[#00c896]"
+                      ? "bg-[#15803d]/18 text-[#15803d]"
                       : "bg-foreground/[0.06] text-muted-foreground",
                   )}
                 >
@@ -166,7 +166,7 @@ function ReportsView() {
         >
           <Card className="overflow-hidden print:border-0 print:bg-white">
             {/* cover */}
-            <div className="relative overflow-hidden border-b border-foreground/[0.08] bg-gradient-to-br from-[#00c896]/12 via-transparent to-[#38bdf8]/10 p-6 sm:p-9">
+            <div className="relative overflow-hidden border-b border-foreground/[0.08] bg-gradient-to-br from-[#15803d]/12 via-transparent to-[#1e5f8a]/10 p-6 sm:p-9">
               <div className="pointer-events-none absolute inset-0 bg-grid opacity-30" />
               <div className="relative">
                 <div className="flex flex-wrap items-center gap-2">
@@ -223,10 +223,10 @@ function ReportsView() {
 
             <CardContent ref={printRef} className="p-6 sm:p-9">
               {/* abstract */}
-              <div className="rounded-2xl border border-[#00c896]/20 bg-[#00c896]/6 p-5">
+              <div className="rounded-2xl border border-[#15803d]/20 bg-[#15803d]/6 p-5">
                 <div className="mb-2.5 flex items-center gap-2">
-                  <Quote className="h-3.5 w-3.5 text-[#00c896]" />
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#00c896]">
+                  <Quote className="h-3.5 w-3.5 text-[#15803d]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#15803d]">
                     Abstract
                   </span>
                 </div>
@@ -246,7 +246,7 @@ function ReportsView() {
                     <h2 className="text-[16px] font-bold tracking-tight sm:text-[17px]">
                       {s.heading}
                     </h2>
-                    <div className="mt-1 h-px bg-gradient-to-r from-[#00c896]/40 to-transparent" />
+                    <div className="mt-1 h-px bg-gradient-to-r from-[#15803d]/40 to-transparent" />
 
                     <div className="mt-4 space-y-3.5">
                       {s.body.map((p, j) => (
@@ -260,7 +260,7 @@ function ReportsView() {
                       <ul className="mt-4 space-y-2">
                         {s.bullets.map((b, j) => (
                           <li key={j} className="flex gap-2.5">
-                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#00c896]" />
+                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#15803d]" />
                             <span className="text-[12.5px] leading-relaxed text-muted-foreground">
                               {b}
                             </span>
@@ -303,7 +303,7 @@ function ReportsView() {
                                         "text-[#ef4444]",
                                       typeof cell === "string" &&
                                         cell.startsWith("+") &&
-                                        "text-[#00c896]",
+                                        "text-[#15803d]",
                                     )}
                                   >
                                     {cell}
@@ -337,7 +337,7 @@ function ReportsView() {
                   <Button
                     size="sm"
                     onClick={handleDownload}
-                    className="bg-gradient-eco font-semibold text-[#04231b]"
+                    className="bg-gradient-eco font-semibold text-[#ffffff]"
                   >
                     <Download className="h-3.5 w-3.5" />
                     Download PDF
@@ -357,7 +357,7 @@ export default function ReportsPage() {
     <Suspense
       fallback={
         <div className="grid min-h-screen place-items-center bg-background">
-          <Loader2 className="h-6 w-6 animate-spin text-[#00c896]" />
+          <Loader2 className="h-6 w-6 animate-spin text-[#15803d]" />
         </div>
       }
     >

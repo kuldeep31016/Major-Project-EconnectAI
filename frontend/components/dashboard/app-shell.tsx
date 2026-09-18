@@ -13,6 +13,10 @@ import {
   History,
   LayoutDashboard,
   Cpu,
+  Bell,
+  ClipboardCheck,
+  FolderKanban,
+  LogOut,
   Map as MapIcon,
   Menu,
   Satellite,
@@ -25,19 +29,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useAnalysis } from "@/hooks/use-analysis";
+import { useAuth } from "@/hooks/use-auth";
 import { ProvenanceBadge } from "@/components/shared/provenance-badge";
 import { RunSelector } from "@/components/shared/run-selector";
 import { getScenes } from "@/lib/data";
 import { EASE } from "@/components/shared/motion";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/analysis", label: "Analysis", icon: MapIcon },
-  { href: "/simulation", label: "Simulation", icon: FlaskConical },
-  { href: "/experiments", label: "Experiments", icon: Cpu },
+/** Navigation is role-aware: technical ML controls are hidden from field/officer roles (`cap`). */
+const NAV: { href: string; label: string; icon: typeof LayoutDashboard; cap?: string; roles?: string[] }[] = [
+  { href: "/command", label: "Command Center", icon: LayoutDashboard },
+  { href: "/analysis", label: "Landscape", icon: MapIcon },
+  { href: "/simulation", label: "Scenario Lab", icon: FlaskConical },
+  { href: "/alerts", label: "Alerts", icon: Bell },
+  { href: "/field", label: "Field Work", icon: ClipboardCheck },
+  { href: "/projects", label: "Projects", icon: FolderKanban },
   { href: "/reports", label: "Reports", icon: FileText },
-  { href: "/history", label: "History", icon: History },
+  { href: "/experiments", label: "Models", icon: Cpu, cap: "view_models", roles: ["gis_officer", "analyst", "state_admin", "senior_officer"] },
+  { href: "/history", label: "Analyses", icon: History, roles: ["gis_officer", "analyst", "state_admin", "senior_officer", "range_officer"] },
+  { href: "/dashboard", label: "Overview", icon: LayoutDashboard, roles: ["analyst", "gis_officer", "state_admin"] },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -59,6 +69,8 @@ export function AppShell({
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const visibleNav = NAV.filter((n) => !n.roles || !user || n.roles.includes(user.role));
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -75,12 +87,12 @@ export function AppShell({
         <div className="flex h-16 items-center gap-2.5 border-b border-foreground/[0.08] px-4">
           <Link href="/" className="flex min-w-0 items-center gap-2.5">
             <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-eco">
-              <Waves className="h-5 w-5 text-[#04231b]" strokeWidth={2.4} />
+              <Waves className="h-5 w-5 text-[#ffffff]" strokeWidth={2.4} />
             </div>
             {!collapsed && (
               <div className="min-w-0 leading-none">
                 <div className="truncate text-[14px] font-semibold tracking-tight">
-                  Eco<span className="text-[#00c896]">Connect</span>AI
+                  Eco<span className="text-[#15803d]">Connect</span>AI
                 </div>
                 <div className="mt-1 text-[9px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                   Conservation Intelligence
@@ -101,7 +113,7 @@ export function AppShell({
 
         {/* nav */}
         <nav className="scroll-slim flex-1 space-y-1 overflow-y-auto p-3">
-          {NAV.map((item) => {
+          {visibleNav.map((item) => {
             const active =
               pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
             const link = (
@@ -120,14 +132,14 @@ export function AppShell({
                 {active && (
                   <motion.span
                     layoutId="nav-active"
-                    className="absolute inset-0 rounded-xl bg-[#00c896]/12 ring-1 ring-[#00c896]/25"
+                    className="absolute inset-0 rounded-xl bg-[#15803d]/12 ring-1 ring-[#15803d]/25"
                     transition={{ type: "spring", stiffness: 380, damping: 32 }}
                   />
                 )}
                 <item.icon
                   className={cn(
                     "relative h-[18px] w-[18px] shrink-0 transition-colors",
-                    active && "text-[#00c896]",
+                    active && "text-[#15803d]",
                   )}
                 />
                 {!collapsed && <span className="relative truncate">{item.label}</span>}
@@ -151,7 +163,7 @@ export function AppShell({
             href="/upload"
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "mt-2 flex items-center gap-3 rounded-xl border border-dashed border-[#00c896]/30 px-3 py-2.5 text-[13px] font-medium text-[#00c896] transition-colors hover:bg-[#00c896]/10",
+              "mt-2 flex items-center gap-3 rounded-xl border border-dashed border-[#15803d]/30 px-3 py-2.5 text-[13px] font-medium text-[#15803d] transition-colors hover:bg-[#15803d]/10",
               collapsed && "justify-center px-0",
             )}
           >
@@ -163,6 +175,22 @@ export function AppShell({
         {/* scene switcher + collapse */}
         <div className="border-t border-foreground/[0.08] p-3">
           {!collapsed && <SceneSwitcher />}
+          {!collapsed &&
+            (user ? (
+              <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-foreground/[0.08] px-3 py-2">
+                <div className="min-w-0">
+                  <div className="truncate text-[12px] font-medium">{user.fullName}</div>
+                  <div className="truncate text-[10px] text-muted-foreground">{user.roleLabel}</div>
+                </div>
+                <button onClick={signOut} aria-label="Sign out" className="shrink-0 rounded-md p-1 text-muted-foreground hover:text-foreground">
+                  <LogOut className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            ) : (
+              <Link href="/login" className="mt-2 block rounded-xl border border-foreground/[0.08] px-3 py-2 text-center text-[12px] font-medium hover:bg-foreground/[0.04]">
+                Sign in
+              </Link>
+            ))}
           <button
             onClick={() => setCollapsed((v) => !v)}
             className={cn(
@@ -283,7 +311,7 @@ function SceneSwitcher() {
                   }}
                   className={cn(
                     "flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-foreground/[0.06]",
-                    s.id === sceneId && "bg-[#00c896]/10",
+                    s.id === sceneId && "bg-[#15803d]/10",
                   )}
                 >
                   <div
@@ -297,7 +325,7 @@ function SceneSwitcher() {
                     <div className="truncate text-[10px] text-muted-foreground">{s.region}</div>
                   </div>
                   {s.id === sceneId && (
-                    <Satellite className="h-3.5 w-3.5 shrink-0 text-[#00c896]" />
+                    <Satellite className="h-3.5 w-3.5 shrink-0 text-[#15803d]" />
                   )}
                 </button>
               ))}

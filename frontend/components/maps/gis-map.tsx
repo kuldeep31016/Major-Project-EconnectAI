@@ -218,7 +218,7 @@ export default function GisMap({
                 key={e.id}
                 positions={[a.center as [number, number], b.center as [number, number]]}
                 pathOptions={{
-                  color: severed ? "#ef4444" : e.critical ? "#f59e0b" : "#38bdf8",
+                  color: severed ? "#ef4444" : e.critical ? "#f59e0b" : "#1e5f8a",
                   weight: severed ? 1.2 : 1 + e.strength * 2.6,
                   opacity: severed ? 0.4 : 0.32 + e.strength * 0.5,
                   dashArray: severed ? "4 6" : e.critical ? "7 4" : undefined,

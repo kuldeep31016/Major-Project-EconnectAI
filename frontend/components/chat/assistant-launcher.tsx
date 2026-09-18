@@ -28,8 +28,8 @@ interface Message {
 }
 
 const TONE: Record<string, string> = {
-  eco: "text-[#00c896] bg-[#00c896]/10 border-[#00c896]/20",
-  sky: "text-[#38bdf8] bg-[#38bdf8]/10 border-[#38bdf8]/20",
+  eco: "text-[#15803d] bg-[#15803d]/10 border-[#15803d]/20",
+  sky: "text-[#1e5f8a] bg-[#1e5f8a]/10 border-[#1e5f8a]/20",
   warn: "text-[#f59e0b] bg-[#f59e0b]/10 border-[#f59e0b]/20",
   danger: "text-[#ef4444] bg-[#ef4444]/10 border-[#ef4444]/20",
 };
@@ -113,15 +113,15 @@ export function AssistantLauncher() {
             exit={{ opacity: 0, scale: 0.8, y: 12 }}
             transition={{ duration: 0.28, ease: EASE }}
             onClick={() => setOpen(true)}
-            className="group fixed bottom-5 right-5 z-[60] flex items-center gap-2.5 rounded-2xl bg-gradient-eco py-3 pl-3.5 pr-4 font-semibold text-[#04231b] shadow-2xl shadow-[#00c896]/25 transition-transform hover:scale-[1.03] sm:bottom-6 sm:right-6"
+            className="group fixed bottom-5 right-5 z-[60] flex items-center gap-2.5 rounded-2xl bg-gradient-eco py-3 pl-3.5 pr-4 font-semibold text-[#ffffff] shadow-2xl shadow-[#15803d]/25 transition-transform hover:scale-[1.03] sm:bottom-6 sm:right-6"
             aria-label="Open EcoConnect assistant"
           >
             <span className="relative grid h-6 w-6 place-items-center">
-              <span className="absolute inset-0 animate-ping rounded-full bg-[#04231b]/20" />
+              <span className="absolute inset-0 animate-ping rounded-full bg-[#ffffff]/20" />
               <Sparkles className="relative h-[18px] w-[18px]" strokeWidth={2.4} />
             </span>
             <span className="text-[13px]">Ask AI</span>
-            <kbd className="hidden rounded bg-[#04231b]/15 px-1.5 py-0.5 text-[10px] font-bold sm:inline">
+            <kbd className="hidden rounded bg-[#ffffff]/15 px-1.5 py-0.5 text-[10px] font-bold sm:inline">
               ⌘K
             </kbd>
           </motion.button>
@@ -142,7 +142,7 @@ export function AssistantLauncher() {
             <div className="flex items-center justify-between gap-3 border-b border-foreground/[0.08] bg-sidebar px-4 py-3.5">
               <div className="flex items-center gap-2.5">
                 <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-gradient-eco">
-                  <Bot className="h-[18px] w-[18px] text-[#04231b]" strokeWidth={2.2} />
+                  <Bot className="h-[18px] w-[18px] text-[#ffffff]" strokeWidth={2.2} />
                   <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-[#0b1120] bg-[#22c55e]" />
                 </div>
                 <div className="leading-tight">
@@ -180,7 +180,7 @@ export function AssistantLauncher() {
                         "mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg",
                         m.role === "user"
                           ? "bg-foreground/[0.08] text-muted-foreground"
-                          : "bg-[#00c896]/15 text-[#00c896]",
+                          : "bg-[#15803d]/15 text-[#15803d]",
                       )}
                     >
                       {m.role === "user" ? (
@@ -195,7 +195,7 @@ export function AssistantLauncher() {
                         className={cn(
                           "inline-block rounded-2xl px-3.5 py-2.5 text-left text-[13px] leading-relaxed",
                           m.role === "user"
-                            ? "bg-[#38bdf8]/12 text-foreground"
+                            ? "bg-[#1e5f8a]/12 text-foreground"
                             : "bg-foreground/[0.05] text-foreground/90",
                         )}
                       >
@@ -246,11 +246,11 @@ export function AssistantLauncher() {
                     animate={{ opacity: 1 }}
                     className="flex gap-2.5"
                   >
-                    <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#00c896]/15 text-[#00c896]">
+                    <div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#15803d]/15 text-[#15803d]">
                       <Bot className="h-3.5 w-3.5" />
                     </div>
                     <div className="flex items-center gap-2 rounded-2xl bg-foreground/[0.05] px-3.5 py-2.5 text-[12px] text-muted-foreground">
-                      <Loader2 className="h-3.5 w-3.5 animate-spin text-[#00c896]" />
+                      <Loader2 className="h-3.5 w-3.5 animate-spin text-[#15803d]" />
                       Querying connectivity model…
                     </div>
                   </motion.div>
@@ -266,7 +266,7 @@ export function AssistantLauncher() {
                     key={s}
                     onClick={() => send(s)}
                     disabled={thinking}
-                    className="shrink-0 rounded-full border border-foreground/10 bg-foreground/[0.05] px-3 py-1.5 text-[11px] text-muted-foreground transition-colors hover:border-[#00c896]/30 hover:text-foreground disabled:opacity-50"
+                    className="shrink-0 rounded-full border border-foreground/10 bg-foreground/[0.05] px-3 py-1.5 text-[11px] text-muted-foreground transition-colors hover:border-[#15803d]/30 hover:text-foreground disabled:opacity-50"
                   >
                     {s}
                   </button>
@@ -287,13 +287,13 @@ export function AssistantLauncher() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about corridors, scenarios, restoration…"
-                className="h-10 flex-1 rounded-xl border border-foreground/10 bg-foreground/[0.05] px-3.5 text-[13px] outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-[#00c896]/40"
+                className="h-10 flex-1 rounded-xl border border-foreground/10 bg-foreground/[0.05] px-3.5 text-[13px] outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-[#15803d]/40"
               />
               <Button
                 type="submit"
                 size="icon"
                 disabled={!input.trim() || thinking}
-                className="h-10 w-10 shrink-0 rounded-xl bg-gradient-eco text-[#04231b] hover:opacity-90 disabled:opacity-40"
+                className="h-10 w-10 shrink-0 rounded-xl bg-gradient-eco text-[#ffffff] hover:opacity-90 disabled:opacity-40"
                 aria-label="Send message"
               >
                 <ArrowUp className="h-4 w-4" strokeWidth={2.5} />

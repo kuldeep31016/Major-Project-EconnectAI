@@ -7,12 +7,12 @@ export const BRAND = {
 } as const;
 
 export const COLORS = {
-  eco: "#00c896",
-  sky: "#38bdf8",
+  eco: "#15803d",
+  sky: "#1e5f8a",
   danger: "#ef4444",
   warning: "#f59e0b",
   success: "#22c55e",
-  violet: "#a78bfa",
+  violet: "#6d5bd0",
   muted: "#94a3b8",
   panel: "#111827",
   bg: "#050816",
@@ -53,8 +53,8 @@ export const SENSITIVITY_META: Record<
 };
 
 export const HABITAT_META: Record<HabitatClass, { label: string; color: string }> = {
-  mangrove: { label: "Mangrove Forest", color: "#00c896" },
-  seagrass: { label: "Seagrass Meadow", color: "#38bdf8" },
+  mangrove: { label: "Mangrove Forest", color: "#15803d" },
+  seagrass: { label: "Seagrass Meadow", color: "#1e5f8a" },
   coral: { label: "Coral Reef", color: "#f472b6" },
   saltmarsh: { label: "Salt Marsh", color: "#a3e635" },
   mudflat: { label: "Intertidal Mudflat", color: "#f59e0b" },

@@ -16,10 +16,10 @@ export function ProvenanceBadge({ compact = false }: { compact?: boolean }) {
   const kind = dataSource.provenance?.resultKind ?? "mock";
   const meta = {
     mock: { label: "Prototype · synthetic", color: "#94a3b8", Icon: Database },
-    synthetic: { label: "Exact computation · synthetic geometry", color: "#a78bfa", Icon: Beaker },
+    synthetic: { label: "Exact computation · synthetic geometry", color: "#6d5bd0", Icon: Beaker },
     development: { label: "Real pipeline · dev subset · not final", color: "#f59e0b", Icon: FlaskConical },
     experiment: { label: "Our experimental result", color: "#22c55e", Icon: ShieldCheck },
-    external: { label: "External patch geometry", color: "#38bdf8", Icon: Database },
+    external: { label: "External patch geometry", color: "#1e5f8a", Icon: Database },
   }[kind];
   const Icon = meta.Icon;
   const p = dataSource.provenance;

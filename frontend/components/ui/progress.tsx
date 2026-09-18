@@ -29,9 +29,9 @@ export function Progress({ value, className, color, striped, height = 6 }: Progr
       <motion.div
         className="h-full rounded-full"
         style={{
-          background: color ?? "linear-gradient(90deg, #00c896, #38bdf8)",
+          background: color ?? "linear-gradient(90deg, #15803d, #1e5f8a)",
           backgroundImage: striped
-            ? "repeating-linear-gradient(45deg, rgba(255,255,255,0.16) 0 8px, transparent 8px 16px), linear-gradient(90deg, #00c896, #38bdf8)"
+            ? "repeating-linear-gradient(45deg, rgba(255,255,255,0.16) 0 8px, transparent 8px 16px), linear-gradient(90deg, #15803d, #1e5f8a)"
             : undefined,
           backgroundSize: striped ? "32px 32px, 100% 100%" : undefined,
         }}

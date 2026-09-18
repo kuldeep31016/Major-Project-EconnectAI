@@ -50,7 +50,7 @@ function ChartTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl border border-foreground/12 bg-[#111827]/95 px-3 py-2 shadow-2xl backdrop-blur">
+    <div className="rounded-xl border border-foreground/12 bg-popover/95 px-3 py-2 shadow-2xl backdrop-blur">
       {label !== undefined && (
         <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
           {label}
@@ -86,8 +86,8 @@ export function ConnectivityTrendChart({
       <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
         <defs>
           <linearGradient id="gradConn" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#00c896" stopOpacity={0.5} />
-            <stop offset="100%" stopColor="#00c896" stopOpacity={0.02} />
+            <stop offset="0%" stopColor="#15803d" stopOpacity={0.5} />
+            <stop offset="100%" stopColor="#15803d" stopOpacity={0.02} />
           </linearGradient>
         </defs>
         {GRID}
@@ -98,12 +98,12 @@ export function ConnectivityTrendChart({
           type="monotone"
           dataKey="connectivity"
           name="Connectivity"
-          stroke="#00c896"
+          stroke="#15803d"
           strokeWidth={2.4}
           fill="url(#gradConn)"
           animationDuration={1200}
           dot={false}
-          activeDot={{ r: 4, fill: "#00c896", stroke: "#050816", strokeWidth: 2 }}
+          activeDot={{ r: 4, fill: "#15803d", stroke: "#050816", strokeWidth: 2 }}
         />
       </AreaChart>
     </ResponsiveContainer>
@@ -137,7 +137,7 @@ export function ScenarioLineChart({
           type="monotone"
           dataKey="baseline"
           name="Baseline"
-          stroke="#38bdf8"
+          stroke="#1e5f8a"
           strokeWidth={2}
           strokeDasharray="5 4"
           dot={false}
@@ -220,19 +220,19 @@ export function HealthRadarChart({
         <Radar
           name="Benchmark"
           dataKey="benchmark"
-          stroke="#38bdf8"
+          stroke="#1e5f8a"
           strokeWidth={1.4}
           strokeDasharray="4 3"
-          fill="#38bdf8"
+          fill="#1e5f8a"
           fillOpacity={0.06}
           animationDuration={900}
         />
         <Radar
           name="Observed"
           dataKey="score"
-          stroke="#00c896"
+          stroke="#15803d"
           strokeWidth={2}
-          fill="#00c896"
+          fill="#15803d"
           fillOpacity={0.22}
           animationDuration={1100}
         />
@@ -273,7 +273,7 @@ export function PriorityBarChart({
         <RTooltip content={<ChartTooltip />} cursor={{ fill: "#ffffff08" }} />
         <Bar dataKey="gain" name="Connectivity gain" radius={[0, 6, 6, 0]} animationDuration={1000}>
           {data.map((d, i) => (
-            <Cell key={i} fill={i === 0 ? "#00c896" : i === 1 ? "#38bdf8" : "#a78bfa"} />
+            <Cell key={i} fill={i === 0 ? "#15803d" : i === 1 ? "#1e5f8a" : "#6d5bd0"} />
           ))}
         </Bar>
       </BarChart>
@@ -337,7 +337,7 @@ export function ScoreGauge({
 
 export function Sparkline({
   data,
-  color = "#00c896",
+  color = "#15803d",
   height = 40,
 }: {
   data: number[];
@@ -388,8 +388,8 @@ export function TimelineAreaChart({
       <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -18 }}>
         <defs>
           <linearGradient id="gradYear" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.45} />
-            <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.02} />
+            <stop offset="0%" stopColor="#1e5f8a" stopOpacity={0.45} />
+            <stop offset="100%" stopColor="#1e5f8a" stopOpacity={0.02} />
           </linearGradient>
         </defs>
         {GRID}
@@ -400,7 +400,7 @@ export function TimelineAreaChart({
           type="monotone"
           dataKey="connectivityScore"
           name="Connectivity"
-          stroke="#38bdf8"
+          stroke="#1e5f8a"
           strokeWidth={2.4}
           fill="url(#gradYear)"
           animationDuration={900}
@@ -412,7 +412,7 @@ export function TimelineAreaChart({
                 cx={props.cx}
                 cy={props.cy}
                 r={on ? 5.5 : 3}
-                fill={on ? "#00c896" : "#38bdf8"}
+                fill={on ? "#15803d" : "#1e5f8a"}
                 stroke="#050816"
                 strokeWidth={2}
               />
