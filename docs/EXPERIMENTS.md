@@ -37,9 +37,12 @@ compared across AOIs of different size; ECA % of habitat is used for cross-area 
 | Experiment | Status | Label |
 |---|---|---|
 | Graph analysis over prototype geometry, 4 areas (`prototype_synthetic`) | done 2026-09-18 | PROTOTYPE / SYNTHETIC RESULT |
-| Kerala acquisition (S1 RTC ×6, S2 L2A ×4, GMW 2020) | in progress 2026-09-18 | data |
-| E1 dev (B0, Kerala) | **NOT YET RUN** | — |
-| E1 final (UNB7, GPU) | **NOT YET RUN** | — |
-| E2 / E3 | **NOT YET RUN** | — |
+| Kerala acquisition (S1 RTC ×6, S2 L2A ×6, GMW 2020) | done 2026-09-18 | data (102 ha mangrove, 0.21 % of AOI) |
+| E1 / E2 / E3 dev (B0, Kerala, 176/32/48 tiles) | done 2026-09-18 — see RESULTS_PROVENANCE.md | DEVELOPMENT-SUBSET — NOT FINAL |
+| Exp. 2 threshold sweep (E1 → 0.70, E2 → 0.45) | done 2026-09-18 | DEVELOPMENT-SUBSET — NOT FINAL |
+| Exp. 3–5 on real predictions (`kerala_E1_s1_b0_dev_t0.70`, `kerala_E2_s2_b0_dev_t0.45`) | done 2026-09-18 | DEVELOPMENT-SUBSET — NOT FINAL |
+| Kerala 2025 S1 acquisition (timeline) | in progress | data |
+| Sundarbans / Gulf of Mannar / Bhitarkanika | **NOT YET RUN** | — |
+| E1 final (UNB7, GPU, multi-area) | **NOT YET RUN** | — |
 
 Numbers that exist today and what they mean are listed in `docs/RESULTS_PROVENANCE.md`.

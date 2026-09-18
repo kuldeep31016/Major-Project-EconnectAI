@@ -20,27 +20,18 @@ pipeline outputs through a FastAPI backend. Every number shown carries a provena
 
 | Stage | State |
 |---|---|
-| Graph construction, IIC/PC/ECA, exact leave-one-out criticality, what-if, explanations, restoration | **Implemented and unit-tested.** Reproduces the paper's Tables VI–VIII bit-for-bit from the synthetic prototype geometry. |
-| Patch extraction from a probability raster (connected components, geodesic area, polygons, MMU) | **Implemented and unit-tested.** |
-| Backend API + frontend integration (exact what-if in the UI, provenance badge) | **Implemented and verified in the browser.** |
-| Satellite acquisition (Sentinel-1 RTC, Sentinel-2 L2A, no credentials) + GMW weak labels | **Implemented; verified live on a small test AOI.** |
-| Dataset loader, preprocessing, UNB7 model, training/validation/evaluation/inference | **Implemented; plumbing verified end-to-end on a synthetic test fixture.** |
-| **Trained segmentation model / real segmentation results** | **NOT YET RUN — blocked on the dataset decision (see below).** |
-| EcoConnectAI segmentation accuracy | **NOT AVAILABLE.** The 95.56 % OA in the paper is the foundation study's result (PUBLISHED BASELINE — NOT OUR RESULT). |
+| Graph construction, IIC/PC/ECA, exact leave-one-out criticality, what-if, explanations, restoration | **Implemented, unit-tested**; reproduces the paper's Tables VI–VIII bit-for-bit from the synthetic prototype geometry. |
+| Patch extraction from probability rasters | **Implemented, unit-tested.** |
+| Backend API + frontend (exact what-if, real timeline, provenance badge, polygon scenarios) | **Implemented, verified in the browser on real runs.** |
+| Satellite acquisition (Sentinel-1 RTC, Sentinel-2 L2A, GMW weak labels; no credentials) | **Implemented and executed for Kerala 2020** (S1 ×6, S2 ×6, GMW tile N10E076). |
+| Dataset, preprocessing, UNB7 model, train/validate/evaluate/predict, threshold sweep | **Implemented and executed** on Kerala (dev mode, B0 encoder). |
+| **E1/E2/E3 development runs (Kerala, B0)** | **Done — DEVELOPMENT-SUBSET RESULTS, NOT FINAL.** Test IoU vs GMW: E1 S1-only 0.023, E2 S2-only 0.054, E3 fusion 0.053 (48 tiles). Weak: 176 training tiles, 0.2 % positives, 1–3 px fringes. See `docs/RESULTS_PROVENANCE.md`. |
+| Graph analysis on real predictions | **Done** (`outputs/runs/kerala-coast/kerala_E1_s1_b0_dev_t0.70`, 24 patches, IIC 1.59e-5, ECA 75.5 % of habitat). |
+| Other three study areas; multi-area dataset | **NOT YET RUN.** |
+| **UNB7 final run (GPU) → OUR EXPERIMENTAL RESULT** | **NOT YET RUN.** EcoConnectAI's final segmentation accuracy is therefore **NOT AVAILABLE**; 95.56 % OA is the foundation study's (PUBLISHED BASELINE — NOT OUR RESULT). |
 
-The runs currently under `outputs/runs/*/prototype_synthetic/` are **PROTOTYPE / SYNTHETIC RESULTS**: the
-mathematics is exact, the patch geometry is the prototype's synthetic data. They exist so the full
-pipeline and UI can be exercised; they are not measurements of any real ecosystem.
-
-### Dataset decision (blocker)
-
-No dataset has been supplied yet. Two paths are ready (`docs/DATASET_SETUP.md`):
-
-* **A.** You provide a dataset (local path / Hugging Face / Kaggle / Drive). `scripts/inspect_dataset.py` inspects
-  it first; an adapter then writes the canonical tile layout.
-* **B.** `scripts/acquire_study_area.py` builds a weakly-labelled dataset for the paper's four study areas
-  from public Sentinel-1/2 imagery and Global Mangrove Watch (≈ 30–80 MB per area, no credentials) —
-  the foundation study's own weak-supervision regime.
+Runs under `outputs/runs/*/prototype_synthetic/` are PROTOTYPE / SYNTHETIC (exact maths over synthetic geometry).
+Runs named `kerala_E*_dev_*` are real-data development runs. Every number in the UI carries its label.
 
 ---
 

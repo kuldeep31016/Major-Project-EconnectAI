@@ -23,6 +23,13 @@ Measured on this machine (Apple M3, 16 GB, MPS): B7 forward+backward at batch 2 
 UNB7 *can* be trained locally at small batch, but a full run belongs on a CUDA GPU (Colab/Kaggle). AMP is
 enabled automatically on CUDA only.
 
+## Class imbalance
+
+Mangrove is rare in some AOIs (Kerala: 0.2 % of pixels). Two documented levers: `scripts/build_tiles.py
+--max-negative-ratio R --min-positive-pixels N` (keep at most R × positive tiles of all-negative tiles; counts are
+written to `metadata.json`) and `training.loss_kwargs.pos_weight` in the train config (BCE positive weight; 25 in
+the dev configs). Overall accuracy is meaningless under such imbalance; report IoU/Dice/precision/recall.
+
 ## Loop (`ecoconnect/ml/training/trainer.py`)
 
 AdamW · cosine or plateau LR schedule · BCE+Dice (binary) or CE+Dice (multi-class) with `ignore_index` masking ·
