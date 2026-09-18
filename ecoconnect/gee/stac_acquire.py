@@ -99,8 +99,25 @@ def stac_search(url: str, collection: str, aoi: AOI, date_range: tuple[str, str]
     return [item.to_dict() for item in search.items()]
 
 
-def _read_asset_to_grid(href: str, grid: TargetGrid, resampling: Resampling, dtype=np.float32) -> np.ndarray:
-    """Windowed read of a remote COG, reprojected/resampled onto the target grid.  Returns (H, W)."""
+def _read_asset_to_grid(href: str, grid: TargetGrid, resampling: Resampling, dtype=np.float32,
+                        retries: int = 4) -> np.ndarray:
+    """Windowed read of a remote COG, reprojected/resampled onto the target grid.  Returns (H, W).
+    Transient HTTP failures are retried with exponential back-off (2, 4, 8, 16 s)."""
+    import time as _time
+    last = None
+    for attempt in range(retries + 1):
+        try:
+            return _read_asset_to_grid_once(href, grid, resampling, dtype)
+        except Exception as e:  # rasterio.errors.RasterioIOError and friends
+            last = e
+            if attempt < retries:
+                wait = 2 ** (attempt + 1)
+                print(f"  read failed ({type(e).__name__}); retry {attempt + 1}/{retries} in {wait}s: {href[-60:]}")
+                _time.sleep(wait)
+    raise RuntimeError(f"giving up on {href} after {retries} retries") from last
+
+
+def _read_asset_to_grid_once(href: str, grid: TargetGrid, resampling: Resampling, dtype=np.float32) -> np.ndarray:
     out = np.full((grid.height, grid.width), np.nan, dtype=dtype)
     with rasterio.Env(**GDAL_ENV), rasterio.open(href) as src:
         # window in the source CRS covering the target extent (with a small margin)
