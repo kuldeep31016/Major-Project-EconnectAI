@@ -4,8 +4,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 export DATA_ROOT="$PWD/data"
 PY=.venv/bin/python
-EXP=all4_E1_s1_b0_dev
-for a in odisha-coast sundarbans gulf-of-mannar; do
+EXP="${EXP:-multi_E1_s1_b0_dev}"
+AREAS="${AREAS:-odisha-coast gulf-of-mannar}"
+for a in $AREAS; do
   until [ -f "data/labels/$a/gmw_2020.tif" ] && [ -f "data/scenes/$a/${a}_2020_s12_10m.tif" ]; do sleep 20; done
   echo "[phase2] $a acquired"
 done
