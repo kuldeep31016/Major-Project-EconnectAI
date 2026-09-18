@@ -1,6 +1,14 @@
 # EcoConnectAI
 
-**A Satellite-Driven Framework for Coastal Ecosystem Connectivity and Conservation Decision Support**
+**Coastal Ecosystem Intelligence and Decision-Support Platform** — built on the paper *A Satellite-Driven Framework for
+Coastal Ecosystem Connectivity and Conservation Decision Support*.
+
+Platform loop: OBSERVE → ANALYSE → UNDERSTAND → SIMULATE → PRIORITISE → ACT → VERIFY → LEARN.
+*AI recommends. Evidence explains. GIS contextualises. Scenarios quantify. Officers decide. Field verification confirms.*
+
+Sign in (`/login`, demo roles) → Command Center → Landscape → Evidence → Scenario Lab → Restoration Planner → Field Work →
+Official report. Platform docs: `docs/PRODUCT_REQUIREMENTS.md`, `API.md`, `FIELD_WORKFLOW.md`, `SECURITY.md`, `DEPLOYMENT.md`,
+`DATA_PROVENANCE.md`, `MODEL_CARD.md`, `PRODUCT_DIFFERENTIATION.md`, `PAPER_IMPLEMENTATION_GAP.md`.
 
 Final-year major project. This repository turns the research design in `docs/EcoConnectAI_IEEE_paper.pdf`
 into a runnable, testable pipeline:

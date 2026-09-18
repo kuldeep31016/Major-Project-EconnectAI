@@ -9,15 +9,16 @@ export const NAV = [
   { href: "#explore", label: "Explore" },
   { href: "#methodology", label: "Methodology" },
   { href: "#study-areas", label: "Study Areas" },
-  { href: "#insights", label: "Insights" },
+  { href: "#workflow", label: "Field & Reports" },
+  { href: "#responsible-ai", label: "Responsible AI" },
   { href: "#team", label: "Team" },
 ] as const;
 
 export const HERO = {
   eyebrow: "Satellite data · Ecosystem science · Real impact",
-  title: ["Connecting Coasts", "for a Sustainable Tomorrow"],
+  title: ["Coastal Ecosystem Intelligence", "for Evidence-Based Conservation"],
   body:
-    "EcoConnectAI uses satellite imagery and graph-based AI to map, analyse and strengthen coastal ecosystem connectivity, helping to conserve mangroves and safeguard our coasts.",
+    "EcoConnectAI turns public satellite imagery into habitat maps, connectivity graphs, ranked priorities and field-verifiable recommendations for coastal forest departments — with the evidence behind every number.",
   features: [
     { icon: "Satellite", label: "Satellite\nImagery" },
     { icon: "Network", label: "Connectivity\nAnalysis" },
@@ -66,3 +67,19 @@ export const TEAM = {
     { name: "Project guide", role: "Supervision" },
   ],
 } as const;
+
+export const WORKFLOW = [
+  { title: "Monitoring", text: "Sentinel-1 and Sentinel-2 composites per landscape, repeated per observation date; change between dates is a mask difference, reported without attributing a cause." },
+  { title: "Connectivity intelligence", text: "Patches become a graph; IIC, PC and ECA are computed from their definitions and every patch is priced by exact leave-one-out removal, across τ = 3 / 5 / 8 km." },
+  { title: "Restoration planning", text: "Candidate sites are ranked by connectivity gained; feasibility rules state what was checked (water, proximity, overlap) and what was not (legal status, cost)." },
+  { title: "Field verification", text: "AI detections become tasks; field officers submit GPS, observation and photo; only accepted evidence turns a detection into a verified fact." },
+  { title: "Reports", text: "Official reports are composed from stored artefacts, project records and field evidence, with provenance and limitations sections — nothing is written by hand." },
+] as const;
+
+export const RESPONSIBLE_AI = [
+  "Every number carries a label: foundation-paper result, prototype/demonstration data, development result (not final), our experimental result, or simulated scenario.",
+  "Segmentation labels are Global Mangrove Watch — an existing map. Agreement with it is reported as such, never as field-truth accuracy.",
+  "The dispersal threshold τ is a configurable analysis parameter, not a biological constant; rankings are shown across values.",
+  "AI recommends, evidence explains, GIS contextualises, scenarios quantify, officers decide, field verification confirms. Predictions never self-verify.",
+  "No costs, field observations, government integrations or performance figures are invented; missing data is shown as missing.",
+] as const;

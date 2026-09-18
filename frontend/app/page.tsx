@@ -17,7 +17,7 @@ import {
 import { HeroMap } from "@/components/landing/hero-map";
 import { fetchStudyAreas, type StudyAreaInfo } from "@/lib/api";
 import { getScenes } from "@/lib/data";
-import { HERO, METHOD_EQUATIONS, NAV, PIPELINE, TEAM, WHY } from "@/lib/landing-content";
+import { HERO, METHOD_EQUATIONS, NAV, PIPELINE, RESPONSIBLE_AI, TEAM, WHY, WORKFLOW } from "@/lib/landing-content";
 
 const ICONS: Record<string, LucideIcon> = { Satellite, Network, Leaf, ShieldCheck, Cloud, Users };
 
@@ -67,7 +67,7 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-2">
             <Link
-              href="/dashboard"
+              href="/command"
               className="hidden items-center gap-2 rounded-lg bg-[#0f5132] px-4 py-2.5 text-[14px] font-semibold text-white transition hover:bg-[#0b3d26] sm:inline-flex"
             >
               Open Dashboard <ArrowRight className="h-4 w-4" />
@@ -84,7 +84,7 @@ export default function LandingPage() {
                 {n.label}
               </a>
             ))}
-            <Link href="/dashboard" className="mt-2 block rounded-lg bg-[#0f5132] px-4 py-2.5 text-center font-semibold text-white">
+            <Link href="/command" className="mt-2 block rounded-lg bg-[#0f5132] px-4 py-2.5 text-center font-semibold text-white">
               Open Dashboard
             </Link>
           </nav>
@@ -110,7 +110,7 @@ export default function LandingPage() {
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/90">{HERO.body}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/dashboard"
+                href="/command"
                 className="inline-flex items-center gap-2 rounded-lg bg-[#22c55e] px-6 py-3.5 text-[15px] font-semibold text-[#052e16] shadow-lg transition hover:bg-[#4ade80]"
               >
                 Explore the Dashboard <ArrowRight className="h-4 w-4" />
@@ -333,6 +333,35 @@ export default function LandingPage() {
         )}
       </section>
 
+      {/* ------------------------------------------------------------ workflow: monitoring → field → reports */}
+      <section id="workflow" className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+        <div className="text-[11.5px] font-semibold uppercase tracking-[0.2em] text-[#16a34a]">Observe → analyse → simulate → prioritise → act → verify</div>
+        <h2 className="mt-2 text-[34px] font-bold tracking-tight">From monitoring to verified action</h2>
+        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+          {WORKFLOW.map((w, i) => (
+            <div key={w.title} className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm">
+              <div className="text-[11px] font-semibold text-[#16a34a]">0{i + 1}</div>
+              <div className="mt-1 text-[15px] font-semibold">{w.title}</div>
+              <p className="mt-2 text-[13px] leading-relaxed text-[#475569]">{w.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------ responsible AI */}
+      <section id="responsible-ai" className="bg-[#0f5132] text-white">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+          <div className="text-[11.5px] font-semibold uppercase tracking-[0.2em] text-[#86efac]">Responsible AI</div>
+          <h2 className="mt-2 text-[34px] font-bold tracking-tight">Honest by design</h2>
+          <ul className="mt-6 grid gap-3 md:grid-cols-2">
+            {RESPONSIBLE_AI.map((r) => (
+              <li key={r} className="rounded-2xl bg-white/10 p-4 text-[14px] leading-relaxed text-white/95">{r}</li>
+            ))}
+          </ul>
+          <p className="mt-6 text-[12px] text-white/70">Differentiation is stated only as a documented capability combination (see PRODUCT_DIFFERENTIATION.md); no claim of being first or unique is made.</p>
+        </div>
+      </section>
+
       {/* ------------------------------------------------------------ team */}
       <section id="team" className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
@@ -357,10 +386,10 @@ export default function LandingPage() {
       <section className="bg-[#0b1120] text-white">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-4 py-14 sm:px-6 md:flex-row md:items-center">
           <div>
-            <h3 className="text-[28px] font-bold tracking-tight">See the connectivity of a coast in minutes.</h3>
-            <p className="mt-2 text-[15px] text-white/75">Open the dashboard, pick a study area and run the pipeline.</p>
+            <h3 className="text-[28px] font-bold tracking-tight">Open the Command Center.</h3>
+            <p className="mt-2 text-[15px] text-white/75">Sign in with a demo role, pick a landscape and follow one patch from detection to verified report.</p>
           </div>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 rounded-lg bg-[#22c55e] px-6 py-3.5 text-[15px] font-semibold text-[#052e16] hover:bg-[#4ade80]">
+          <Link href="/command" className="inline-flex items-center gap-2 rounded-lg bg-[#22c55e] px-6 py-3.5 text-[15px] font-semibold text-[#052e16] hover:bg-[#4ade80]">
             Open Dashboard <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
