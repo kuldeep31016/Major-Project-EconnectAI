@@ -6,22 +6,24 @@ import { useMemo } from "react";
  * Deterministic starfield — seeded so server and client render identical
  * positions (Math.random here would cause hydration mismatch).
  */
+function makeStars(count: number) {
+  let seed = 20260808;
+  const rnd = () => {
+    seed = (seed * 1664525 + 1013904223) % 4294967296;
+    return seed / 4294967296;
+  };
+  return Array.from({ length: count }, () => ({
+    left: rnd() * 100,
+    top: rnd() * 100,
+    size: 0.6 + rnd() * 1.8,
+    opacity: 0.15 + rnd() * 0.6,
+    delay: rnd() * 6,
+    duration: 2.5 + rnd() * 4,
+  }));
+}
+
 export function Starfield({ count = 90, className }: { count?: number; className?: string }) {
-  const stars = useMemo(() => {
-    let seed = 20260808;
-    const rnd = () => {
-      seed = (seed * 1664525 + 1013904223) % 4294967296;
-      return seed / 4294967296;
-    };
-    return Array.from({ length: count }, () => ({
-      left: rnd() * 100,
-      top: rnd() * 100,
-      size: 0.6 + rnd() * 1.8,
-      opacity: 0.15 + rnd() * 0.6,
-      delay: rnd() * 6,
-      duration: 2.5 + rnd() * 4,
-    }));
-  }, [count]);
+  const stars = useMemo(() => makeStars(count), [count]);
 
   return (
     <div className={className} aria-hidden>
