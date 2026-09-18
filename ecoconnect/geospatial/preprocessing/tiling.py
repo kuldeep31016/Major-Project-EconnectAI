@@ -32,6 +32,8 @@ class TilingReport:
     n_tiles_written: int
     n_tiles_skipped_invalid: int
     n_tiles_skipped_unlabelled: int
+    n_positive_tiles: int
+    n_negative_tiles_dropped: int
     split_counts: dict
     positive_fraction_train: float
     crs: str
@@ -78,7 +80,12 @@ def build_tiles(
     seed: int = 42,
     source_description: Optional[dict] = None,
     append: bool = False,
+    max_negative_ratio: Optional[float] = None,
+    min_positive_pixels: int = 1,
 ) -> TilingReport:
+    """``max_negative_ratio``: keep at most ratio x (#tiles with >= min_positive_pixels habitat pixels)
+    all-negative tiles (seeded), to tame extreme class imbalance. None = keep every tile. The counts of
+    kept/dropped negatives are written to metadata.json so the subsampling is always documented."""
     image_path, label_path, root = Path(image_path), Path(label_path), Path(dataset_root)
     stride = stride or tile_size
     (root / "tiles" / "images").mkdir(parents=True, exist_ok=True)
@@ -123,11 +130,27 @@ def build_tiles(
                     o.write(x.astype(prof_img["dtype"]))
                 with rasterio.open(root / "tiles" / "masks" / f"{tid}.tif", "w", **{**prof_lab, "transform": t, "count": 1}) as o:
                     o.write(y, 1)
-                pos = float((y == 1).sum() / max(labelled.sum(), 1))
+                pos = float((y == 1).sum() / max(labelled.sum(), 1)) if (y == 1).sum() >= min_positive_pixels else 0.0
                 written.append((tid, r // stride, c // stride, pos))
         crs, px = str(img.crs), [abs(img.transform.a), abs(img.transform.e)]
         n_bands = img.count
     lab.close()
+
+    # optional negative-tile subsampling (class imbalance); files of dropped tiles are removed again
+    n_neg_dropped = 0
+    n_pos = sum(1 for _, _, _, pos in written if pos > 0)
+    if max_negative_ratio is not None:
+        rng_neg = random.Random(seed + 1)
+        negs = [w for w in written if w[3] <= 0]
+        keep_n = int(round(max_negative_ratio * n_pos))
+        if len(negs) > keep_n:
+            rng_neg.shuffle(negs)
+            drop = set(w[0] for w in negs[keep_n:])
+            for tid in drop:
+                (root / "tiles" / "images" / f"{tid}.tif").unlink(missing_ok=True)
+                (root / "tiles" / "masks" / f"{tid}.tif").unlink(missing_ok=True)
+            n_neg_dropped = len(drop)
+            written = [w for w in written if w[0] not in drop]
 
     # spatial-block split: assign each block (of block_tiles x block_tiles tiles) to a split
     rng = random.Random(seed)
@@ -159,6 +182,8 @@ def build_tiles(
         "classes": {"0": "non-habitat", "1": "habitat"},
         "tile_size": tile_size, "stride": stride, "crs": crs, "pixel_size": px,
         "split_strategy": f"spatial blocks of {block_tiles}x{block_tiles} tiles, fractions {split_fracs}, seed {seed}",
+        "negative_subsampling": {"max_negative_ratio": max_negative_ratio, "positive_tiles": n_pos,
+                                 "negative_tiles_dropped": n_neg_dropped},
     })
     meta.setdefault("sources", []).append({
         "image": str(image_path.resolve()), "label": str(label_path.resolve()), **(source_description or {})})
@@ -168,6 +193,7 @@ def build_tiles(
         dataset_root=str(root), source_image=str(image_path), source_label=str(label_path),
         tile_size=tile_size, stride=stride, n_tiles_written=len(written),
         n_tiles_skipped_invalid=skipped_invalid, n_tiles_skipped_unlabelled=skipped_unlab,
+        n_positive_tiles=n_pos, n_negative_tiles_dropped=n_neg_dropped,
         split_counts={k: len(v) for k, v in split_ids.items()},
         positive_fraction_train=float(np.mean(pos_train)) if pos_train else 0.0,
         crs=crs, pixel_size=px, bands=meta["bands"],

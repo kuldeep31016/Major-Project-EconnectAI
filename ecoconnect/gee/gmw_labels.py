@@ -49,12 +49,17 @@ def _download(url: str, dest: Path, log=print) -> Path:
 
 
 def gmw_tile_names(aoi: AOI) -> list[str]:
-    """GMW tiles are 1-degree cells named by their lower-left corner, e.g. N09E076."""
+    """GMW tiles are 1-degree cells named by their NORTHERN edge latitude and WESTERN edge longitude
+    (verified on the v3 archive: N00E008 spans lat -1..0, N01E006 spans 0..1, S01E008 spans -2..-1,
+    N09E076 spans 8..9)."""
     min_lat, min_lon, max_lat, max_lon = aoi.bbox
     names = []
-    for lat in range(math.floor(min_lat), math.ceil(max_lat)):
-        for lon in range(math.floor(min_lon), math.ceil(max_lon)):
-            names.append(f"{'N' if lat >= 0 else 'S'}{abs(lat):02d}{'E' if lon >= 0 else 'W'}{abs(lon):03d}")
+    for lat in range(math.floor(min_lat), math.ceil(max_lat)):      # lat = southern edge of the band
+        top = lat + 1
+        lat_tag = f"N{top:02d}" if top >= 0 else f"S{-top:02d}"
+        for lon in range(math.floor(min_lon), math.ceil(max_lon)):  # lon = western edge
+            lon_tag = f"E{lon:03d}" if lon >= 0 else f"W{-lon:03d}"
+            names.append(f"{lat_tag}{lon_tag}")
     return names
 
 

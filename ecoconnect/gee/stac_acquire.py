@@ -125,16 +125,35 @@ def sentinel2_composite(aoi: AOI, grid: TargetGrid, cfg: dict, acq: dict, log=pr
                         sortby=[{"field": "properties.eo:cloud_cover", "direction": "asc"}])
     if not items:
         raise RuntimeError("no Sentinel-2 scenes matched; widen date_range or raise max_cloud_cover_s2")
-    # prefer scenes in the grid's own UTM zone, then fewest clouds
-    epsg = grid.crs.to_epsg()
-    items.sort(key=lambda it: (str(it["properties"].get("proj:epsg", it["properties"].get("proj:code", ""))).endswith(str(epsg)) is False,
-                               it["properties"]["eo:cloud_cover"]))
-    items = items[: acq["max_scenes_s2"]]
+    # An AOI can straddle several MGRS granules, and a granule sliver can have ~0 % cloud simply
+    # because it barely overlaps the AOI.  So: compute each item's overlap with the AOI, discard
+    # slivers, and take the least-cloudy ``max_scenes_s2`` items PER MGRS tile.
+    from shapely.geometry import shape as _shape, box as _box
+    aoi_geom = _box(*aoi.bbox_lonlat)
+    by_tile: dict[str, list[dict]] = {}
+    for it in items:
+        try:
+            ov = _shape(it["geometry"]).intersection(aoi_geom).area / aoi_geom.area
+        except Exception:
+            ov = 1.0
+        if ov < 0.02:
+            continue
+        it["_overlap"] = ov
+        tile = it["properties"].get("s2:mgrs_tile") or it["properties"].get("grid:code") or it["id"].split("_")[1]
+        by_tile.setdefault(tile, []).append(it)
+    chosen = []
+    for tile, its in by_tile.items():
+        its.sort(key=lambda it: it["properties"]["eo:cloud_cover"])
+        chosen += its[: acq["max_scenes_s2"]]
+    if not chosen:
+        raise RuntimeError("no Sentinel-2 scene overlaps the AOI by >= 2 %")
+    log(f"  S2 granules covering the AOI: " + ", ".join(f"{t} ({max(i['_overlap'] for i in its):.0%})" for t, its in by_tile.items()))
+    items = chosen
     names = list(cfg["bands"])
     stack = np.full((len(items), len(names), grid.height, grid.width), np.nan, np.float32)
     used = []
     for k, it in enumerate(items):
-        log(f"  S2 {it['id']}  cloud={it['properties']['eo:cloud_cover']:.1f}%")
+        log(f"  S2 {it['id']}  cloud={it['properties']['eo:cloud_cover']:.1f}%  AOI overlap={it.get('_overlap', 1.0):.0%}")
         scl = _read_asset_to_grid(it["assets"][cfg["scl_band"]]["href"], grid, Resampling.nearest)
         bad = np.isin(scl, cfg["scl_mask_classes"]) | np.isnan(scl)
         props = it["properties"]
@@ -146,6 +165,7 @@ def sentinel2_composite(aoi: AOI, grid: TargetGrid, cfg: dict, acq: dict, log=pr
             arr[arr <= 0] = np.nan                     # L2A 0 = nodata
             stack[k, bi] = arr - offset                # BOA_ADD_OFFSET (baseline >= 04.00)
         used.append({"id": it["id"], "datetime": props["datetime"], "cloud_cover": props["eo:cloud_cover"],
+                     "aoi_overlap": it.get("_overlap"),
                      "processing_baseline": props.get("s2:processing_baseline"), "boa_offset_subtracted_dn": offset,
                      "href_example": it["assets"][names[0]]["href"]})
     with warnings.catch_warnings():

@@ -1,0 +1,5 @@
+[acquire] kerala-coast  bbox=(9.778, 76.272, 9.978, 76.472)  grid=2203x2221 @ 10 m  EPSG:32643
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-2 L2A (Earth Search) ...
+  S2 granules covering the AOI: MGRS-43PFM (59%), MGRS-43PFL (85%)
+  S2 S2A_43PFM_20200112_1_L2A  cloud=0.0%  AOI overlap=22%

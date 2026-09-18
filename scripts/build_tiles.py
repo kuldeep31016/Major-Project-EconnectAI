@@ -22,6 +22,8 @@ def main():
     ap.add_argument("--bands", default=None, help="comma-separated band names recorded in metadata.json")
     ap.add_argument("--id-prefix", default="t"); ap.add_argument("--append", action="store_true", help="add to an existing dataset (multi-AOI)")
     ap.add_argument("--source-note", default=None)
+    ap.add_argument("--max-negative-ratio", type=float, default=None, help="keep at most R x positive tiles of all-negative tiles")
+    ap.add_argument("--min-positive-pixels", type=int, default=1)
     a = ap.parse_args()
     if not a.data_root:
         ap.error("set DATA_ROOT (env/.env) or pass --data-root")
@@ -29,7 +31,8 @@ def main():
                       block_tiles=a.block_tiles, seed=a.seed, min_valid_frac=a.min_valid_frac,
                       min_labelled_frac=a.min_labelled_frac, band_names=a.bands.split(",") if a.bands else None,
                       id_prefix=a.id_prefix, append=a.append,
-                      source_description={"note": a.source_note} if a.source_note else None)
+                      source_description={"note": a.source_note} if a.source_note else None,
+                      max_negative_ratio=a.max_negative_ratio, min_positive_pixels=a.min_positive_pixels)
     print(json.dumps(rep.to_dict(), indent=1))
 
 
