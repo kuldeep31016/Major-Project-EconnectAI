@@ -1,0 +1,49 @@
+# Satellite data acquisition (paper Section IV-A / Table IV).  No credentials required for the
+# default STAC path.  Nothing is downloaded until scripts/acquire_study_area.py is run explicitly.
+#
+# Sentinel-1 (SAR) is the PRIMARY segmentation input, Sentinel-2 is COMPLEMENTARY (paper: not fused).
+# Both are written into one scene GeoTIFF with named bands; which bands a model consumes is chosen
+# in configs/dataset.yaml (bands: ...) so S1-only (paper baseline), S2-only and S1+S2 (fusion -
+# experimental, unvalidated) are separate, explicitly labelled experiments.
+
+acquisition:
+  provider: stac                    # stac (default, no auth) | gee (requires earthengine authentication)
+  date_range: ["2020-01-01", "2020-12-31"]   # matches the GMW 2020 label year
+  max_scenes_s2: 6                  # least-cloudy scenes used for the median composite
+  max_cloud_cover_s2: 40            # scene-level filter (%), pixel-level SCL masking is applied anyway
+  max_scenes_s1: 8                  # S1 scenes for the temporal median (speckle reduction, time-series SAR)
+  s1_orbit: any                     # any | ascending | descending
+  target_resolution_m: 10
+  output_dir: ${DATA_ROOT}/scenes   # data/scenes/<study_area>/<scene_id>.tif + .json
+
+sentinel2:
+  stac_url: https://earth-search.aws.element84.com/v1
+  collection: sentinel-2-l2a
+  bands: [blue, green, red, nir, swir16, swir22]      # B02 B03 B04 B08 B11 B12
+  scl_band: scl
+  scl_mask_classes: [0, 1, 2, 3, 8, 9, 10, 11]        # nodata, saturated, dark, shadow, cloud med/high, cirrus, snow
+  indices: [ndvi, ndwi]                                # computed from the composite
+
+sentinel1:
+  stac_url: https://planetarycomputer.microsoft.com/api/stac/v1
+  collection: sentinel-1-rtc                           # radiometrically terrain corrected gamma0
+  bands: [vv, vh]
+  to_db: true
+  sign_assets: true                                    # planetary_computer.sign (anonymous, no account)
+
+labels:
+  source: gmw                                          # Global Mangrove Watch v3.0, CC-BY-4.0 (Bunting et al. 2022)
+  gmw_zenodo_record: 6894273
+  gmw_year: 2020
+  gmw_file: gmw_v3_2020_gtiff.zip                      # 66 MB global zip; only tiles covering the AOI are extracted
+  cache_dir: ${DATA_ROOT}/raw/gmw
+  note: >
+    GMW is an existing, imperfect published mangrove map. Training against it is WEAK SUPERVISION,
+    exactly the regime of the foundation study (Ghorbanian et al. 2025). Accuracy measured against GMW
+    is agreement with a weak label, not ground truth, and is reported as such.
+
+gee:                                                   # only used when provider = gee
+  project: null                                        # your Earth Engine cloud project id
+  s2_collection: COPERNICUS/S2_SR_HARMONIZED
+  s1_collection: COPERNICUS/S1_GRD
+  scale_m: 10
