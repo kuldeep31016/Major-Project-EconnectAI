@@ -451,3 +451,84 @@ def save_scenario(body: ScenarioIn, user: User = Depends(current_user), db: Sess
 @router.get("/audit")
 def audit_log(limit: int = 200, user: User = Depends(require("view_audit")), db: Session = Depends(get_db)):
     return [a.to_dict() for a in db.query(AuditLog).order_by(AuditLog.ts.desc()).limit(min(limit, 1000)).all()]
+
+
+# --------------------------------------------------------------------------- evidence chain, assistant, official reports
+from fastapi import Query  # noqa: E402
+from .insight import answer as _answer, evidence_chain as _evidence_chain, official_report as _official_report  # noqa: E402
+
+
+def _run_dir_for(db: Session, study_area: str, run_id: str) -> Path:
+    q = db.query(AnalysisVersion).filter_by(study_area_id=study_area)
+    if run_id == "latest":
+        ptr = OUTPUTS_DIR / "runs" / study_area / "LATEST"
+        if ptr.exists():
+            run_id = ptr.read_text().strip()
+        else:
+            v = q.filter(AnalysisVersion.result_kind != "synthetic").order_by(AnalysisVersion.timestamp.desc()).first() or q.first()
+            if not v:
+                raise HTTPException(404, "no run")
+            return Path(v.path)
+    v = db.get(AnalysisVersion, run_id) or db.get(AnalysisVersion, f"{study_area}/{run_id}")
+    if not v:
+        p = OUTPUTS_DIR / "runs" / study_area / run_id
+        if not p.exists():
+            raise HTTPException(404, "run not found")
+        return p
+    return Path(v.path)
+
+
+@router.get("/runs/{study_area}/{run_id}/evidence/{object_type}/{object_id}")
+def evidence_chain_ep(study_area: str, run_id: str, object_type: str, object_id: str, db: Session = Depends(get_db)):
+    """The evidence chain behind a decision: data source → imagery → model → parameters → analysis → calculation → field verification."""
+    try:
+        return _evidence_chain(db, _run_dir_for(db, study_area, run_id), object_type, object_id)
+    except KeyError:
+        raise HTTPException(404, f"{object_type} {object_id} not in run")
+
+
+class AskIn(BaseModel):
+    question: str
+    study_area: str
+    run_id: str = "latest"
+
+
+@router.post("/assistant/ask")
+def assistant_ask(body: AskIn, db: Session = Depends(get_db)):
+    """GIS-aware decision assistant: intent → stored data → templated answer. Never generates numbers."""
+    try:
+        rd = _run_dir_for(db, body.study_area, body.run_id)
+    except HTTPException:
+        rd = None
+    return _answer(db, body.question, body.study_area, rd)
+
+
+class ReportIn(BaseModel):
+    study_area: str
+    run_id: str = "latest"
+    project_id: Optional[int] = None
+
+
+@router.post("/reports/generate")
+def generate_report(body: ReportIn, user: User = Depends(require("generate_report")), db: Session = Depends(get_db)):
+    """Official report composed from run artefacts + project + field verification; stored and audited."""
+    from ecoconnect.pipeline.config import load_study_areas
+    rd = _run_dir_for(db, body.study_area, body.run_id)
+    project = db.get(Project, body.project_id) if body.project_id else None
+    rep = _official_report(db, rd, load_study_areas().get(body.study_area, {}), project, user)
+    row = Report(project_id=body.project_id, study_area_id=body.study_area, run_id=rep["provenance"]["runId"], title=rep["title"], content=rep, created_by=user.id)
+    db.add(row); db.flush()
+    rep["id"] = f"official-{row.id}"
+    audit(db, user, "generate_report", "report", row.id, new={"study_area": body.study_area, "run_id": rep["provenance"]["runId"], "project_id": body.project_id}); db.commit()
+    return rep
+
+
+@router.get("/reports")
+def list_reports(study_area: Optional[str] = Query(None), db: Session = Depends(get_db)):
+    q = db.query(Report)
+    if study_area:
+        q = q.filter_by(study_area_id=study_area)
+    out = []
+    for r in q.order_by(Report.created_at.desc()).all():
+        c = dict(r.content or {}); c["id"] = f"official-{r.id}"; out.append(c)
+    return out

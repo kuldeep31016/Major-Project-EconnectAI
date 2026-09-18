@@ -23,7 +23,9 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { EASE } from "@/components/shared/motion";
 import { getReports } from "@/lib/data";
-import { fetchReport, fetchRuns } from "@/lib/api";
+import { fetchOfficialReports, fetchProjects, fetchReport, fetchRuns, generateOfficialReport, type ProjectItem } from "@/lib/api";
+import { useAnalysis } from "@/hooks/use-analysis";
+import { useAuth } from "@/hooks/use-auth";
 import type { ScientificReport } from "@/types";
 import { fmtDate } from "@/utils/format";
 import { cn } from "@/lib/utils";
@@ -47,8 +49,28 @@ function ReportsView() {
       cancelled = true;
     };
   }, []);
-  const isLive = liveReports !== null && liveReports.length > 0;
-  const reports = isLive ? liveReports! : mockReports;
+  const { sceneId, runId } = useAnalysis();
+  const { can } = useAuth();
+  const [official, setOfficial] = useState<ScientificReport[]>([]);
+  const [projects, setProjects] = useState<ProjectItem[]>([]);
+  const [projectId, setProjectId] = useState<number | "">("");
+  const [generating, setGenerating] = useState(false);
+  useEffect(() => {
+    fetchOfficialReports().then(setOfficial).catch(() => setOfficial([]));
+    fetchProjects().then(setProjects).catch(() => setProjects([]));
+  }, []);
+  const isLive = (liveReports !== null && liveReports.length > 0) || official.length > 0;
+  const reports = isLive ? [...official, ...(liveReports ?? [])] : mockReports;
+  const generate = async () => {
+    setGenerating(true);
+    try {
+      const rep = await generateOfficialReport(sceneId, runId, projectId === "" ? undefined : projectId);
+      setOfficial((o) => [rep, ...o]);
+      setActiveId(rep.id);
+    } finally {
+      setGenerating(false);
+    }
+  };
   const [activeId, setActiveId] = useState(params.get("id") ?? mockReports[0].id);
   const [downloading, setDownloading] = useState(false);
   const printRef = useRef<HTMLDivElement>(null);
@@ -77,6 +99,15 @@ function ReportsView() {
       }
       actions={
         <>
+          {can("generate_report") && (
+            <>
+              <select value={projectId} onChange={(e) => setProjectId(e.target.value === "" ? "" : Number(e.target.value))} className="hidden rounded-lg border border-foreground/15 bg-background px-2 py-1.5 text-[11.5px] md:block" aria-label="Project">
+                <option value="">no project</option>
+                {projects.filter((p) => p.study_area_id === sceneId).map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+              <Button size="sm" onClick={generate} disabled={generating}>{generating ? "Generating…" : "Generate official report"}</Button>
+            </>
+          )}
           <Button variant="outline" size="sm" className="hidden sm:inline-flex">
             <Share2 className="h-3.5 w-3.5" />
             Share

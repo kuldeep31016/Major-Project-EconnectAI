@@ -5,7 +5,7 @@ import { Cpu, FlaskConical } from "lucide-react";
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchModels, fetchModelDetail, modelAssetUrl, type ModelInfo, type ModelDetail } from "@/lib/api";
+import { fetchModels, fetchModelDetail, fetchModelCards, modelAssetUrl, type ModelInfo, type ModelDetail } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 /** Real segmentation experiments (outputs/segmentation): metrics, calibration, curves, qualitative panels. */
@@ -13,6 +13,8 @@ export default function ExperimentsPage() {
   const [models, setModels] = useState<ModelInfo[] | null>(null);
   const [active, setActive] = useState<string | null>(null);
   const [detail, setDetail] = useState<ModelDetail | null>(null);
+  const [cards, setCards] = useState<{ foundationPaper: Record<string, unknown>; prototype: Record<string, unknown>; ours: Record<string, unknown>[] } | null>(null);
+  useEffect(() => { fetchModelCards().then(setCards).catch(() => setCards(null)); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -80,6 +82,24 @@ export default function ExperimentsPage() {
 
         {detail && (
           <div className="space-y-4">
+            {cards && (() => {
+              const ours = cards.ours.find((c) => c.id === detail.experimentId) as Record<string, unknown> | undefined;
+              const card = (ours?.card ?? {}) as Record<string, unknown>;
+              return (
+                <Card>
+                  <CardHeader className="pb-2"><CardTitle>AI model card</CardTitle><CardDescription>Categories are never mixed: foundation-paper result · prototype · our experimental/development result</CardDescription></CardHeader>
+                  <CardContent className="grid gap-3 text-[12px] md:grid-cols-3">
+                    <div className="rounded-xl border border-foreground/[0.08] p-3"><div className="text-[10px] uppercase tracking-wider text-muted-foreground">Foundation paper result — NOT OURS</div><div className="mt-1 font-semibold">{String(cards.foundationPaper.name)}</div><div className="text-muted-foreground">{String(cards.foundationPaper.architecture)} · {String(cards.foundationPaper.input)}</div><div className="mt-1">OA 95.56 % · κ 0.94 · F1 0.95 (their data)</div></div>
+                    <div className="rounded-xl border border-foreground/[0.08] p-3"><div className="text-[10px] uppercase tracking-wider text-muted-foreground">Prototype / demonstration</div><div className="mt-1 font-semibold">{String(cards.prototype.name)}</div><div className="text-muted-foreground">{String(cards.prototype.note)}</div></div>
+                    <div className="rounded-xl border border-[#0f5132]/30 bg-[#0f5132]/[0.04] p-3"><div className="text-[10px] uppercase tracking-wider text-[#0f5132]">This model — {String(ours?.result_label ?? "")}</div>
+                      <div className="mt-1">{String(ours?.architecture ?? "U-Net")} · {String(ours?.encoder ?? "")} · bands {JSON.stringify(ours?.input_bands ?? null)}</div>
+                      <div className="text-muted-foreground">label source: {String(card.label_source ?? "")}</div><div className="text-muted-foreground">validation: {String(card.validation ?? "")}</div>
+                      <div className="text-muted-foreground">trained {String(ours?.trained_at ?? "").slice(0, 19)} on {String((ours?.hardware as Record<string, unknown> | undefined)?.device ?? "")}</div>
+                      <div className="mt-1">limitations: {((card.known_limitations as string[]) ?? []).join("; ")}</div></div>
+                  </CardContent>
+                </Card>
+              );
+            })()}
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2"><FlaskConical className="h-4 w-4 text-[#6d5bd0]" />{detail.experimentId}</CardTitle>

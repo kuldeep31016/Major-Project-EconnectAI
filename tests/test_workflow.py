@@ -118,3 +118,21 @@ def test_scenarios_and_feasibility(client):
     m = client.post(R + "/scenario", json={"type": "restore_multi", "candidate_ids": ids}).json()
     assert m["difference"]["c"] > 0 and len(m["individual"]) == 2
     assert client.post(R + "/scenario", json={"type": "threshold"}).status_code == 400   # synthetic geometry has no raster
+
+
+def test_evidence_assistant_and_official_report(client):
+    s = _auth(client, "senior")
+    crit = client.get("/api/runs/odisha-coast/wf_test_run/criticality").json()
+    pid = crit[0]["patch_id"]
+    ch = client.get(f"/api/runs/odisha-coast/wf_test_run/evidence/patch/{pid}").json()
+    assert ch["decision"]["rank"] == 1 and ch["criticality_calculation"]["S_i"] == crit[0]["criticality_score"]
+    assert ch["field_verification"] and ch["verification_status"] == "CONFIRMED"      # from the lifecycle test
+    a = client.post("/api/assistant/ask", json={"question": "Which patches are most critical?", "study_area": "odisha-coast", "run_id": "wf_test_run"}).json()
+    assert a["intent"] == "critical" and pid in a["answer"] and a["label"]
+    w = client.post("/api/assistant/ask", json={"question": f"what happens if {pid} is removed", "study_area": "odisha-coast", "run_id": "wf_test_run"}).json()
+    assert w["intent"] == "whatif" and f"{crit[0]['delta_pct']:.1f}" in w["answer"]
+    p = client.get("/api/projects").json()[0]
+    rep = client.post("/api/reports/generate", headers=s, json={"study_area": "odisha-coast", "run_id": "wf_test_run", "project_id": p["id"]}).json()
+    assert rep["status"] == "draft" and any(sec["id"] == "verification" for sec in rep["sections"]) and rep["sections"][0]["id"] == "project"
+    assert client.get("/api/reports?study_area=odisha-coast").json()[0]["id"] == rep["id"]
+    assert client.post("/api/reports/generate", headers=_auth(client, "field"), json={"study_area": "odisha-coast"}).status_code == 403

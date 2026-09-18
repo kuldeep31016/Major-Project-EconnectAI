@@ -40,6 +40,7 @@ import { useAnalysis } from "@/hooks/use-analysis";
 import { getConnectivity, getGraph, getHabitatMask, getHeatmap } from "@/lib/data";
 import { fetchProbabilityBounds, probabilityPngUrl } from "@/lib/api";
 import { SensitivityExplorer } from "@/components/analysis/sensitivity-explorer";
+import { EvidenceDrawer } from "@/components/analysis/evidence-drawer";
 import { SENSITIVITY_META, type BasemapId } from "@/lib/constants";
 import { fmtArea, fmtDate, fmtRatio, fmtIndex } from "@/utils/format";
 import { cn } from "@/lib/utils";
@@ -86,6 +87,7 @@ export default function AnalysisPage() {
 
   const [view, setView] = useState<ViewMode>("split");
   const [explorerOpen, setExplorerOpen] = useState(false);
+  const [evidenceFor, setEvidenceFor] = useState<string | null>(null);
   const [layers, setLayers] = useState<LayerState>({
     satellite: true,
     probability: true,
@@ -192,6 +194,14 @@ export default function AnalysisPage() {
           setSelectedCellId(null);
         }}
       />
+
+      {/* evidence chain for the selected patch */}
+      {selectedPatchId && dataSource.mode === "live" && !evidenceFor && (
+        <button onClick={() => setEvidenceFor(selectedPatchId)} className="absolute right-3 top-3 z-[940] rounded-full bg-[#0f5132] px-3 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-[#0b3d26]">
+          Why is {selectedPatchId} ranked here? · Evidence
+        </button>
+      )}
+      {evidenceFor && <EvidenceDrawer objectType="patch" objectId={evidenceFor} onClose={() => setEvidenceFor(null)} />}
 
       {/* τ / k / metric sensitivity explorer (real runs) */}
       <div className="absolute left-3 top-24 z-[900] w-[300px] max-w-[calc(100%-1.5rem)]">

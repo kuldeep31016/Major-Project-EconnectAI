@@ -16,6 +16,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { ASSISTANT, matchAssistantReply } from "@/lib/data";
+import { askAssistant } from "@/lib/api";
+import { useAnalysis } from "@/hooks/use-analysis";
 import { EASE } from "@/components/shared/motion";
 import { cn } from "@/lib/utils";
 import type { AssistantReply } from "@/types";
@@ -42,6 +44,7 @@ export function AssistantLauncher() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
+  const { sceneId, runId, apiOnline } = useAnalysis();
   const [messages, setMessages] = useState<Message[]>([
     { id: "greeting", role: "assistant", text: ASSISTANT.greeting },
   ]);
@@ -79,9 +82,30 @@ export function AssistantLauncher() {
     setInput("");
     setThinking(true);
 
-    // Small deliberate latency — an instant reply reads as a lookup, not analysis.
+    // GIS-aware assistant: the backend retrieves stored run/database values for the current landscape
+    // and answers from templates (no generation). Falls back to the prototype's canned replies only
+    // when the backend is offline, and says so.
+    if (apiOnline) {
+      askAssistant(text, sceneId, runId)
+        .then((a) => {
+          setThinking(false);
+          setMessages((m) => [
+            ...m,
+            {
+              id: nextId(),
+              role: "assistant",
+              text: a.answer + (a.label ? `\n\n[${a.label}]` : ""),
+              reply: { id: a.intent, match: [], question: text, answer: a.answer, citations: a.sources.map((s) => JSON.stringify(s)), followUps: a.links?.map((l) => `Open ${l}`) },
+            },
+          ]);
+        })
+        .catch(() => {
+          setThinking(false);
+          setMessages((m) => [...m, { id: nextId(), role: "assistant", text: "The backend did not answer; no data available for this question." }]);
+        });
+      return;
+    }
     const reply = matchAssistantReply(text);
-    const delay = 700 + Math.min(1100, text.length * 18);
     window.setTimeout(() => {
       setThinking(false);
       setMessages((m) => [
@@ -89,11 +113,11 @@ export function AssistantLauncher() {
         {
           id: nextId(),
           role: "assistant",
-          text: reply?.answer ?? ASSISTANT.fallback,
+          text: "[DEMONSTRATION — backend offline, prototype reply] " + (reply?.answer ?? ASSISTANT.fallback),
           reply: reply ?? undefined,
         },
       ]);
-    }, delay);
+    }, 400);
   };
 
   // The assistant is contextual to an analysis — hide it on the landing page.

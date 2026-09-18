@@ -252,3 +252,13 @@ export const saveScenario = (body: { study_area_id: string; run_id: string; type
 export interface FeasibilityCandidate { candidate_id: string; rank: number; area_ha: number; centroid: [number, number]; gain_pct: number; new_links: number; linked_patch_ids: string[]; nearest_habitat_km: number | null; ndwi_mean: number | null; overlaps_existing: boolean; overlap_fraction: number; verdict: "recommended" | "conditional" | "not_recommended"; why: string[]; why_not: string[]; not_assessed: string[]; geometry: unknown }
 export interface Feasibility { metric: string; baseline_c: number; ranking_basis: string; candidate_method: string; rules: Record<string, unknown>; candidates: FeasibilityCandidate[] }
 export const fetchFeasibility = (studyArea: string, runId: string) => getJson<Feasibility>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/restoration/feasibility`, undefined, 60000);
+
+/* ------------------------------------------------------------------ evidence, assistant, official reports */
+export const fetchEvidenceChain = (studyArea: string, runId: string, objectType: string, objectId: string) =>
+  getJson<Record<string, unknown>>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/evidence/${objectType}/${encodeURIComponent(objectId)}`);
+export interface AssistantAnswer { intent: string; answer: string; sources: Record<string, unknown>[]; label: string | null; links?: string[]; objects?: string[] }
+export const askAssistant = (question: string, studyArea: string, runId = "latest") =>
+  getJson<AssistantAnswer>("/api/assistant/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, study_area: studyArea, run_id: runId }) });
+export const generateOfficialReport = (studyArea: string, runId = "latest", projectId?: number) =>
+  getJson<ScientificReport>("/api/reports/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ study_area: studyArea, run_id: runId, project_id: projectId }) }, 60000);
+export const fetchOfficialReports = (studyArea?: string) => getJson<ScientificReport[]>(`/api/reports${studyArea ? `?study_area=${encodeURIComponent(studyArea)}` : ""}`);
