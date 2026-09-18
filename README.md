@@ -65,8 +65,15 @@ cd frontend && npm run dev                                         # terminal 2 
 .venv/bin/python scripts/evaluate.py --checkpoint outputs/segmentation/<exp>/best_model.pth
 .venv/bin/python scripts/predict.py  --checkpoint outputs/segmentation/<exp>/best_model.pth --input data/scenes/kerala-coast/<scene>.tif --output outputs/segmentation/<exp>/predictions/kerala-coast_prob.tif
 .venv/bin/python scripts/run_graph_analysis.py --study-area kerala-coast --probability outputs/segmentation/<exp>/predictions/kerala-coast_prob.tif --result-kind development
-# or all of the above:
+# multi-area (every area with a scene + label): tiles → train → evaluate → sweep → analyse
+.venv/bin/python scripts/run_all_areas.py --stage tiles
+.venv/bin/python scripts/run_all_areas.py --stage train --config configs/train_dev.yaml --experiment-id all4_E1_s1_b0_dev
+.venv/bin/python scripts/run_all_areas.py --stage evaluate --experiment-id all4_E1_s1_b0_dev
+.venv/bin/python scripts/run_all_areas.py --stage sweep    --experiment-id all4_E1_s1_b0_dev
+.venv/bin/python scripts/run_all_areas.py --stage analyse  --experiment-id all4_E1_s1_b0_dev
+# or all of the above for one area:
 ./run_demo.sh configs/demo.yaml
+# UNB7 final run on a GPU: notebooks/colab_train_unb7.ipynb
 ```
 
 ---

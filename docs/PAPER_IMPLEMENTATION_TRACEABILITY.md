@@ -28,4 +28,4 @@ Paper: `docs/EcoConnectAI_IEEE_paper.pdf` (source `docs/paper_source_main.tex`).
 | Table II implementation status | | superseded by `docs/IMPLEMENTATION_AUDIT.md` + `README.md` status | — |
 | Table III study areas | metadata only | `configs/study_areas.yaml` | — |
 | Table V (foundation study accuracy) | PUBLISHED BASELINE — NOT OUR RESULT | never emitted by code; `docs/RESULTS_PROVENANCE.md` | — |
-| Decision output | report of map, graph, ranking, what-if, explanations, restoration | `pipeline/analysis.py` exports + `frontend_bundle.json`; dashboard | — |
+| Decision output | report of map, graph, ranking, what-if, explanations, restoration | `pipeline/analysis.py` exports + `frontend_bundle.json`; `pipeline/report.py` (`GET …/report`, Reports page); dashboard | — |

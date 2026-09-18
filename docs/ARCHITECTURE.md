@@ -25,8 +25,10 @@
                ▼   outputs/runs/<area>/<run_id>/  (manifest, geojson, json, csv, frontend_bundle)
 ┌──────── backend (FastAPI) ────────┐      ┌──────── frontend (Next.js) ────────┐
 │ GET study-areas/runs/bundle/...   │ ───► │ lib/api.ts → lib/data.ts registry   │
-│ POST what-if (exact) / restoration│ ◄─── │ provenance badge · exact what-if UI │
-│ POST segment (predict + analyse)  │      │ Leaflet map · React Flow graph      │
+│ GET timeline (real, per year)     │      │ provenance badge · exact what-if UI │
+│ GET report (from run artefacts)   │ ◄─── │ Leaflet map · React Flow graph      │
+│ POST what-if (exact) / restoration│      │ real timeline · real history        │
+│ POST segment (auto scene/ckpt)    │      │ "Run analysis" → real backend run   │
 └───────────────────────────────────┘      └─────────────────────────────────────┘
 ```
 
@@ -59,3 +61,27 @@ paths are hard-coded.
 existing getter (`getHabitatMask`, `getGraph`, …) returns the live bundle when present, otherwise the
 prototype mock labelled PROTOTYPE / SYNTHETIC. Scenario narratives (cyclone, SLR…) and the 2020–25
 timeline are prototype content outside the paper's pipeline and always stay mock.
+
+## Backend endpoints (backend/main.py)
+
+| Endpoint | Purpose |
+|---|---|
+| `GET /api/health`, `/api/study-areas`, `/api/runs`, `/api/scenes`, `/api/models` | discovery: areas + latest run, all runs, acquired scenes, trained experiments |
+| `GET /api/runs/{area}/{run|latest}/bundle` | everything the UI needs, in the prototype's types, with provenance |
+| `GET …/patches|graph|metrics|criticality|explanations|restoration|tau-sensitivity|manifest|files/{name}` | raw artefacts |
+| `GET /api/runs/{area}/timeline` | REAL timeline: one entry per scene year with a run; mask difference between years |
+| `GET …/report` | decision-support report composed only from the run's artefacts |
+| `POST …/what-if {patch_ids}` | exact Eq. (10) recomputation |
+| `POST …/restoration {costs?}` | Eq. (11)/(12); cost-aware only with user costs |
+| `POST /api/segment {study_area, …}` | inference + graph analysis; auto-picks newest scene, best checkpoint (full > calibrated > newest) and its calibrated threshold |
+
+## What in the UI is real vs demonstration
+
+| UI element | Real when a run exists | Otherwise |
+|---|---|---|
+| Analysis map/graph/metrics, criticality, explanations | real run (badge shows label) | prototype mock, badge *Prototype · synthetic* |
+| What-if (patch click / polygon) | exact backend recomputation | prototype heuristic, labelled |
+| Restoration | raw-gain ranking; cost-aware only with a cost CSV | prototype budget bands |
+| Timeline | real runs per year + mask difference | demonstration timeline, labelled |
+| History, Reports, Models panel | real runs / generated reports / real experiments | demonstration entries, labelled |
+| Scenario narratives (cyclone, SLR, …), AI assistant | always demonstration content, labelled | |
