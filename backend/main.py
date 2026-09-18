@@ -177,6 +177,13 @@ for _name, _file in {
     app.add_api_route(f"/api/runs/{{study_area}}/{{run_id}}/{_name}", _make(_file), methods=["GET"], name=_name)
 
 
+@app.get("/api/runs/{study_area}/{run_id}/report")
+def report(study_area: str, run_id: str):
+    """Decision-support report composed only from the run's computed artefacts."""
+    from ecoconnect.pipeline.report import build_report
+    return build_report(_resolve_run(study_area, run_id), load_study_areas().get(study_area, {}))
+
+
 @app.get("/api/runs/{study_area}/{run_id}/files/{name}")
 def run_file(study_area: str, run_id: str, name: str):
     p = _resolve_run(study_area, run_id) / Path(name).name

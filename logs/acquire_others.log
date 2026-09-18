@@ -19,3 +19,39 @@
   S2 S2B_45QWD_20201130_1_L2A  cloud=0.0%  AOI overlap=5%
   S2 S2B_45QWD_20201220_3_L2A  cloud=0.0%  AOI overlap=5%
   S2 S2B_45QVC_20200214_1_L2A  cloud=0.0%  AOI overlap=83%
+ERROR 1: Request for https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/45/Q/VC/2020/2/S2B_45QVC_20200214_1_L2A/B08.tif range 56177231-60348223 failed with response_code=206
+rasterio._err.CPLE_AppDefinedError: ZIPDecode:Decoding error at scanline 0, unknown compression method
+
+The above exception was the direct cause of the following exception:
+
+rasterio._err.CPLE_AppDefinedError: ZIPDecode:Decoding error at scanline 0, unknown compression method
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "rasterio/_io.pyx", line 894, in rasterio._io.DatasetReaderBase._read
+    io_multi_mask(self._hds, 0, xoff, yoff, width, height, out, indexes_arr, resampling=resampling.value)
+  File "rasterio/_io.pyx", line 245, in rasterio._io.io_multi_mask
+    with stack_errors() as checker:
+  File "rasterio/_io.pyx", line 250, in rasterio._io.io_multi_mask
+    retval = checker.exc_wrap_int(retval)
+  File "rasterio/_err.pyx", line 325, in rasterio._err.StackChecker.exc_wrap_int
+rasterio._err.CPLE_AppDefinedError: ZIPDecode:Decoding error at scanline 0, unknown compression method
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/kuldeepraj/Major-Project-EconnectAI/scripts/acquire_study_area.py", line 99, in <module>
+    path = parts[0]
+                 ^^
+  File "/Users/kuldeepraj/Major-Project-EconnectAI/scripts/acquire_study_area.py", line 74, in main
+  File "/Users/kuldeepraj/Major-Project-EconnectAI/ecoconnect/gee/stac_acquire.py", line 171, in sentinel2_composite
+    log(f"  S2 granules covering the AOI: " + ", ".join(f"{t} ({max(i['_overlap'] for i in its):.0%})" for t, its in by_tile.items()))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kuldeepraj/Major-Project-EconnectAI/ecoconnect/gee/stac_acquire.py", line 112, in _read_asset_to_grid
+    data = src.read(1, window=win, masked=True).astype(np.float32)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "rasterio/_io.pyx", line 578, in rasterio._io.DatasetReaderBase.read
+  File "rasterio/_io.pyx", line 900, in rasterio._io.DatasetReaderBase._read
+    raise RasterioIOError("Read failed. See previous exception for details.") from cplerr
+rasterio.errors.RasterioIOError: Read failed. See previous exception for details.

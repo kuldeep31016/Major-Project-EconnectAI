@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 
 import { AppShell } from "@/components/dashboard/app-shell";
+import { ModelsPanel } from "@/components/dashboard/models-panel";
 import { KpiCard } from "@/components/dashboard/kpi-card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -314,6 +315,8 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
+
+          <ModelsPanel />
 
           <Card className="lg:col-span-2">
             <CardHeader className="flex-row items-start justify-between gap-3 pb-3">
