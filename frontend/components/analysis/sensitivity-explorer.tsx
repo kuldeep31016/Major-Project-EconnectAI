@@ -32,7 +32,7 @@ export function SensitivityExplorer() {
   useEffect(() => {
     const b = getLiveBundle(sceneId);
     original.current = b ? JSON.stringify(b) : null;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [sceneId, runId, dataSource.provenance?.runId]);
 
   const run = (t: number, kk: number, m: string) => {

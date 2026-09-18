@@ -43,7 +43,7 @@ interface AnalysisState {
   /* ---------------- real pipeline integration ---------------- */
   /** Whether the FastAPI backend answered /api/health. */
   apiOnline: boolean | null;
-  /** live = real pipeline run from the backend; mock = prototype synthetic JSON. */
+  /** live = real pipeline run from the backend; none = no run / backend offline (empty structures). */
   dataSource: DataSource;
   /** True while the run bundle for the current scene is loading. */
   bundleLoading: boolean;
@@ -89,7 +89,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       : null;
   const whatIfLoading = removedPatchIds.length > 0 && whatIf === null && getDataSource(sceneId).mode === "live";
 
-  // Load the latest real run for the scene. Falls back silently to mock when the API is
+  // Load the latest real run for the scene. Leaves the scene empty when the API is
   // offline or no run exists; the UI shows which through `dataSource`.
   const loadBundle = useCallback(async (id: string, run = "latest") => {
     setBundleLoading(true);
@@ -119,7 +119,9 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void loadBundle(sceneId, runId);
+    // defer one tick so the state updates inside loadBundle never run synchronously in the effect body
+    const t = window.setTimeout(() => void loadBundle(sceneId, runId), 0);
+    return () => window.clearTimeout(t);
   }, [sceneId, runId, loadBundle]);
 
   const refreshBundle = useCallback(() => loadBundle(sceneId, runId), [loadBundle, sceneId, runId]);
@@ -149,7 +151,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       cancelled = true;
     };
     // bundleVersion: re-run once the bundle for this scene has arrived
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [sceneId, runId, removedPatchIds, bundleVersion]);
 
   const setSceneId = useCallback((id: string) => {
@@ -212,7 +214,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       bundleVersion,
     }),
     // bundleVersion forces a refresh of dataSource when a bundle lands
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [
       sceneId,
       setSceneId,

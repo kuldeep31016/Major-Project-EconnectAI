@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import Link from "next/link";
 import { Bell, CheckCircle2, EyeOff, RefreshCw } from "lucide-react";
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Badge } from "@/components/ui/badge";
@@ -20,17 +21,19 @@ function AlertsView() {
   const { sceneId, setSelectedPatchId } = useAnalysis();
   const params = useSearchParams();
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
-  const [active, setActive] = useState<AlertItem | null>(null);
   const [filter, setFilter] = useState<string>("all");
-  const load = async () => {
-    const a = await fetchAlerts(sceneId).catch(() => []);
-    setAlerts(a);
-    const wanted = Number(params.get("id"));
-    if (wanted) setActive(a.find((x) => x.id === wanted) ?? null);
-  };
-  useEffect(() => { void load(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  const [activeId, setActiveId] = useState<number | null>(Number(params.get("id")) || null);
+  const load = () => fetchAlerts(sceneId).catch(() => [] as AlertItem[]).then(setAlerts);
+  useEffect(() => {
+    let cancelled = false;
+    fetchAlerts(sceneId).catch(() => [] as AlertItem[]).then((a) => { if (!cancelled) setAlerts(a); });
+    return () => { cancelled = true; };
   }, [sceneId]);
+  // the detail panel always reflects the freshly loaded record
+  const active = alerts.find((a) => a.id === activeId) ?? null;
+  const setActive = (a: AlertItem | null) => setActiveId(a?.id ?? null);
   const shown = alerts.filter((a) => filter === "all" || a.status === filter);
+  const counts = Object.fromEntries(["OPEN", "ACKNOWLEDGED", "ASSIGNED", "RESOLVED", "DISMISSED"].map((k) => [k, alerts.filter((a) => a.status === k).length]));
 
   return (
     <AppShell title="Alerts" subtitle="Rule-based, each with its triggering numbers — thresholds are operational settings, not ecological facts"
@@ -39,7 +42,7 @@ function AlertsView() {
         <div>
           <div className="mb-2 flex flex-wrap gap-1.5">
             {["all", "OPEN", "ACKNOWLEDGED", "ASSIGNED", "RESOLVED", "DISMISSED"].map((f) => (
-              <button key={f} onClick={() => setFilter(f)} className={cn("rounded-full border px-2.5 py-1 text-[11px]", filter === f ? "border-[#0f5132] bg-[#0f5132] text-white" : "border-foreground/15")}>{f.toLowerCase()}</button>
+              <button key={f} onClick={() => setFilter(f)} className={cn("rounded-full border px-2.5 py-1 text-[11px]", filter === f ? "border-[#0f5132] bg-[#0f5132] text-white" : "border-foreground/15")}>{f.toLowerCase()}{f !== "all" && counts[f] ? ` (${counts[f]})` : ""}</button>
             ))}
           </div>
           <div className="space-y-1.5">
@@ -72,8 +75,11 @@ function AlertsView() {
                 {can("manage_alerts") && (
                   <div className="flex flex-wrap gap-2">
                     {active.status === "OPEN" && <Button size="sm" onClick={async () => { await updateAlert(active.id, "ACKNOWLEDGED", "reviewed"); await load(); }}><CheckCircle2 className="h-3.5 w-3.5" /> Acknowledge</Button>}
-                    <Button size="sm" variant="outline" onClick={async () => { await updateAlert(active.id, "DISMISSED", "dismissed by officer"); await load(); }}><EyeOff className="h-3.5 w-3.5" /> Dismiss</Button>
-                    <a href="/field" className="inline-flex items-center rounded-lg border border-foreground/15 px-3 py-1.5 text-[12px] hover:bg-foreground/[0.04]">Create field task →</a>
+                    {(active.status === "ACKNOWLEDGED" || active.status === "ASSIGNED") && <Button size="sm" onClick={async () => { await updateAlert(active.id, "RESOLVED", "resolved by officer"); await load(); }}><CheckCircle2 className="h-3.5 w-3.5" /> Resolve</Button>}
+                    {active.status !== "DISMISSED" && active.status !== "RESOLVED" && <Button size="sm" variant="outline" onClick={async () => { await updateAlert(active.id, "DISMISSED", "dismissed by officer"); await load(); }}><EyeOff className="h-3.5 w-3.5" /> Dismiss</Button>}
+                    {(active.status === "DISMISSED" || active.status === "RESOLVED") && <Button size="sm" variant="outline" onClick={async () => { await updateAlert(active.id, "OPEN", "reopened"); await load(); }}>Reopen</Button>}
+                    {can("assign_tasks") && active.lat != null && <Link href={`/field?alert=${active.id}`} className="inline-flex items-center rounded-lg border border-foreground/15 px-3 py-1.5 text-[12px] hover:bg-foreground/[0.04]">Create field task →</Link>}
+                    {active.object_type === "patch" && active.object_id && <Link href={`/analysis?scene=${active.study_area_id}&patch=${active.object_id}`} className="inline-flex items-center rounded-lg border border-foreground/15 px-3 py-1.5 text-[12px] hover:bg-foreground/[0.04]">Open patch on map →</Link>}
                   </div>
                 )}
               </CardContent>

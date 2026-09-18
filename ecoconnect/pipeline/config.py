@@ -66,3 +66,11 @@ def load_config(name_or_path: str | Path) -> dict:
 
 def load_study_areas() -> dict:
     return load_config("study_areas")["study_areas"]
+
+
+def portable_path(p) -> str:
+    """Path as stored in artefacts: relative to the repository when inside it (portable provenance,
+    no machine-specific prefixes), absolute otherwise."""
+    pp = Path(p).resolve()
+    root = REPO_ROOT.resolve()
+    return str(pp.relative_to(root)) if pp.is_relative_to(root) else str(pp)

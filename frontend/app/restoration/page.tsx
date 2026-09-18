@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { applyRestorationRanking, createTask, fetchFeasibility, postRestoration, type Feasibility, type FeasibilityCandidate } from "@/lib/api";
 import { applyRestorationActions, getGraph, getHabitatMask, getHeatmap, getRestoration } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { requestMapFocus, useMapFocus } from "@/lib/map-focus";
 
 const GisMap = dynamic(() => import("@/components/maps/gis-map"), { ssr: false });
 const VERDICT: Record<string, { label: string; variant: "success" | "warning" | "danger" }> = {
@@ -23,16 +24,24 @@ export default function RestorationPlanner() {
   const { can, user } = useAuth();
   const { sceneId, scene, runId, dataSource, bump, selectedPatchId, setSelectedPatchId } = useAnalysis();
   const live = dataSource.mode === "live";
-  const [fe, setFe] = useState<Feasibility | null>(null);
-  const [active, setActive] = useState<FeasibilityCandidate | null>(null);
+  const focus = useMapFocus();
+  // feasibility tagged with the run it answers so a stale table is never shown for another run
+  const [feRes, setFeRes] = useState<{ key: string; data: Feasibility | null } | null>(null);
+  const feKey = `${sceneId}|${dataSource.provenance?.runId ?? ""}`;
+  const fe = feRes?.key === feKey ? feRes.data : null;
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const active = fe?.candidates.find((c) => c.candidate_id === activeId) ?? null;
+  const setActive = (c: FeasibilityCandidate | null) => setActiveId(c?.candidate_id ?? null);
   const [note, setNote] = useState<string | null>(null);
   const mask = getHabitatMask(sceneId); const graph = getGraph(sceneId); const heatmap = getHeatmap(sceneId); const restoration = getRestoration(sceneId);
 
   useEffect(() => {
-    setFe(null); setActive(null);
     if (!live) return;
-    fetchFeasibility(sceneId, runId).then(setFe).catch(() => setFe(null));
-  }, [sceneId, runId, live, dataSource.provenance?.runId]);
+    let cancelled = false;
+    const key = feKey;
+    fetchFeasibility(sceneId, runId).then((d) => { if (!cancelled) setFeRes({ key, data: d }); }).catch(() => { if (!cancelled) setFeRes({ key, data: null }); });
+    return () => { cancelled = true; };
+  }, [sceneId, runId, live, feKey]);
 
   const costUpload = async (f: File) => {
     const text = await f.text();
@@ -47,10 +56,10 @@ export default function RestorationPlanner() {
     <AppShell title="Restoration Planner" subtitle={`${scene.shortName} · ${fe?.ranking_basis ?? "ranked by connectivity gain; cost data unavailable"}`} bleed>
       <div className="grid h-[calc(100vh-4rem)] grid-cols-1 lg:grid-cols-[400px_1fr_380px]">
         <div className="scroll-slim overflow-y-auto border-r border-foreground/[0.08] p-3 space-y-2">
-          {!live && <div className="rounded-xl border border-[#b45309]/30 bg-[#fffbeb] p-3 text-[11.5px] text-[#78350f]">Needs a real analysis run (candidates come from the model's marginal-probability areas).</div>}
+          {!live && <div className="rounded-xl border border-[#b45309]/30 bg-[#fffbeb] p-3 text-[11.5px] text-[#78350f]">Needs a real analysis run (candidates come from the model&apos;s marginal-probability areas).</div>}
           {fe && <div className="rounded-xl border border-foreground/[0.08] bg-foreground/[0.03] p-3 text-[11px] leading-relaxed text-muted-foreground"><b className="text-foreground">Candidate method:</b> {fe.candidate_method}. <b className="text-foreground">Gain:</b> Rᵢ = C(G + vᵢ) − C(G), {fe.metric.toUpperCase()}.</div>}
           {fe?.candidates.map((c) => (
-            <button key={c.candidate_id} onClick={() => setActive(c)} className={cn("w-full rounded-xl border px-3 py-2 text-left", active?.candidate_id === c.candidate_id ? "border-[#0f5132]/40 bg-[#0f5132]/[0.06]" : "border-foreground/[0.08] hover:bg-foreground/[0.03]")}>
+            <button key={c.candidate_id} onClick={() => { setActive(c); requestMapFocus(c.centroid[0], c.centroid[1], 14); }} className={cn("w-full rounded-xl border px-3 py-2 text-left", active?.candidate_id === c.candidate_id ? "border-[#0f5132]/40 bg-[#0f5132]/[0.06]" : "border-foreground/[0.08] hover:bg-foreground/[0.03]")}>
               <div className="flex items-center justify-between gap-2"><span className="text-[12.5px] font-semibold">#{c.rank} {c.candidate_id} · {c.area_ha.toFixed(1)} ha</span><Badge variant={VERDICT[c.verdict].variant}>{VERDICT[c.verdict].label}</Badge></div>
               <div className="mt-0.5 text-[11px] text-muted-foreground">+{c.gain_pct.toFixed(2)} % {fe.metric.toUpperCase()} · {c.new_links} link(s) · {c.nearest_habitat_km != null ? `${c.nearest_habitat_km.toFixed(2)} km to habitat` : ""}</div>
             </button>
@@ -62,8 +71,10 @@ export default function RestorationPlanner() {
           {note && <div className="text-[11px] text-[#1e5f8a]">{note}</div>}
         </div>
         <div className="relative min-h-[420px]">
-          <GisMap scene={scene} mask={mask} graph={graph} heatmap={heatmap} layers={{ satellite: true, probability: false, habitat: true, heatmap: false, connectivity: true, protectedAreas: false, labels: false }} basemap="satellite" heatOpacity={0.5} selectedPatchId={selectedPatchId} onSelectPatch={setSelectedPatchId} className="h-full w-full" />
-          <div className="pointer-events-none absolute left-3 top-3 z-[900] rounded-lg bg-white/90 px-3 py-1.5 text-[11px] shadow">{live ? "REAL DATA · candidates are model output, not surveyed sites" : "DEMONSTRATION DATA"}</div>
+          <GisMap scene={scene} mask={mask} graph={graph} heatmap={heatmap} layers={{ satellite: true, probability: false, habitat: true, heatmap: false, connectivity: true, protectedAreas: false, labels: false }} basemap="satellite" heatOpacity={0.5} selectedPatchId={selectedPatchId} onSelectPatch={setSelectedPatchId} className="h-full w-full"
+            markers={(fe?.candidates ?? []).map((c) => ({ id: c.candidate_id, lat: c.centroid[0], lon: c.centroid[1], color: c.verdict === "recommended" ? "#16a34a" : c.verdict === "conditional" ? "#f59e0b" : "#b91c1c", label: `#${c.rank} ${c.candidate_id} · +${c.gain_pct.toFixed(2)} % · ${VERDICT[c.verdict].label}`, kind: "candidate" as const, onClick: () => setActive(c) }))}
+            focus={focus} />
+          <div className="pointer-events-none absolute left-3 top-3 z-[900] rounded-lg bg-white/90 px-3 py-1.5 text-[11px] shadow">{live ? "REAL DATA · candidates are model output (marginal-probability areas), not surveyed sites" : "no analysis for this landscape yet"}</div>
           {active && <div className="absolute bottom-3 left-3 z-[900] rounded-lg bg-white/95 px-3 py-2 text-[11px] shadow">Candidate {active.candidate_id} at {active.centroid[0].toFixed(4)}, {active.centroid[1].toFixed(4)} · links to {active.linked_patch_ids.join(", ") || "—"}</div>}
         </div>
         <div className="scroll-slim overflow-y-auto border-l border-foreground/[0.08] p-3 space-y-3">

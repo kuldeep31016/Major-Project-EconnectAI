@@ -41,7 +41,6 @@ import {
   getHabitatMask,
   getHeatmap,
   getRestoration,
-  getSimulation,
   getTimeline,
 } from "@/lib/data";
 import { fmtArea, fmtCurrency, fmtRatio } from "@/utils/format";
@@ -59,16 +58,8 @@ const GisMap = dynamic(() => import("@/components/maps/gis-map"), {
   ),
 });
 
-const SCENARIO_ICONS: Record<ScenarioId, typeof Wind> = {
-  cyclone: Wind,
-  "urban-expansion": Building2,
-  "sea-level-rise": WavesIcon,
-  aquaculture: Fish,
-  "road-construction": Route,
-  encroachment: AlertTriangle,
-};
 
-type Mode = "whatif" | "scenario" | "restore" | "timeline";
+type Mode = "whatif" | "restore" | "timeline";
 
 export default function SimulationPage() {
   const {
@@ -77,8 +68,6 @@ export default function SimulationPage() {
     removedPatchIds,
     togglePatchRemoved,
     clearRemoved,
-    activeScenarioId,
-    setActiveScenarioId,
     year,
     setYear,
     selectedPatchId,
@@ -96,7 +85,6 @@ export default function SimulationPage() {
   const graph = getGraph(sceneId);
   const heatmap = getHeatmap(sceneId);
   const conn = getConnectivity(sceneId);
-  const sim = getSimulation(sceneId);
   const restoration = getRestoration(sceneId);
   const timeline = getTimeline(sceneId);
 
@@ -106,16 +94,13 @@ export default function SimulationPage() {
   const [computing, setComputing] = useState(false);
   const [budgetLakh, setBudgetLakh] = useState(180);
 
-  const activeScenario = sim.scenarios.find((s) => s.id === activeScenarioId) ?? null;
-  const activeYear = timeline.years.find((y) => y.year === year) ?? timeline.years.at(-1)!;
+  const activeYear = timeline.years.find((y) => y.year === year) ?? timeline.years.at(-1) ?? null;
 
   /* -------------------------------------------------- what-if maths */
 
   // What-if (paper Eq. 10).
   //  live  -> EXACT: the backend rebuilds G without the patches and recomputes C(G) (IIC) and the
   //           interface score; nothing here is estimated.
-  //  mock  -> PROTOTYPE HEURISTIC over stored attributes (kept only for the synthetic demo and
-  //           labelled as such in the UI).
   const whatIf = useMemo(() => {
     if (!removedPatchIds.length) return null;
 
@@ -161,44 +146,12 @@ export default function SimulationPage() {
       };
     }
 
-    // ---- prototype heuristic (synthetic data only) ----
-    const bridgeLoss = removedPatches.reduce(
-      (s, p) => s + p.bridgeScore * 9 + p.connectivityContribution * 22,
-      0,
-    );
-    const areaLoss = lostPct * 0.22;
-    const drop = Math.min(conn.score * 0.85, bridgeLoss + areaLoss);
-    const after = Math.max(0, conn.score - drop);
-    const survivingEdges = graph.edges.filter(
-      (e) => !removedPatchIds.includes(e.source) && !removedPatchIds.includes(e.target),
-    );
-    const connected = new Set<string>();
-    survivingEdges.forEach((e) => {
-      connected.add(e.source);
-      connected.add(e.target);
-    });
-    const isolated = mask.patches.filter(
-      (p) => !removedPatchIds.includes(p.id) && !connected.has(p.id),
-    );
-    const carbon = removedPatches.reduce((s, p) => s + (p.carbonStockTonnes ?? 0), 0);
-    return {
-      kind: "heuristic" as const,
-      removed: removedPatches,
-      lostHa,
-      lostPct,
-      severedEdges,
-      isolated,
-      before: conn.score,
-      after,
-      drop,
-      ratio: lostPct > 0 ? drop / lostPct : 0,
-      carbonLost: removedPatches.some((p) => p.carbonStockTonnes != null) ? carbon : null,
-    };
+    return null; // no run loaded: nothing to simulate
   }, [removedPatchIds, mask.patches, mask.totals.habitatAreaHa, graph.edges, conn.score, isLive, exactWhatIf]);
 
   /* ------------------------------------------------ restoration band */
 
-  // Budget bands exist only in the prototype's prepared data. Real runs rank candidates by the
+  // Budget bands exist only when a cost table has been uploaded. Real runs rank candidates by the
   // recomputed gain R_i (Eq. 11) and only become cost-aware when the user supplies costs (Eq. 12).
   const band = useMemo(() => {
     const bands = restoration.budgetBands ?? [];
@@ -217,18 +170,13 @@ export default function SimulationPage() {
     satellite: true,
     probability: false,
     habitat: true,
-    heatmap: mode === "scenario" || mode === "timeline",
+    heatmap: mode === "timeline",
     connectivity: true,
     protectedAreas: mode === "restore",
     labels: false,
   };
 
-  const degradedIds =
-    mode === "scenario" && activeScenario
-      ? activeScenario.affectedPatchIds
-      : mode === "timeline"
-        ? activeYear.degradedPatchIds
-        : [];
+  const degradedIds = mode === "timeline" && activeYear ? activeYear.degradedPatchIds : [];
 
   const handleDrawPoint = useCallback(
     (p: LatLng) => {
@@ -260,7 +208,7 @@ export default function SimulationPage() {
       setPolygon([]);
       setComputing(false);
     };
-    // the prototype animated a fake delay; live runs recompute for real, so apply immediately
+    // live runs recompute for real on the backend, so apply immediately
     if (isLive) apply();
     else window.setTimeout(apply, 1200);
   };
@@ -269,7 +217,6 @@ export default function SimulationPage() {
     clearRemoved();
     setPolygon([]);
     setDrawing(false);
-    setActiveScenarioId(null);
   };
 
   return (
@@ -389,22 +336,14 @@ export default function SimulationPage() {
           <div className="pointer-events-none absolute bottom-4 left-4 z-[1000]">
             <div className="rounded-xl glass-strong px-3 py-2 shadow-xl">
               <div className="text-[9.5px] uppercase tracking-widest text-muted-foreground">
-                {mode === "whatif"
-                  ? "What-if simulator"
-                  : mode === "scenario"
-                    ? "Scenario projection"
-                    : mode === "restore"
-                      ? "Restoration planner"
-                      : "Temporal analysis"}
+                {mode === "whatif" ? "What-if simulator" : mode === "restore" ? "Restoration planner" : "Temporal analysis"}
               </div>
               <div className="mt-0.5 text-[12px] font-semibold">
                 {mode === "whatif"
                   ? `${removedPatchIds.length} patch${removedPatchIds.length === 1 ? "" : "es"} removed`
-                  : mode === "scenario"
-                    ? (activeScenario?.name ?? "No scenario active")
-                    : mode === "restore"
-                      ? `${fundedActions.length} interventions funded`
-                      : `Year ${activeYear.year}`}
+                  : mode === "restore"
+                    ? `${fundedActions.length} interventions ranked`
+                    : activeYear ? `Year ${activeYear.year}` : "no runs"}
               </div>
             </div>
           </div>
@@ -433,7 +372,6 @@ export default function SimulationPage() {
               onValueChange={(v) => setMode(v as Mode)}
               items={[
                 { value: "whatif", label: "What-if", icon: Target },
-                { value: "scenario", label: "Scenarios", icon: Wind },
                 { value: "restore", label: "Restore", icon: Sprout },
                 { value: "timeline", label: "Timeline", icon: Clock },
               ]}
@@ -525,23 +463,6 @@ export default function SimulationPage() {
                             .
                           </p>
                         )}
-                        {whatIf.kind === "heuristic" && (
-                          <p className="mt-2 text-[12px] leading-relaxed text-foreground/90">
-                            You removed <b>{fmtArea(whatIf.lostHa)}</b> —{" "}
-                            {whatIf.lostPct.toFixed(1)}% of habitat area — and the prototype estimates a fall of{" "}
-                            <b>{whatIf.drop.toFixed(1)} points</b> (<b>{whatIf.ratio.toFixed(1)}×</b> the area loss).
-                            {whatIf.isolated.length > 0 && (
-                              <>
-                                {" "}
-                                <b>{whatIf.isolated.length}</b> further patch
-                                {whatIf.isolated.length === 1 ? " is" : "es are"} now fully isolated.
-                              </>
-                            )}{" "}
-                            <span className="text-muted-foreground">
-                              Synthetic prototype data — this number is a heuristic, not Eq. (10).
-                            </span>
-                          </p>
-                        )}
                         {whatIfError && (
                           <p className="mt-2 text-[11px] text-[#ef4444]">Backend error: {whatIfError}</p>
                         )}
@@ -580,21 +501,6 @@ export default function SimulationPage() {
                               before={whatIf.exact.components_before}
                               after={whatIf.exact.components_after}
                               unit=""
-                              index={3}
-                            />
-                          )}
-                          {whatIf.carbonLost != null && (
-                            <ImpactRow
-                              label="Carbon stock (prototype)"
-                              before={Math.round(
-                                mask.patches.reduce((s, p) => s + (p.carbonStockTonnes ?? 0), 0) / 1000,
-                              )}
-                              after={Math.round(
-                                (mask.patches.reduce((s, p) => s + (p.carbonStockTonnes ?? 0), 0) -
-                                  whatIf.carbonLost) /
-                                  1000,
-                              )}
-                              unit="kt"
                               index={3}
                             />
                           )}
@@ -649,152 +555,6 @@ export default function SimulationPage() {
                         Restore all habitat
                       </Button>
                     </>
-                  )}
-                </div>
-              )}
-
-              {/* ----------------------------------------- scenarios */}
-              {mode === "scenario" && (
-                <div className="space-y-4">
-                  <div className="rounded-2xl border border-[#f59e0b]/25 bg-[#f59e0b]/8 px-3 py-2.5 text-[11px] leading-relaxed text-[#f59e0b]">
-                    <b>Demonstration / hypothetical scenarios.</b> These narratives (cyclone, sea-level rise,
-                    urban expansion…) are prototype content, not outputs of a validated physical or geospatial
-                    model. For a real scenario use <b>What-if → Draw impact area</b>, which removes the patches
-                    inside your polygon and recomputes C(G) exactly.
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {sim.scenarios.map((s) => {
-                      const Icon = SCENARIO_ICONS[s.id];
-                      const active = s.id === activeScenarioId;
-                      const severity =
-                        s.severity === "extreme"
-                          ? "#ef4444"
-                          : s.severity === "severe"
-                            ? "#f97316"
-                            : s.severity === "moderate"
-                              ? "#f59e0b"
-                              : "#22c55e";
-                      return (
-                        <button
-                          key={s.id}
-                          onClick={() => setActiveScenarioId(active ? null : s.id)}
-                          className={cn(
-                            "group rounded-2xl border p-3 text-left transition-all",
-                            active
-                              ? "border-[#ef4444]/40 bg-[#ef4444]/10"
-                              : "border-foreground/[0.08] bg-foreground/[0.03] hover:border-foreground/15 hover:bg-foreground/[0.06]",
-                          )}
-                        >
-                          <div
-                            className="grid h-8 w-8 place-items-center rounded-lg transition-transform group-hover:scale-105"
-                            style={{ background: `${severity}22`, color: severity }}
-                          >
-                            <Icon className="h-4 w-4" />
-                          </div>
-                          <div className="mt-2 truncate text-[11.5px] font-semibold">{s.name}</div>
-                          <div className="mt-0.5 text-[10px] tabular" style={{ color: severity }}>
-                            −{(sim.baselineScore - s.scoreAfter).toFixed(1)} pts
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {activeScenario ? (
-                    <>
-                      <ScoreDelta before={sim.baselineScore} after={activeScenario.scoreAfter} />
-
-                      <Card>
-                        <CardHeader className="pb-2">
-                          <div className="flex items-center justify-between gap-2">
-                            <CardTitle>{activeScenario.name}</CardTitle>
-                            <Badge
-                              variant={
-                                activeScenario.severity === "extreme" ||
-                                activeScenario.severity === "severe"
-                                  ? "danger"
-                                  : activeScenario.severity === "moderate"
-                                    ? "warning"
-                                    : "success"
-                              }
-                            >
-                              {activeScenario.severity}
-                            </Badge>
-                          </div>
-                          <CardDescription>{activeScenario.description}</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-[12px] leading-relaxed text-muted-foreground">
-                            {activeScenario.narrative}
-                          </p>
-
-                          <div className="mt-4 grid grid-cols-2 gap-2">
-                            {[
-                              ["Habitat loss", `${activeScenario.habitatLossPct}%`, "#ef4444"],
-                              ["Patches isolated", activeScenario.isolatedPatches, "#f59e0b"],
-                              ["Species at risk", activeScenario.speciesAtRisk, "#f97316"],
-                              ["Recovery", `${activeScenario.recoveryYears} yrs`, "#1e5f8a"],
-                              [
-                                "Carbon loss",
-                                `${Math.round(activeScenario.carbonLossTonnes / 1000)} kt`,
-                                "#6d5bd0",
-                              ],
-                              ["Confidence", fmtRatio(activeScenario.confidence), "#22c55e"],
-                            ].map(([k, v, c]) => (
-                              <div
-                                key={k as string}
-                                className="rounded-xl border border-foreground/[0.08] bg-foreground/[0.03] px-3 py-2.5"
-                              >
-                                <div
-                                  className="text-[15px] font-bold leading-none tabular"
-                                  style={{ color: c as string }}
-                                >
-                                  {v as string}
-                                </div>
-                                <div className="mt-1 text-[9.5px] uppercase tracking-wider text-muted-foreground">
-                                  {k as string}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardHeader className="pb-1">
-                          <CardTitle>Projection to 2050</CardTitle>
-                          <CardDescription>Baseline against scenario trajectory</CardDescription>
-                        </CardHeader>
-                        <CardContent className="pt-2">
-                          <ScenarioLineChart data={activeScenario.timeline} height={200} />
-                        </CardContent>
-                      </Card>
-
-                      <Card>
-                        <CardHeader className="pb-3">
-                          <CardTitle>Impact summary</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          {activeScenario.impacts.map((im, i) => (
-                            <ImpactRow key={im.label} {...im} index={i} />
-                          ))}
-                        </CardContent>
-                      </Card>
-                    </>
-                  ) : (
-                    <Card>
-                      <CardContent className="p-5 text-center">
-                        <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#f59e0b]/12 text-[#f59e0b]">
-                          <Wind className="h-6 w-6" />
-                        </div>
-                        <h3 className="mt-4 text-[14px] font-semibold">Select a scenario</h3>
-                        <p className="mt-2 text-[12px] leading-relaxed text-muted-foreground">
-                          Each pressure pathway re-solves the network and updates the map, heatmap
-                          and KPIs. Compare them to see which threats are severe and which are
-                          merely large.
-                        </p>
-                      </CardContent>
-                    </Card>
                   )}
                 </div>
               )}
@@ -1046,14 +806,14 @@ export default function SimulationPage() {
                       <CardDescription>
                         {timeline.note
                           ? `Real pipeline runs · ${timeline.years.map((y) => y.year).join(", ")}`
-                          : "Landscape change 2020 – 2025"}
+                          : "No runs yet"}
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      {!timeline.note && (
+                      {!timeline.years.length && (
                         <div className="mb-3 rounded-xl border border-[#f59e0b]/25 bg-[#f59e0b]/8 px-3 py-2 text-[10.5px] leading-relaxed text-[#f59e0b]">
-                          <b>Demonstration timeline</b> — prototype narrative data. A real timeline appears here once
-                          the pipeline has processed imagery from two or more years for this study area.
+                          No timeline yet — it appears once the pipeline has processed imagery from at least one year for this landscape
+                          (two or more years for change).
                         </div>
                       )}
                       {timeline.note && (
@@ -1090,7 +850,7 @@ export default function SimulationPage() {
                     </CardContent>
                   </Card>
 
-                  <motion.div key={year} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                  {activeYear && <motion.div key={year} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
                     <Card>
                       <CardHeader className="pb-2">
                         <div className="flex items-center justify-between gap-2">
@@ -1156,7 +916,7 @@ export default function SimulationPage() {
                         </div>
                       </CardContent>
                     </Card>
-                  </motion.div>
+                  </motion.div>}
 
                   <Card>
                     <CardHeader className="pb-3">

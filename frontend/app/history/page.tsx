@@ -25,11 +25,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs } from "@/components/ui/tabs";
 import { EASE } from "@/components/shared/motion";
-import { getHistory, getScenes, getScene } from "@/lib/data";
+import { getScenes, getScene } from "@/lib/data";
 import { fetchRuns } from "@/lib/api";
 import type { AnalysisHistoryEntry, RunSummary } from "@/types";
 
-/** Map a real pipeline run onto the prototype's history row shape. */
+/** Map a real pipeline run onto the history row shape. */
 function runToEntry(r: RunSummary): AnalysisHistoryEntry {
   const scene = getScene(r.studyAreaId);
   const kind = r.resultKind;
@@ -66,7 +66,7 @@ const STATUS_META = {
 
 export default function HistoryPage() {
   const scenes = getScenes();
-  // Real runs from the backend when available; otherwise the prototype's demonstration entries.
+  // Real runs from the backend (outputs/runs); empty when the backend is offline.
   const [runs, setRuns] = useState<RunSummary[] | null>(null);
   useEffect(() => {
     let cancelled = false;
@@ -82,7 +82,7 @@ export default function HistoryPage() {
     };
   }, []);
   const isLive = runs !== null && runs.length > 0;
-  const history = useMemo(() => (isLive ? runs!.map(runToEntry) : getHistory()), [isLive, runs]);
+  const history = useMemo(() => (isLive ? runs!.map(runToEntry) : []), [isLive, runs]);
 
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
@@ -126,7 +126,7 @@ export default function HistoryPage() {
       subtitle={
         isLive
           ? `${history.length} real pipeline run${history.length === 1 ? "" : "s"} (outputs/runs) — labels per run`
-          : `${history.length} demonstration entries (prototype) — backend offline or no runs yet`
+          : "no runs available — backend offline or nothing analysed yet"
       }
       actions={
         <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#ffffff]">

@@ -2,7 +2,7 @@
  * Client for the EcoConnectAI FastAPI backend (backend/main.py).
  *
  * The base URL comes from NEXT_PUBLIC_API_URL (default http://localhost:8000). Every call
- * fails soft: callers decide whether to fall back to the prototype's mock data.
+ * fails soft: callers decide how to present the absence of data (never invented values).
  */
 import type { FrontendBundle, RunSummary, WhatIfResult, RestorationAction, TimelineData, ScientificReport } from "@/types";
 
@@ -34,7 +34,12 @@ async function getJson<T>(path: string, init?: RequestInit, timeoutMs = 8000): P
     const headers = new Headers(init?.headers);
     if (token) headers.set("Authorization", `Bearer ${token}`);
     const res = await fetch(`${API_URL}${path}`, { ...init, headers, signal: ctrl.signal, cache: "no-store" });
-    if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${path}`);
+    if (!res.ok) {
+      // surface the backend's own explanation (FastAPI `detail`) so the UI never shows a bare status code
+      let detail = "";
+      try { const j = await res.json(); detail = typeof j?.detail === "string" ? j.detail : JSON.stringify(j?.detail ?? j); } catch { /* no body */ }
+      throw new Error(detail ? `${res.status}: ${detail}` : `${res.status} ${res.statusText} for ${path}`);
+    }
     return (await res.json()) as T;
   } finally {
     clearTimeout(t);
@@ -117,12 +122,27 @@ export const postRestoration = (
   });
 
 /** Launch a real segmentation + graph run for a study area (backend auto-picks newest scene, checkpoint, threshold). */
-export const postSegment = (studyArea: string) =>
+export interface SegmentRequest { study_area: string; scene_tif?: string; checkpoint?: string; threshold?: number | null; result_kind?: "development" | "experiment" }
+export const postSegment = (body: SegmentRequest) =>
   getJson<RunSummary & { scene?: string; checkpoint?: string; thresholdUsed?: number | null }>(
     "/api/segment",
-    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ study_area: studyArea }) },
-    600000,
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) },
+    900000,
   );
+
+/** Downloaded scenes (data/scenes/<area>/*.json sidecars written by the acquisition module). */
+export interface SceneRecord {
+  studyAreaId: string;
+  scene_id: string;
+  bbox: [number, number, number, number];
+  date_range: [string, string];
+  bands: string[];
+  crs: string;
+  width: number;
+  height: number;
+  sources?: Record<string, { scenes?: { id: string; datetime: string; cloud_cover?: number; orbit?: string }[]; valid_fraction?: number; composite?: string }>;
+}
+export const fetchScenes = () => getJson<SceneRecord[]>("/api/scenes");
 
 export interface ModelInfo {
   experimentId: string;
@@ -133,6 +153,12 @@ export interface ModelInfo {
   result_label?: string;
   val?: Record<string, number> | null;
   test?: Record<string, number> | null;
+  bands?: number[] | null;
+  inChannels?: number | null;
+  calibratedThreshold?: number | null;
+  checkpoint?: string | null;
+  trainedAt?: string | null;
+  trainingAreas?: string | null;
 }
 export const fetchModels = () => getJson<ModelInfo[]>("/api/models");
 
@@ -226,6 +252,8 @@ export const updateAlert = (id: number, status: string, reason?: string) => getJ
 
 export interface DetectionItem { id: number; study_area_id: string; run_id: string; object_type: string; object_id: string; status: string; lat: number | null; lon: number | null; summary: string | null; updated_at: string }
 export const fetchDetections = (studyArea?: string) => getJson<DetectionItem[]>(`/api/detections${studyArea ? `?study_area=${encodeURIComponent(studyArea)}` : ""}`);
+export const registerDetection = (body: { study_area_id: string; run_id: string; object_type: string; object_id: string; lat?: number | null; lon?: number | null; summary?: string | null }) =>
+  getJson<DetectionItem>("/api/detections", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 export const setDetectionStatus = (id: number, status: string, reason?: string) => getJson<DetectionItem>(`/api/detections/${id}/status`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, reason }) });
 
 export interface FieldTaskItem { id: number; study_area_id: string; project_id: number | null; alert_id: number | null; detection_id: number | null; title: string; reason: string; lat: number; lon: number; object_type: string | null; object_id: string | null; run_id: string | null; evidence_required: string; assignee_id: number | null; assigneeName?: string | null; created_by: number | null; createdByName?: string | null; status: string; due_date: string | null; created_at: string; updated_at: string; evidenceCount?: number }

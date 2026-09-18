@@ -21,6 +21,13 @@ from shapely.geometry import Polygon, shape
 from ecoconnect.graph import (Patch, build_graph, connectivity, compute_criticality, evaluate_candidates,
                               simulate_removal, summarise)
 from ecoconnect.graph.construction import haversine_km
+from ecoconnect.pipeline.config import REPO_ROOT
+
+
+def _abs(p) -> Path:
+    """Artefact paths are stored repo-relative (ecoconnect.pipeline.config.portable_path)."""
+    pp = Path(str(p or ""))
+    return pp if pp.is_absolute() else REPO_ROOT / pp
 
 
 def _load(run_dir: Path):
@@ -117,12 +124,12 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
 
     if t == "threshold":
         src = m["data_source"]
-        if src.get("type") != "probability_raster" or not Path(str(src.get("path", ""))).is_file():
+        if src.get("type") != "probability_raster" or not _abs(src.get("path")).is_file():
             raise ValueError("threshold scenarios need the run's probability raster on disk (not available for synthetic runs)")
         from ecoconnect.pipeline.sources import from_probability_raster
         out = []
         for thr in body.get("thresholds") or [0.4, 0.5, 0.6, 0.7]:
-            p2, _, a2, _, _ = from_probability_raster(src["path"], threshold=float(thr), mmu_ha=src.get("mmu_ha", 2.0), candidate_threshold=None)
+            p2, _, a2, _, _ = from_probability_raster(_abs(src["path"]), threshold=float(thr), mmu_ha=src.get("mmu_ha", 2.0), candidate_threshold=None)
             if not p2:
                 out.append({"threshold": thr, "n_patches": 0}); continue
             gg = build_graph(p2, k=k, tau_km=tau, distance_mode=dm)
@@ -168,8 +175,9 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
 # --------------------------------------------------------------------------- restoration feasibility
 def _ndwi_stats(scene_path: Optional[str], geometry: dict) -> Optional[float]:
     """Mean Sentinel-2 NDWI inside a candidate polygon, if the scene carries an 's2_ndwi' band."""
-    if not scene_path or not Path(scene_path).exists():
+    if not scene_path or not _abs(scene_path).exists():
         return None
+    scene_path = str(_abs(scene_path))
     try:
         import rasterio
         from rasterio.mask import mask as rmask

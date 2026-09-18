@@ -19,14 +19,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!getToken()) {
-      setReady(true);
-      return;
-    }
-    fetchMe()
-      .then(setUser)
-      .catch(() => setToken(null))
-      .finally(() => setReady(true));
+    let cancelled = false;
+    // resolve the stored session token (if any) into a user; always ends in `ready`
+    (getToken() ? fetchMe().then((u) => { if (!cancelled) setUser(u); }).catch(() => setToken(null)) : Promise.resolve())
+      .finally(() => { if (!cancelled) setReady(true); });
+    return () => { cancelled = true; };
   }, []);
 
   const signIn = useCallback(async (username: string, password: string) => {

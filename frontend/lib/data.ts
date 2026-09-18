@@ -1,50 +1,33 @@
 /**
- * Typed data-access layer.
+ * Typed data-access layer — LIVE ONLY.
  *
- * Every page reads through these helpers. Each per-scene getter first looks in the LIVE
- * registry (a `FrontendBundle` fetched from the backend for a real pipeline run, see
- * `hooks/use-analysis.tsx`) and only then falls back to the prototype's prepared mock JSON.
+ * Every page reads through these helpers. Each per-scene getter returns the `FrontendBundle` of the
+ * real pipeline run fetched from the backend (see `hooks/use-analysis.tsx`). When no run exists for a
+ * landscape (or the backend is offline) the getters return EMPTY structures — never prototype or
+ * synthetic content — and `getDataSource(sceneId).mode === "none"` so the UI can say so.
  *
- *   live  -> computed by ecoconnect/ (segmentation -> patches -> graph -> criticality …),
- *            labelled by its `provenance.resultLabel`
- *   mock  -> PROTOTYPE / SYNTHETIC — deterministic generator output, never a result
- *
- * `getDataSource(sceneId)` tells the UI which one it is showing.
+ * Study-area metadata (names, extent, protection) is configuration mirrored from
+ * configs/study_areas.yaml; it is not a measurement.
  */
-import satelliteImages from "@/mock-data/satellite-images.json";
-import habitatMask from "@/mock-data/habitat-mask.json";
-import graphData from "@/mock-data/graph.json";
-import heatmapData from "@/mock-data/heatmap.json";
-import connectivityData from "@/mock-data/connectivity.json";
-import simulationData from "@/mock-data/simulation.json";
-import recommendationsData from "@/mock-data/recommendations.json";
-import timelineData from "@/mock-data/timeline.json";
-import reportsData from "@/mock-data/reports.json";
-import assistantData from "@/mock-data/assistant.json";
-import historyData from "@/mock-data/history.json";
+import studyAreas from "@/config-data/study-areas.json";
 
 import type {
-  AnalysisHistoryEntry,
-  AssistantData,
   ConnectivityMetrics,
   FrontendBundle,
   HabitatGraph,
   HabitatMask,
   HeatmapData,
-  PipelineStage,
   RestorationData,
   RunProvenance,
   SatelliteScene,
-  ScientificReport,
-  SimulationData,
   TimelineData,
 } from "@/types";
 
 /* ------------------------------------------------------------------ */
-/* scenes                                                              */
+/* study areas (configuration)                                         */
 /* ------------------------------------------------------------------ */
 
-export const SCENES = satelliteImages.scenes as unknown as SatelliteScene[];
+export const SCENES = studyAreas.scenes as unknown as SatelliteScene[];
 export const DEFAULT_SCENE_ID = "kerala-coast";
 
 export function getScenes(): SatelliteScene[] {
@@ -56,19 +39,22 @@ export function getScene(sceneId: string): SatelliteScene {
 }
 
 /* ------------------------------------------------------------------ */
-/* per-scene payloads                                                  */
+/* empty payloads (no run yet)                                         */
 /* ------------------------------------------------------------------ */
 
-const masks = habitatMask as unknown as Record<string, HabitatMask>;
-const graphs = graphData as unknown as Record<string, HabitatGraph>;
-const heatmaps = heatmapData as unknown as Record<string, HeatmapData>;
-const connectivity = connectivityData as unknown as Record<string, ConnectivityMetrics>;
-const simulations = simulationData as unknown as Record<string, SimulationData>;
-const restorations = recommendationsData as unknown as Record<string, RestorationData>;
-const timelines = timelineData as unknown as Record<string, TimelineData>;
-
-const fallback = <T,>(map: Record<string, T>, sceneId: string): T =>
-  map[sceneId] ?? map[DEFAULT_SCENE_ID];
+const emptyMask = (sceneId: string): HabitatMask => ({
+  sceneId, generatedAt: "", modelVersion: "", classes: [], patches: [],
+  totals: { habitatAreaHa: 0, patchCount: 0, meanPatchSizeHa: 0, largestPatchIndex: 0, edgeDensity: 0, meanConfidence: 0 },
+});
+const emptyGraph = (sceneId: string): HabitatGraph => ({ sceneId, nodes: [], edges: [], clusters: [] });
+const emptyHeatmap = (sceneId: string): HeatmapData => ({ sceneId, resolutionM: 0, generatedAt: "", cells: [], legend: [] } as unknown as HeatmapData);
+const emptyConnectivity = (sceneId: string): ConnectivityMetrics => ({
+  sceneId, score: 0, previousScore: null, pcIndex: 0, iicIndex: 0, equivalentConnectedArea: 0, ecaPctOfHabitat: undefined,
+  meanPatchIsolationM: null, linkDensity: 0, networkDiameterKm: 0, fragmentationIndex: 0, resilienceIndex: 0, confidence: 0,
+  grade: null, interpretation: null, components: [], composition: [], health: [], trend: [],
+} as unknown as ConnectivityMetrics);
+const emptyRestoration = (sceneId: string): RestorationData => ({ sceneId, currency: null, baselineScore: 0, rankingBasis: "raw_gain", budgetBands: [], actions: [] });
+const emptyTimeline = (sceneId: string): TimelineData => ({ sceneId, years: [] });
 
 /* ------------------------------------------------------------------ */
 /* live registry (real pipeline runs served by the backend)            */
@@ -149,7 +135,7 @@ export function registerLiveTimeline(sceneId: string, t: TimelineData | null) {
 }
 export const hasLiveTimeline = (sceneId: string) => liveTimelines.has(sceneId);
 
-export type DataMode = "live" | "mock";
+export type DataMode = "live" | "none";
 export interface DataSource {
   mode: DataMode;
   /** Present for live runs. */
@@ -157,172 +143,25 @@ export interface DataSource {
   /** Short label for badges. */
   label: string;
 }
-export const MOCK_LABEL = "PROTOTYPE / SYNTHETIC DATA — not a result";
+export const NO_RUN_LABEL = "NO ANALYSIS YET — run the pipeline for this landscape";
 
 export function getDataSource(sceneId: string): DataSource {
   const b = live.get(sceneId);
   return b
     ? { mode: "live", provenance: b.provenance, label: b.provenance.resultLabel }
-    : { mode: "mock", provenance: null, label: MOCK_LABEL };
+    : { mode: "none", provenance: null, label: NO_RUN_LABEL };
 }
 
-export const getHabitatMask = (sceneId: string): HabitatMask =>
-  live.get(sceneId)?.habitatMask ?? fallback(masks, sceneId);
-export const getGraph = (sceneId: string): HabitatGraph =>
-  live.get(sceneId)?.graph ?? fallback(graphs, sceneId);
-export const getHeatmap = (sceneId: string): HeatmapData =>
-  live.get(sceneId)?.heatmap ?? fallback(heatmaps, sceneId);
-export const getConnectivity = (sceneId: string): ConnectivityMetrics =>
-  live.get(sceneId)?.connectivity ?? fallback(connectivity, sceneId);
-export const getRestoration = (sceneId: string): RestorationData =>
-  live.get(sceneId)?.restoration ?? fallback(restorations, sceneId);
-/** Scenario projections (cyclone, SLR …) are PROTOTYPE narrative content and remain mock in every mode. */
-export const getSimulation = (sceneId: string): SimulationData => fallback(simulations, sceneId);
-/** Timeline: REAL when at least one year has a pipeline run (backend /timeline), else prototype mock. */
-export const getTimeline = (sceneId: string): TimelineData =>
-  liveTimelines.get(sceneId) ?? fallback(timelines, sceneId);
+export const getHabitatMask = (sceneId: string): HabitatMask => live.get(sceneId)?.habitatMask ?? emptyMask(sceneId);
+export const getGraph = (sceneId: string): HabitatGraph => live.get(sceneId)?.graph ?? emptyGraph(sceneId);
+export const getHeatmap = (sceneId: string): HeatmapData => live.get(sceneId)?.heatmap ?? emptyHeatmap(sceneId);
+export const getConnectivity = (sceneId: string): ConnectivityMetrics => live.get(sceneId)?.connectivity ?? emptyConnectivity(sceneId);
+export const getRestoration = (sceneId: string): RestorationData => live.get(sceneId)?.restoration ?? emptyRestoration(sceneId);
+/** Timeline: one entry per year that has a real pipeline run (backend /timeline); empty otherwise. */
+export const getTimeline = (sceneId: string): TimelineData => liveTimelines.get(sceneId) ?? emptyTimeline(sceneId);
 export const getExplanation = (sceneId: string, patchId: string) =>
   live.get(sceneId)?.explanations?.[patchId] ?? null;
 export const getCriticality = (sceneId: string) => live.get(sceneId)?.criticality ?? null;
 
 export const getPatch = (sceneId: string, patchId: string) =>
   getHabitatMask(sceneId).patches.find((p) => p.id === patchId);
-
-/* ------------------------------------------------------------------ */
-/* reports, history, assistant                                         */
-/* ------------------------------------------------------------------ */
-
-export const REPORTS = reportsData.reports as unknown as ScientificReport[];
-export const HISTORY = historyData.entries as unknown as AnalysisHistoryEntry[];
-export const ASSISTANT = assistantData as unknown as AssistantData;
-
-export const getReports = (): ScientificReport[] => REPORTS;
-export const getReport = (id: string): ScientificReport =>
-  REPORTS.find((r) => r.id === id) ?? REPORTS[0];
-export const getReportForScene = (sceneId: string): ScientificReport =>
-  REPORTS.find((r) => r.sceneId === sceneId) ?? REPORTS[0];
-export const getHistory = (): AnalysisHistoryEntry[] => HISTORY;
-
-/**
- * Keyword-scored intent match against the canned reply set. Deliberately simple —
- * it only needs to feel responsive, and a deterministic match is easier to demo.
- */
-export function matchAssistantReply(input: string) {
-  const q = input.toLowerCase().trim();
-  if (!q) return null;
-
-  let best: { score: number; reply: (typeof ASSISTANT.replies)[number] } | null = null;
-  for (const reply of ASSISTANT.replies) {
-    let score = 0;
-    for (const kw of reply.match) if (q.includes(kw)) score += kw.length;
-    if (q === reply.question.toLowerCase()) score += 100;
-    if (score > 0 && (!best || score > best.score)) best = { score, reply };
-  }
-  return best?.reply ?? null;
-}
-
-/* ------------------------------------------------------------------ */
-/* analysis pipeline                                                   */
-/* ------------------------------------------------------------------ */
-
-export const PIPELINE_STAGES: PipelineStage[] = [
-  {
-    id: "upload",
-    label: "Uploading",
-    detail: "Transferring scene to processing node",
-    icon: "UploadCloud",
-    durationMs: 1500,
-    logs: [
-      "Establishing secure channel to ingest-node-04…",
-      "Validating GeoTIFF header and CRS…",
-      "CRS detected: EPSG:32643 (WGS 84 / UTM zone 43N)",
-      "Transfer complete — checksum verified",
-    ],
-  },
-  {
-    id: "preprocess",
-    label: "Preprocessing",
-    detail: "Atmospheric correction and cloud masking",
-    icon: "Layers",
-    durationMs: 2200,
-    logs: [
-      "Applying Sen2Cor atmospheric correction…",
-      "Generating scene classification layer…",
-      "Cloud + cirrus mask: 4.2% of scene excluded",
-      "Resampling B11, B12 to 10 m…",
-      "Computing NDVI, NDWI index channels…",
-    ],
-  },
-  {
-    id: "segmentation",
-    label: "Habitat Segmentation",
-    detail: "EcoSeg v3.2 — Swin-UNet inference",
-    icon: "Scan",
-    durationMs: 3400,
-    logs: [
-      "Loading EcoSeg-v3.2 weights (12-band input)…",
-      "Tiling scene into 512×512 windows — 486 tiles",
-      "Running inference on GPU cluster…",
-      "Thresholding class probabilities at 0.5…",
-      "Vectorising masks — 2 ha minimum mapping unit",
-      "18 habitat patches resolved · mean confidence 0.91",
-    ],
-  },
-  {
-    id: "graph",
-    label: "Building Habitat Graph",
-    detail: "Patch topology and resistance surface",
-    icon: "Network",
-    durationMs: 2400,
-    logs: [
-      "Reducing patches to weighted centroids…",
-      "Computing inter-patch dispersal distances…",
-      "Deriving resistance surface from land cover…",
-      "Linking patches below dispersal threshold…",
-      "Graph built — 18 nodes, 31 functional links",
-    ],
-  },
-  {
-    id: "connectivity",
-    label: "Connectivity Analysis",
-    detail: "PC / IIC indices and betweenness centrality",
-    icon: "GitBranch",
-    durationMs: 2800,
-    logs: [
-      "Computing Probability of Connectivity (PC)…",
-      "Computing Integral Index of Connectivity (IIC)…",
-      "Quality-weighted betweenness centrality per patch…",
-      "Identifying bridging corridors…",
-      "Landscape connectivity score: 74.6 / 100",
-    ],
-  },
-  {
-    id: "sensitivity",
-    label: "Generating Sensitivity Map",
-    detail: "Leave-one-out marginal importance surface",
-    icon: "Flame",
-    durationMs: 2600,
-    logs: [
-      "Initialising 100 m analysis grid…",
-      "Leave-one-out recomputation per cell…",
-      "Classifying sensitivity into 4 bands…",
-      "2 cells classified critical · 47 high",
-      "Sensitivity surface rendered",
-    ],
-  },
-  {
-    id: "report",
-    label: "Creating Report",
-    detail: "Compiling findings and recommendations",
-    icon: "FileText",
-    durationMs: 1800,
-    logs: [
-      "Ranking restoration candidates by marginal gain…",
-      "Running six scenario projections…",
-      "Composing executive summary…",
-      "Report ECR-2026-0142 ready",
-    ],
-  },
-];
-
-export const TOTAL_PIPELINE_MS = PIPELINE_STAGES.reduce((s, x) => s + x.durationMs, 0);

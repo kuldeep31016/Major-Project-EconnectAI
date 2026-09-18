@@ -19,6 +19,7 @@ import torch
 from ecoconnect.geospatial.preprocessing.transforms import Normalizer, handle_nodata
 from ecoconnect.geospatial.raster_processing.io import RasterMeta, write_raster
 from ecoconnect.ml.models.unet import build_model, pick_device
+from ecoconnect.pipeline.config import portable_path
 
 
 def load_checkpoint(path: str | Path, device: Optional[torch.device] = None):
@@ -117,8 +118,8 @@ def predict_scene(
         write_raster(p3, binary, meta, dtype="uint8", nodata=255)
         outputs["binary"] = str(p3)
     side = {
-        "checkpoint": str(Path(checkpoint).resolve()), "experiment_id": ck.get("experiment_id"), "mode": ck.get("mode"),
-        "model": ck["eco_meta"], "scene": str(Path(scene_path).resolve()), "threshold": threshold, "tta": tta,
+        "checkpoint": portable_path(checkpoint), "experiment_id": ck.get("experiment_id"), "mode": ck.get("mode"),
+        "model": ck["eco_meta"], "scene": portable_path(scene_path), "threshold": threshold, "tta": tta,
         "tile": tile, "overlap": overlap, "valid_fraction": float(valid.mean()),
         "habitat_fraction_at_threshold": float(np.nanmean(prob >= threshold)) if valid.any() else 0.0,
         "outputs": outputs,

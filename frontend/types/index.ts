@@ -25,28 +25,22 @@ export type HabitatClass =
 /* Datasets                                                            */
 /* ------------------------------------------------------------------ */
 
+/** Study-area configuration (configs/study_areas.yaml) — names, extent, protection. Not a measurement. */
 export interface SatelliteScene {
   id: string;
   name: string;
   shortName: string;
   region: string;
   state: string;
-  sensor: string;
-  productId: string;
-  acquisitionDate: string;
-  cloudCover: number;
-  resolutionM: number;
-  bands: string[];
-  epsg: string;
-  sizeMb: number;
+  protection: string;
+  primaryHabitat: string;
   center: LatLng;
   bounds: [LatLng, LatLng];
   zoom: number;
   areaKm2: number;
-  thumbnailGradient: [string, string];
+  protectedAreas: string[];
   description: string;
-  tags: string[];
-  protectedAreas?: string[];
+  thumbnailGradient: [string, string];
 }
 
 /* ------------------------------------------------------------------ */

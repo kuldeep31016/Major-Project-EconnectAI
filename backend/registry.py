@@ -103,6 +103,8 @@ def sync_runs(db: Session) -> int:
         av = av or AnalysisVersion(id=rid)
         av.study_area_id = m["study_area_id"]
         scene_path = ds.get("path")
+        if scene_path and not Path(scene_path).is_absolute():
+            scene_path = str(REPO_ROOT / scene_path)
         model_ckpt = (ds.get("model_info") or {}).get("checkpoint")
         av.model_id = Path(model_ckpt).parent.name if model_ckpt else None
         if av.model_id and not db.get(Model, av.model_id):

@@ -21,18 +21,26 @@ type Chain = {
 };
 
 /** Evidence drawer: the full chain behind "why is this patch high priority?" — from imagery to field verification. */
+function Row({ k, v }: { k: string; v: React.ReactNode }) {
+  return <div className="grid grid-cols-[130px_1fr] gap-2 border-t border-foreground/[0.06] py-1 text-[11.5px]"><span className="text-muted-foreground">{k}</span><span className="break-words">{v}</span></div>;
+}
+
 export function EvidenceDrawer({ objectType, objectId, onClose }: { objectType: "patch" | "candidate"; objectId: string; onClose: () => void }) {
   const { sceneId, runId, dataSource } = useAnalysis();
-  const [chain, setChain] = useState<Chain | null>(null);
-  const [err, setErr] = useState<string | null>(null);
+  // result tagged with the request it answers, so switching objects never shows a stale chain
+  const key = `${sceneId}|${runId}|${objectType}|${objectId}`;
+  const [res, setRes] = useState<{ key: string; chain: Chain | null; err: string | null } | null>(null);
   useEffect(() => {
-    setChain(null); setErr(null);
-    if (dataSource.mode !== "live") { setErr("Evidence chains exist only for real pipeline runs."); return; }
-    fetchEvidenceChain(sceneId, runId, objectType, objectId).then((c) => setChain(c as Chain)).catch((e) => setErr(e instanceof Error ? e.message : String(e)));
-  }, [sceneId, runId, objectType, objectId, dataSource.mode]);
-
-  const Row = ({ k, v }: { k: string; v: React.ReactNode }) => <div className="grid grid-cols-[130px_1fr] gap-2 border-t border-foreground/[0.06] py-1 text-[11.5px]"><span className="text-muted-foreground">{k}</span><span className="break-words">{v}</span></div>;
-  const c = chain;
+    if (dataSource.mode !== "live") return;
+    let cancelled = false;
+    const k = key;
+    fetchEvidenceChain(sceneId, runId, objectType, objectId)
+      .then((c) => { if (!cancelled) setRes({ key: k, chain: c as Chain, err: null }); })
+      .catch((e) => { if (!cancelled) setRes({ key: k, chain: null, err: e instanceof Error ? e.message : String(e) }); });
+    return () => { cancelled = true; };
+  }, [sceneId, runId, objectType, objectId, dataSource.mode, key]);
+  const c = res?.key === key ? res.chain : null;
+  const err = dataSource.mode !== "live" ? "Evidence chains exist only for real pipeline runs." : res?.key === key ? res.err : null;
   return (
     <div className="fixed right-4 top-20 z-[1100] flex max-h-[calc(100vh-6rem)] w-[400px] max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-foreground/[0.1] bg-card shadow-2xl">
       <div className="flex items-center justify-between border-b border-foreground/[0.08] px-4 py-2.5">

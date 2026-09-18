@@ -17,7 +17,23 @@ from sqlalchemy.orm import Session
 
 from .db import ROLES, Organization, User, get_db, utcnow
 
-JWT_SECRET = os.environ.get("ECO_JWT_SECRET") or secrets.token_hex(32)   # ephemeral if unset (dev only)
+def _dev_secret() -> str:
+    """Without ECO_JWT_SECRET, keep one random secret per installation (outputs/.jwt_secret) so sessions
+    survive backend restarts in development. Production must set ECO_JWT_SECRET (docs/SECURITY.md)."""
+    from ecoconnect.pipeline.config import OUTPUTS_DIR
+    f = OUTPUTS_DIR / ".jwt_secret"
+    try:
+        if f.exists():
+            return f.read_text().strip()
+        f.parent.mkdir(parents=True, exist_ok=True)
+        s = secrets.token_hex(32)
+        f.write_text(s)
+        return s
+    except OSError:
+        return secrets.token_hex(32)
+
+
+JWT_SECRET = os.environ.get("ECO_JWT_SECRET") or _dev_secret()
 JWT_ALG = "HS256"
 TOKEN_HOURS = int(os.environ.get("ECO_TOKEN_HOURS", "12"))
 

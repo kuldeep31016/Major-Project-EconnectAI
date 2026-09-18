@@ -33,3 +33,8 @@ service-account*.json
 
 # os
 .DS_Store
+
+# runtime database (seeded at startup)
+outputs/ecoconnect.db*
+outputs/quicklooks/
+outputs/.jwt_secret

@@ -6,16 +6,16 @@ import { Tooltip } from "@/components/ui/tooltip";
 
 /**
  * Tells the viewer where the numbers on screen come from. Shown in the app header on every page.
- *   mock          -> PROTOTYPE / SYNTHETIC (prepared JSON)            grey
+ *   none          -> no run for this landscape / backend offline       grey
  *   synthetic run -> computed exactly over synthetic geometry          violet
  *   development   -> real pipeline, small subset — NOT FINAL           amber
  *   experiment    -> OUR EXPERIMENTAL RESULT                          green
  */
 export function ProvenanceBadge({ compact = false }: { compact?: boolean }) {
   const { dataSource, apiOnline, bundleLoading } = useAnalysis();
-  const kind = dataSource.provenance?.resultKind ?? "mock";
+  const kind = dataSource.provenance?.resultKind ?? "none";
   const meta = {
-    mock: { label: "Prototype · synthetic", color: "#94a3b8", Icon: Database },
+    none: { label: "No analysis yet", color: "#94a3b8", Icon: Database },
     synthetic: { label: "Exact computation · synthetic geometry", color: "#6d5bd0", Icon: Beaker },
     development: { label: "Real pipeline · dev subset · not final", color: "#f59e0b", Icon: FlaskConical },
     experiment: { label: "Our experimental result", color: "#22c55e", Icon: ShieldCheck },
@@ -41,8 +41,8 @@ export function ProvenanceBadge({ compact = false }: { compact?: boolean }) {
       ) : (
         <div className="mt-1 text-muted-foreground">
           {apiOnline === false
-            ? "Backend offline — showing the prototype's prepared datasets."
-            : "No pipeline run for this study area yet — showing the prototype's prepared datasets."}
+            ? "Backend offline — nothing can be shown until the API is running."
+            : "No pipeline run for this landscape yet — run New Analysis."}
         </div>
       )}
     </div>

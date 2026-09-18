@@ -263,8 +263,8 @@ export default function Dashboard() {
               <div className="mt-3 grid grid-cols-2 gap-2">
                 <button disabled={!live || !selected} onClick={() => selected && togglePatchRemoved(selected.id)} className="flex items-center gap-2 rounded-lg bg-[#fee2e2] px-3 py-3 text-[12.5px] font-semibold text-[#b91c1c] hover:bg-[#fecaca] disabled:opacity-40"><Scissors className="h-4 w-4" /> Remove Patch</button>
                 <Link href="/restoration" className="flex items-center gap-2 rounded-lg bg-[#dcfce7] px-3 py-3 text-[12.5px] font-semibold text-[#15803d] hover:bg-[#bbf7d0]"><Sprout className="h-4 w-4" /> Restore Area</Link>
-                <Link href="/scenario?type=barrier" className="flex items-center gap-2 rounded-lg bg-[#dbeafe] px-3 py-3 text-[12.5px] font-semibold text-[#1e5f8a] hover:bg-[#bfdbfe]"><Waves className="h-4 w-4" /> Add Barrier</Link>
-                <Link href="/scenario" className="flex items-center gap-2 rounded-lg bg-[#ede9fe] px-3 py-3 text-[12.5px] font-semibold text-[#6d28d9] hover:bg-[#ddd6fe]"><Settings2 className="h-4 w-4" /> Custom Scenario</Link>
+                <Link href="/scenario?type=remove_polygon" className="flex items-center gap-2 rounded-lg bg-[#dbeafe] px-3 py-3 text-[12.5px] font-semibold text-[#1e5f8a] hover:bg-[#bfdbfe]"><Waves className="h-4 w-4" /> Draw Impact Area</Link>
+                <Link href="/scenario?type=tau" className="flex items-center gap-2 rounded-lg bg-[#ede9fe] px-3 py-3 text-[12.5px] font-semibold text-[#6d28d9] hover:bg-[#ddd6fe]"><Settings2 className="h-4 w-4" /> Scenario Lab</Link>
               </div>
               {removedPatchIds.length > 0 && (
                 <div className="mt-3 rounded-lg border border-[#fecaca] bg-[#fff5f5] p-3 text-[12px]">

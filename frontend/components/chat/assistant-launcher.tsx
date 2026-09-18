@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { ASSISTANT, matchAssistantReply } from "@/lib/data";
 import { askAssistant } from "@/lib/api";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { EASE } from "@/components/shared/motion";
@@ -38,6 +37,14 @@ const TONE: Record<string, string> = {
 
 let seq = 0;
 const nextId = () => `m${++seq}`;
+const GREETING =
+  "I answer from the stored results of the selected landscape and run (patches, criticality, connectivity, alerts, field tasks). I never generate figures — if a value is not in the run, I say so.";
+const SUGGESTIONS = [
+  "Which patch is most critical and why?",
+  "How much habitat and how many patches does this run have?",
+  "What restoration candidates rank highest?",
+  "Are there open alerts for this landscape?",
+];
 
 export function AssistantLauncher() {
   const pathname = usePathname();
@@ -46,7 +53,7 @@ export function AssistantLauncher() {
   const [thinking, setThinking] = useState(false);
   const { sceneId, runId, apiOnline } = useAnalysis();
   const [messages, setMessages] = useState<Message[]>([
-    { id: "greeting", role: "assistant", text: ASSISTANT.greeting },
+    { id: "greeting", role: "assistant", text: GREETING },
   ]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -83,8 +90,7 @@ export function AssistantLauncher() {
     setThinking(true);
 
     // GIS-aware assistant: the backend retrieves stored run/database values for the current landscape
-    // and answers from templates (no generation). Falls back to the prototype's canned replies only
-    // when the backend is offline, and says so.
+    // and answers from templates (no generation). Offline there is nothing to answer from.
     if (apiOnline) {
       askAssistant(text, sceneId, runId)
         .then((a) => {
@@ -105,26 +111,15 @@ export function AssistantLauncher() {
         });
       return;
     }
-    const reply = matchAssistantReply(text);
-    window.setTimeout(() => {
-      setThinking(false);
-      setMessages((m) => [
-        ...m,
-        {
-          id: nextId(),
-          role: "assistant",
-          text: "[DEMONSTRATION — backend offline, prototype reply] " + (reply?.answer ?? ASSISTANT.fallback),
-          reply: reply ?? undefined,
-        },
-      ]);
-    }, 400);
+    setThinking(false);
+    setMessages((m) => [...m, { id: nextId(), role: "assistant", text: "The backend is offline, so no run data can be retrieved. Start the API server and ask again." }]);
   };
 
   // The assistant is contextual to an analysis — hide it on the landing page.
   if (pathname === "/") return null;
 
   const lastReply = [...messages].reverse().find((m) => m.reply)?.reply;
-  const chips = lastReply?.followUps?.length ? lastReply.followUps : ASSISTANT.suggestions;
+  const chips = lastReply?.followUps?.length ? lastReply.followUps : SUGGESTIONS;
 
   return (
     <>

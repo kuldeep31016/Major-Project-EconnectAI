@@ -144,6 +144,10 @@ export function ConnectivityGraph({
   const [nodes, setNodes, onNodesChange] = useNodesState(baseNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+  // The run bundle arrives asynchronously (and can be re-analysed): rebuild the node set whenever the
+  // graph itself changes. Selection/dimming changes do NOT go through here (see the effect below).
+  useEffect(() => setNodes(baseNodes), [baseNodes, setNodes]);
+
   // Patch visual state into existing nodes so measured internals survive.
   useEffect(() => {
     setNodes((current) =>

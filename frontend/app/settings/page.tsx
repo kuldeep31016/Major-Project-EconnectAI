@@ -366,9 +366,9 @@ export default function SettingsPage() {
         <Card>
           <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <div className="text-[13px] font-semibold">EcoConnectAI v1.3.0</div>
+              <div className="text-[13px] font-semibold">EcoConnectAI</div>
               <div className="mt-1 text-[11px] text-muted-foreground">
-                Segmentation EcoSeg v3.2 · Connectivity model v2.1 · Research prototype
+                Backend version and model registry are reported by the API (/api/health, /api/models) — see Data &amp; Models.
               </div>
             </div>
             <div className="flex flex-wrap gap-2">

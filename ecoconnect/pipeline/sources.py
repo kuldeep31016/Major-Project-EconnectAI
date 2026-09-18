@@ -21,6 +21,7 @@ from ecoconnect.graph import Patch
 from ecoconnect.geospatial.raster_processing.io import read_raster, utm_epsg_for
 from ecoconnect.geospatial.patch_extraction import extract_patches
 from .config import REPO_ROOT
+from ecoconnect.pipeline.config import portable_path
 
 
 # --------------------------------------------------------------------------- real raster path
@@ -76,7 +77,7 @@ def from_probability_raster(
         except (ValueError, OSError, KeyError):
             scene_year = None
     src = {
-        "type": "probability_raster", "path": str(Path(prob_path).resolve()),
+        "type": "probability_raster", "path": portable_path(prob_path),
         "scene_year": scene_year,
         "crs": str(meta.crs), "width": meta.width, "height": meta.height,
         "pixel_size": [abs(meta.transform.a), abs(meta.transform.e)],
@@ -109,14 +110,14 @@ def from_geojson(path: str | Path, *, landscape_area_ha: float, habitat_class: s
             habitat_class=props.get("habitat_class", habitat_class), name=props.get("name"),
             protected=bool(props.get("protected", False)), geometry=mapping(geom),
         ))
-    src = {"type": "geojson", "path": str(Path(path).resolve()), "n_features": len(patches)}
+    src = {"type": "geojson", "path": portable_path(path), "n_features": len(patches)}
     return patches, [], landscape_area_ha, src, result_kind
 
 
 # --------------------------------------------------------------------------- prototype path
-def from_prototype_mock(study_area_id: str, mock_dir: Path = REPO_ROOT / "frontend" / "mock-data"):
-    """The prototype's synthetic geometry, so the full pipeline + UI can be exercised before the
-    segmentation stage exists.  Always labelled PROTOTYPE / SYNTHETIC."""
+def from_prototype_mock(study_area_id: str, mock_dir: Path = REPO_ROOT / "tests" / "fixtures" / "synthetic_geometry"):
+    """Synthetic test geometry (tests/fixtures/synthetic_geometry) so the graph stage can be exercised
+    without a segmentation run.  Always labelled PROTOTYPE / SYNTHETIC; never a platform result."""
     masks = json.loads((mock_dir / "habitat-mask.json").read_text())
     scenes = {s["id"]: s for s in json.loads((mock_dir / "satellite-images.json").read_text())["scenes"]}
     recs = json.loads((mock_dir / "recommendations.json").read_text())

@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
@@ -33,7 +33,8 @@ SEG_DIR = OUTPUTS_DIR / "segmentation"
 
 from contextlib import asynccontextmanager  # noqa: E402
 from backend.db import SessionLocal, init_db  # noqa: E402
-from backend.auth import seed_demo_users  # noqa: E402
+from backend.auth import seed_demo_users, require, User  # noqa: E402
+from backend.db import audit as _audit  # noqa: E402
 from backend.registry import sync_all  # noqa: E402
 from backend.routers import router as workflow_router  # noqa: E402
 
@@ -60,6 +61,14 @@ app.add_middleware(
 
 
 # --------------------------------------------------------------------------- helpers
+def _abs(p: str | None) -> str | None:
+    """Artefact paths are stored repo-relative (see ecoconnect.pipeline.config.portable_path)."""
+    if not p:
+        return p
+    pp = Path(p)
+    return str(pp if pp.is_absolute() else REPO_ROOT / pp)
+
+
 def _read_json(p: Path):
     if not p.exists():
         raise HTTPException(404, f"{p.name} not found")
@@ -170,7 +179,19 @@ def models():
     for d in sorted(SEG_DIR.glob("*")) if SEG_DIR.exists() else []:
         if (d / "metrics.json").exists():
             m = json.loads((d / "metrics.json").read_text())
-            out.append({"experimentId": d.name, **{k: m.get(k) for k in ("mode", "model", "encoder", "best_epoch", "test", "val", "result_label")}})
+            exp, cal = {}, None
+            try:
+                exp = json.loads((d / "experiment.json").read_text())
+            except (OSError, ValueError):
+                pass
+            try:
+                cal = json.loads((d / "threshold_calibration.json").read_text()).get("selected_threshold")
+            except (OSError, ValueError):
+                pass
+            out.append({"experimentId": d.name, **{k: m.get(k) for k in ("mode", "model", "encoder", "best_epoch", "test", "val", "result_label")},
+                        "bands": exp.get("bands"), "inChannels": exp.get("in_channels"), "calibratedThreshold": cal,
+                        "checkpoint": str((d / "best_model.pth").relative_to(REPO_ROOT)) if (d / "best_model.pth").exists() else None,
+                        "trainedAt": exp.get("timestamp_utc"), "trainingAreas": exp.get("training_areas") or (exp.get("dataset") or {}).get("name")})
     return out
 
 
@@ -258,7 +279,7 @@ def timeline(study_area: str, critical_threshold: float = 0.10):
         diff = None
         if prev is not None:
             _, pm, _ = by_year[prev]
-            diff = _mask_diff_ha(pm["data_source"]["path"], m["data_source"]["path"],
+            diff = _mask_diff_ha(_abs(pm["data_source"]["path"]), _abs(m["data_source"]["path"]),
                                  pm["data_source"].get("threshold", 0.5), m["data_source"].get("threshold", 0.5))
         years.append({
             "year": y, "runId": run_id, "resultKind": m["result_kind"], "resultLabel": m["result_label"],
@@ -338,8 +359,21 @@ class SegmentRequest(BaseModel):
     result_kind: str = "development"
 
 
+import threading  # noqa: E402
+_SEGMENT_LOCK = threading.Lock()   # one inference/analysis at a time - the GPU/MPS and the LATEST pointer are shared
+
+
 @app.post("/api/segment")
-def segment(req: SegmentRequest):
+def segment(req: SegmentRequest, user: User = Depends(require("run_analysis"))):
+    if not _SEGMENT_LOCK.acquire(blocking=False):
+        raise HTTPException(409, "another analysis is already running - wait for it to finish")
+    try:
+        return _segment(req, user)
+    finally:
+        _SEGMENT_LOCK.release()
+
+
+def _segment(req: SegmentRequest, user: User):
     """Run inference (if a scene + checkpoint are given) and then the graph analysis.
     Synchronous: fine for the AOI sizes this project uses; returns the new run summary."""
     py = sys.executable
@@ -356,19 +390,29 @@ def segment(req: SegmentRequest):
         cks = sorted(SEG_DIR.glob("*/best_model.pth"), key=lambda p: p.stat().st_mtime)
         if not cks:
             raise HTTPException(404, "no trained checkpoint under outputs/segmentation - run scripts/train.py")
-        # prefer: full-mode experiments, then experiments with a threshold calibration, then newest
+        # prefer: full-mode experiments, then the reported S1-only configuration (E1, bands [0, 1] - the paper's
+        # sensor and the only one every downloaded scene carries), then calibrated experiments, then newest
         def _rank(p: Path):
             exp = p.parent
-            mode = "development"
+            mode, bands = "development", None
             try:
-                mode = json.loads((exp / "experiment.json").read_text()).get("mode", mode)
+                e = json.loads((exp / "experiment.json").read_text())
+                mode = e.get("mode", mode)
+                bands = e.get("bands") or (e.get("dataset") or {}).get("bands")
             except (OSError, ValueError):
                 pass
-            return (mode == "full", (exp / "threshold_calibration.json").exists(), p.stat().st_mtime)
+            return (mode == "full", bands == [0, 1], (exp / "threshold_calibration.json").exists(), p.stat().st_mtime)
         req.checkpoint = str(max(cks, key=_rank))
-        tc = cks[-1].parent / "threshold_calibration.json"
+        tc = Path(req.checkpoint).parent / "threshold_calibration.json"
         if req.threshold is None and tc.exists():
             req.threshold = json.loads(tc.read_text()).get("selected_threshold")
+    # store repo-relative paths in the run manifest (portable provenance, no machine-specific paths)
+    def _rel(p: Optional[str]) -> Optional[str]:
+        if not p:
+            return p
+        pp = Path(p).resolve()
+        return str(pp.relative_to(REPO_ROOT.resolve())) if pp.is_relative_to(REPO_ROOT.resolve()) else str(pp)
+    req.scene_tif, req.checkpoint, prob = _rel(req.scene_tif), _rel(req.checkpoint), _rel(prob)
     if req.scene_tif:
         if not req.checkpoint:
             raise HTTPException(400, "checkpoint is required to run inference on a scene")
@@ -378,7 +422,7 @@ def segment(req: SegmentRequest):
                "--input", req.scene_tif, "--output", str(prob_path)]
         r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT)
         if r.returncode != 0:
-            raise HTTPException(500, f"predict.py failed:\n{r.stderr[-2000:]}")
+            raise HTTPException(500, f"predict.py failed (exit {r.returncode}):\n{(r.stderr or r.stdout)[-2000:]}")
         prob = str(prob_path)
     if not prob:
         raise HTTPException(400, "provide probability_tif or scene_tif + checkpoint")
@@ -391,11 +435,14 @@ def segment(req: SegmentRequest):
                 f"{req.study_area}_{Path(req.checkpoint).parent.name}_ui_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT)
     if r.returncode != 0:
-        raise HTTPException(500, f"run_graph_analysis.py failed:\n{r.stderr[-2000:]}")
-    with SessionLocal() as db:            # register the new analysis version in the provenance registry
+        raise HTTPException(500, f"run_graph_analysis.py failed (exit {r.returncode}):\n{(r.stderr or r.stdout)[-2000:]}")
+    summary = _run_summary(_resolve_run(req.study_area, "latest"))
+    with SessionLocal() as db:            # register the new analysis version in the provenance registry + audit trail
         sync_all(db)
-    return {**_run_summary(_resolve_run(req.study_area, "latest")), "scene": req.scene_tif, "checkpoint": req.checkpoint,
-            "thresholdUsed": req.threshold}
+        _audit(db, user, "run_analysis", "analysis_version", summary["runId"],
+               new={"scene": req.scene_tif, "checkpoint": req.checkpoint, "threshold": req.threshold, "result_kind": req.result_kind})
+        db.commit()
+    return {**summary, "scene": req.scene_tif, "checkpoint": req.checkpoint, "thresholdUsed": req.threshold}
 
 
 # =========================================================================== research tools
@@ -455,7 +502,7 @@ def probability_png(study_area: str, run_id: str, alpha: float = 0.85):
     src = m["data_source"]
     if src.get("type") != "probability_raster":
         raise HTTPException(404, "this run has no probability raster (synthetic geometry)")
-    prob, meta = read_raster(src["path"], bands=[1])
+    prob, meta = read_raster(_abs(src["path"]), bands=[1])
     prob = prob[0]
     # reproject to EPSG:4326 (Leaflet ImageOverlay is equirectangular) at ~1000 px width
     b = transform_bounds(meta.crs, CRS.from_epsg(4326), *meta.bounds)
@@ -646,7 +693,7 @@ def restoration_feasibility_ep(study_area: str, run_id: str):
     run_dir = _resolve_run(study_area, run_id)
     m = _read_json(run_dir / "manifest.json")
     scene = None
-    prob = m["data_source"].get("path")
+    prob = _abs(m["data_source"].get("path"))
     if prob and Path(prob).with_suffix(".json").exists():
         scene = json.loads(Path(prob).with_suffix(".json").read_text()).get("scene")
     return restoration_feasibility(run_dir, scene)

@@ -31,7 +31,10 @@ function ProjectsView() {
     const wanted = Number(params.get("id")); if (wanted) setActive(p.find((x) => x.id === wanted) ?? null);
     setTasks(await fetchTasks().catch(() => []));
   };
-  useEffect(() => { void load(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const t = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const top = [...mask.patches].filter((p) => p.criticalityRank != null).sort((a, b) => (a.criticalityRank ?? 99) - (b.criticalityRank ?? 99)).slice(0, 8);
 

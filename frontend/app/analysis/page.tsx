@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   AlertTriangle,
@@ -38,7 +38,10 @@ import { ScoreGauge, CompositionChart, ConnectivityTrendChart } from "@/componen
 import { EASE } from "@/components/shared/motion";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { getConnectivity, getGraph, getHabitatMask, getHeatmap } from "@/lib/data";
-import { fetchProbabilityBounds, probabilityPngUrl } from "@/lib/api";
+import { fetchProbabilityBounds, probabilityPngUrl, registerDetection } from "@/lib/api";
+import { useAuth } from "@/hooks/use-auth";
+import { requestMapFocus, useMapFocus } from "@/lib/map-focus";
+import { useSearchParams } from "next/navigation";
 import { SensitivityExplorer } from "@/components/analysis/sensitivity-explorer";
 import { EvidenceDrawer } from "@/components/analysis/evidence-drawer";
 import { SENSITIVITY_META, type BasemapId } from "@/lib/constants";
@@ -61,18 +64,41 @@ const GisMap = dynamic(() => import("@/components/maps/gis-map"), {
 type ViewMode = "map" | "split";
 
 export default function AnalysisPage() {
-  const { sceneId, scene, selectedPatchId, setSelectedPatchId, dataSource, runId, bundleVersion } = useAnalysis();
-  // Real runs expose their probability raster as a bounded PNG overlay.
-  const [probOverlay, setProbOverlay] = useState<{ url: string; bounds: [[number, number], [number, number]] } | null>(null);
+  return <Suspense><AnalysisView /></Suspense>;
+}
+
+function AnalysisView() {
+  const { sceneId, scene, setSceneId, selectedPatchId, setSelectedPatchId, dataSource, runId, bundleVersion } = useAnalysis();
+  const { can } = useAuth();
+  const focus = useMapFocus();
+  const params = useSearchParams();
+  const [reviewMsg, setReviewMsg] = useState<string | null>(null);
+  // Deep links: /analysis?scene=<id>&patch=<id>  or  ?scene=<id>&lat=&lon=
+  const wantScene = params.get("scene"); const wantPatch = params.get("patch");
+  const wantLat = Number(params.get("lat")); const wantLon = Number(params.get("lon"));
+  useEffect(() => {
+    if (wantScene && wantScene !== sceneId) setSceneId(wantScene);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wantScene]);
+  useEffect(() => {
+    if (wantScene && wantScene !== sceneId) return;
+    if (wantPatch) {
+      const p = getHabitatMask(sceneId).patches.find((x) => x.id === wantPatch);
+      if (p) { setSelectedPatchId(p.id); requestMapFocus(p.center[0], p.center[1], 14); }
+    } else if (wantLat && wantLon) requestMapFocus(wantLat, wantLon, 14);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wantScene, wantPatch, wantLat, wantLon, sceneId, bundleVersion]);
+  // Real runs expose their probability raster as a bounded PNG overlay (tagged by run so it never goes stale).
+  const [probRes, setProbRes] = useState<{ key: string; data: { url: string; bounds: [[number, number], [number, number]] } | null } | null>(null);
+  const probKey = `${sceneId}|${dataSource.provenance?.runId ?? ""}`;
+  const probOverlay = probRes?.key === probKey ? probRes.data : null;
   useEffect(() => {
     let cancelled = false;
     const prov = dataSource.provenance;
-    if (dataSource.mode !== "live" || !prov || prov.dataSource.type !== "probability_raster") {
-      setProbOverlay(null);
-      return;
-    }
+    if (dataSource.mode !== "live" || !prov || prov.dataSource.type !== "probability_raster") return;
+    const key = probKey;
     fetchProbabilityBounds(sceneId, prov.runId).then((b) => {
-      if (!cancelled) setProbOverlay(b ? { url: probabilityPngUrl(sceneId, prov.runId), bounds: b } : null);
+      if (!cancelled) setProbRes({ key, data: b ? { url: probabilityPngUrl(sceneId, prov.runId), bounds: b } : null });
     });
     return () => {
       cancelled = true;
@@ -108,7 +134,8 @@ export default function AnalysisPage() {
 
   // Show the layer panel up front on wide screens, where it doesn't cover the map.
   useEffect(() => {
-    if (window.innerWidth >= 1280) setLayerPanelOpen(true);
+    const t = window.setTimeout(() => { if (window.innerWidth >= 1280) setLayerPanelOpen(true); }, 0);
+    return () => window.clearTimeout(t);
   }, []);
 
   const selectedPatch = useMemo(
@@ -145,6 +172,7 @@ export default function AnalysisPage() {
           setSelectedPatchId(id);
           setSelectedCellId(null);
         }}
+        focus={focus}
         onCursorMove={setCursor}
         onCellClick={(id) => {
           setSelectedCellId(id);
@@ -182,7 +210,7 @@ export default function AnalysisPage() {
       </div>
 
       <div className="pointer-events-none absolute bottom-3 left-1/2 z-[1000] -translate-x-1/2">
-        <CoordinateReadout cursor={cursor} zoom={scene.zoom} epsg={scene.epsg} />
+        <CoordinateReadout cursor={cursor} zoom={scene.zoom} epsg="EPSG:4326" />
       </div>
 
       <PixelInspector
@@ -197,9 +225,27 @@ export default function AnalysisPage() {
 
       {/* evidence chain for the selected patch */}
       {selectedPatchId && dataSource.mode === "live" && !evidenceFor && (
-        <button onClick={() => setEvidenceFor(selectedPatchId)} className="absolute bottom-16 right-3 z-[940] rounded-full bg-[#0f5132] px-3 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-[#0b3d26]">
-          Why is {selectedPatchId} ranked here? · Evidence
-        </button>
+        <div className="absolute bottom-16 right-3 z-[940] flex flex-col items-end gap-1.5">
+          <button onClick={() => setEvidenceFor(selectedPatchId)} className="rounded-full bg-[#0f5132] px-3 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-[#0b3d26]">
+            Why is {selectedPatchId} ranked here? · Evidence
+          </button>
+          {can("review_detections") && dataSource.provenance && (
+            <button
+              onClick={async () => {
+                const p = selectedPatch;
+                if (!p || !dataSource.provenance) return;
+                try {
+                  const d = await registerDetection({ study_area_id: sceneId, run_id: dataSource.provenance.runId, object_type: "patch", object_id: p.id, lat: p.center[0], lon: p.center[1], summary: `${p.areaHa} ha · rank #${p.criticalityRank ?? "—"} · confidence ${(p.confidence * 100).toFixed(0)} %` });
+                  setReviewMsg(`Registered as detection #${d.id} (${d.status}) — see Field Reports → verification queue.`);
+                } catch (e) { setReviewMsg(e instanceof Error ? e.message : String(e)); }
+              }}
+              className="rounded-full border border-[#0f5132]/40 bg-white px-3 py-1.5 text-[11px] font-semibold text-[#0f5132] shadow hover:bg-[#f0fdf4]"
+            >
+              Send {selectedPatchId} to verification
+            </button>
+          )}
+          {reviewMsg && <div className="max-w-[260px] rounded-lg bg-white/95 px-2 py-1 text-[10.5px] shadow">{reviewMsg}</div>}
+        </div>
       )}
       {evidenceFor && <EvidenceDrawer objectType="patch" objectId={evidenceFor} onClose={() => setEvidenceFor(null)} />}
 

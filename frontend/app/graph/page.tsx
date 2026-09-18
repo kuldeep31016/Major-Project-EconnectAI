@@ -267,7 +267,7 @@ export default function GraphPage() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle>Patch importance ranking</CardTitle>
-                <CardDescription>Quality-weighted betweenness centrality</CardDescription>
+                <CardDescription>Criticality Sᵢ = ΔCᵢ / C(G), exact leave-one-out (paper Eq. 9), scaled to 100</CardDescription>
               </CardHeader>
               <CardContent className="space-y-1.5">
                 {ranked.slice(0, 8).map((n, i) => {
@@ -310,34 +310,33 @@ export default function GraphPage() {
                 <div className="flex gap-2.5">
                   <Waypoints className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#1e5f8a]" />
                   <span>
-                    <b className="text-foreground">Node size</b> encodes patch area; the number is
-                    ecological importance out of 100.
+                    <b className="text-foreground">Node size</b> encodes patch area; the number is the
+                    patch&apos;s criticality relative to the most critical patch (100).
                   </span>
                 </div>
                 <div className="flex gap-2.5">
                   <Network className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#15803d]" />
                   <span>
-                    <b className="text-foreground">Ring colour</b> is connectivity sensitivity —
-                    red rings are irreplaceable bridges.
+                    <b className="text-foreground">Ring colour</b> is the criticality band —
+                    red rings are cut vertices whose removal splits the network.
                   </span>
                 </div>
                 <div className="flex gap-2.5">
                   <Share2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#f59e0b]" />
                   <span>
-                    <b className="text-foreground">Amber dashed links</b> are critical corridors;
-                    line thickness is ecological flow strength.
+                    <b className="text-foreground">Amber dashed links</b> are bridges (their removal
+                    disconnects the graph); line thickness is the edge weight w = √(qᵢqⱼ)·e^(−d/τ).
                   </span>
                 </div>
                 <div className="flex gap-2.5">
                   <Star className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#f59e0b]" />
                   <span>
-                    <b className="text-foreground">Starred nodes</b> are hubs — high degree and
-                    high bridging score.
+                    <b className="text-foreground">Starred nodes</b> are hubs — highest degree in the
+                    k-nearest-neighbour graph (k = 3, τ = 5 km).
                   </span>
                 </div>
                 <p className="pt-1">
-                  Click any node to open its explainability panel, or click a link to trace which
-                  species flows it carries.
+                  Click any node to open its explainability panel; hover a link for its distance and weight.
                 </p>
               </CardContent>
             </Card>

@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Camera, CheckCircle2, ClipboardCheck, MapPin, Plus, XCircle } from "lucide-react";
+import { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Camera, CheckCircle2, ClipboardCheck, MapPin, Plus, ShieldCheck, XCircle } from "lucide-react";
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,43 +11,58 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAnalysis } from "@/hooks/use-analysis";
 import { useAuth } from "@/hooks/use-auth";
 import {
-  createTask, evidencePhotoUrl, fetchAlerts, fetchEvidence, fetchTasks, fetchUsers, setTaskStatus, submitEvidence, verifyEvidence,
-  type AlertItem, type EvidenceItem, type FieldTaskItem, type SessionUser,
+  createTask, evidencePhotoUrl, fetchAlerts, fetchDetections, fetchEvidence, fetchTasks, fetchUsers, setDetectionStatus, setTaskStatus, submitEvidence, verifyEvidence,
+  type AlertItem, type DetectionItem, type EvidenceItem, type FieldTaskItem, type SessionUser,
 } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const STATUS_COLOR: Record<string, string> = { PENDING: "secondary", IN_PROGRESS: "sky", SUBMITTED: "warning", VERIFIED: "success", REJECTED: "danger" };
+/** Human-in-the-loop verification chain (backend/db.py DETECTION_STATUSES). */
+const DET_FLOW = ["AI_DETECTED", "UNDER_REVIEW", "FIELD_ASSIGNED", "FIELD_VERIFIED", "CONFIRMED"] as const;
 
 /**
  * Field Work: officers create verification tasks from alerts/patches; field officers see MY TASKS and
  * submit GPS + observation + photo evidence; reviewing officers accept/reject. Mobile-friendly single column.
  */
 export default function FieldPage() {
+  return <Suspense><FieldView /></Suspense>;
+}
+
+function FieldView() {
   const { user, ready, can } = useAuth();
   const { sceneId } = useAnalysis();
+  const params = useSearchParams();
+  const fromAlert = Number(params.get("alert")) || null;
   const [tasks, setTasks] = useState<FieldTaskItem[]>([]);
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [users, setUsers] = useState<SessionUser[]>([]);
-  const [active, setActive] = useState<FieldTaskItem | null>(null);
+  const [detections, setDetections] = useState<DetectionItem[]>([]);
+  const [activeId, setActiveId] = useState<number | null>(null);
   const [evidence, setEvidence] = useState<EvidenceItem[]>([]);
   const [msg, setMsg] = useState<string | null>(null);
-  const [showNew, setShowNew] = useState(false);
+  const [showNew, setShowNew] = useState(!!fromAlert);
+  const active = tasks.find((t) => t.id === activeId) ?? null;
+  const setActive = (t: FieldTaskItem | null) => setActiveId(t?.id ?? null);
 
   const load = async () => {
     if (!user) return;
-    setTasks(await fetchTasks(undefined, user.role === "field_officer").catch(() => []));
-    if (can("assign_tasks")) {
-      setAlerts(await fetchAlerts(sceneId).catch(() => []));
-      setUsers(await fetchUsers().catch(() => []));
-    }
+    const [t, a, u, d] = await Promise.all([
+      fetchTasks(undefined, user.role === "field_officer").catch(() => [] as FieldTaskItem[]),
+      can("assign_tasks") ? fetchAlerts(sceneId).catch(() => [] as AlertItem[]) : Promise.resolve([] as AlertItem[]),
+      can("assign_tasks") ? fetchUsers().catch(() => [] as SessionUser[]) : Promise.resolve([] as SessionUser[]),
+      can("review_detections") ? fetchDetections(sceneId).catch(() => [] as DetectionItem[]) : Promise.resolve([] as DetectionItem[]),
+    ]);
+    setTasks(t); setAlerts(a); setUsers(u); setDetections(d);
   };
   useEffect(() => {
-    if (ready) void load();
+    if (!ready) return;
+    const t = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ready, user?.id, sceneId]);
   useEffect(() => {
-    if (active) fetchEvidence(active.id).then(setEvidence).catch(() => setEvidence([]));
-  }, [active]);
+    if (activeId) fetchEvidence(activeId).then(setEvidence).catch(() => setEvidence([]));
+  }, [activeId]);
 
   if (ready && !user) {
     return (
@@ -62,7 +79,7 @@ export default function FieldPage() {
       actions={can("assign_tasks") ? <Button size="sm" onClick={() => setShowNew((v) => !v)}><Plus className="h-3.5 w-3.5" /> New task</Button> : null}>
       <div className="grid gap-4 p-4 sm:p-6 lg:grid-cols-[380px_1fr]">
         <div className="space-y-2">
-          {showNew && can("assign_tasks") && <NewTask alerts={alerts} users={users} sceneId={sceneId} onCreated={() => { setShowNew(false); void load(); }} />}
+          {showNew && can("assign_tasks") && <NewTask alerts={alerts} users={users} sceneId={sceneId} initialAlertId={fromAlert} onCreated={() => { setShowNew(false); void load(); }} />}
           {tasks.length === 0 && <div className="rounded-xl border border-dashed border-foreground/15 p-4 text-[12px] text-muted-foreground">No tasks{isField ? " assigned to you" : ""} yet.</div>}
           {tasks.map((t) => (
             <button key={t.id} onClick={() => setActive(t)} className={cn("w-full rounded-xl border p-3 text-left", active?.id === t.id ? "border-[#0f5132]/40 bg-[#0f5132]/[0.05]" : "border-foreground/[0.08] hover:bg-foreground/[0.03]")}>
@@ -95,7 +112,7 @@ export default function FieldPage() {
                   <div>
                     <div className="text-[10px] uppercase tracking-wider text-muted-foreground">Location</div>
                     <div className="mt-0.5 tabular">{active.lat.toFixed(5)}, {active.lon.toFixed(5)}</div>
-                    <a className="text-[11px] text-[#1e5f8a] underline" target="_blank" rel="noreferrer" href={`https://www.openstreetmap.org/?mlat=${active.lat}&mlon=${active.lon}#map=16/${active.lat}/${active.lon}`}>open in map</a>
+                    <Link className="text-[11px] text-[#1e5f8a] underline" href={active.object_type === "patch" && active.object_id ? `/analysis?scene=${active.study_area_id}&patch=${active.object_id}` : `/analysis?scene=${active.study_area_id}&lat=${active.lat}&lon=${active.lon}`}>open on the map</Link>
                     <div className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">Evidence required</div>
                     <div className="mt-0.5">{active.evidence_required}</div>
                     {active.object_id && <div className="mt-2 text-[11px] text-muted-foreground">Object: {active.object_type} {active.object_id} · run {active.run_id}</div>}
@@ -138,6 +155,42 @@ export default function FieldPage() {
           )}
         </div>
       </div>
+
+      {can("review_detections") && (
+        <div className="px-4 pb-6 sm:px-6">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-[13px]"><ShieldCheck className="h-4 w-4 text-[#0f5132]" />Verification queue — {detections.length} detection{detections.length === 1 ? "" : "s"}</CardTitle>
+              <CardDescription>AI DETECTED → UNDER REVIEW → FIELD ASSIGNED → FIELD VERIFIED → CONFIRMED / REJECTED. A detection can only be verified or confirmed when a field task holds ACCEPTED evidence — AI output never self-verifies.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-1.5">
+              {detections.length === 0 && <div className="text-[12px] text-muted-foreground">No detections registered for this landscape. Register one from a patch (Interactive Map → patch → &quot;Send to review&quot;) or create a field task from an alert.</div>}
+              {detections.map((d) => {
+                const idx = DET_FLOW.indexOf(d.status as (typeof DET_FLOW)[number]);
+                const taskFor = tasks.find((t) => t.detection_id === d.id);
+                const go = async (status: string) => { setMsg(null); try { await setDetectionStatus(d.id, status, "reviewed"); await load(); } catch (e) { setMsg(e instanceof Error ? e.message : String(e)); } };
+                return (
+                  <div key={d.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-foreground/[0.08] px-3 py-2 text-[12px]">
+                    <div className="min-w-[180px]"><div className="font-semibold">{d.object_type} {d.object_id}</div><div className="text-[10.5px] text-muted-foreground">run {d.run_id} · {d.summary ?? ""}</div></div>
+                    <div className="flex flex-1 items-center gap-1">
+                      {DET_FLOW.map((st, i) => <span key={st} className={cn("rounded-full px-2 py-0.5 text-[10px] font-semibold", d.status === "REJECTED" ? "bg-foreground/[0.05] text-muted-foreground" : i <= idx ? "bg-[#dcfce7] text-[#15803d]" : "bg-foreground/[0.05] text-muted-foreground")}>{st.replace(/_/g, " ")}</span>)}
+                      {d.status === "REJECTED" && <span className="rounded-full bg-[#fee2e2] px-2 py-0.5 text-[10px] font-semibold text-[#b91c1c]">REJECTED</span>}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {d.status === "AI_DETECTED" && <Button size="sm" variant="outline" onClick={() => go("UNDER_REVIEW")}>Start review</Button>}
+                      {(d.status === "AI_DETECTED" || d.status === "UNDER_REVIEW") && !taskFor && can("assign_tasks") && <Button size="sm" variant="outline" onClick={() => { setShowNew(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Assign field task</Button>}
+                      {taskFor && <Button size="sm" variant="outline" onClick={() => setActive(taskFor)}>Task #{taskFor.id} · {taskFor.status}</Button>}
+                      {d.status === "FIELD_VERIFIED" && <Button size="sm" onClick={() => go("CONFIRMED")}>Confirm</Button>}
+                      {d.status !== "CONFIRMED" && d.status !== "REJECTED" && <Button size="sm" variant="outline" onClick={() => go("REJECTED")}>Reject</Button>}
+                    </div>
+                  </div>
+                );
+              })}
+              {msg && <div className="text-[12px] text-[#b91c1c]">{msg}</div>}
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </AppShell>
   );
 }
@@ -184,7 +237,7 @@ function EvidenceForm({ task, onDone }: { task: FieldTaskItem; onDone: (msg: str
   );
 }
 
-function NewTask({ alerts, users, sceneId, onCreated }: { alerts: AlertItem[]; users: SessionUser[]; sceneId: string; onCreated: () => void }) {
+function NewTask({ alerts, users, sceneId, initialAlertId, onCreated }: { alerts: AlertItem[]; users: SessionUser[]; sceneId: string; initialAlertId?: number | null; onCreated: () => void }) {
   const [alertId, setAlertId] = useState<number | "">("");
   const [assignee, setAssignee] = useState<number | "">("");
   const [title, setTitle] = useState("");
@@ -197,6 +250,12 @@ function NewTask({ alerts, users, sceneId, onCreated }: { alerts: AlertItem[]; u
     const a = alerts.find((x) => x.id === id);
     if (a) { setTitle(`Verify: ${a.title}`); setReason(a.reason); setLat(String(a.lat ?? "")); setLon(String(a.lon ?? "")); }
   };
+  // pre-fill when opened from an alert (/field?alert=ID): the parent remounts this form once alerts are loaded
+  const [seeded, setSeeded] = useState<number | null>(null);
+  if (initialAlertId && seeded !== initialAlertId && alerts.some((a) => a.id === initialAlertId)) {
+    setSeeded(initialAlertId);
+    pick(initialAlertId);
+  }
   return (
     <Card>
       <CardHeader className="pb-2"><CardTitle className="text-[13px]">New field task</CardTitle><CardDescription>From an alert (recommended) or free-form. The AI reason travels with the task.</CardDescription></CardHeader>

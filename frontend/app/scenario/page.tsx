@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { FlaskConical, Pencil, Play, Save } from "lucide-react";
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Badge } from "@/components/ui/badge";
@@ -43,29 +44,42 @@ function Delta({ label, b, s, fmt }: { label: string; b: number; s: number; fmt:
 }
 
 export default function ScenarioLab() {
+  return <Suspense><ScenarioLabView /></Suspense>;
+}
+
+function ScenarioLabView() {
   const { user } = useAuth();
+  const params = useSearchParams();
+  const wanted = params.get("type") as Kind | null;
   const { sceneId, scene, runId, dataSource, selectedPatchId, setSelectedPatchId, removedPatchIds, togglePatchRemoved, clearRemoved } = useAnalysis();
   const live = dataSource.mode === "live";
   const mask = getHabitatMask(sceneId);
   const graph = getGraph(sceneId);
   const heatmap = getHeatmap(sceneId);
   const restoration = getRestoration(sceneId);
-  const [kind, setKind] = useState<Kind>("remove_patches");
+  const [kind, setKind] = useState<Kind>(wanted && KINDS.some((k) => k.id === wanted) ? wanted : "remove_patches");
   const [drawing, setDrawing] = useState(false);
-  const [polygon, setPolygon] = useState<LatLng[]>([]);
-  const [cands, setCands] = useState<string[]>([]);
+  // inputs and the result are scoped to (landscape, run): switching either starts from a clean slate
+  const scope = `${sceneId}|${runId}`;
+  const [inputs, setInputs] = useState<{ scope: string; polygon: LatLng[]; cands: string[] }>({ scope, polygon: [], cands: [] });
+  const polygon = inputs.scope === scope ? inputs.polygon : [];
+  const cands = inputs.scope === scope ? inputs.cands : [];
+  const setPolygon = (f: (p: LatLng[]) => LatLng[]) => setInputs((i) => ({ scope, polygon: f(i.scope === scope ? i.polygon : []), cands: i.scope === scope ? i.cands : [] }));
+  const setCands = (f: (c: string[]) => string[]) => setInputs((i) => ({ scope, polygon: i.scope === scope ? i.polygon : [], cands: f(i.scope === scope ? i.cands : []) }));
   const [otherRun, setOtherRun] = useState("");
   const [runs, setRuns] = useState<RunSummary[]>([]);
-  const [result, setResult] = useState<ScenarioResult | null>(null);
+  const [res, setRes] = useState<{ scope: string; data: ScenarioResult | null } | null>(null);
+  const result = res?.scope === scope ? res.data : null;
+  const setResult = (d: ScenarioResult | null) => setRes({ scope, data: d });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchRuns(sceneId).then((r) => setRuns(r.filter((x) => x.resultKind !== "synthetic"))).catch(() => setRuns([]));
-    setResult(null); clearRemoved(); setPolygon([]); setCands([]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sceneId, runId]);
+    let cancelled = false;
+    fetchRuns(sceneId).then((r) => { if (!cancelled) setRuns(r.filter((x) => x.resultKind !== "synthetic")); }).catch(() => { if (!cancelled) setRuns([]); });
+    return () => { cancelled = true; };
+  }, [sceneId]);
 
   const run = useCallback(async () => {
     if (!live) return;
@@ -96,7 +110,7 @@ export default function ScenarioLab() {
       <div className="grid h-[calc(100vh-4rem)] grid-cols-1 lg:grid-cols-[340px_1fr_380px]">
         {/* ------------------------------------------------ controls */}
         <div className="scroll-slim overflow-y-auto border-r border-foreground/[0.08] p-3 space-y-3">
-          {!live && <div className="rounded-xl border border-[#b45309]/30 bg-[#fffbeb] p-3 text-[11.5px] text-[#78350f]">Scenario Lab needs a real analysis run for this landscape (demonstration data has no probability raster).</div>}
+          {!live && <div className="rounded-xl border border-[#b45309]/30 bg-[#fffbeb] p-3 text-[11.5px] text-[#78350f]">Scenario Lab needs a real analysis run for this landscape — open New Analysis first.</div>}
           <div className="space-y-1">
             {KINDS.map((k) => (
               <button key={k.id} onClick={() => { setKind(k.id); setResult(null); }} className={cn("w-full rounded-xl border px-3 py-2 text-left", kind === k.id ? "border-[#0f5132]/40 bg-[#0f5132]/[0.06]" : "border-foreground/[0.08] hover:bg-foreground/[0.03]")}>
@@ -107,7 +121,7 @@ export default function ScenarioLab() {
           {kind === "remove_patches" && <div className="text-[11.5px] text-muted-foreground">Selected: {removedPatchIds.join(", ") || "click patches on the map"} {removedPatchIds.length > 0 && <button className="ml-1 underline" onClick={clearRemoved}>clear</button>}</div>}
           {kind === "remove_polygon" && (
             <div className="space-y-1.5 text-[11.5px]">
-              <Button size="sm" variant={drawing ? "default" : "outline"} onClick={() => { setDrawing((d) => !d); if (drawing) setPolygon([]); }}><Pencil className="h-3.5 w-3.5" /> {drawing ? "Stop drawing" : "Draw polygon"}</Button>
+              <Button size="sm" variant={drawing ? "default" : "outline"} onClick={() => { setDrawing((d) => !d); if (drawing) setPolygon(() => []); }}><Pencil className="h-3.5 w-3.5" /> {drawing ? "Stop drawing" : "Draw polygon"}</Button>
               <div className="text-muted-foreground">{polygon.length} vertices {drawing ? "— click on the map to add" : ""}</div>
             </div>
           )}
@@ -143,7 +157,7 @@ export default function ScenarioLab() {
             onSelectPatch={(id) => { if (kind === "remove_patches" && id) togglePatchRemoved(id); else setSelectedPatchId(id); }}
             removedPatchIds={removedForMap} drawing={drawing} drawnPolygon={polygon} onDrawPoint={(p) => setPolygon((s) => [...s, p])} className="h-full w-full" />
           <div className="pointer-events-none absolute left-3 top-3 z-[900] rounded-lg bg-white/90 px-3 py-1.5 text-[11px] shadow">
-            {result ? <span className={cn("font-semibold", result.label.startsWith("SIM") ? "text-[#c2410c]" : "text-[#1e5f8a]")}>{result.label}</span> : <span>{live ? "REAL DATA · baseline" : "DEMONSTRATION DATA"}</span>}
+            {result ? <span className={cn("font-semibold", result.label.startsWith("SIM") ? "text-[#c2410c]" : "text-[#1e5f8a]")}>{result.label}</span> : <span>{live ? "REAL DATA · baseline" : "no analysis for this landscape yet"}</span>}
           </div>
         </div>
 
