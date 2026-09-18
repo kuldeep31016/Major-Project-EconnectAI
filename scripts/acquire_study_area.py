@@ -14,13 +14,12 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
 import sys
 import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-import numpy as np  # noqa: E402
 
 from ecoconnect.pipeline.config import load_config, load_study_areas, load_dotenv  # noqa: E402
 from ecoconnect.gee.stac_acquire import AOI, TargetGrid, sentinel1_composite, sentinel2_composite, write_scene  # noqa: E402
@@ -63,26 +62,50 @@ def main() -> int:
     print(f"[acquire] {a.study_area}  bbox={bbox}  grid={grid.width}x{grid.height} @ {acq['target_resolution_m']} m  {grid.crs}")
     print(f"[acquire] date range {acq['date_range']}  provider=stac (no credentials)")
 
-    bands, names, info = [], [], {"study_area_id": a.study_area, "bbox": bbox, "date_range": acq["date_range"], "sources": {}}
-    t0 = time.time()
-    if not a.skip_s1:
-        print("[acquire] Sentinel-1 RTC (Planetary Computer) ...")
-        b, n, i = sentinel1_composite(aoi, grid, cfg["sentinel1"], acq)
-        bands.append(b); names += n; info["sources"]["sentinel1"] = i
-    if not a.skip_s2:
-        print("[acquire] Sentinel-2 L2A (Earth Search) ...")
-        b, n, i = sentinel2_composite(aoi, grid, cfg["sentinel2"], acq)
-        bands.append(b); names += n; info["sources"]["sentinel2"] = i
-    if not bands:
-        sys.exit("nothing to write (both sensors skipped)")
-    scene = np.concatenate(bands, axis=0)
-    scene_id = f"{a.study_area}_{acq['date_range'][0][:4]}_s{'1' if not a.skip_s1 else ''}{'2' if not a.skip_s2 else ''}_{acq['target_resolution_m']}m"
+    year = acq["date_range"][0][:4]
+    res = acq["target_resolution_m"]
     out_dir = Path(a.data_root) / "scenes" / a.study_area
-    info.update({"scene_id": scene_id, "elapsed_s": round(time.time() - t0, 1),
-                 "note": "S1 = primary segmentation input (paper), S2 = complementary. Bands are stored together; "
-                         "the model's band subset is chosen in configs/dataset.yaml."})
-    path = write_scene(out_dir / f"{scene_id}.tif", scene, names, grid, info)
-    print(f"[acquire] wrote {path} ({path.stat().st_size/1e6:.1f} MB) bands={names}")
+    info = {"study_area_id": a.study_area, "bbox": bbox, "date_range": acq["date_range"], "sources": {}}
+    t0 = time.time()
+    parts = []
+
+    def sensor_file(tag):
+        return out_dir / f"{a.study_area}_{year}_{tag}_{res}m.tif"
+
+    # Each sensor composite is checkpointed to its own file as soon as it is computed, and reused if present.
+    if not a.skip_s1:
+        f = sensor_file("s1")
+        if f.exists():
+            print(f"[acquire] Sentinel-1: reusing {f.name}")
+        else:
+            print("[acquire] Sentinel-1 RTC (Planetary Computer) ...")
+            b, n, i = sentinel1_composite(aoi, grid, cfg["sentinel1"], acq)
+            write_scene(f, b, n, grid, {**info, "sources": {"sentinel1": i}, "scene_id": f.stem})
+            del b
+        parts.append(f)
+    if not a.skip_s2:
+        f = sensor_file("s2")
+        if f.exists():
+            print(f"[acquire] Sentinel-2: reusing {f.name}")
+        else:
+            print("[acquire] Sentinel-2 L2A (Earth Search) ...")
+            b, n, i = sentinel2_composite(aoi, grid, cfg["sentinel2"], acq)
+            write_scene(f, b, n, grid, {**info, "sources": {"sentinel2": i}, "scene_id": f.stem})
+            del b
+        parts.append(f)
+    if not parts:
+        sys.exit("nothing to write (both sensors skipped)")
+    if len(parts) == 1:
+        path = parts[0]
+    else:
+        path = sensor_file("s12")
+        subprocess.run([sys.executable, str(Path(__file__).with_name("merge_scenes.py")), "--out", str(path)] + [str(p) for p in parts], check=True)
+    sj = json.loads(path.with_suffix(".json").read_text())
+    sj.update({"elapsed_s": round(time.time() - t0, 1),
+               "note": "S1 = primary segmentation input (paper), S2 = complementary. Bands are stored together; "
+                       "the model's band subset is chosen in configs/dataset.yaml."})
+    path.with_suffix(".json").write_text(json.dumps(sj, indent=1, default=str))
+    print(f"[acquire] scene {path} ({path.stat().st_size/1e6:.1f} MB) bands={sj.get('bands')}")
 
     if not a.skip_labels:
         print("[acquire] GMW weak labels (Zenodo) ...")
