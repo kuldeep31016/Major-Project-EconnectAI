@@ -180,6 +180,24 @@ export async function fetchProbabilityBounds(studyArea: string, runId: string): 
   }
 }
 
+/** Real sensor quicklook of the downloaded scene (Sentinel-1 VV dB, Sentinel-2 NDVI or true colour). */
+export type QuicklookKind = "s1" | "ndvi" | "rgb";
+export const sceneQuicklookUrl = (studyArea: string, kind: QuicklookKind, year?: number | null) =>
+  `${API_URL}/api/scenes/${encodeURIComponent(studyArea)}/quicklook.png?kind=${kind}${year ? `&year=${year}` : ""}`;
+export interface SceneQuicklook { url: string; bounds: [[number, number], [number, number]]; /** scene file actually rendered (may be another year when the requested one lacks the sensor) */ scene: string }
+export async function fetchSceneQuicklook(studyArea: string, kind: QuicklookKind, year?: number | null): Promise<SceneQuicklook | null> {
+  try {
+    const url = sceneQuicklookUrl(studyArea, kind, year);
+    const res = await fetch(url, { method: "GET", cache: "force-cache" });
+    const b = res.headers.get("X-Bounds");
+    if (!res.ok || !b) return null;
+    const [minLat, minLon, maxLat, maxLon] = b.split(",").map(Number);
+    return { url, bounds: [[minLat, minLon], [maxLat, maxLon]], scene: res.headers.get("X-Scene") ?? "" };
+  } catch {
+    return null;
+  }
+}
+
 export interface ModelDetail {
   experimentId: string;
   metrics: { mode?: string; result_label?: string; model?: string; encoder?: string; best_epoch?: number; val?: Record<string, number>; test?: Record<string, number> | null; test_threshold?: number };

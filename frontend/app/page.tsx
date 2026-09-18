@@ -13,7 +13,7 @@ import { useAnalysis } from "@/hooks/use-analysis";
 import { fetchStudyAreas, type StudyAreaInfo } from "@/lib/api";
 import { getHabitatMask, getScenes } from "@/lib/data";
 
-const NAV = [["#home", "Home"], ["#about", "About"], ["#features", "Features"], ["#study-areas", "Study Areas"], ["#impact", "Impact"], ["#team", "Team"]] as const;
+const NAV = [["#home", "Home"], ["#about", "About"], ["#features", "Features"], ["#study-areas", "Study Areas"], ["#impact", "Impact"]] as const;
 
 function areaImage(bbox: [number, number, number, number], w = 640, h = 400) {
   const [minLat, minLon, maxLat, maxLon] = bbox;
@@ -33,12 +33,6 @@ const FEATURES = [
   { icon: Sprout, title: "Restoration Planner", text: "Find and rank candidate sites for maximum ecological benefit" },
   { icon: ClipboardCheck, title: "Field Verification", text: "Assign field tasks, collect evidence and track progress" },
   { icon: FileText, title: "Reports & Insights", text: "Generate detailed reports for planning and policy" },
-];
-const TEAM = [
-  { initial: "R", name: "Ruhinaaz", role: "Remote Sensing & AI" },
-  { initial: "K", name: "Kuldeep Raj", role: "Graph Analysis & Backend" },
-  { initial: "S", name: "Team Member", role: "Frontend & Visualisation" },
-  { initial: "P", name: "Project Guide", role: "Supervision & Support" },
 ];
 
 export default function LandingPage() {
@@ -234,27 +228,6 @@ export default function LandingPage() {
               )}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ------------------------------------------------------------ 7 · team */}
-      <section id="team" className="mx-auto max-w-7xl px-4 py-20 sm:px-6">
-        <div className="grid items-center gap-8 lg:grid-cols-[1fr_auto]">
-          <div>
-            <div className="text-[11.5px] font-semibold uppercase tracking-[0.2em] text-[#16a34a]">People behind the mission</div>
-            <h2 className="mt-2 text-[38px] font-bold tracking-tight">A Shared Vision for Resilient Coasts</h2>
-            <p className="mt-2 text-[15px] text-[#475569]">We are a team of final-year students building technology for a healthier, more sustainable future.</p>
-            <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-4">
-              {TEAM.map((m) => (
-                <div key={m.name} className="text-center">
-                  <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#dcfce7] text-[22px] font-bold text-[#15803d]">{m.initial}</div>
-                  <div className="mt-3 text-[15px] font-semibold">{m.name}</div>
-                  <div className="text-[12.5px] text-[#64748b]">{m.role}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="hidden rotate-[-6deg] text-[22px] leading-tight text-[#15803d] lg:block" style={{ fontFamily: "'Segoe Script','Bradley Hand',cursive" }}>“Technology<br />for People,<br />Nature and<br />Future Generations”</div>
         </div>
       </section>
 

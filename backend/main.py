@@ -19,7 +19,7 @@ from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -399,7 +399,6 @@ def segment(req: SegmentRequest):
 
 
 # =========================================================================== research tools
-from fastapi.responses import Response  # noqa: E402
 from ecoconnect.graph import compute_criticality, summarise, composite_interface_score  # noqa: E402
 from ecoconnect.graph.explain import criticality_level  # noqa: E402
 
@@ -480,6 +479,114 @@ def probability_png(study_area: str, run_id: str, alpha: float = 0.85):
     return Response(buf.getvalue(), media_type="image/png",
                     headers={"X-Bounds": f"{b[1]},{b[0]},{b[3]},{b[2]}", "Access-Control-Expose-Headers": "X-Bounds",
                              "Cache-Control": "public, max-age=3600"})
+
+
+def _scene_raster(study_area: str, year: int | None, needs: tuple[str, ...] = ()) -> Path:
+    """Downloaded scene GeoTIFF for a study area that carries the requested bands. The requested year is
+    preferred; if that year's scene lacks the sensor (e.g. an S1-only 2025 scene), the nearest other year is used
+    and the response says which scene was drawn."""
+    import rasterio
+    scenes_dir = Path(os.environ.get("DATA_ROOT", REPO_ROOT / "data")) / "scenes" / study_area
+    cands = sorted(scenes_dir.glob("*.tif")) if scenes_dir.exists() else []
+    if not cands:
+        raise HTTPException(404, f"no downloaded scene for {study_area}")
+
+    def scene_year(c: Path) -> int:
+        try:
+            return int(c.stem.split("_")[1])
+        except (IndexError, ValueError):
+            return 0
+    # requested year first, then closest years; composite (s12) before single-sensor files
+    cands.sort(key=lambda c: (abs(scene_year(c) - year) if year else 0, 0 if "_s12_" in c.name else 1, c.name))
+    for c in cands:
+        if not needs:
+            return c
+        with rasterio.open(c) as ds:
+            if all(n in ds.descriptions for n in needs):
+                return c
+    raise HTTPException(404, f"no scene of {study_area} carries bands {list(needs)}")
+
+
+@app.get("/api/scenes/{study_area}/quicklook.png")
+def scene_quicklook(study_area: str, kind: str = "s1", year: Optional[int] = None):
+    """Real sensor quicklook rendered from the downloaded scene raster (not a basemap):
+    kind=s1 -> Sentinel-1 VV backscatter (dB, grey); kind=ndvi -> Sentinel-2 NDVI ramp; kind=rgb -> Sentinel-2 true colour.
+    WGS84-bounded PNG (X-Bounds: min_lat,min_lon,max_lat,max_lon), cached under outputs/quicklooks."""
+    import io
+    import numpy as np
+    from PIL import Image
+    import rasterio
+    from rasterio.warp import transform_bounds, reproject, Resampling
+    from rasterio.crs import CRS
+    from rasterio.transform import from_bounds as _fb
+
+    if kind not in {"s1", "ndvi", "rgb"}:
+        raise HTTPException(400, "kind must be s1, ndvi or rgb")
+    needs = {"s1": ("s1_vv_db",), "ndvi": ("s2_red", "s2_nir"), "rgb": ("s2_red", "s2_green", "s2_blue")}[kind]
+    src = _scene_raster(study_area, year, needs)
+    cache_dir = OUTPUTS_DIR / "quicklooks"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    cached = cache_dir / f"{src.stem}_{kind}.png"
+    meta_f = cached.with_suffix(".json")
+    if cached.exists() and meta_f.exists() and cached.stat().st_mtime >= src.stat().st_mtime:
+        bounds = json.loads(meta_f.read_text())["bounds"]
+        return Response(cached.read_bytes(), media_type="image/png",
+                        headers={"X-Bounds": bounds, "X-Scene": src.name, "Access-Control-Expose-Headers": "X-Bounds, X-Scene", "Cache-Control": "public, max-age=3600"})
+
+    with rasterio.open(src) as ds:
+        names = list(ds.descriptions)
+        def band(n: str) -> np.ndarray:
+            if n not in names:
+                raise HTTPException(404, f"scene has no band {n} (available: {names})")
+            a = ds.read(names.index(n) + 1).astype(np.float32)
+            if ds.nodata is not None:
+                a[a == ds.nodata] = np.nan
+            return a
+        if kind == "s1":
+            chans = [band("s1_vv_db")]
+        elif kind == "ndvi":
+            chans = [band("s2_ndvi")] if "s2_ndvi" in names else [None]
+            if chans[0] is None:
+                r, n = band("s2_red"), band("s2_nir")
+                chans = [(n - r) / np.maximum(n + r, 1e-6)]
+        else:
+            chans = [band("s2_red"), band("s2_green"), band("s2_blue")]
+        b = transform_bounds(ds.crs, CRS.from_epsg(4326), *ds.bounds)
+        w = 1200
+        h = int(w * (b[3] - b[1]) / (b[2] - b[0]))
+        dst_tr = _fb(*b, w, h)
+        out = []
+        for ch in chans:
+            dst = np.full((h, w), np.nan, np.float32)
+            reproject(np.nan_to_num(ch, nan=-9999), dst, src_transform=ds.transform, src_crs=ds.crs, src_nodata=-9999,
+                      dst_transform=dst_tr, dst_crs=CRS.from_epsg(4326), dst_nodata=np.nan, resampling=Resampling.bilinear)
+            out.append(dst)
+
+    valid = np.all([np.isfinite(o) for o in out], axis=0)
+    rgba = np.zeros((h, w, 4), np.uint8)
+    if kind == "s1":
+        v = np.clip((np.nan_to_num(out[0], nan=-25) + 25) / 25, 0, 1)  # -25 .. 0 dB
+        g = (v * 255).astype(np.uint8)
+        rgba[..., 0] = rgba[..., 1] = rgba[..., 2] = g
+    elif kind == "ndvi":
+        v = np.clip((np.nan_to_num(out[0], nan=-1) + 0.2) / 1.0, 0, 1)  # -0.2 .. 0.8
+        # brown -> yellow -> dark green
+        rgba[..., 0] = (np.where(v < 0.5, 150 + 105 * (v / 0.5), 255 * (1 - (v - 0.5) / 0.5) * 0.9 + 20)).astype(np.uint8)
+        rgba[..., 1] = (np.where(v < 0.5, 90 + 150 * (v / 0.5), 240 - 120 * ((v - 0.5) / 0.5))).astype(np.uint8)
+        rgba[..., 2] = (np.where(v < 0.5, 40, 40 * (1 - (v - 0.5) / 0.5))).astype(np.uint8)
+    else:
+        for i in range(3):
+            # surface reflectance ~0..0.3 stretched with a mild gamma for coastal scenes
+            v = np.clip(np.nan_to_num(out[i]) / 0.3, 0, 1) ** 0.7
+            rgba[..., i] = (v * 255).astype(np.uint8)
+    rgba[..., 3] = np.where(valid, 255, 0).astype(np.uint8)
+    buf = io.BytesIO()
+    Image.fromarray(rgba, "RGBA").save(buf, "PNG", optimize=True)
+    bounds = f"{b[1]},{b[0]},{b[3]},{b[2]}"
+    cached.write_bytes(buf.getvalue())
+    meta_f.write_text(json.dumps({"bounds": bounds, "source": str(src.relative_to(REPO_ROOT)) if src.is_relative_to(REPO_ROOT) else str(src)}))
+    return Response(buf.getvalue(), media_type="image/png",
+                    headers={"X-Bounds": bounds, "X-Scene": src.name, "Access-Control-Expose-Headers": "X-Bounds, X-Scene", "Cache-Control": "public, max-age=3600"})
 
 
 @app.get("/api/models/{experiment_id}")

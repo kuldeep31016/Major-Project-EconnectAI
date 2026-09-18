@@ -349,10 +349,14 @@ export interface TimelineYear {
   eventType: "natural" | "anthropogenic" | "conservation" | "stable";
   /** Present on real timelines (one pipeline run per year). */
   runId?: string;
+  iic?: number;
+  pc?: number;
+  ecaHa?: number;
+  ecaPctOfHabitat?: number;
+  nEdges?: number;
+  nComponents?: number;
   resultKind?: ResultKind;
   resultLabel?: string;
-  iic?: number;
-  ecaHa?: number;
   narrative: string;
   /** Patch ids that are degraded/absent in this year. */
   degradedPatchIds: string[];

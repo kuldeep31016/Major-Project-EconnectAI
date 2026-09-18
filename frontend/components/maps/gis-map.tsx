@@ -64,6 +64,18 @@ interface Props {
   measuring?: boolean;
   measurePoints?: LatLng[];
   onMeasurePoint?: (p: LatLng) => void;
+  /** Real sensor quicklook (Sentinel-1 VV / Sentinel-2 NDVI / true colour) rendered from the downloaded scene. */
+  sensorOverlay?: { url: string; bounds: [[number, number], [number, number]] } | null;
+  /** Per-patch fill/stroke override (e.g. critical patches in red, low-confidence patches lighter). null = default. */
+  patchStyle?: (p: HabitatMask["patches"][number]) => { color?: string; fillColor?: string; fillOpacity?: number; dashArray?: string } | null;
+  /** Patches not drawn at all (layer toggles). */
+  hiddenPatchIds?: string[];
+  /** Dashed outline of the study-area extent. */
+  showBoundary?: boolean;
+  /** Hide Leaflet's default zoom control (the page draws its own). */
+  zoomControl?: boolean;
+  /** Programmatic focus: fly to a point (search box, alert click). */
+  focus?: { lat: number; lon: number; zoom?: number; nonce: number } | null;
 }
 
 export interface MapMarker {
@@ -126,6 +138,16 @@ function SceneFitter({ bounds, sceneId }: { bounds: LatLngBoundsExpression; scen
   return null;
 }
 
+/** Flies to a requested point whenever `nonce` changes. */
+function Focuser({ focus }: { focus: Props["focus"] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!focus) return;
+    map.flyTo([focus.lat, focus.lon], focus.zoom ?? Math.max(map.getZoom(), 13), { duration: 0.8 });
+  }, [focus?.nonce]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
+}
+
 /** Adds the metric scale bar once per map instance. */
 function ScaleBar() {
   const map = useMap();
@@ -166,6 +188,12 @@ export default function GisMap({
   measuring = false,
   measurePoints = [],
   onMeasurePoint,
+  sensorOverlay = null,
+  patchStyle,
+  hiddenPatchIds = NO_IDS,
+  showBoundary = false,
+  zoomControl = true,
+  focus = null,
 }: Props) {
   const measureKm = measurePoints.reduce((acc, p, i) => (i ? acc + haversineKm(measurePoints[i - 1], p) : 0), 0);
   const base = BASEMAPS.find((b) => b.id === basemap) ?? BASEMAPS[0];
@@ -189,11 +217,12 @@ export default function GisMap({
         zoom={scene.zoom}
         bounds={bounds}
         scrollWheelZoom
-        zoomControl
+        zoomControl={zoomControl}
         className="h-full w-full"
         attributionControl
       >
         <SceneFitter bounds={bounds} sceneId={scene.id} />
+        <Focuser focus={focus} />
         <CursorTracker
           onMove={onCursorMove}
           onClick={(p) => {
@@ -240,6 +269,12 @@ export default function GisMap({
             attribution=""
             maxZoom={19}
           />
+        )}
+
+        {/* ------------------------------------ real sensor quicklook */}
+        {sensorOverlay && <ImageOverlay key={sensorOverlay.url} url={sensorOverlay.url} bounds={sensorOverlay.bounds} opacity={1} zIndex={340} />}
+        {showBoundary && (
+          <Rectangle bounds={bounds} pathOptions={{ color: "#f8fafc", weight: 1.5, dashArray: "6 6", fill: false, opacity: 0.8 }} interactive={false} />
         )}
 
         {/* ------------------------------------ model probability raster */}
@@ -306,34 +341,33 @@ export default function GisMap({
 
         {/* ------------------------------------------ habitat patches */}
         {layers.habitat &&
-          mask.patches.map((p) => {
+          mask.patches.filter((p) => !hiddenPatchIds.includes(p.id)).map((p) => {
             const removed = removedPatchIds.includes(p.id);
             const degraded = degradedPatchIds.includes(p.id);
             const selected = selectedPatchId === p.id;
             const meta = HABITAT_META[p.habitatClass];
             const sens = SENSITIVITY_META[p.sensitivity];
+            const ov = patchStyle?.(p) ?? null;
+            const baseFill = removed ? 0.1 : degraded ? 0.18 : selected ? 0.44 : ov?.fillOpacity ?? 0.28;
 
             return (
               <Polygon
                 key={p.id}
                 positions={p.polygon as [number, number][]}
                 pathOptions={{
-                  color: removed ? "#ef4444" : selected ? "#f8fafc" : meta.color,
+                  color: removed ? "#ef4444" : selected ? "#f8fafc" : ov?.color ?? meta.color,
                   weight: selected ? 2.6 : removed ? 1.6 : 1.4,
                   opacity: removed ? 0.85 : 0.9,
-                  dashArray: removed || degraded ? "5 4" : undefined,
-                  fillColor: removed ? "#ef4444" : degraded ? "#f59e0b" : meta.color,
-                  fillOpacity: removed ? 0.1 : degraded ? 0.18 : selected ? 0.44 : 0.28,
+                  dashArray: removed || degraded ? "5 4" : ov?.dashArray,
+                  fillColor: removed ? "#ef4444" : degraded ? "#f59e0b" : ov?.fillColor ?? meta.color,
+                  fillOpacity: baseFill,
                 }}
                 eventHandlers={{
                   click: () => {
                     if (!drawing) onSelectPatch(selected ? null : p.id);
                   },
                   mouseover: (e) => e.target.setStyle({ fillOpacity: 0.5 }),
-                  mouseout: (e) =>
-                    e.target.setStyle({
-                      fillOpacity: removed ? 0.1 : degraded ? 0.18 : selected ? 0.44 : 0.28,
-                    }),
+                  mouseout: (e) => e.target.setStyle({ fillOpacity: baseFill }),
                 }}
               >
                 <LTooltip direction="top" offset={[0, -4]} opacity={1}>
