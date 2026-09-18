@@ -91,3 +91,23 @@ Label:        DEVELOPMENT-SUBSET RESULT — NOT FINAL | OUR EXPERIMENTAL RESULT
 Caveat:       agreement with a weak label (GMW), not field truth
 ```
 `scripts/evaluate.py` writes all of these fields into `metrics.json` / `experiment.json` automatically.
+
+## Four-landscape runs with the Kerala development model (2026-09-19) — DEVELOPMENT, NOT FINAL
+
+The `kerala_E1_s1_b0_dev` checkpoint (EfficientNet-B0 U-Net, Sentinel-1 VV/VH only, trained on the Kerala
+subset, calibrated threshold 0.70) was applied **without retraining** to the downloaded 2020 scenes of the
+other three landscapes through `POST /api/segment`. These are real pipeline runs (scene → probability raster →
+patches (MMU 2 ha) → graph k = 3, τ = 5 km → IIC/PC/ECA → exact criticality), but they are *transfer* results
+of a small development model and must not be read as mangrove extent estimates: Sundarbans and Odisha are
+grossly under-detected (the model has never seen delta-scale mangrove), which is exactly what the pending
+four-area training (`scripts/phase2_all_areas.sh`) is meant to fix.
+
+| Landscape | run | scene year | patches | links | components | habitat (ha) | ECA / habitat | threshold |
+|---|---|---|---|---|---|---|---|---|
+| kerala-coast | `kerala_E1_s1_b0_dev_2025_t0.70` | 2025 | 25 | 48 | 2 | 319.1 | 74.5 % | 0.7 |
+| sundarbans | `sundarbans_kerala_E1_s1_b0_dev_ui_20260918T201317Z` | 2020 | 23 | 20 | 10 | 80.9 | 50.1 % | 0.7 |
+| gulf-of-mannar | `gulf-of-mannar_kerala_E1_s1_b0_dev_ui_20260918T201304Z` | 2020 | 36 | 60 | 6 | 159.8 | 51.5 % | 0.7 |
+| odisha-coast | `odisha-coast_kerala_E1_s1_b0_dev_ui_20260918T201251Z` | 2020 | 2 | 0 | 2 | 4.8 | 73.0 % | 0.7 |
+
+No prototype/synthetic run exists in `outputs/runs` any more; the platform shows "no analysis yet" for a
+landscape without a real run.
