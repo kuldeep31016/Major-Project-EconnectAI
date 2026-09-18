@@ -83,6 +83,14 @@ export function registerLiveBundle(sceneId: string, bundle: FrontendBundle | nul
 }
 export const getLiveBundle = (sceneId: string) => live.get(sceneId) ?? null;
 
+const liveTimelines = new Map<string, TimelineData>();
+/** Register a REAL timeline (>= 1 year with an actual pipeline run); `null` clears it. */
+export function registerLiveTimeline(sceneId: string, t: TimelineData | null) {
+  if (t && t.years.length) liveTimelines.set(sceneId, t);
+  else liveTimelines.delete(sceneId);
+}
+export const hasLiveTimeline = (sceneId: string) => liveTimelines.has(sceneId);
+
 export type DataMode = "live" | "mock";
 export interface DataSource {
   mode: DataMode;
@@ -110,10 +118,11 @@ export const getConnectivity = (sceneId: string): ConnectivityMetrics =>
   live.get(sceneId)?.connectivity ?? fallback(connectivity, sceneId);
 export const getRestoration = (sceneId: string): RestorationData =>
   live.get(sceneId)?.restoration ?? fallback(restorations, sceneId);
-/** Scenario projections (cyclone, SLR …) and the 2020–25 timeline are PROTOTYPE narrative
- *  content: they are not produced by the pipeline and remain mock in every mode. */
+/** Scenario projections (cyclone, SLR …) are PROTOTYPE narrative content and remain mock in every mode. */
 export const getSimulation = (sceneId: string): SimulationData => fallback(simulations, sceneId);
-export const getTimeline = (sceneId: string): TimelineData => fallback(timelines, sceneId);
+/** Timeline: REAL when at least one year has a pipeline run (backend /timeline), else prototype mock. */
+export const getTimeline = (sceneId: string): TimelineData =>
+  liveTimelines.get(sceneId) ?? fallback(timelines, sceneId);
 export const getExplanation = (sceneId: string, patchId: string) =>
   live.get(sceneId)?.explanations?.[patchId] ?? null;
 export const getCriticality = (sceneId: string) => live.get(sceneId)?.criticality ?? null;

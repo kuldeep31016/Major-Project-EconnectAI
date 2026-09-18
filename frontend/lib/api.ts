@@ -4,7 +4,7 @@
  * The base URL comes from NEXT_PUBLIC_API_URL (default http://localhost:8000). Every call
  * fails soft: callers decide whether to fall back to the prototype's mock data.
  */
-import type { FrontendBundle, RunSummary, WhatIfResult, RestorationAction } from "@/types";
+import type { FrontendBundle, RunSummary, WhatIfResult, RestorationAction, TimelineData } from "@/types";
 
 export const API_URL =
   (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) || "http://localhost:8000";
@@ -48,6 +48,10 @@ export const fetchRuns = (studyArea?: string) =>
   getJson<RunSummary[]>(`/api/runs${studyArea ? `?study_area=${encodeURIComponent(studyArea)}` : ""}`);
 export const fetchBundle = (studyArea: string, runId = "latest") =>
   getJson<FrontendBundle>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/bundle`, undefined, 20000);
+
+/** Real timeline: one entry per scene year with a pipeline run; empty when none exist. */
+export const fetchTimeline = (studyArea: string) =>
+  getJson<TimelineData>(`/api/runs/${encodeURIComponent(studyArea)}/timeline`);
 
 export const postWhatIf = (studyArea: string, patchIds: string[], runId = "latest") =>
   getJson<WhatIfResult>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/what-if`, {

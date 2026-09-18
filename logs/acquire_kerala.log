@@ -1,0 +1,4 @@
+[acquire] kerala-coast  bbox=(9.778, 76.272, 9.978, 76.472)  grid=2203x2221 @ 10 m  EPSG:32643
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1B_IW_GRDH_1SDV_20200101T004013_20200101T004038_019616_02512D_rtc  2020-01-01  descending

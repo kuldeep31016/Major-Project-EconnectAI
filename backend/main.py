@@ -174,6 +174,76 @@ def run_file(study_area: str, run_id: str, name: str):
     return FileResponse(p)
 
 
+# --------------------------------------------------------------------------- real timeline
+def _mask_diff_ha(prob_a: str, prob_b: str, thr_a: float, thr_b: float) -> Optional[dict]:
+    """Habitat lost/gained (ha) between two probability rasters on the same grid."""
+    try:
+        import numpy as np
+        from ecoconnect.geospatial.raster_processing.io import read_raster, pixel_area_ha
+        a, ma = read_raster(prob_a, bands=[1]); b, mb = read_raster(prob_b, bands=[1])
+        if a.shape != b.shape or ma.transform != mb.transform:
+            return None
+        pa, pb = a[0], b[0]
+        valid = np.isfinite(pa) & np.isfinite(pb)
+        ha_row = pixel_area_ha(ma)
+        area = np.broadcast_to(ha_row[:, None], pa.shape)
+        ba, bb = (pa >= thr_a) & valid, (pb >= thr_b) & valid
+        return {"lost_ha": float(area[ba & ~bb].sum()), "gained_ha": float(area[~ba & bb].sum()),
+                "stable_ha": float(area[ba & bb].sum())}
+    except Exception:
+        return None
+
+
+@app.get("/api/runs/{study_area}/timeline")
+def timeline(study_area: str, critical_threshold: float = 0.10):
+    """REAL timeline: one entry per scene year that has a pipeline run (latest run per year).
+    Habitat change between consecutive years is computed from the binary masks of the two runs.
+    Years without a real run are simply absent - nothing is interpolated or invented."""
+    base = RUNS_DIR / study_area
+    by_year: dict[int, tuple[str, dict, dict]] = {}
+    for run_dir in sorted(base.glob("*")) if base.exists() else []:
+        mp = run_dir / "manifest.json"
+        if not mp.exists():
+            continue
+        m = json.loads(mp.read_text())
+        y = (m.get("data_source") or {}).get("scene_year")
+        if y is None or m.get("result_kind") == "synthetic":
+            continue
+        if y not in by_year or m["timestamp_utc"] > by_year[y][1]["timestamp_utc"]:
+            by_year[int(y)] = (run_dir.name, m, json.loads((run_dir / "metrics.json").read_text()))
+    years = []
+    prev = None
+    for y in sorted(by_year):
+        run_id, m, met = by_year[y]
+        crit = json.loads((base / run_id / "criticality.json").read_text())
+        rm = met["research_metrics"]
+        diff = None
+        if prev is not None:
+            _, pm, _ = by_year[prev]
+            diff = _mask_diff_ha(pm["data_source"]["path"], m["data_source"]["path"],
+                                 pm["data_source"].get("threshold", 0.5), m["data_source"].get("threshold", 0.5))
+        years.append({
+            "year": y, "runId": run_id, "resultKind": m["result_kind"], "resultLabel": m["result_label"],
+            "connectivityScore": round(met["interface_score"]["score"], 1),
+            "iic": rm["iic"], "pc": rm["pc"], "ecaHa": rm["eca_ha"], "ecaPctOfHabitat": rm["eca_pct_of_habitat"],
+            "habitatAreaHa": round(rm["habitat_area_ha"], 1), "patchCount": rm["n_patches"],
+            "nEdges": rm["n_edges"], "nComponents": rm["n_components"],
+            "fragmentationIndex": round(rm["n_components"] / max(rm["n_patches"], 1), 4),
+            "criticalPatches": sum(1 for r in crit if r["criticality_score"] >= critical_threshold),
+            "lostHa": round(diff["lost_ha"], 1) if diff else None,
+            "gainedHa": round(diff["gained_ha"], 1) if diff else None,
+            "meanConfidence": round(sum(r["confidence"] * r["area_ha"] for r in crit) / max(rm["habitat_area_ha"], 1e-9), 4),
+            "event": f"Pipeline run over {y} imagery", "eventType": "stable",
+            "narrative": (f"{rm['n_patches']} patches, {rm['n_edges']} links, {rm['n_components']} components; "
+                          f"ECA {rm['eca_ha']:.0f} ha ({rm['eca_pct_of_habitat']:.1f}% of habitat)."
+                          + (f" Versus {prev}: {diff['lost_ha']:.0f} ha lost, {diff['gained_ha']:.0f} ha gained (mask difference at the run thresholds)." if diff else "")),
+            "degradedPatchIds": [], "composition": [],
+        })
+        prev = y
+    return {"sceneId": study_area, "years": years,
+            "note": "Real timeline: each year is an actual pipeline run; change = binary-mask difference between consecutive runs. No interpolation."}
+
+
 # --------------------------------------------------------------------------- interactive computations
 class WhatIfRequest(BaseModel):
     patch_ids: list[str] = Field(..., min_length=1)

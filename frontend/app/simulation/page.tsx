@@ -231,20 +231,32 @@ export default function SimulationPage() {
     [],
   );
 
-  /** Close the polygon and remove every patch whose centroid falls inside it. */
+  /**
+   * Close the polygon and remove every patch it touches: a patch is affected when its centroid or any
+   * polygon vertex lies inside the drawn area, or a drawn vertex lies inside the patch. On live runs the
+   * connectivity change is then recomputed exactly by the backend (Eq. 10) — a real graph operation,
+   * not narrative content.
+   */
   const applyPolygon = () => {
     if (polygon.length < 3) return;
     setComputing(true);
-
-    window.setTimeout(() => {
-      const inside = mask.patches.filter((p) => pointInPolygon(p.center, polygon));
+    const apply = () => {
+      const inside = mask.patches.filter(
+        (p) =>
+          pointInPolygon(p.center, polygon) ||
+          p.polygon.some((v) => pointInPolygon(v, polygon)) ||
+          polygon.some((v) => pointInPolygon(v, p.polygon)),
+      );
       inside.forEach((p) => {
         if (!removedPatchIds.includes(p.id)) togglePatchRemoved(p.id);
       });
       setDrawing(false);
       setPolygon([]);
       setComputing(false);
-    }, 1200);
+    };
+    // the prototype animated a fake delay; live runs recompute for real, so apply immediately
+    if (isLive) apply();
+    else window.setTimeout(apply, 1200);
   };
 
   const resetAll = () => {
@@ -638,6 +650,12 @@ export default function SimulationPage() {
               {/* ----------------------------------------- scenarios */}
               {mode === "scenario" && (
                 <div className="space-y-4">
+                  <div className="rounded-2xl border border-[#f59e0b]/25 bg-[#f59e0b]/8 px-3 py-2.5 text-[11px] leading-relaxed text-[#f59e0b]">
+                    <b>Demonstration / hypothetical scenarios.</b> These narratives (cyclone, sea-level rise,
+                    urban expansion…) are prototype content, not outputs of a validated physical or geospatial
+                    model. For a real scenario use <b>What-if → Draw impact area</b>, which removes the patches
+                    inside your polygon and recomputes C(G) exactly.
+                  </div>
                   <div className="grid grid-cols-2 gap-2">
                     {sim.scenarios.map((s) => {
                       const Icon = SCENARIO_ICONS[s.id];
@@ -986,9 +1004,25 @@ export default function SimulationPage() {
                   <Card>
                     <CardHeader className="pb-2">
                       <CardTitle>Temporal analysis</CardTitle>
-                      <CardDescription>Landscape change 2020 – 2025</CardDescription>
+                      <CardDescription>
+                        {timeline.note
+                          ? `Real pipeline runs · ${timeline.years.map((y) => y.year).join(", ")}`
+                          : "Landscape change 2020 – 2025"}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
+                      {!timeline.note && (
+                        <div className="mb-3 rounded-xl border border-[#f59e0b]/25 bg-[#f59e0b]/8 px-3 py-2 text-[10.5px] leading-relaxed text-[#f59e0b]">
+                          <b>Demonstration timeline</b> — prototype narrative data. A real timeline appears here once
+                          the pipeline has processed imagery from two or more years for this study area.
+                        </div>
+                      )}
+                      {timeline.note && (
+                        <div className="mb-3 rounded-xl border border-[#00c896]/25 bg-[#00c896]/8 px-3 py-2 text-[10.5px] leading-relaxed text-[#00c896]">
+                          Each year is an actual segmentation + graph run; habitat change is the binary-mask
+                          difference between consecutive runs at their thresholds. Years without a run are absent.
+                        </div>
+                      )}
                       {/* year selector */}
                       <div className="flex gap-1.5">
                         {timeline.years.map((y) => (
@@ -1048,8 +1082,8 @@ export default function SimulationPage() {
                             ["Habitat area", fmtArea(activeYear.habitatAreaHa), "#38bdf8"],
                             ["Patches", activeYear.patchCount, "#a78bfa"],
                             ["Critical", activeYear.criticalPatches, "#ef4444"],
-                            ["Lost", `${activeYear.lostHa} ha`, "#f97316"],
-                            ["Gained", `${activeYear.gainedHa} ha`, "#22c55e"],
+                            ["Lost", activeYear.lostHa != null ? `${activeYear.lostHa} ha` : "—", "#f97316"],
+                            ["Gained", activeYear.gainedHa != null ? `${activeYear.gainedHa} ha` : "—", "#22c55e"],
                           ].map(([k, v, c]) => (
                             <div
                               key={k as string}

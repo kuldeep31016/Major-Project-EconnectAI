@@ -14,9 +14,10 @@ import {
   getDataSource,
   getScene,
   registerLiveBundle,
+  registerLiveTimeline,
   type DataSource,
 } from "@/lib/data";
-import { apiHealth, fetchBundle, postWhatIf } from "@/lib/api";
+import { apiHealth, fetchBundle, fetchTimeline, postWhatIf } from "@/lib/api";
 import type { SatelliteScene, WhatIfResult } from "@/types";
 
 interface AnalysisState {
@@ -92,8 +93,14 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       }
       const bundle = await fetchBundle(id);
       registerLiveBundle(id, bundle);
+      try {
+        registerLiveTimeline(id, await fetchTimeline(id));
+      } catch {
+        registerLiveTimeline(id, null);
+      }
     } catch {
       registerLiveBundle(id, null);
+      registerLiveTimeline(id, null);
     } finally {
       setBundleVersion((v) => v + 1);
       setBundleLoading(false);

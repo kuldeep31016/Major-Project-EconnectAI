@@ -340,12 +340,19 @@ export interface TimelineYear {
   habitatAreaHa: number;
   patchCount: number;
   fragmentationIndex: number;
-  lostHa: number;
-  gainedHa: number;
+  /** null for the first real year (no earlier run to compare against). */
+  lostHa: number | null;
+  gainedHa: number | null;
   criticalPatches: number;
   meanConfidence: number;
   event: string;
   eventType: "natural" | "anthropogenic" | "conservation" | "stable";
+  /** Present on real timelines (one pipeline run per year). */
+  runId?: string;
+  resultKind?: ResultKind;
+  resultLabel?: string;
+  iic?: number;
+  ecaHa?: number;
   narrative: string;
   /** Patch ids that are degraded/absent in this year. */
   degradedPatchIds: string[];
@@ -355,6 +362,8 @@ export interface TimelineYear {
 export interface TimelineData {
   sceneId: string;
   years: TimelineYear[];
+  /** Set on real timelines returned by the backend. */
+  note?: string;
 }
 
 /* ------------------------------------------------------------------ */

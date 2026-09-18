@@ -164,6 +164,11 @@ def run_graph_analysis(
         "result_label": RESULT_LABELS[result_kind],
         "data_source": data_source,
         "landscape_area_ha": landscape_area_ha,
+        "aoi_area_km2": round(landscape_area_ha / 100.0, 2),
+        "valid_area_km2": round(landscape_area_ha / 100.0, 2),
+        "habitat_area_ha": round(sum(p.area_ha for p in patches), 2),
+        "comparability_note": ("IIC and PC scale with the analysis extent A_L; do not compare raw values between "
+                               "study areas of different AOI size - use ECA as % of habitat area instead."),
         "n_patches": len(patches),
         "n_candidates": len(candidates or []),
         "config": cfg,

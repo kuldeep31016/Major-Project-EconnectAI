@@ -64,8 +64,20 @@ def from_probability_raster(
         )
         candidates = cands[:candidate_max_count]
 
+    scene_year = None
+    side = Path(prob_path).with_suffix(".json")
+    if side.exists():
+        try:
+            scene = json.loads(side.read_text()).get("scene")
+            sj = Path(scene).with_suffix(".json") if scene else None
+            if sj and sj.exists():
+                dr = json.loads(sj.read_text()).get("date_range") or []
+                scene_year = int(str(dr[0])[:4]) if dr else None
+        except (ValueError, OSError, KeyError):
+            scene_year = None
     src = {
         "type": "probability_raster", "path": str(Path(prob_path).resolve()),
+        "scene_year": scene_year,
         "crs": str(meta.crs), "width": meta.width, "height": meta.height,
         "pixel_size": [abs(meta.transform.a), abs(meta.transform.e)],
         "threshold": threshold, "mmu_ha": mmu_ha, "connectivity": connectivity,
