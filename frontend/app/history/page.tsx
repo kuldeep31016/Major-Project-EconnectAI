@@ -34,7 +34,7 @@ function runToEntry(r: RunSummary): AnalysisHistoryEntry {
   const scene = getScene(r.studyAreaId);
   const kind = r.resultKind;
   return {
-    id: r.runId,
+    id: `${r.studyAreaId}/${r.runId}`,
     sceneId: r.studyAreaId,
     name: `${scene.shortName} · ${r.runId}`,
     region: scene.region,
@@ -351,7 +351,7 @@ export default function HistoryPage() {
                       <span className="truncate">
                         {h.analyst} · {relativeTime(h.runAt)}
                       </span>
-                      <span className="shrink-0 tabular">{fmtDuration(h.durationSec)}</span>
+                      <span className="shrink-0 tabular">{h.durationSec > 0 ? fmtDuration(h.durationSec) : "—"}</span>
                     </div>
 
                     <div className="mt-3 flex gap-2">

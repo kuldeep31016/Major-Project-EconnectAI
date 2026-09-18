@@ -48,9 +48,15 @@ export function fmtDate(iso: string, withTime = false) {
   return `${date} · ${time}`;
 }
 
-export function relativeTime(iso: string, now = new Date("2026-08-08T12:00:00Z")) {
-  const diff = now.getTime() - new Date(iso).getTime();
+/** The prototype froze "now" so its mock timestamps read consistently; real runs use the real clock. */
+export const DEMO_NOW = new Date("2026-08-08T12:00:00Z");
+
+export function relativeTime(iso: string, now?: Date) {
+  const t = new Date(iso).getTime();
+  const ref = now ?? (t > DEMO_NOW.getTime() ? new Date() : DEMO_NOW);
+  const diff = Math.max(0, ref.getTime() - t);
   const mins = Math.round(diff / 60000);
+  if (mins < 1) return "just now";
   if (mins < 60) return `${mins} min ago`;
   const hrs = Math.round(mins / 60);
   if (hrs < 24) return `${hrs} hr${hrs === 1 ? "" : "s"} ago`;
