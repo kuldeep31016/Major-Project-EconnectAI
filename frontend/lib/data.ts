@@ -1,8 +1,15 @@
 /**
- * Typed access layer over the mock JSON.
+ * Typed data-access layer.
  *
- * Every page reads through these helpers rather than importing JSON directly,
- * so swapping in a real API later means changing this file only.
+ * Every page reads through these helpers. Each per-scene getter first looks in the LIVE
+ * registry (a `FrontendBundle` fetched from the backend for a real pipeline run, see
+ * `hooks/use-analysis.tsx`) and only then falls back to the prototype's prepared mock JSON.
+ *
+ *   live  -> computed by ecoconnect/ (segmentation -> patches -> graph -> criticality …),
+ *            labelled by its `provenance.resultLabel`
+ *   mock  -> PROTOTYPE / SYNTHETIC — deterministic generator output, never a result
+ *
+ * `getDataSource(sceneId)` tells the UI which one it is showing.
  */
 import satelliteImages from "@/mock-data/satellite-images.json";
 import habitatMask from "@/mock-data/habitat-mask.json";
@@ -20,11 +27,13 @@ import type {
   AnalysisHistoryEntry,
   AssistantData,
   ConnectivityMetrics,
+  FrontendBundle,
   HabitatGraph,
   HabitatMask,
   HeatmapData,
   PipelineStage,
   RestorationData,
+  RunProvenance,
   SatelliteScene,
   ScientificReport,
   SimulationData,
@@ -61,14 +70,53 @@ const timelines = timelineData as unknown as Record<string, TimelineData>;
 const fallback = <T,>(map: Record<string, T>, sceneId: string): T =>
   map[sceneId] ?? map[DEFAULT_SCENE_ID];
 
-export const getHabitatMask = (sceneId: string): HabitatMask => fallback(masks, sceneId);
-export const getGraph = (sceneId: string): HabitatGraph => fallback(graphs, sceneId);
-export const getHeatmap = (sceneId: string): HeatmapData => fallback(heatmaps, sceneId);
+/* ------------------------------------------------------------------ */
+/* live registry (real pipeline runs served by the backend)            */
+/* ------------------------------------------------------------------ */
+
+const live = new Map<string, FrontendBundle>();
+
+/** Register (or clear with `null`) the real-run bundle for a scene. */
+export function registerLiveBundle(sceneId: string, bundle: FrontendBundle | null) {
+  if (bundle) live.set(sceneId, bundle);
+  else live.delete(sceneId);
+}
+export const getLiveBundle = (sceneId: string) => live.get(sceneId) ?? null;
+
+export type DataMode = "live" | "mock";
+export interface DataSource {
+  mode: DataMode;
+  /** Present for live runs. */
+  provenance: RunProvenance | null;
+  /** Short label for badges. */
+  label: string;
+}
+export const MOCK_LABEL = "PROTOTYPE / SYNTHETIC DATA — not a result";
+
+export function getDataSource(sceneId: string): DataSource {
+  const b = live.get(sceneId);
+  return b
+    ? { mode: "live", provenance: b.provenance, label: b.provenance.resultLabel }
+    : { mode: "mock", provenance: null, label: MOCK_LABEL };
+}
+
+export const getHabitatMask = (sceneId: string): HabitatMask =>
+  live.get(sceneId)?.habitatMask ?? fallback(masks, sceneId);
+export const getGraph = (sceneId: string): HabitatGraph =>
+  live.get(sceneId)?.graph ?? fallback(graphs, sceneId);
+export const getHeatmap = (sceneId: string): HeatmapData =>
+  live.get(sceneId)?.heatmap ?? fallback(heatmaps, sceneId);
 export const getConnectivity = (sceneId: string): ConnectivityMetrics =>
-  fallback(connectivity, sceneId);
+  live.get(sceneId)?.connectivity ?? fallback(connectivity, sceneId);
+export const getRestoration = (sceneId: string): RestorationData =>
+  live.get(sceneId)?.restoration ?? fallback(restorations, sceneId);
+/** Scenario projections (cyclone, SLR …) and the 2020–25 timeline are PROTOTYPE narrative
+ *  content: they are not produced by the pipeline and remain mock in every mode. */
 export const getSimulation = (sceneId: string): SimulationData => fallback(simulations, sceneId);
-export const getRestoration = (sceneId: string): RestorationData => fallback(restorations, sceneId);
 export const getTimeline = (sceneId: string): TimelineData => fallback(timelines, sceneId);
+export const getExplanation = (sceneId: string, patchId: string) =>
+  live.get(sceneId)?.explanations?.[patchId] ?? null;
+export const getCriticality = (sceneId: string) => live.get(sceneId)?.criticality ?? null;
 
 export const getPatch = (sceneId: string, patchId: string) =>
   getHabitatMask(sceneId).patches.find((p) => p.id === patchId);

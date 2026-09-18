@@ -173,7 +173,7 @@ export default function GraphPage() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle>Network topology</CardTitle>
-                <CardDescription>{conn.grade}</CardDescription>
+                <CardDescription>{conn.grade ?? "Interface score (Eq. 7)"}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-2">

@@ -299,10 +299,11 @@ export default function AnalysisPage() {
               <div className="flex shrink-0 items-center gap-4 px-5 py-4">
                 <ScoreGauge score={conn.score} size={92} label="Score" />
                 <div>
-                  <div className="text-[11px] font-semibold">{conn.grade}</div>
+                  <div className="text-[11px] font-semibold">{conn.grade ?? "Interface score · Eq. (7)"}</div>
                   <div className="mt-1 text-[10px] text-muted-foreground">
-                    {conn.score > conn.previousScore ? "▲" : "▼"}{" "}
-                    {Math.abs(conn.score - conn.previousScore).toFixed(1)} since last run
+                    {conn.previousScore != null
+                      ? `${conn.score > conn.previousScore ? "▲" : "▼"} ${Math.abs(conn.score - conn.previousScore).toFixed(1)} since last run`
+                      : `IIC ${conn.iicIndex.toExponential(2)} · PC ${conn.pcIndex.toExponential(2)}`}
                   </div>
                   <div className="mt-2 flex gap-3 text-[10px] text-muted-foreground">
                     <span>
@@ -376,7 +377,10 @@ export default function AnalysisPage() {
                   Analysis summary
                 </div>
                 <p className="text-[11px] leading-relaxed text-muted-foreground">
-                  {conn.interpretation}
+                  {conn.interpretation ??
+                    (conn.research
+                      ? `${conn.research.nPatches} patches, ${conn.research.nEdges} links in ${conn.research.nComponents} component${conn.research.nComponents === 1 ? "" : "s"} (k = ${conn.research.k}, τ = ${conn.research.tauKm} km). ECA = ${Math.round(conn.research.ecaHa).toLocaleString()} ha (${conn.ecaPctOfHabitat?.toFixed(1)}% of habitat). Spearman ρ(area, criticality) = ${conn.research.spearmanAreaVsCriticality.toFixed(2)}. ${conn.research.interfaceScoreLabel}.`
+                      : "")}
                 </p>
               </div>
 

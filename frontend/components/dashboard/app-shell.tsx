@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useAnalysis } from "@/hooks/use-analysis";
+import { ProvenanceBadge } from "@/components/shared/provenance-badge";
 import { getScenes } from "@/lib/data";
 import { EASE } from "@/components/shared/motion";
 import { cn } from "@/lib/utils";
@@ -213,7 +214,10 @@ export function AppShell({
             )}
           </div>
 
-          <div className="flex shrink-0 items-center gap-2">{actions}</div>
+          <div className="flex shrink-0 items-center gap-2">
+            <ProvenanceBadge />
+            {actions}
+          </div>
         </header>
 
         <main className={cn("min-w-0 flex-1", !bleed && "p-4 sm:p-6")}>{children}</main>

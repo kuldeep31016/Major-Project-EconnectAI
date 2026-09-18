@@ -189,12 +189,21 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                       value={fmtRatio(node.importance)}
                       tone="#f59e0b"
                     />
-                    <Stat
-                      icon={Activity}
-                      label="Degradation risk"
-                      value={fmtRatio(patch.degradationRisk)}
-                      tone={patch.degradationRisk > 0.6 ? "#ef4444" : "#22c55e"}
-                    />
+                    {patch.degradationRisk != null ? (
+                      <Stat
+                        icon={Activity}
+                        label="Degradation risk"
+                        value={fmtRatio(patch.degradationRisk)}
+                        tone={patch.degradationRisk > 0.6 ? "#ef4444" : "#22c55e"}
+                      />
+                    ) : (
+                      <Stat
+                        icon={Activity}
+                        label="ΔC on removal"
+                        value={patch.deltaPct != null ? `−${patch.deltaPct.toFixed(1)}%` : "—"}
+                        tone={patch.isCutVertex ? "#ef4444" : "#f59e0b"}
+                      />
+                    )}
                   </div>
 
                   <p className="mt-3 text-[11.5px] leading-relaxed text-muted-foreground">
@@ -241,11 +250,26 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                 {/* attributes */}
                 <div className="grid grid-cols-2 gap-2">
                   <Metric label="Area" value={fmtArea(patch.areaHa)} />
-                  <Metric label="Species supported" value={String(patch.speciesSupported)} />
-                  <Metric
-                    label="Carbon stock"
-                    value={`${(patch.carbonStockTonnes / 1000).toFixed(1)} kt`}
-                  />
+                  {patch.speciesSupported != null ? (
+                    <Metric label="Species supported" value={String(patch.speciesSupported)} />
+                  ) : (
+                    <Metric
+                      label="Criticality rank"
+                      value={patch.criticalityRank != null ? `#${patch.criticalityRank} (area #${patch.rankByArea})` : "—"}
+                    />
+                  )}
+                  {patch.carbonStockTonnes != null ? (
+                    <Metric
+                      label="Carbon stock"
+                      value={`${(patch.carbonStockTonnes / 1000).toFixed(1)} kt`}
+                    />
+                  ) : (
+                    <Metric
+                      label="Degree · bridge"
+                      value={`${patch.degree ?? 0} link${patch.degree === 1 ? "" : "s"}${patch.isCutVertex ? " · cut vertex" : ""}`}
+                      tone={patch.isCutVertex ? "#ef4444" : undefined}
+                    />
+                  )}
                   <Metric
                     label="Protection"
                     value={patch.protected ? "Notified" : "Unprotected"}

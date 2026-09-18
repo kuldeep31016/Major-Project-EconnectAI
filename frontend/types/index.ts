@@ -70,11 +70,25 @@ export interface HabitatPatch {
   bridgeScore: number;
   sensitivity: SensitivityBand;
   protected: boolean;
-  protectedAreaName?: string;
-  carbonStockTonnes: number;
-  speciesSupported: number;
-  degradationRisk: number;
+  protectedAreaName?: string | null;
+  /** Prototype-only descriptive fields. null when the payload comes from a real pipeline run. */
+  carbonStockTonnes: number | null;
+  speciesSupported: number | null;
+  degradationRisk: number | null;
   notes: string;
+  /* ---- research fields (present only on real pipeline runs; paper Eqs. 8-9) ---- */
+  criticalityRank?: number;
+  /** S_i = ΔC_i / C(G) */
+  criticalityScore?: number;
+  deltaConnectivity?: number;
+  deltaPct?: number;
+  degree?: number;
+  isCutVertex?: boolean;
+  componentCountAfter?: number;
+  rankByArea?: number;
+  perimeterKm?: number | null;
+  neighbourIds?: string[];
+  neighbourDistancesKm?: number[];
 }
 
 export interface HabitatMask {
@@ -108,21 +122,37 @@ export interface ConnectivityMetrics {
   sceneId: string;
   /** Headline 0–100 landscape connectivity score. */
   score: number;
-  previousScore: number;
+  previousScore: number | null;
   /** Probability of Connectivity index. */
   pcIndex: number;
   /** Integral Index of Connectivity. */
   iicIndex: number;
   equivalentConnectedArea: number;
-  meanPatchIsolationM: number;
+  ecaPctOfHabitat?: number;
+  meanPatchIsolationM: number | null;
   linkDensity: number;
   networkDiameterKm: number;
   fragmentationIndex: number;
   resilienceIndex: number;
   confidence: number;
-  grade: string;
-  interpretation: string;
-  components: { label: string; value: number; weight: number; delta: number }[];
+  grade: string | null;
+  interpretation: string | null;
+  components: { label: string; value: number; weight: number; delta: number | null }[];
+  /** Present only on real pipeline runs — the paper's research metrics with provenance labels. */
+  research?: {
+    iic: number;
+    pc: number;
+    ecaHa: number;
+    nPatches: number;
+    nEdges: number;
+    nComponents: number;
+    meanDegree: number;
+    tauKm: number;
+    k: number;
+    spearmanAreaVsCriticality: number;
+    labels: Record<string, string>;
+    interfaceScoreLabel: string;
+  };
   composition: { name: string; value: number; color: string }[];
   health: { metric: string; score: number; benchmark: number }[];
   trend: {
@@ -152,6 +182,8 @@ export interface GraphNode {
   degree: number;
   isHub: boolean;
   explanation: string;
+  criticalityRank?: number;
+  isCutVertex?: boolean;
 }
 
 export interface GraphEdge {
@@ -254,27 +286,37 @@ export interface RestorationAction {
   id: string;
   rank: number;
   name: string;
-  patchId: string;
   location: string;
   center: LatLng;
   interventionType: string;
   areaHa: number;
-  costLakh: number;
+  /** null when no cost data was supplied — ranking is then by raw gain R_i. */
+  costLakh: number | null;
+  /** Connectivity gain. Prototype: score points. Real runs: % of baseline C(G) (Eq. 11). */
   connectivityGain: number;
-  scoreAfter: number;
-  confidence: number;
-  timeToImpactMonths: number;
-  carbonSequestrationTonnes: number;
-  speciesBenefited: number;
-  costEffectiveness: number;
+  connectivityGainAbs?: number;
+  scoreAfter: number | null;
+  confidence: number | null;
+  timeToImpactMonths: number | null;
+  carbonSequestrationTonnes: number | null;
+  speciesBenefited: number | null;
+  costEffectiveness: number | null;
   rationale: string;
-  risks: string;
+  risks: string | null;
+  patchId: string | null;
+  polygon?: LatLng[] | null;
+  newLinks?: number;
+  linkedPatchIds?: string[];
+  componentsBefore?: number;
+  componentsAfter?: number;
+  rankingBasis?: "gain_per_cost" | "raw_gain";
 }
 
 export interface RestorationData {
   sceneId: string;
-  currency: string;
+  currency: string | null;
   baselineScore: number;
+  rankingBasis?: "gain_per_cost" | "raw_gain";
   budgetBands: {
     minLakh: number;
     maxLakh: number;
@@ -396,4 +438,102 @@ export interface PipelineStage {
   icon: string;
   durationMs: number;
   logs: string[];
+}
+
+/* ------------------------------------------------------------------ */
+/* Real pipeline runs (backend)                                        */
+/* ------------------------------------------------------------------ */
+
+export type ResultKind = "synthetic" | "development" | "experiment" | "external";
+
+export interface RunProvenance {
+  runId: string;
+  studyAreaId: string;
+  resultKind: ResultKind;
+  /** e.g. "PROTOTYPE / SYNTHETIC RESULT …", "DEVELOPMENT-SUBSET RESULT - NOT FINAL", "OUR EXPERIMENTAL RESULT" */
+  resultLabel: string;
+  dataSource: Record<string, unknown> & { type?: string; model?: string };
+  timestamp: string;
+  landscapeAreaHa: number;
+  parameters: { k: number; tauKm: number; metric: string; threshold?: number | null; mmuHa?: number | null };
+}
+
+export interface CriticalityRow {
+  rank: number;
+  patch_id: string;
+  name: string | null;
+  area_ha: number;
+  area_pct: number;
+  degree: number;
+  confidence: number;
+  c_before: number;
+  c_after: number;
+  delta_connectivity: number;
+  criticality_score: number;
+  delta_pct: number;
+  component_count_before: number;
+  component_count_after: number;
+  is_cut_vertex: boolean;
+  rank_by_area: number;
+  neighbour_ids: string[];
+  neighbour_distances_km: number[];
+}
+
+export interface PatchExplanation {
+  patch_id: string;
+  text: string;
+  level: SensitivityBand;
+  evidence: Record<string, unknown>;
+}
+
+/** Exact what-if recomputation (paper Eq. 10) returned by POST /what-if. */
+export interface WhatIfResult {
+  removed_patch_ids: string[];
+  metric: string;
+  c_before: number;
+  c_after: number;
+  delta_connectivity: number;
+  loss_fraction: number;
+  loss_pct: number;
+  habitat_area_before_ha: number;
+  habitat_area_removed_ha: number;
+  habitat_area_removed_pct: number;
+  components_before: number;
+  components_after: number;
+  edges_before: number;
+  edges_after: number;
+  severed_edges: { source: string; target: string; distance_km: number; weight: number }[];
+  newly_isolated_patch_ids: string[];
+  affected_patch_ids: string[];
+  interface_score_before: number | null;
+  interface_score_after: number | null;
+  notes: string[];
+}
+
+export interface FrontendBundle {
+  provenance: RunProvenance;
+  habitatMask: HabitatMask;
+  graph: HabitatGraph;
+  connectivity: ConnectivityMetrics;
+  heatmap: HeatmapData;
+  restoration: RestorationData;
+  criticality: CriticalityRow[];
+  explanations: Record<string, PatchExplanation>;
+  whatIfExample: WhatIfResult;
+}
+
+export interface RunSummary {
+  runId: string;
+  studyAreaId: string;
+  timestamp: string;
+  resultKind: ResultKind;
+  resultLabel: string;
+  dataSourceType?: string;
+  nPatches: number;
+  nEdges: number;
+  nComponents: number;
+  iic: number;
+  pc: number;
+  ecaHa: number;
+  interfaceScore: number;
 }

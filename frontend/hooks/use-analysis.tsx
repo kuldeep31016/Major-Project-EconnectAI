@@ -9,8 +9,15 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { DEFAULT_SCENE_ID, getScene } from "@/lib/data";
-import type { SatelliteScene } from "@/types";
+import {
+  DEFAULT_SCENE_ID,
+  getDataSource,
+  getScene,
+  registerLiveBundle,
+  type DataSource,
+} from "@/lib/data";
+import { apiHealth, fetchBundle, postWhatIf } from "@/lib/api";
+import type { SatelliteScene, WhatIfResult } from "@/types";
 
 interface AnalysisState {
   sceneId: string;
@@ -32,6 +39,19 @@ interface AnalysisState {
   /** Year selected on the timeline. */
   year: number;
   setYear: (y: number) => void;
+  /* ---------------- real pipeline integration ---------------- */
+  /** Whether the FastAPI backend answered /api/health. */
+  apiOnline: boolean | null;
+  /** live = real pipeline run from the backend; mock = prototype synthetic JSON. */
+  dataSource: DataSource;
+  /** True while the run bundle for the current scene is loading. */
+  bundleLoading: boolean;
+  /** Exact what-if result (Eq. 10) for `removedPatchIds`, recomputed by the backend. */
+  whatIf: WhatIfResult | null;
+  whatIfLoading: boolean;
+  whatIfError: string | null;
+  /** Re-fetch the latest run for the current scene (e.g. after POST /segment). */
+  refreshBundle: () => Promise<void>;
 }
 
 const AnalysisContext = createContext<AnalysisState | null>(null);
@@ -45,17 +65,69 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   const [removedPatchIds, setRemovedPatchIds] = useState<string[]>([]);
   const [activeScenarioId, setActiveScenarioId] = useState<string | null>(null);
   const [year, setYear] = useState(2025);
+  const [apiOnline, setApiOnline] = useState<boolean | null>(null);
+  const [bundleLoading, setBundleLoading] = useState(false);
+  const [bundleVersion, setBundleVersion] = useState(0);
+  const [whatIfRaw, setWhatIf] = useState<WhatIfResult | null>(null);
+  const [whatIfError, setWhatIfError] = useState<string | null>(null);
+  // Only expose a result that matches the current selection (and the live scene).
+  const whatIf =
+    whatIfRaw &&
+    removedPatchIds.length > 0 &&
+    whatIfRaw.removed_patch_ids.every((id) => removedPatchIds.includes(id))
+      ? whatIfRaw
+      : null;
+  const whatIfLoading = removedPatchIds.length > 0 && whatIf === null && getDataSource(sceneId).mode === "live";
 
-  // Restore the last-viewed scene so navigating back feels continuous.
-  useEffect(() => {
+  // Load the latest real run for the scene. Falls back silently to mock when the API is
+  // offline or no run exists; the UI shows which through `dataSource`.
+  const loadBundle = useCallback(async (id: string) => {
+    setBundleLoading(true);
     try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved) setSceneIdState(saved);
-      if (window.sessionStorage.getItem("ecoconnect:hasRun") === "1") setHasRun(true);
+      const ok = await apiHealth();
+      setApiOnline(ok);
+      if (!ok) {
+        registerLiveBundle(id, null);
+        return;
+      }
+      const bundle = await fetchBundle(id);
+      registerLiveBundle(id, bundle);
     } catch {
-      /* storage unavailable — fall back to defaults */
+      registerLiveBundle(id, null);
+    } finally {
+      setBundleVersion((v) => v + 1);
+      setBundleLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    void loadBundle(sceneId);
+  }, [sceneId, loadBundle]);
+
+  const refreshBundle = useCallback(() => loadBundle(sceneId), [loadBundle, sceneId]);
+
+  // Exact what-if: every change of the removed set is recomputed on the actual graph. The
+  // effect only launches the request; consumers compare `whatIf.removed_patch_ids` with the
+  // current selection, so a stale result is never shown and no synchronous setState is needed.
+  useEffect(() => {
+    if (getDataSource(sceneId).mode !== "live" || removedPatchIds.length === 0) return;
+    let cancelled = false;
+    postWhatIf(sceneId, removedPatchIds)
+      .then((r) => {
+        if (cancelled) return;
+        setWhatIf(r);
+        setWhatIfError(null);
+      })
+      .catch((e: unknown) => {
+        if (cancelled) return;
+        setWhatIfError(e instanceof Error ? e.message : String(e));
+      });
+    return () => {
+      cancelled = true;
+    };
+    // bundleVersion: re-run once the bundle for this scene has arrived
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sceneId, removedPatchIds, bundleVersion]);
 
   const setSceneId = useCallback((id: string) => {
     setSceneIdState(id);
@@ -102,7 +174,16 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       setActiveScenarioId,
       year,
       setYear,
+      apiOnline,
+      dataSource: getDataSource(sceneId),
+      bundleLoading,
+      whatIf,
+      whatIfLoading,
+      whatIfError,
+      refreshBundle,
     }),
+    // bundleVersion forces a refresh of dataSource when a bundle lands
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       sceneId,
       setSceneId,
@@ -114,6 +195,13 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       clearRemoved,
       activeScenarioId,
       year,
+      apiOnline,
+      bundleLoading,
+      bundleVersion,
+      whatIf,
+      whatIfLoading,
+      whatIfError,
+      refreshBundle,
     ],
   );
 

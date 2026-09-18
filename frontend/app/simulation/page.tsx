@@ -81,7 +81,11 @@ export default function SimulationPage() {
     setYear,
     selectedPatchId,
     setSelectedPatchId,
+    dataSource,
+    whatIf: exactWhatIf,
+    whatIfError,
   } = useAnalysis();
+  const isLive = dataSource.mode === "live";
 
   const mask = getHabitatMask(sceneId);
   const graph = getGraph(sceneId);
@@ -102,19 +106,57 @@ export default function SimulationPage() {
 
   /* -------------------------------------------------- what-if maths */
 
-  // Removing a patch deletes its links; connectivity falls faster than area.
+  // What-if (paper Eq. 10).
+  //  live  -> EXACT: the backend rebuilds G without the patches and recomputes C(G) (IIC) and the
+  //           interface score; nothing here is estimated.
+  //  mock  -> PROTOTYPE HEURISTIC over stored attributes (kept only for the synthetic demo and
+  //           labelled as such in the UI).
   const whatIf = useMemo(() => {
     if (!removedPatchIds.length) return null;
 
     const removedPatches = mask.patches.filter((p) => removedPatchIds.includes(p.id));
     const lostHa = removedPatches.reduce((s, p) => s + p.areaHa, 0);
     const lostPct = (lostHa / mask.totals.habitatAreaHa) * 100;
-
     const severedEdges = graph.edges.filter(
       (e) => removedPatchIds.includes(e.source) || removedPatchIds.includes(e.target),
     );
 
-    // Connectivity loss weights bridging role far above raw area.
+    if (isLive) {
+      if (!exactWhatIf || exactWhatIf.removed_patch_ids.join() !== removedPatchIds.filter((id) => mask.patches.some((p) => p.id === id)).join()) {
+        return {
+          kind: "pending" as const,
+          removed: removedPatches,
+          lostHa,
+          lostPct,
+          severedEdges,
+          isolated: [] as typeof mask.patches,
+          before: conn.score,
+          after: conn.score,
+          drop: 0,
+          ratio: 0,
+          carbonLost: null as number | null,
+        };
+      }
+      const isolated = mask.patches.filter((p) => exactWhatIf.newly_isolated_patch_ids.includes(p.id));
+      const before = exactWhatIf.interface_score_before ?? conn.score;
+      const after = exactWhatIf.interface_score_after ?? before;
+      return {
+        kind: "exact" as const,
+        removed: removedPatches,
+        lostHa: exactWhatIf.habitat_area_removed_ha,
+        lostPct: exactWhatIf.habitat_area_removed_pct,
+        severedEdges,
+        isolated,
+        before,
+        after,
+        drop: before - after,
+        ratio: exactWhatIf.habitat_area_removed_pct > 0 ? exactWhatIf.loss_pct / exactWhatIf.habitat_area_removed_pct : 0,
+        carbonLost: null as number | null,
+        exact: exactWhatIf,
+      };
+    }
+
+    // ---- prototype heuristic (synthetic data only) ----
     const bridgeLoss = removedPatches.reduce(
       (s, p) => s + p.bridgeScore * 9 + p.connectivityContribution * 22,
       0,
@@ -122,8 +164,6 @@ export default function SimulationPage() {
     const areaLoss = lostPct * 0.22;
     const drop = Math.min(conn.score * 0.85, bridgeLoss + areaLoss);
     const after = Math.max(0, conn.score - drop);
-
-    // Patches left with no surviving link.
     const survivingEdges = graph.edges.filter(
       (e) => !removedPatchIds.includes(e.source) && !removedPatchIds.includes(e.target),
     );
@@ -135,32 +175,36 @@ export default function SimulationPage() {
     const isolated = mask.patches.filter(
       (p) => !removedPatchIds.includes(p.id) && !connected.has(p.id),
     );
-
+    const carbon = removedPatches.reduce((s, p) => s + (p.carbonStockTonnes ?? 0), 0);
     return {
+      kind: "heuristic" as const,
       removed: removedPatches,
       lostHa,
       lostPct,
       severedEdges,
       isolated,
+      before: conn.score,
       after,
       drop,
       ratio: lostPct > 0 ? drop / lostPct : 0,
-      carbonLost: removedPatches.reduce((s, p) => s + p.carbonStockTonnes, 0),
-      speciesAffected: removedPatches.reduce((s, p) => s + p.speciesSupported, 0),
+      carbonLost: removedPatches.some((p) => p.carbonStockTonnes != null) ? carbon : null,
     };
-  }, [removedPatchIds, mask.patches, mask.totals.habitatAreaHa, graph.edges, conn.score]);
+  }, [removedPatchIds, mask.patches, mask.totals.habitatAreaHa, graph.edges, conn.score, isLive, exactWhatIf]);
 
   /* ------------------------------------------------ restoration band */
 
+  // Budget bands exist only in the prototype's prepared data. Real runs rank candidates by the
+  // recomputed gain R_i (Eq. 11) and only become cost-aware when the user supplies costs (Eq. 12).
   const band = useMemo(() => {
-    const bands = restoration.budgetBands;
-    return (
-      [...bands].reverse().find((b) => budgetLakh >= b.minLakh) ?? bands[0]
-    );
+    const bands = restoration.budgetBands ?? [];
+    if (!bands.length) return null;
+    return [...bands].reverse().find((b) => budgetLakh >= b.minLakh) ?? bands[0];
   }, [budgetLakh, restoration.budgetBands]);
 
-  const fundedActions = restoration.actions.filter((a) => band.actionIds.includes(a.id));
-  const restoredScore = Math.min(100, conn.score + band.totalGain);
+  const fundedActions = band
+    ? restoration.actions.filter((a) => band.actionIds.includes(a.id))
+    : [...restoration.actions].sort((a, b) => a.rank - b.rank);
+  const restoredScore = band ? Math.min(100, conn.score + band.totalGain) : conn.score;
 
   /* ---------------------------------------------- map layer wiring */
 
@@ -418,30 +462,71 @@ export default function SimulationPage() {
                     </Card>
                   ) : (
                     <>
-                      <ScoreDelta before={conn.score} after={whatIf.after} />
+                      {whatIf.kind === "exact" && whatIf.exact ? (
+                        <ScoreDelta
+                          before={100}
+                          after={Number((100 - whatIf.exact.loss_pct).toFixed(1))}
+                          label={`C(G) retained · ${whatIf.exact.metric.toUpperCase()} (% of baseline)`}
+                        />
+                      ) : (
+                        <ScoreDelta before={whatIf.before} after={whatIf.after} />
+                      )}
 
-                      {/* disproportionality callout */}
+                      {/* interpretation callout */}
                       <div className="rounded-2xl border border-[#f59e0b]/20 bg-[#f59e0b]/8 p-4">
                         <div className="flex items-center gap-2">
-                          <Sparkles className="h-4 w-4 shrink-0 text-[#f59e0b]" />
+                          {whatIf.kind === "pending" ? (
+                            <Loader2 className="h-4 w-4 shrink-0 animate-spin text-[#f59e0b]" />
+                          ) : (
+                            <Sparkles className="h-4 w-4 shrink-0 text-[#f59e0b]" />
+                          )}
                           <span className="text-[11px] font-semibold uppercase tracking-widest text-[#f59e0b]">
-                            Model interpretation
+                            {whatIf.kind === "exact"
+                              ? "Exact recomputation · Eq. (10)"
+                              : whatIf.kind === "pending"
+                                ? "Recomputing C(G − v) on the backend…"
+                                : "Prototype heuristic estimate"}
                           </span>
                         </div>
-                        <p className="mt-2 text-[12px] leading-relaxed text-foreground/90">
-                          You removed <b>{fmtArea(whatIf.lostHa)}</b> —{" "}
-                          {whatIf.lostPct.toFixed(1)}% of habitat area — but connectivity fell{" "}
-                          <b>{whatIf.drop.toFixed(1)} points</b>. That is{" "}
-                          <b>{whatIf.ratio.toFixed(1)}×</b> the area loss, the signature of removing
-                          bridging patches rather than interior habitat.
-                          {whatIf.isolated.length > 0 && (
-                            <>
-                              {" "}
-                              <b>{whatIf.isolated.length}</b> further patch
-                              {whatIf.isolated.length === 1 ? " is" : "es are"} now fully isolated.
-                            </>
-                          )}
-                        </p>
+                        {whatIf.kind === "exact" && whatIf.exact && (
+                          <p className="mt-2 text-[12px] leading-relaxed text-foreground/90">
+                            Removing <b>{fmtArea(whatIf.lostHa)}</b> ({whatIf.lostPct.toFixed(1)}% of habitat)
+                            lowers <b>{whatIf.exact.metric.toUpperCase()}</b> by{" "}
+                            <b>{whatIf.exact.loss_pct.toFixed(1)}%</b> (C(G) {whatIf.exact.c_before.toExponential(3)} →{" "}
+                            {whatIf.exact.c_after.toExponential(3)}) — <b>{whatIf.ratio.toFixed(1)}×</b> the area share.
+                            The network goes from <b>{whatIf.exact.components_before}</b> to{" "}
+                            <b>{whatIf.exact.components_after}</b> component
+                            {whatIf.exact.components_after === 1 ? "" : "s"}; {whatIf.exact.severed_edges.length} link
+                            {whatIf.exact.severed_edges.length === 1 ? "" : "s"} severed
+                            {whatIf.isolated.length > 0 && (
+                              <>
+                                , <b>{whatIf.isolated.length}</b> patch
+                                {whatIf.isolated.length === 1 ? "" : "es"} newly isolated
+                              </>
+                            )}
+                            .
+                          </p>
+                        )}
+                        {whatIf.kind === "heuristic" && (
+                          <p className="mt-2 text-[12px] leading-relaxed text-foreground/90">
+                            You removed <b>{fmtArea(whatIf.lostHa)}</b> —{" "}
+                            {whatIf.lostPct.toFixed(1)}% of habitat area — and the prototype estimates a fall of{" "}
+                            <b>{whatIf.drop.toFixed(1)} points</b> (<b>{whatIf.ratio.toFixed(1)}×</b> the area loss).
+                            {whatIf.isolated.length > 0 && (
+                              <>
+                                {" "}
+                                <b>{whatIf.isolated.length}</b> further patch
+                                {whatIf.isolated.length === 1 ? " is" : "es are"} now fully isolated.
+                              </>
+                            )}{" "}
+                            <span className="text-muted-foreground">
+                              Synthetic prototype data — this number is a heuristic, not Eq. (10).
+                            </span>
+                          </p>
+                        )}
+                        {whatIfError && (
+                          <p className="mt-2 text-[11px] text-[#ef4444]">Backend error: {whatIfError}</p>
+                        )}
                       </div>
 
                       <Card>
@@ -451,8 +536,8 @@ export default function SimulationPage() {
                         </CardHeader>
                         <CardContent className="space-y-2">
                           <ImpactRow
-                            label="Connectivity score"
-                            before={conn.score}
+                            label={whatIf.kind === "exact" ? "Interface score (Eq. 7)" : "Connectivity score"}
+                            before={Number(whatIf.before.toFixed(1))}
                             after={Number(whatIf.after.toFixed(1))}
                             unit="/100"
                             index={0}
@@ -471,19 +556,30 @@ export default function SimulationPage() {
                             unit="links"
                             index={2}
                           />
-                          <ImpactRow
-                            label="Carbon stock"
-                            before={Math.round(
-                              mask.patches.reduce((s, p) => s + p.carbonStockTonnes, 0) / 1000,
-                            )}
-                            after={Math.round(
-                              (mask.patches.reduce((s, p) => s + p.carbonStockTonnes, 0) -
-                                whatIf.carbonLost) /
-                                1000,
-                            )}
-                            unit="kt"
-                            index={3}
-                          />
+                          {whatIf.kind === "exact" && whatIf.exact && (
+                            <ImpactRow
+                              label="Network components"
+                              before={whatIf.exact.components_before}
+                              after={whatIf.exact.components_after}
+                              unit=""
+                              index={3}
+                            />
+                          )}
+                          {whatIf.carbonLost != null && (
+                            <ImpactRow
+                              label="Carbon stock (prototype)"
+                              before={Math.round(
+                                mask.patches.reduce((s, p) => s + (p.carbonStockTonnes ?? 0), 0) / 1000,
+                              )}
+                              after={Math.round(
+                                (mask.patches.reduce((s, p) => s + (p.carbonStockTonnes ?? 0), 0) -
+                                  whatIf.carbonLost) /
+                                  1000,
+                              )}
+                              unit="kt"
+                              index={3}
+                            />
+                          )}
                         </CardContent>
                       </Card>
 
@@ -682,6 +778,22 @@ export default function SimulationPage() {
               {/* --------------------------------------- restoration */}
               {mode === "restore" && (
                 <div className="space-y-4">
+                  {!band && (
+                    <Card>
+                      <CardHeader className="pb-3">
+                        <CardTitle>Restoration candidates</CardTitle>
+                        <CardDescription>
+                          Ranked by recomputed connectivity gain R<sub>i</sub> = C(G + v<sub>i</sub>) − C(G) · Eq. (11)
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="text-[11.5px] leading-relaxed text-muted-foreground">
+                        {restoration.rankingBasis === "gain_per_cost"
+                          ? "Cost data supplied — ranking is gain per unit cost (Eq. 12)."
+                          : "No cost data supplied, so Priority_i reduces to R_i (paper Section IV-F). Candidate sites are marginal-probability components from the segmentation output; costs are never invented."}
+                      </CardContent>
+                    </Card>
+                  )}
+                  {band && (
                   <Card>
                     <CardHeader className="pb-3">
                       <CardTitle>Restoration budget</CardTitle>
@@ -720,17 +832,22 @@ export default function SimulationPage() {
                       </p>
                     </CardContent>
                   </Card>
+                  )}
 
-                  <ScoreDelta
-                    before={conn.score}
-                    after={restoredScore}
-                    label="Projected connectivity"
-                  />
+                  {band && (
+                    <ScoreDelta
+                      before={conn.score}
+                      after={restoredScore}
+                      label="Projected connectivity"
+                    />
+                  )}
 
                   <Card>
                     <CardHeader className="pb-1">
                       <CardTitle>Gain by intervention</CardTitle>
-                      <CardDescription>Connectivity points delivered</CardDescription>
+                      <CardDescription>
+                        {band ? "Connectivity points delivered" : `Gain as % of baseline ${dataSource.provenance?.parameters.metric.toUpperCase() ?? "C(G)"}`}
+                      </CardDescription>
                     </CardHeader>
                     <CardContent className="pt-2">
                       <PriorityBarChart
@@ -738,7 +855,7 @@ export default function SimulationPage() {
                         data={fundedActions.slice(0, 5).map((a) => ({
                           name: a.location.length > 18 ? a.location.slice(0, 17) + "…" : a.location,
                           gain: a.connectivityGain,
-                          cost: a.costLakh,
+                          cost: a.costLakh ?? 0,
                         }))}
                       />
                     </CardContent>
@@ -778,10 +895,10 @@ export default function SimulationPage() {
                               </div>
                               <div className="shrink-0 text-right">
                                 <div className="text-[15px] font-bold tabular text-[#00c896]">
-                                  +{a.connectivityGain}
+                                  +{band ? a.connectivityGain : a.connectivityGain.toFixed(2)}
                                 </div>
                                 <div className="text-[9px] uppercase tracking-wider text-muted-foreground">
-                                  points
+                                  {band ? "points" : "% C(G)"}
                                 </div>
                               </div>
                             </div>
@@ -789,16 +906,26 @@ export default function SimulationPage() {
                             <div className="mt-2.5 flex flex-wrap gap-1.5">
                               <Badge variant="secondary">
                                 <Coins className="h-3 w-3" />
-                                {fmtCurrency(a.costLakh)}
+                                {a.costLakh != null ? fmtCurrency(a.costLakh) : "cost: not supplied"}
                               </Badge>
-                              <Badge variant="sky">
-                                <Clock className="h-3 w-3" />
-                                {a.timeToImpactMonths} mo
-                              </Badge>
-                              <Badge variant="success">
-                                <CheckCircle2 className="h-3 w-3" />
-                                {fmtRatio(a.confidence)} confidence
-                              </Badge>
+                              {a.timeToImpactMonths != null && (
+                                <Badge variant="sky">
+                                  <Clock className="h-3 w-3" />
+                                  {a.timeToImpactMonths} mo
+                                </Badge>
+                              )}
+                              {a.newLinks != null && (
+                                <Badge variant="sky">
+                                  <Route className="h-3 w-3" />
+                                  {a.newLinks} new link{a.newLinks === 1 ? "" : "s"}
+                                </Badge>
+                              )}
+                              {a.confidence != null && (
+                                <Badge variant="success">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  {fmtRatio(a.confidence)} confidence
+                                </Badge>
+                              )}
                             </div>
 
                             <p className="mt-2.5 text-[11px] leading-relaxed text-muted-foreground">
@@ -809,9 +936,19 @@ export default function SimulationPage() {
                               <div className="text-[9.5px] uppercase tracking-wider text-muted-foreground">
                                 {a.interventionType}
                               </div>
-                              <div className="mt-1 text-[10.5px] leading-snug text-muted-foreground">
-                                {a.risks}
-                              </div>
+                              {a.risks && (
+                                <div className="mt-1 text-[10.5px] leading-snug text-muted-foreground">
+                                  {a.risks}
+                                </div>
+                              )}
+                              {a.linkedPatchIds && a.linkedPatchIds.length > 0 && (
+                                <div className="mt-1 text-[10.5px] leading-snug text-muted-foreground">
+                                  links to {a.linkedPatchIds.join(", ")}
+                                  {a.componentsBefore != null && a.componentsAfter != null && a.componentsAfter !== a.componentsBefore
+                                    ? ` · components ${a.componentsBefore} → ${a.componentsAfter}`
+                                    : ""}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -819,6 +956,7 @@ export default function SimulationPage() {
                     ))}
                   </div>
 
+                  {band && (
                   <Card>
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between text-[12px]">
@@ -838,6 +976,7 @@ export default function SimulationPage() {
                       </div>
                     </CardContent>
                   </Card>
+                  )}
                 </div>
               )}
 

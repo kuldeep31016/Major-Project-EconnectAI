@@ -61,7 +61,9 @@ export default function DashboardPage() {
   const protectedHa = mask.patches.filter((p) => p.protected).reduce((s, p) => s + p.areaHa, 0);
   const protectedPct = (protectedHa / mask.totals.habitatAreaHa) * 100;
   const topAction = restoration.actions[0];
-  const sparkTrend = conn.trend.map((t) => t.connectivity);
+  const sparkTrend = conn.trend.length ? conn.trend.map((t) => t.connectivity) : undefined;
+  const scoreDelta = conn.previousScore != null ? conn.score - conn.previousScore : undefined;
+  const isLive = conn.research != null;
 
   const bandCounts = (["critical", "high", "medium", "low"] as const).map((band) => ({
     band,
@@ -109,8 +111,8 @@ export default function DashboardPage() {
             decimals={1}
             icon={Network}
             accent="#00c896"
-            delta={conn.score - conn.previousScore}
-            hint={conn.grade}
+            delta={scoreDelta}
+            hint={conn.grade ?? `Interface score · Eq. (7) · IIC ${conn.iicIndex.toExponential(2)}`}
             spark={sparkTrend}
           />
           <KpiCard
@@ -144,7 +146,7 @@ export default function DashboardPage() {
             suffix=" pts"
             icon={Sprout}
             accent="#38bdf8"
-            hint={`${fmtCurrency(topAction.costLakh)} · ${topAction.location}`}
+            hint={topAction ? `${topAction.costLakh != null ? fmtCurrency(topAction.costLakh) + " · " : ""}${topAction.location}` : "no candidates"}
           />
         </div>
 
@@ -153,7 +155,7 @@ export default function DashboardPage() {
           <Card className="overflow-hidden">
             <CardHeader className="pb-2">
               <CardTitle>Landscape connectivity</CardTitle>
-              <CardDescription>{conn.grade}</CardDescription>
+              <CardDescription>{conn.grade ?? "Interface score (Eq. 7) — not a research metric"}</CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center pb-6">
               <ScoreGauge score={conn.score} size={186} />
@@ -198,13 +200,28 @@ export default function DashboardPage() {
                   <CardTitle>Connectivity trend</CardTitle>
                   <CardDescription>Rolling 12-month landscape index</CardDescription>
                 </div>
-                <Badge variant={conn.score >= conn.previousScore ? "success" : "danger"}>
-                  <TrendingDown className="h-3 w-3" />
-                  {(conn.score - conn.previousScore).toFixed(1)} vs last run
-                </Badge>
+                {scoreDelta != null && (
+                  <Badge variant={scoreDelta >= 0 ? "success" : "danger"}>
+                    <TrendingDown className="h-3 w-3" />
+                    {scoreDelta.toFixed(1)} vs last run
+                  </Badge>
+                )}
               </CardHeader>
               <CardContent className="pt-2">
-                <ConnectivityTrendChart data={conn.trend} height={196} />
+                {conn.trend.length ? (
+                  <ConnectivityTrendChart data={conn.trend} height={196} />
+                ) : (
+                  <div className="grid h-[196px] place-items-center text-center text-[11px] text-muted-foreground">
+                    No time series yet — a single pipeline run has one date.
+                    {conn.research && (
+                      <div className="mt-2 grid grid-cols-3 gap-3 text-left">
+                        <div><div className="text-[9px] uppercase tracking-wider">IIC</div><div className="text-foreground tabular">{conn.research.iic.toExponential(3)}</div></div>
+                        <div><div className="text-[9px] uppercase tracking-wider">PC</div><div className="text-foreground tabular">{conn.research.pc.toExponential(3)}</div></div>
+                        <div><div className="text-[9px] uppercase tracking-wider">ECA</div><div className="text-foreground tabular">{Math.round(conn.research.ecaHa).toLocaleString()} ha</div></div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -227,7 +244,13 @@ export default function DashboardPage() {
                   <CardDescription>Observed against regional benchmark</CardDescription>
                 </CardHeader>
                 <CardContent className="pt-2">
-                  <HealthRadarChart data={conn.health} height={208} />
+                  {conn.health.length ? (
+                    <HealthRadarChart data={conn.health} height={208} />
+                  ) : (
+                    <div className="grid h-[208px] place-items-center px-4 text-center text-[11px] text-muted-foreground">
+                      Not computed by the pipeline (prototype-only chart).
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -329,13 +352,13 @@ export default function DashboardPage() {
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-[13px] font-medium">{a.location}</div>
                     <div className="mt-0.5 truncate text-[11px] text-muted-foreground">
-                      {a.interventionType} · {a.areaHa} ha · {a.timeToImpactMonths} mo
+                      {a.interventionType} · {a.areaHa} ha{a.timeToImpactMonths != null ? ` · ${a.timeToImpactMonths} mo` : ""}
                     </div>
                   </div>
 
                   <div className="hidden shrink-0 text-right sm:block">
                     <div className="text-[11px] text-muted-foreground">Cost</div>
-                    <div className="text-[13px] font-semibold tabular">{fmtCurrency(a.costLakh)}</div>
+                    <div className="text-[13px] font-semibold tabular">{a.costLakh != null ? fmtCurrency(a.costLakh) : "—"}</div>
                   </div>
 
                   <div className="shrink-0 text-right">
