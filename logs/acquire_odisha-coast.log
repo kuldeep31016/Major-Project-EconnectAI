@@ -1,0 +1,4 @@
+[acquire] odisha-coast  bbox=(20.6, 86.78, 20.84, 87.02)  grid=2502x2659 @ 10 m  EPSG:32645
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1A_IW_GRDH_1SDV_20200101T122010_20200101T122035_030607_0381AA_rtc  2020-01-01  ascending

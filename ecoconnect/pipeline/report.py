@@ -100,7 +100,7 @@ def build_report(run_dir: Path, study_area: dict) -> dict:
          "body": []},
     ]
     return {
-        "id": f"report-{m['run_id']}",
+        "id": f"report-{m['study_area_id']}-{m['run_id']}",
         "title": f"Connectivity assessment — {study_area.get('name', m['study_area_id'])} ({m['run_id']})",
         "sceneId": m["study_area_id"],
         "region": study_area.get("name", ""),
