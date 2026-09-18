@@ -1,0 +1,2127 @@
+{
+  "kerala-coast": {
+    "sceneId": "kerala-coast",
+    "baselineScore": 74.6,
+    "scenarios": [
+      {
+        "id": "cyclone",
+        "name": "Cyclone Landfall",
+        "icon": "Wind",
+        "severity": "severe",
+        "description": "Category 3 cyclone with 165 km/h sustained winds and 3.4 m storm surge.",
+        "narrative": "Storm surge strips fringing canopy along the exposed seaward margin and breaches embankments. Interior patches survive but lose their outer buffer, isolating the seaward cluster.",
+        "affectedPatchIds": [
+          "kerala-coast-p18",
+          "kerala-coast-p12",
+          "kerala-coast-p06",
+          "kerala-coast-p14"
+        ],
+        "removedEdgeIds": [
+          "kerala-coast-e2",
+          "kerala-coast-e7",
+          "kerala-coast-e8",
+          "kerala-coast-e12",
+          "kerala-coast-e13"
+        ],
+        "scoreAfter": 56.1,
+        "habitatLossHa": 988,
+        "habitatLossPct": 14.2,
+        "fragmentationDelta": 0.2,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 34,
+        "carbonLossTonnes": 183768,
+        "recoveryYears": 7,
+        "confidence": 0.804,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 75,
+            "scenario": 75.4
+          },
+          {
+            "year": "2030",
+            "baseline": 74.2,
+            "scenario": 70.8
+          },
+          {
+            "year": "2035",
+            "baseline": 73.7,
+            "scenario": 65.4
+          },
+          {
+            "year": "2040",
+            "baseline": 73.1,
+            "scenario": 61.4
+          },
+          {
+            "year": "2045",
+            "baseline": 72.2,
+            "scenario": 57
+          },
+          {
+            "year": "2050",
+            "baseline": 71.4,
+            "scenario": 51.7
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 74.6,
+            "after": 56.1,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6960,
+            "after": 5972,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 31,
+            "after": 26,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1295,
+            "after": 1111,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "urban-expansion",
+        "name": "Urban Expansion",
+        "icon": "Building2",
+        "severity": "moderate",
+        "description": "Projected 2035 built-up footprint following the district master plan.",
+        "narrative": "Peri-urban growth consumes the landward buffer and hardens the shoreline. Corridors that once routed around settlement edges are severed, forcing longer, higher-resistance paths.",
+        "affectedPatchIds": [
+          "kerala-coast-p06",
+          "kerala-coast-p14"
+        ],
+        "removedEdgeIds": [
+          "kerala-coast-e7",
+          "kerala-coast-e8",
+          "kerala-coast-e12",
+          "kerala-coast-e13",
+          "kerala-coast-e23"
+        ],
+        "scoreAfter": 63.3,
+        "habitatLossHa": 599,
+        "habitatLossPct": 8.6,
+        "fragmentationDelta": 0.14,
+        "isolatedPatches": 3,
+        "speciesAtRisk": 23,
+        "carbonLossTonnes": 111414,
+        "recoveryYears": 18,
+        "confidence": 0.917,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 75.2,
+            "scenario": 74.8
+          },
+          {
+            "year": "2030",
+            "baseline": 74.5,
+            "scenario": 72.2
+          },
+          {
+            "year": "2035",
+            "baseline": 73.3,
+            "scenario": 68.4
+          },
+          {
+            "year": "2040",
+            "baseline": 73,
+            "scenario": 65.3
+          },
+          {
+            "year": "2045",
+            "baseline": 72.1,
+            "scenario": 62.5
+          },
+          {
+            "year": "2050",
+            "baseline": 71.5,
+            "scenario": 58.4
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 74.6,
+            "after": 63.3,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6960,
+            "after": 6361,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 31,
+            "after": 26,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1295,
+            "after": 1183,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "sea-level-rise",
+        "name": "Sea Level Rise",
+        "icon": "Waves",
+        "severity": "extreme",
+        "description": "IPCC SSP5-8.5 trajectory — 0.68 m mean sea level rise by 2100.",
+        "narrative": "Coastal squeeze prevents landward migration of the mangrove belt. Low-elevation mudflats drown first, removing the stepping-stone patches that currently bind the network together.",
+        "affectedPatchIds": [
+          "kerala-coast-p18",
+          "kerala-coast-p12",
+          "kerala-coast-p06",
+          "kerala-coast-p14"
+        ],
+        "removedEdgeIds": [
+          "kerala-coast-e2",
+          "kerala-coast-e7",
+          "kerala-coast-e8",
+          "kerala-coast-e12",
+          "kerala-coast-e13"
+        ],
+        "scoreAfter": 49.9,
+        "habitatLossHa": 1496,
+        "habitatLossPct": 21.5,
+        "fragmentationDelta": 0.29,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 47,
+        "carbonLossTonnes": 278256,
+        "recoveryYears": 30,
+        "confidence": 0.864,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 75.2,
+            "scenario": 74.9
+          },
+          {
+            "year": "2030",
+            "baseline": 74.1,
+            "scenario": 69
+          },
+          {
+            "year": "2035",
+            "baseline": 73.5,
+            "scenario": 63.6
+          },
+          {
+            "year": "2040",
+            "baseline": 72.8,
+            "scenario": 57.7
+          },
+          {
+            "year": "2045",
+            "baseline": 72.3,
+            "scenario": 52.1
+          },
+          {
+            "year": "2050",
+            "baseline": 71.8,
+            "scenario": 46.2
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 74.6,
+            "after": 49.9,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6960,
+            "after": 5464,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 31,
+            "after": 26,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1295,
+            "after": 1016,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "aquaculture",
+        "name": "Aquaculture Conversion",
+        "icon": "Fish",
+        "severity": "severe",
+        "description": "Conversion of intertidal margin to brackish shrimp ponds.",
+        "narrative": "Pond bunding blocks tidal exchange and fragments the creek network. Hydrological isolation degrades habitat quality well beyond the converted footprint.",
+        "affectedPatchIds": [
+          "kerala-coast-p06",
+          "kerala-coast-p14",
+          "kerala-coast-p02"
+        ],
+        "removedEdgeIds": [
+          "kerala-coast-e1",
+          "kerala-coast-e4",
+          "kerala-coast-e5",
+          "kerala-coast-e7",
+          "kerala-coast-e8"
+        ],
+        "scoreAfter": 58.3,
+        "habitatLossHa": 891,
+        "habitatLossPct": 12.8,
+        "fragmentationDelta": 0.19,
+        "isolatedPatches": 4,
+        "speciesAtRisk": 33,
+        "carbonLossTonnes": 165726,
+        "recoveryYears": 12,
+        "confidence": 0.799,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 74.6,
+            "scenario": 75.1
+          },
+          {
+            "year": "2030",
+            "baseline": 74,
+            "scenario": 70.9
+          },
+          {
+            "year": "2035",
+            "baseline": 73.4,
+            "scenario": 66.8
+          },
+          {
+            "year": "2040",
+            "baseline": 73,
+            "scenario": 62.3
+          },
+          {
+            "year": "2045",
+            "baseline": 71.8,
+            "scenario": 58.1
+          },
+          {
+            "year": "2050",
+            "baseline": 71.7,
+            "scenario": 53.3
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 74.6,
+            "after": 58.3,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6960,
+            "after": 6069,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 31,
+            "after": 26,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1295,
+            "after": 1129,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "road-construction",
+        "name": "Road / Embankment",
+        "icon": "Route",
+        "severity": "moderate",
+        "description": "Coastal highway alignment with a raised embankment across the wetland.",
+        "narrative": "Direct habitat loss is modest, but the linear barrier bisects the landscape. Connectivity loss far exceeds area loss — the classic signature of a fragmenting infrastructure project.",
+        "affectedPatchIds": [
+          "kerala-coast-p18",
+          "kerala-coast-p12",
+          "kerala-coast-p06"
+        ],
+        "removedEdgeIds": [
+          "kerala-coast-e2",
+          "kerala-coast-e7",
+          "kerala-coast-e8",
+          "kerala-coast-e12",
+          "kerala-coast-e13"
+        ],
+        "scoreAfter": 65.9,
+        "habitatLossHa": 285,
+        "habitatLossPct": 4.1,
+        "fragmentationDelta": 0.1,
+        "isolatedPatches": 4,
+        "speciesAtRisk": 21,
+        "carbonLossTonnes": 53010,
+        "recoveryYears": 9,
+        "confidence": 0.885,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 75.1,
+            "scenario": 74.6
+          },
+          {
+            "year": "2030",
+            "baseline": 74,
+            "scenario": 71.9
+          },
+          {
+            "year": "2035",
+            "baseline": 73.4,
+            "scenario": 69.5
+          },
+          {
+            "year": "2040",
+            "baseline": 72.6,
+            "scenario": 66.4
+          },
+          {
+            "year": "2045",
+            "baseline": 71.8,
+            "scenario": 63.8
+          },
+          {
+            "year": "2050",
+            "baseline": 71.7,
+            "scenario": 60.9
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 74.6,
+            "after": 65.9,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6960,
+            "after": 6675,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 31,
+            "after": 26,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1295,
+            "after": 1241,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "encroachment",
+        "name": "Illegal Encroachment",
+        "icon": "AlertTriangle",
+        "severity": "low",
+        "description": "Detected unauthorised clearing within the notified buffer zone.",
+        "narrative": "Scattered small clearings accumulate along accessible edges. Individually minor, collectively they erode edge integrity and open interior habitat to further incursion.",
+        "affectedPatchIds": [
+          "kerala-coast-p06",
+          "kerala-coast-p14"
+        ],
+        "removedEdgeIds": [
+          "kerala-coast-e7",
+          "kerala-coast-e8",
+          "kerala-coast-e12",
+          "kerala-coast-e13",
+          "kerala-coast-e23"
+        ],
+        "scoreAfter": 68.2,
+        "habitatLossHa": 237,
+        "habitatLossPct": 3.4,
+        "fragmentationDelta": 0.08,
+        "isolatedPatches": 3,
+        "speciesAtRisk": 16,
+        "carbonLossTonnes": 44082,
+        "recoveryYears": 5,
+        "confidence": 0.945,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 75.1,
+            "scenario": 75.1
+          },
+          {
+            "year": "2030",
+            "baseline": 74.4,
+            "scenario": 72.7
+          },
+          {
+            "year": "2035",
+            "baseline": 73.5,
+            "scenario": 70.1
+          },
+          {
+            "year": "2040",
+            "baseline": 72.8,
+            "scenario": 67.9
+          },
+          {
+            "year": "2045",
+            "baseline": 71.9,
+            "scenario": 66.4
+          },
+          {
+            "year": "2050",
+            "baseline": 71.9,
+            "scenario": 64
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 74.6,
+            "after": 68.2,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6960,
+            "after": 6723,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 31,
+            "after": 26,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1295,
+            "after": 1250,
+            "unit": "kt CO₂e"
+          }
+        ]
+      }
+    ]
+  },
+  "sundarbans": {
+    "sceneId": "sundarbans",
+    "baselineScore": 81.3,
+    "scenarios": [
+      {
+        "id": "cyclone",
+        "name": "Cyclone Landfall",
+        "icon": "Wind",
+        "severity": "severe",
+        "description": "Category 3 cyclone with 165 km/h sustained winds and 3.4 m storm surge.",
+        "narrative": "Storm surge strips fringing canopy along the exposed seaward margin and breaches embankments. Interior patches survive but lose their outer buffer, isolating the seaward cluster.",
+        "affectedPatchIds": [
+          "sundarbans-p18",
+          "sundarbans-p11",
+          "sundarbans-p10"
+        ],
+        "removedEdgeIds": [
+          "sundarbans-e17",
+          "sundarbans-e19",
+          "sundarbans-e21",
+          "sundarbans-e22",
+          "sundarbans-e23"
+        ],
+        "scoreAfter": 62.2,
+        "habitatLossHa": 1335,
+        "habitatLossPct": 14.2,
+        "fragmentationDelta": 0.22,
+        "isolatedPatches": 4,
+        "speciesAtRisk": 35,
+        "carbonLossTonnes": 248310,
+        "recoveryYears": 7,
+        "confidence": 0.917,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 81.7,
+            "scenario": 82.1
+          },
+          {
+            "year": "2030",
+            "baseline": 80.8,
+            "scenario": 77.2
+          },
+          {
+            "year": "2035",
+            "baseline": 80.3,
+            "scenario": 72.4
+          },
+          {
+            "year": "2040",
+            "baseline": 79.8,
+            "scenario": 68.1
+          },
+          {
+            "year": "2045",
+            "baseline": 78.5,
+            "scenario": 63.3
+          },
+          {
+            "year": "2050",
+            "baseline": 78.2,
+            "scenario": 59
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 81.3,
+            "after": 62.2,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 9401,
+            "after": 8066,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 39,
+            "after": 34,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1749,
+            "after": 1500,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "urban-expansion",
+        "name": "Urban Expansion",
+        "icon": "Building2",
+        "severity": "moderate",
+        "description": "Projected 2035 built-up footprint following the district master plan.",
+        "narrative": "Peri-urban growth consumes the landward buffer and hardens the shoreline. Corridors that once routed around settlement edges are severed, forcing longer, higher-resistance paths.",
+        "affectedPatchIds": [
+          "sundarbans-p10",
+          "sundarbans-p05",
+          "sundarbans-p17",
+          "sundarbans-p04"
+        ],
+        "removedEdgeIds": [
+          "sundarbans-e6",
+          "sundarbans-e9",
+          "sundarbans-e10",
+          "sundarbans-e11",
+          "sundarbans-e12"
+        ],
+        "scoreAfter": 69.5,
+        "habitatLossHa": 808,
+        "habitatLossPct": 8.6,
+        "fragmentationDelta": 0.17,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 29,
+        "carbonLossTonnes": 150288,
+        "recoveryYears": 18,
+        "confidence": 0.792,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 82.1,
+            "scenario": 82.1
+          },
+          {
+            "year": "2030",
+            "baseline": 80.7,
+            "scenario": 78.3
+          },
+          {
+            "year": "2035",
+            "baseline": 80.3,
+            "scenario": 75
+          },
+          {
+            "year": "2040",
+            "baseline": 79.6,
+            "scenario": 71.9
+          },
+          {
+            "year": "2045",
+            "baseline": 79,
+            "scenario": 68.8
+          },
+          {
+            "year": "2050",
+            "baseline": 78.4,
+            "scenario": 65.3
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 81.3,
+            "after": 69.5,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 9401,
+            "after": 8593,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 39,
+            "after": 34,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1749,
+            "after": 1598,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "sea-level-rise",
+        "name": "Sea Level Rise",
+        "icon": "Waves",
+        "severity": "extreme",
+        "description": "IPCC SSP5-8.5 trajectory — 0.68 m mean sea level rise by 2100.",
+        "narrative": "Coastal squeeze prevents landward migration of the mangrove belt. Low-elevation mudflats drown first, removing the stepping-stone patches that currently bind the network together.",
+        "affectedPatchIds": [
+          "sundarbans-p18",
+          "sundarbans-p11",
+          "sundarbans-p10"
+        ],
+        "removedEdgeIds": [
+          "sundarbans-e17",
+          "sundarbans-e19",
+          "sundarbans-e21",
+          "sundarbans-e22",
+          "sundarbans-e23"
+        ],
+        "scoreAfter": 56.5,
+        "habitatLossHa": 2021,
+        "habitatLossPct": 21.5,
+        "fragmentationDelta": 0.26,
+        "isolatedPatches": 4,
+        "speciesAtRisk": 47,
+        "carbonLossTonnes": 375906,
+        "recoveryYears": 30,
+        "confidence": 0.903,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 81.6,
+            "scenario": 81.7
+          },
+          {
+            "year": "2030",
+            "baseline": 81.1,
+            "scenario": 75.6
+          },
+          {
+            "year": "2035",
+            "baseline": 80.6,
+            "scenario": 70
+          },
+          {
+            "year": "2040",
+            "baseline": 80,
+            "scenario": 64.6
+          },
+          {
+            "year": "2045",
+            "baseline": 78.9,
+            "scenario": 58.4
+          },
+          {
+            "year": "2050",
+            "baseline": 78.1,
+            "scenario": 53.4
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 81.3,
+            "after": 56.5,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 9401,
+            "after": 7380,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 39,
+            "after": 34,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1749,
+            "after": 1373,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "aquaculture",
+        "name": "Aquaculture Conversion",
+        "icon": "Fish",
+        "severity": "severe",
+        "description": "Conversion of intertidal margin to brackish shrimp ponds.",
+        "narrative": "Pond bunding blocks tidal exchange and fragments the creek network. Hydrological isolation degrades habitat quality well beyond the converted footprint.",
+        "affectedPatchIds": [
+          "sundarbans-p10",
+          "sundarbans-p05",
+          "sundarbans-p17",
+          "sundarbans-p04"
+        ],
+        "removedEdgeIds": [
+          "sundarbans-e6",
+          "sundarbans-e9",
+          "sundarbans-e10",
+          "sundarbans-e11",
+          "sundarbans-e12"
+        ],
+        "scoreAfter": 64.1,
+        "habitatLossHa": 1203,
+        "habitatLossPct": 12.8,
+        "fragmentationDelta": 0.19,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 32,
+        "carbonLossTonnes": 223758,
+        "recoveryYears": 12,
+        "confidence": 0.939,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 81.4,
+            "scenario": 81.8
+          },
+          {
+            "year": "2030",
+            "baseline": 80.6,
+            "scenario": 77.7
+          },
+          {
+            "year": "2035",
+            "baseline": 80,
+            "scenario": 73.1
+          },
+          {
+            "year": "2040",
+            "baseline": 79.2,
+            "scenario": 68.6
+          },
+          {
+            "year": "2045",
+            "baseline": 78.7,
+            "scenario": 64.3
+          },
+          {
+            "year": "2050",
+            "baseline": 78.1,
+            "scenario": 60.3
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 81.3,
+            "after": 64.1,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 9401,
+            "after": 8198,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 39,
+            "after": 34,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1749,
+            "after": 1525,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "road-construction",
+        "name": "Road / Embankment",
+        "icon": "Route",
+        "severity": "moderate",
+        "description": "Coastal highway alignment with a raised embankment across the wetland.",
+        "narrative": "Direct habitat loss is modest, but the linear barrier bisects the landscape. Connectivity loss far exceeds area loss — the classic signature of a fragmenting infrastructure project.",
+        "affectedPatchIds": [
+          "sundarbans-p18",
+          "sundarbans-p11",
+          "sundarbans-p10",
+          "sundarbans-p05"
+        ],
+        "removedEdgeIds": [
+          "sundarbans-e11",
+          "sundarbans-e12",
+          "sundarbans-e13",
+          "sundarbans-e17",
+          "sundarbans-e19"
+        ],
+        "scoreAfter": 72.6,
+        "habitatLossHa": 385,
+        "habitatLossPct": 4.1,
+        "fragmentationDelta": 0.11,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 21,
+        "carbonLossTonnes": 71610,
+        "recoveryYears": 9,
+        "confidence": 0.849,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 82.1,
+            "scenario": 81.4
+          },
+          {
+            "year": "2030",
+            "baseline": 81.4,
+            "scenario": 79.4
+          },
+          {
+            "year": "2035",
+            "baseline": 80.3,
+            "scenario": 76.5
+          },
+          {
+            "year": "2040",
+            "baseline": 80,
+            "scenario": 73.7
+          },
+          {
+            "year": "2045",
+            "baseline": 78.8,
+            "scenario": 70.4
+          },
+          {
+            "year": "2050",
+            "baseline": 77.9,
+            "scenario": 68.3
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 81.3,
+            "after": 72.6,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 9401,
+            "after": 9016,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 39,
+            "after": 34,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1749,
+            "after": 1677,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "encroachment",
+        "name": "Illegal Encroachment",
+        "icon": "AlertTriangle",
+        "severity": "low",
+        "description": "Detected unauthorised clearing within the notified buffer zone.",
+        "narrative": "Scattered small clearings accumulate along accessible edges. Individually minor, collectively they erode edge integrity and open interior habitat to further incursion.",
+        "affectedPatchIds": [
+          "sundarbans-p10",
+          "sundarbans-p05",
+          "sundarbans-p17",
+          "sundarbans-p04"
+        ],
+        "removedEdgeIds": [
+          "sundarbans-e6",
+          "sundarbans-e9",
+          "sundarbans-e10",
+          "sundarbans-e11",
+          "sundarbans-e12"
+        ],
+        "scoreAfter": 74.1,
+        "habitatLossHa": 320,
+        "habitatLossPct": 3.4,
+        "fragmentationDelta": 0.09,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 22,
+        "carbonLossTonnes": 59520,
+        "recoveryYears": 5,
+        "confidence": 0.882,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 81.4,
+            "scenario": 82
+          },
+          {
+            "year": "2030",
+            "baseline": 81.2,
+            "scenario": 79.6
+          },
+          {
+            "year": "2035",
+            "baseline": 80,
+            "scenario": 77.3
+          },
+          {
+            "year": "2040",
+            "baseline": 79.4,
+            "scenario": 75.3
+          },
+          {
+            "year": "2045",
+            "baseline": 78.9,
+            "scenario": 73
+          },
+          {
+            "year": "2050",
+            "baseline": 77.9,
+            "scenario": 70.4
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 81.3,
+            "after": 74.1,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 9401,
+            "after": 9081,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 39,
+            "after": 34,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1749,
+            "after": 1689,
+            "unit": "kt CO₂e"
+          }
+        ]
+      }
+    ]
+  },
+  "gulf-of-mannar": {
+    "sceneId": "gulf-of-mannar",
+    "baselineScore": 68.2,
+    "scenarios": [
+      {
+        "id": "cyclone",
+        "name": "Cyclone Landfall",
+        "icon": "Wind",
+        "severity": "severe",
+        "description": "Category 3 cyclone with 165 km/h sustained winds and 3.4 m storm surge.",
+        "narrative": "Storm surge strips fringing canopy along the exposed seaward margin and breaches embankments. Interior patches survive but lose their outer buffer, isolating the seaward cluster.",
+        "affectedPatchIds": [
+          "gulf-of-mannar-p01",
+          "gulf-of-mannar-p07",
+          "gulf-of-mannar-p16",
+          "gulf-of-mannar-p05"
+        ],
+        "removedEdgeIds": [
+          "gulf-of-mannar-e1",
+          "gulf-of-mannar-e2",
+          "gulf-of-mannar-e3",
+          "gulf-of-mannar-e7",
+          "gulf-of-mannar-e8"
+        ],
+        "scoreAfter": 49.9,
+        "habitatLossHa": 964,
+        "habitatLossPct": 14.2,
+        "fragmentationDelta": 0.2,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 36,
+        "carbonLossTonnes": 179304,
+        "recoveryYears": 7,
+        "confidence": 0.924,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 68.5,
+            "scenario": 69
+          },
+          {
+            "year": "2030",
+            "baseline": 67.8,
+            "scenario": 64.3
+          },
+          {
+            "year": "2035",
+            "baseline": 67.4,
+            "scenario": 59.4
+          },
+          {
+            "year": "2040",
+            "baseline": 66.4,
+            "scenario": 54.9
+          },
+          {
+            "year": "2045",
+            "baseline": 65.8,
+            "scenario": 50.3
+          },
+          {
+            "year": "2050",
+            "baseline": 64.8,
+            "scenario": 45.6
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 68.2,
+            "after": 49.9,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6789,
+            "after": 5825,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 30,
+            "after": 25,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1263,
+            "after": 1083,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "urban-expansion",
+        "name": "Urban Expansion",
+        "icon": "Building2",
+        "severity": "moderate",
+        "description": "Projected 2035 built-up footprint following the district master plan.",
+        "narrative": "Peri-urban growth consumes the landward buffer and hardens the shoreline. Corridors that once routed around settlement edges are severed, forcing longer, higher-resistance paths.",
+        "affectedPatchIds": [
+          "gulf-of-mannar-p16",
+          "gulf-of-mannar-p05",
+          "gulf-of-mannar-p15",
+          "gulf-of-mannar-p04"
+        ],
+        "removedEdgeIds": [
+          "gulf-of-mannar-e3",
+          "gulf-of-mannar-e4",
+          "gulf-of-mannar-e6",
+          "gulf-of-mannar-e7",
+          "gulf-of-mannar-e8"
+        ],
+        "scoreAfter": 56.9,
+        "habitatLossHa": 584,
+        "habitatLossPct": 8.6,
+        "fragmentationDelta": 0.14,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 27,
+        "carbonLossTonnes": 108624,
+        "recoveryYears": 18,
+        "confidence": 0.918,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 68.8,
+            "scenario": 68.8
+          },
+          {
+            "year": "2030",
+            "baseline": 67.8,
+            "scenario": 65.5
+          },
+          {
+            "year": "2035",
+            "baseline": 67.5,
+            "scenario": 61.8
+          },
+          {
+            "year": "2040",
+            "baseline": 66.2,
+            "scenario": 59
+          },
+          {
+            "year": "2045",
+            "baseline": 65.7,
+            "scenario": 55.4
+          },
+          {
+            "year": "2050",
+            "baseline": 65.2,
+            "scenario": 52.2
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 68.2,
+            "after": 56.9,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6789,
+            "after": 6205,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 30,
+            "after": 25,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1263,
+            "after": 1154,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "sea-level-rise",
+        "name": "Sea Level Rise",
+        "icon": "Waves",
+        "severity": "extreme",
+        "description": "IPCC SSP5-8.5 trajectory — 0.68 m mean sea level rise by 2100.",
+        "narrative": "Coastal squeeze prevents landward migration of the mangrove belt. Low-elevation mudflats drown first, removing the stepping-stone patches that currently bind the network together.",
+        "affectedPatchIds": [
+          "gulf-of-mannar-p01",
+          "gulf-of-mannar-p07",
+          "gulf-of-mannar-p16"
+        ],
+        "removedEdgeIds": [
+          "gulf-of-mannar-e1",
+          "gulf-of-mannar-e2",
+          "gulf-of-mannar-e3",
+          "gulf-of-mannar-e9",
+          "gulf-of-mannar-e10"
+        ],
+        "scoreAfter": 43.4,
+        "habitatLossHa": 1460,
+        "habitatLossPct": 21.5,
+        "fragmentationDelta": 0.27,
+        "isolatedPatches": 4,
+        "speciesAtRisk": 44,
+        "carbonLossTonnes": 271560,
+        "recoveryYears": 30,
+        "confidence": 0.892,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 68.9,
+            "scenario": 68.3
+          },
+          {
+            "year": "2030",
+            "baseline": 67.6,
+            "scenario": 63.3
+          },
+          {
+            "year": "2035",
+            "baseline": 67.4,
+            "scenario": 57.1
+          },
+          {
+            "year": "2040",
+            "baseline": 66.8,
+            "scenario": 51.7
+          },
+          {
+            "year": "2045",
+            "baseline": 65.4,
+            "scenario": 46
+          },
+          {
+            "year": "2050",
+            "baseline": 65.5,
+            "scenario": 39.9
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 68.2,
+            "after": 43.4,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6789,
+            "after": 5329,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 30,
+            "after": 25,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1263,
+            "after": 991,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "aquaculture",
+        "name": "Aquaculture Conversion",
+        "icon": "Fish",
+        "severity": "severe",
+        "description": "Conversion of intertidal margin to brackish shrimp ponds.",
+        "narrative": "Pond bunding blocks tidal exchange and fragments the creek network. Hydrological isolation degrades habitat quality well beyond the converted footprint.",
+        "affectedPatchIds": [
+          "gulf-of-mannar-p16",
+          "gulf-of-mannar-p05"
+        ],
+        "removedEdgeIds": [
+          "gulf-of-mannar-e7",
+          "gulf-of-mannar-e8",
+          "gulf-of-mannar-e9",
+          "gulf-of-mannar-e26",
+          "gulf-of-mannar-e28"
+        ],
+        "scoreAfter": 51.2,
+        "habitatLossHa": 869,
+        "habitatLossPct": 12.8,
+        "fragmentationDelta": 0.2,
+        "isolatedPatches": 3,
+        "speciesAtRisk": 36,
+        "carbonLossTonnes": 161634,
+        "recoveryYears": 12,
+        "confidence": 0.831,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 68.6,
+            "scenario": 69.1
+          },
+          {
+            "year": "2030",
+            "baseline": 67.8,
+            "scenario": 64.3
+          },
+          {
+            "year": "2035",
+            "baseline": 66.8,
+            "scenario": 60.1
+          },
+          {
+            "year": "2040",
+            "baseline": 66.8,
+            "scenario": 56.1
+          },
+          {
+            "year": "2045",
+            "baseline": 65.4,
+            "scenario": 52
+          },
+          {
+            "year": "2050",
+            "baseline": 65.3,
+            "scenario": 47.5
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 68.2,
+            "after": 51.2,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6789,
+            "after": 5920,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 30,
+            "after": 25,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1263,
+            "after": 1101,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "road-construction",
+        "name": "Road / Embankment",
+        "icon": "Route",
+        "severity": "moderate",
+        "description": "Coastal highway alignment with a raised embankment across the wetland.",
+        "narrative": "Direct habitat loss is modest, but the linear barrier bisects the landscape. Connectivity loss far exceeds area loss — the classic signature of a fragmenting infrastructure project.",
+        "affectedPatchIds": [
+          "gulf-of-mannar-p01",
+          "gulf-of-mannar-p07",
+          "gulf-of-mannar-p16"
+        ],
+        "removedEdgeIds": [
+          "gulf-of-mannar-e1",
+          "gulf-of-mannar-e2",
+          "gulf-of-mannar-e3",
+          "gulf-of-mannar-e9",
+          "gulf-of-mannar-e10"
+        ],
+        "scoreAfter": 59.6,
+        "habitatLossHa": 278,
+        "habitatLossPct": 4.1,
+        "fragmentationDelta": 0.11,
+        "isolatedPatches": 4,
+        "speciesAtRisk": 23,
+        "carbonLossTonnes": 51708,
+        "recoveryYears": 9,
+        "confidence": 0.85,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 68.8,
+            "scenario": 68.4
+          },
+          {
+            "year": "2030",
+            "baseline": 67.7,
+            "scenario": 65.9
+          },
+          {
+            "year": "2035",
+            "baseline": 67.5,
+            "scenario": 63.5
+          },
+          {
+            "year": "2040",
+            "baseline": 66.4,
+            "scenario": 60.2
+          },
+          {
+            "year": "2045",
+            "baseline": 65.9,
+            "scenario": 57.6
+          },
+          {
+            "year": "2050",
+            "baseline": 65.1,
+            "scenario": 54.6
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 68.2,
+            "after": 59.6,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6789,
+            "after": 6511,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 30,
+            "after": 25,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1263,
+            "after": 1211,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "encroachment",
+        "name": "Illegal Encroachment",
+        "icon": "AlertTriangle",
+        "severity": "low",
+        "description": "Detected unauthorised clearing within the notified buffer zone.",
+        "narrative": "Scattered small clearings accumulate along accessible edges. Individually minor, collectively they erode edge integrity and open interior habitat to further incursion.",
+        "affectedPatchIds": [
+          "gulf-of-mannar-p16",
+          "gulf-of-mannar-p05",
+          "gulf-of-mannar-p15",
+          "gulf-of-mannar-p04"
+        ],
+        "removedEdgeIds": [
+          "gulf-of-mannar-e3",
+          "gulf-of-mannar-e4",
+          "gulf-of-mannar-e6",
+          "gulf-of-mannar-e7",
+          "gulf-of-mannar-e8"
+        ],
+        "scoreAfter": 62,
+        "habitatLossHa": 231,
+        "habitatLossPct": 3.4,
+        "fragmentationDelta": 0.11,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 19,
+        "carbonLossTonnes": 42966,
+        "recoveryYears": 5,
+        "confidence": 0.829,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 68.6,
+            "scenario": 69.1
+          },
+          {
+            "year": "2030",
+            "baseline": 67.6,
+            "scenario": 66.1
+          },
+          {
+            "year": "2035",
+            "baseline": 67.1,
+            "scenario": 63.8
+          },
+          {
+            "year": "2040",
+            "baseline": 66.2,
+            "scenario": 61.7
+          },
+          {
+            "year": "2045",
+            "baseline": 65.7,
+            "scenario": 59.3
+          },
+          {
+            "year": "2050",
+            "baseline": 65.2,
+            "scenario": 57.5
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 68.2,
+            "after": 62,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 6789,
+            "after": 6558,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 30,
+            "after": 25,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1263,
+            "after": 1220,
+            "unit": "kt CO₂e"
+          }
+        ]
+      }
+    ]
+  },
+  "odisha-coast": {
+    "sceneId": "odisha-coast",
+    "baselineScore": 71.9,
+    "scenarios": [
+      {
+        "id": "cyclone",
+        "name": "Cyclone Landfall",
+        "icon": "Wind",
+        "severity": "severe",
+        "description": "Category 3 cyclone with 165 km/h sustained winds and 3.4 m storm surge.",
+        "narrative": "Storm surge strips fringing canopy along the exposed seaward margin and breaches embankments. Interior patches survive but lose their outer buffer, isolating the seaward cluster.",
+        "affectedPatchIds": [
+          "odisha-coast-p13",
+          "odisha-coast-p12",
+          "odisha-coast-p10",
+          "odisha-coast-p05",
+          "odisha-coast-p11"
+        ],
+        "removedEdgeIds": [
+          "odisha-coast-e10",
+          "odisha-coast-e11",
+          "odisha-coast-e12",
+          "odisha-coast-e17",
+          "odisha-coast-e18"
+        ],
+        "scoreAfter": 54,
+        "habitatLossHa": 1158,
+        "habitatLossPct": 14.2,
+        "fragmentationDelta": 0.2,
+        "isolatedPatches": 7,
+        "speciesAtRisk": 36,
+        "carbonLossTonnes": 215388,
+        "recoveryYears": 7,
+        "confidence": 0.81,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 72.1,
+            "scenario": 72.6
+          },
+          {
+            "year": "2030",
+            "baseline": 71.8,
+            "scenario": 67.5
+          },
+          {
+            "year": "2035",
+            "baseline": 70.6,
+            "scenario": 63.5
+          },
+          {
+            "year": "2040",
+            "baseline": 70.1,
+            "scenario": 58.6
+          },
+          {
+            "year": "2045",
+            "baseline": 69.8,
+            "scenario": 54.3
+          },
+          {
+            "year": "2050",
+            "baseline": 68.8,
+            "scenario": 49.1
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 71.9,
+            "after": 54,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 8158,
+            "after": 7000,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 32,
+            "after": 27,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1517,
+            "after": 1302,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "urban-expansion",
+        "name": "Urban Expansion",
+        "icon": "Building2",
+        "severity": "moderate",
+        "description": "Projected 2035 built-up footprint following the district master plan.",
+        "narrative": "Peri-urban growth consumes the landward buffer and hardens the shoreline. Corridors that once routed around settlement edges are severed, forcing longer, higher-resistance paths.",
+        "affectedPatchIds": [
+          "odisha-coast-p10",
+          "odisha-coast-p05",
+          "odisha-coast-p11",
+          "odisha-coast-p15"
+        ],
+        "removedEdgeIds": [
+          "odisha-coast-e3",
+          "odisha-coast-e10",
+          "odisha-coast-e11",
+          "odisha-coast-e12",
+          "odisha-coast-e17"
+        ],
+        "scoreAfter": 59.8,
+        "habitatLossHa": 702,
+        "habitatLossPct": 8.6,
+        "fragmentationDelta": 0.16,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 27,
+        "carbonLossTonnes": 130572,
+        "recoveryYears": 18,
+        "confidence": 0.868,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 72.5,
+            "scenario": 72.4
+          },
+          {
+            "year": "2030",
+            "baseline": 71.3,
+            "scenario": 68.8
+          },
+          {
+            "year": "2035",
+            "baseline": 71.2,
+            "scenario": 66
+          },
+          {
+            "year": "2040",
+            "baseline": 70.1,
+            "scenario": 62.4
+          },
+          {
+            "year": "2045",
+            "baseline": 69.3,
+            "scenario": 59.7
+          },
+          {
+            "year": "2050",
+            "baseline": 68.5,
+            "scenario": 56.1
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 71.9,
+            "after": 59.8,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 8158,
+            "after": 7456,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 32,
+            "after": 27,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1517,
+            "after": 1387,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "sea-level-rise",
+        "name": "Sea Level Rise",
+        "icon": "Waves",
+        "severity": "extreme",
+        "description": "IPCC SSP5-8.5 trajectory — 0.68 m mean sea level rise by 2100.",
+        "narrative": "Coastal squeeze prevents landward migration of the mangrove belt. Low-elevation mudflats drown first, removing the stepping-stone patches that currently bind the network together.",
+        "affectedPatchIds": [
+          "odisha-coast-p13",
+          "odisha-coast-p12",
+          "odisha-coast-p10",
+          "odisha-coast-p05",
+          "odisha-coast-p11"
+        ],
+        "removedEdgeIds": [
+          "odisha-coast-e10",
+          "odisha-coast-e11",
+          "odisha-coast-e12",
+          "odisha-coast-e17",
+          "odisha-coast-e18"
+        ],
+        "scoreAfter": 47.3,
+        "habitatLossHa": 1754,
+        "habitatLossPct": 21.5,
+        "fragmentationDelta": 0.26,
+        "isolatedPatches": 7,
+        "speciesAtRisk": 46,
+        "carbonLossTonnes": 326244,
+        "recoveryYears": 30,
+        "confidence": 0.835,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 72.5,
+            "scenario": 72.1
+          },
+          {
+            "year": "2030",
+            "baseline": 71.8,
+            "scenario": 66.9
+          },
+          {
+            "year": "2035",
+            "baseline": 70.6,
+            "scenario": 60.5
+          },
+          {
+            "year": "2040",
+            "baseline": 70.1,
+            "scenario": 54.9
+          },
+          {
+            "year": "2045",
+            "baseline": 69.5,
+            "scenario": 49.1
+          },
+          {
+            "year": "2050",
+            "baseline": 68.5,
+            "scenario": 43.6
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 71.9,
+            "after": 47.3,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 8158,
+            "after": 6404,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 32,
+            "after": 27,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1517,
+            "after": 1191,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "aquaculture",
+        "name": "Aquaculture Conversion",
+        "icon": "Fish",
+        "severity": "severe",
+        "description": "Conversion of intertidal margin to brackish shrimp ponds.",
+        "narrative": "Pond bunding blocks tidal exchange and fragments the creek network. Hydrological isolation degrades habitat quality well beyond the converted footprint.",
+        "affectedPatchIds": [
+          "odisha-coast-p10",
+          "odisha-coast-p05",
+          "odisha-coast-p11",
+          "odisha-coast-p15"
+        ],
+        "removedEdgeIds": [
+          "odisha-coast-e3",
+          "odisha-coast-e10",
+          "odisha-coast-e11",
+          "odisha-coast-e12",
+          "odisha-coast-e17"
+        ],
+        "scoreAfter": 55.4,
+        "habitatLossHa": 1044,
+        "habitatLossPct": 12.8,
+        "fragmentationDelta": 0.18,
+        "isolatedPatches": 6,
+        "speciesAtRisk": 32,
+        "carbonLossTonnes": 194184,
+        "recoveryYears": 12,
+        "confidence": 0.791,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 72.3,
+            "scenario": 72.6
+          },
+          {
+            "year": "2030",
+            "baseline": 71.6,
+            "scenario": 68.3
+          },
+          {
+            "year": "2035",
+            "baseline": 71,
+            "scenario": 63.3
+          },
+          {
+            "year": "2040",
+            "baseline": 69.8,
+            "scenario": 59.1
+          },
+          {
+            "year": "2045",
+            "baseline": 69.1,
+            "scenario": 55.3
+          },
+          {
+            "year": "2050",
+            "baseline": 68.8,
+            "scenario": 51.1
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 71.9,
+            "after": 55.4,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 8158,
+            "after": 7114,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 32,
+            "after": 27,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1517,
+            "after": 1323,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "road-construction",
+        "name": "Road / Embankment",
+        "icon": "Route",
+        "severity": "moderate",
+        "description": "Coastal highway alignment with a raised embankment across the wetland.",
+        "narrative": "Direct habitat loss is modest, but the linear barrier bisects the landscape. Connectivity loss far exceeds area loss — the classic signature of a fragmenting infrastructure project.",
+        "affectedPatchIds": [
+          "odisha-coast-p13",
+          "odisha-coast-p12",
+          "odisha-coast-p10",
+          "odisha-coast-p05",
+          "odisha-coast-p11"
+        ],
+        "removedEdgeIds": [
+          "odisha-coast-e10",
+          "odisha-coast-e11",
+          "odisha-coast-e12",
+          "odisha-coast-e17",
+          "odisha-coast-e18"
+        ],
+        "scoreAfter": 62.5,
+        "habitatLossHa": 334,
+        "habitatLossPct": 4.1,
+        "fragmentationDelta": 0.11,
+        "isolatedPatches": 7,
+        "speciesAtRisk": 20,
+        "carbonLossTonnes": 62124,
+        "recoveryYears": 9,
+        "confidence": 0.863,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 72.5,
+            "scenario": 72.2
+          },
+          {
+            "year": "2030",
+            "baseline": 71.3,
+            "scenario": 69.5
+          },
+          {
+            "year": "2035",
+            "baseline": 71.2,
+            "scenario": 66.5
+          },
+          {
+            "year": "2040",
+            "baseline": 70.1,
+            "scenario": 64.5
+          },
+          {
+            "year": "2045",
+            "baseline": 69.5,
+            "scenario": 61.3
+          },
+          {
+            "year": "2050",
+            "baseline": 68.6,
+            "scenario": 58.9
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 71.9,
+            "after": 62.5,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 8158,
+            "after": 7824,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 32,
+            "after": 27,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1517,
+            "after": 1455,
+            "unit": "kt CO₂e"
+          }
+        ]
+      },
+      {
+        "id": "encroachment",
+        "name": "Illegal Encroachment",
+        "icon": "AlertTriangle",
+        "severity": "low",
+        "description": "Detected unauthorised clearing within the notified buffer zone.",
+        "narrative": "Scattered small clearings accumulate along accessible edges. Individually minor, collectively they erode edge integrity and open interior habitat to further incursion.",
+        "affectedPatchIds": [
+          "odisha-coast-p10",
+          "odisha-coast-p05"
+        ],
+        "removedEdgeIds": [
+          "odisha-coast-e10",
+          "odisha-coast-e11",
+          "odisha-coast-e12",
+          "odisha-coast-e17",
+          "odisha-coast-e19"
+        ],
+        "scoreAfter": 65.2,
+        "habitatLossHa": 277,
+        "habitatLossPct": 3.4,
+        "fragmentationDelta": 0.07,
+        "isolatedPatches": 3,
+        "speciesAtRisk": 22,
+        "carbonLossTonnes": 51522,
+        "recoveryYears": 5,
+        "confidence": 0.932,
+        "timeline": [
+          {
+            "year": "2025",
+            "baseline": 72.4,
+            "scenario": 72.2
+          },
+          {
+            "year": "2030",
+            "baseline": 71.9,
+            "scenario": 70.5
+          },
+          {
+            "year": "2035",
+            "baseline": 71.3,
+            "scenario": 68.1
+          },
+          {
+            "year": "2040",
+            "baseline": 70.3,
+            "scenario": 65.2
+          },
+          {
+            "year": "2045",
+            "baseline": 69.2,
+            "scenario": 63.6
+          },
+          {
+            "year": "2050",
+            "baseline": 68.8,
+            "scenario": 61.3
+          }
+        ],
+        "impacts": [
+          {
+            "label": "Connectivity Score",
+            "before": 71.9,
+            "after": 65.2,
+            "unit": "/100"
+          },
+          {
+            "label": "Habitat Area",
+            "before": 8158,
+            "after": 7881,
+            "unit": "ha"
+          },
+          {
+            "label": "Functional Links",
+            "before": 32,
+            "after": 27,
+            "unit": "links"
+          },
+          {
+            "label": "Carbon Stock",
+            "before": 1517,
+            "after": 1466,
+            "unit": "kt CO₂e"
+          }
+        ]
+      }
+    ]
+  }
+}

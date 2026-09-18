@@ -1,0 +1,3243 @@
+{
+  "kerala-coast": {
+    "sceneId": "kerala-coast",
+    "nodes": [
+      {
+        "id": "kerala-coast-p01",
+        "patchId": "kerala-coast-p01",
+        "label": "Kumarakom North Fringe",
+        "habitatClass": "mangrove",
+        "position": {
+          "x": 775,
+          "y": 330
+        },
+        "areaHa": 531.7,
+        "quality": 0.713,
+        "connectivity": 0.643,
+        "sensitivity": "high",
+        "bridgeScore": 0.516,
+        "importance": 0.722,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Kumarakom North Fringe scores 72/100 on ecological importance. It maintains 3 functional links, contributes ~27% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 71% with 91% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p02",
+        "patchId": "kerala-coast-p02",
+        "label": "Pathiramanal Island",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 673,
+          "y": 389
+        },
+        "areaHa": 211.6,
+        "quality": 0.824,
+        "connectivity": 0.79,
+        "sensitivity": "high",
+        "bridgeScore": 0.763,
+        "importance": 0.941,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Pathiramanal Island scores 94/100 on ecological importance. It maintains 4 functional links, contributes ~33% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 82% with 85% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p03",
+        "patchId": "kerala-coast-p03",
+        "label": "Vembanad Core Belt",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 681,
+          "y": 470
+        },
+        "areaHa": 159.6,
+        "quality": 0.474,
+        "connectivity": 0.634,
+        "sensitivity": "medium",
+        "bridgeScore": 0.312,
+        "importance": 0.568,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Vembanad Core Belt scores 57/100 on ecological importance. It maintains 4 functional links, contributes ~26% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 47% with 86% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p04",
+        "patchId": "kerala-coast-p04",
+        "label": "Aroor Backwater Fringe",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 603,
+          "y": 529
+        },
+        "areaHa": 172.3,
+        "quality": 0.895,
+        "connectivity": 0.506,
+        "sensitivity": "medium",
+        "bridgeScore": 0.298,
+        "importance": 0.581,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Aroor Backwater Fringe scores 58/100 on ecological importance. It maintains 3 functional links, contributes ~21% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 90% with 93% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p05",
+        "patchId": "kerala-coast-p05",
+        "label": "Kadamakkudy Cluster",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 475,
+          "y": 500
+        },
+        "areaHa": 657.2,
+        "quality": 0.711,
+        "connectivity": 0.739,
+        "sensitivity": "medium",
+        "bridgeScore": 0.35,
+        "importance": 0.687,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Kadamakkudy Cluster scores 69/100 on ecological importance. It maintains 4 functional links, contributes ~31% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 71% with 93% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p06",
+        "patchId": "kerala-coast-p06",
+        "label": "Panangad Channel Bank",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 373,
+          "y": 545
+        },
+        "areaHa": 146.6,
+        "quality": 0.523,
+        "connectivity": 0.744,
+        "sensitivity": "high",
+        "bridgeScore": 0.662,
+        "importance": 0.808,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Panangad Channel Bank scores 81/100 on ecological importance. It maintains 4 functional links, contributes ~31% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 52% with 89% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p07",
+        "patchId": "kerala-coast-p07",
+        "label": "Puthenvelikkara Mangroves",
+        "habitatClass": "seagrass",
+        "position": {
+          "x": 258,
+          "y": 529
+        },
+        "areaHa": 314.4,
+        "quality": 0.883,
+        "connectivity": 0.504,
+        "sensitivity": "low",
+        "bridgeScore": 0.209,
+        "importance": 0.533,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Puthenvelikkara Mangroves scores 53/100 on ecological importance. It maintains 3 functional links, contributes ~21% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 88% with 83% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p08",
+        "patchId": "kerala-coast-p08",
+        "label": "Cherai Sand Spit",
+        "habitatClass": "mangrove",
+        "position": {
+          "x": 113,
+          "y": 507
+        },
+        "areaHa": 58.5,
+        "quality": 0.675,
+        "connectivity": 0.586,
+        "sensitivity": "high",
+        "bridgeScore": 0.611,
+        "importance": 0.733,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Cherai Sand Spit scores 73/100 on ecological importance. It maintains 3 functional links, contributes ~24% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 68% with 82% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p09",
+        "patchId": "kerala-coast-p09",
+        "label": "Munambam Estuary Mouth",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 122,
+          "y": 405
+        },
+        "areaHa": 492.2,
+        "quality": 0.894,
+        "connectivity": 0.722,
+        "sensitivity": "high",
+        "bridgeScore": 0.392,
+        "importance": 0.736,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Munambam Estuary Mouth scores 74/100 on ecological importance. It maintains 4 functional links, contributes ~30% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 89% with 85% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p10",
+        "patchId": "kerala-coast-p10",
+        "label": "Vypin Fringe Forest",
+        "habitatClass": "seagrass",
+        "position": {
+          "x": 85,
+          "y": 330
+        },
+        "areaHa": 599.5,
+        "quality": 0.771,
+        "connectivity": 0.612,
+        "sensitivity": "medium",
+        "bridgeScore": 0.377,
+        "importance": 0.649,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Vypin Fringe Forest scores 65/100 on ecological importance. It maintains 3 functional links, contributes ~26% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 77% with 97% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p11",
+        "patchId": "kerala-coast-p11",
+        "label": "Kannamali Seagrass Bed",
+        "habitatClass": "urban",
+        "position": {
+          "x": 41,
+          "y": 236
+        },
+        "areaHa": 135,
+        "quality": 0.672,
+        "connectivity": 0.535,
+        "sensitivity": "high",
+        "bridgeScore": 0.406,
+        "importance": 0.605,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Kannamali Seagrass Bed scores 61/100 on ecological importance. It maintains 3 functional links, contributes ~22% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 67% with 91% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p12",
+        "patchId": "kerala-coast-p12",
+        "label": "Chellanam Shoreline",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 179,
+          "y": 190
+        },
+        "areaHa": 610.1,
+        "quality": 0.912,
+        "connectivity": 0.924,
+        "sensitivity": "critical",
+        "bridgeScore": 0.947,
+        "importance": 1,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Chellanam Shoreline scores 100/100 on ecological importance. It maintains 4 functional links, contributes ~39% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 91% with 87% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p13",
+        "patchId": "kerala-coast-p13",
+        "label": "Thanneermukkom Bund North",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 335,
+          "y": 220
+        },
+        "areaHa": 157.6,
+        "quality": 0.765,
+        "connectivity": 0.655,
+        "sensitivity": "medium",
+        "bridgeScore": 0.381,
+        "importance": 0.671,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Thanneermukkom Bund North scores 67/100 on ecological importance. It maintains 4 functional links, contributes ~27% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 77% with 95% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p14",
+        "patchId": "kerala-coast-p14",
+        "label": "Muhamma Marsh",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 358,
+          "y": 58
+        },
+        "areaHa": 820.6,
+        "quality": 0.635,
+        "connectivity": 0.787,
+        "sensitivity": "high",
+        "bridgeScore": 0.792,
+        "importance": 0.917,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Muhamma Marsh scores 92/100 on ecological importance. It maintains 3 functional links, contributes ~33% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 64% with 88% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p15",
+        "patchId": "kerala-coast-p15",
+        "label": "Perumbalam Island",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 514,
+          "y": 13
+        },
+        "areaHa": 684.3,
+        "quality": 0.855,
+        "connectivity": 0.578,
+        "sensitivity": "medium",
+        "bridgeScore": 0.226,
+        "importance": 0.573,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Perumbalam Island scores 57/100 on ecological importance. It maintains 3 functional links, contributes ~24% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 86% with 91% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p16",
+        "patchId": "kerala-coast-p16",
+        "label": "Kothad Mangrove Patch",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 525,
+          "y": 220
+        },
+        "areaHa": 263,
+        "quality": 0.507,
+        "connectivity": 0.648,
+        "sensitivity": "medium",
+        "bridgeScore": 0.297,
+        "importance": 0.574,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Kothad Mangrove Patch scores 57/100 on ecological importance. It maintains 4 functional links, contributes ~27% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 51% with 87% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p17",
+        "patchId": "kerala-coast-p17",
+        "label": "Valanthakad Wetland",
+        "habitatClass": "seagrass",
+        "position": {
+          "x": 747,
+          "y": 153
+        },
+        "areaHa": 355.2,
+        "quality": 0.589,
+        "connectivity": 0.449,
+        "sensitivity": "low",
+        "bridgeScore": 0.016,
+        "importance": 0.35,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Valanthakad Wetland scores 35/100 on ecological importance. It maintains 3 functional links, contributes ~19% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 59% with 89% segmentation confidence."
+      },
+      {
+        "id": "kerala-coast-p18",
+        "patchId": "kerala-coast-p18",
+        "label": "Nettoor Channel Edge",
+        "habitatClass": "urban",
+        "position": {
+          "x": 884,
+          "y": 220
+        },
+        "areaHa": 590.3,
+        "quality": 0.407,
+        "connectivity": 0.782,
+        "sensitivity": "critical",
+        "bridgeScore": 0.909,
+        "importance": 0.927,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Nettoor Channel Edge scores 93/100 on ecological importance. It maintains 3 functional links, contributes ~33% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 41% with 89% segmentation confidence."
+      }
+    ],
+    "edges": [
+      {
+        "id": "kerala-coast-e1",
+        "source": "kerala-coast-p01",
+        "target": "kerala-coast-p02",
+        "strength": 0.5,
+        "distanceKm": 4.26,
+        "resistance": 0.458,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "kerala-coast-e2",
+        "source": "kerala-coast-p01",
+        "target": "kerala-coast-p18",
+        "strength": 0.277,
+        "distanceKm": 6.04,
+        "resistance": 0.694,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "kerala-coast-e3",
+        "source": "kerala-coast-p01",
+        "target": "kerala-coast-p17",
+        "strength": 0.318,
+        "distanceKm": 6.13,
+        "resistance": 0.666,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat"
+        ]
+      },
+      {
+        "id": "kerala-coast-e4",
+        "source": "kerala-coast-p02",
+        "target": "kerala-coast-p03",
+        "strength": 0.546,
+        "distanceKm": 2.59,
+        "resistance": 0.362,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "kerala-coast-e5",
+        "source": "kerala-coast-p02",
+        "target": "kerala-coast-p16",
+        "strength": 0.413,
+        "distanceKm": 4.57,
+        "resistance": 0.526,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat",
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "kerala-coast-e6",
+        "source": "kerala-coast-p03",
+        "target": "kerala-coast-p05",
+        "strength": 0.535,
+        "distanceKm": 2.13,
+        "resistance": 0.346,
+        "critical": true,
+        "speciesFlow": [
+          "Lesser flamingo",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "kerala-coast-e7",
+        "source": "kerala-coast-p03",
+        "target": "kerala-coast-p06",
+        "strength": 0.325,
+        "distanceKm": 4.24,
+        "resistance": 0.564,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Horseshoe crab"
+        ]
+      },
+      {
+        "id": "kerala-coast-e8",
+        "source": "kerala-coast-p04",
+        "target": "kerala-coast-p06",
+        "strength": 0.486,
+        "distanceKm": 3.93,
+        "resistance": 0.453,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "kerala-coast-e9",
+        "source": "kerala-coast-p04",
+        "target": "kerala-coast-p02",
+        "strength": 0.45,
+        "distanceKm": 5.68,
+        "resistance": 0.543,
+        "critical": false,
+        "speciesFlow": [
+          "Dugong",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "kerala-coast-e10",
+        "source": "kerala-coast-p04",
+        "target": "kerala-coast-p07",
+        "strength": 0.448,
+        "distanceKm": 5.93,
+        "resistance": 0.553,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "kerala-coast-e11",
+        "source": "kerala-coast-p05",
+        "target": "kerala-coast-p09",
+        "strength": 0.58,
+        "distanceKm": 3.58,
+        "resistance": 0.386,
+        "critical": false,
+        "speciesFlow": [
+          "Eurasian otter",
+          "Dugong"
+        ]
+      },
+      {
+        "id": "kerala-coast-e12",
+        "source": "kerala-coast-p05",
+        "target": "kerala-coast-p06",
+        "strength": 0.437,
+        "distanceKm": 3.71,
+        "resistance": 0.472,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "kerala-coast-e13",
+        "source": "kerala-coast-p06",
+        "target": "kerala-coast-p07",
+        "strength": 0.528,
+        "distanceKm": 3.32,
+        "resistance": 0.404,
+        "critical": false,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "kerala-coast-e14",
+        "source": "kerala-coast-p07",
+        "target": "kerala-coast-p05",
+        "strength": 0.387,
+        "distanceKm": 6.17,
+        "resistance": 0.61,
+        "critical": false,
+        "speciesFlow": [
+          "Milkfish juveniles",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "kerala-coast-e15",
+        "source": "kerala-coast-p08",
+        "target": "kerala-coast-p10",
+        "strength": 0.377,
+        "distanceKm": 5.71,
+        "resistance": 0.601,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "kerala-coast-e16",
+        "source": "kerala-coast-p08",
+        "target": "kerala-coast-p11",
+        "strength": 0.282,
+        "distanceKm": 7.13,
+        "resistance": 0.743,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "kerala-coast-e17",
+        "source": "kerala-coast-p08",
+        "target": "kerala-coast-p09",
+        "strength": 0.323,
+        "distanceKm": 7.25,
+        "resistance": 0.708,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "kerala-coast-e18",
+        "source": "kerala-coast-p09",
+        "target": "kerala-coast-p13",
+        "strength": 0.465,
+        "distanceKm": 5.24,
+        "resistance": 0.517,
+        "critical": true,
+        "speciesFlow": [
+          "Dugong"
+        ]
+      },
+      {
+        "id": "kerala-coast-e19",
+        "source": "kerala-coast-p09",
+        "target": "kerala-coast-p03",
+        "strength": 0.363,
+        "distanceKm": 5.58,
+        "resistance": 0.606,
+        "critical": false,
+        "speciesFlow": [
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "kerala-coast-e20",
+        "source": "kerala-coast-p10",
+        "target": "kerala-coast-p11",
+        "strength": 0.531,
+        "distanceKm": 3.46,
+        "resistance": 0.408,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "kerala-coast-e21",
+        "source": "kerala-coast-p10",
+        "target": "kerala-coast-p12",
+        "strength": 0.487,
+        "distanceKm": 5.03,
+        "resistance": 0.495,
+        "critical": false,
+        "speciesFlow": [
+          "Dugong",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "kerala-coast-e22",
+        "source": "kerala-coast-p11",
+        "target": "kerala-coast-p12",
+        "strength": 0.347,
+        "distanceKm": 6.85,
+        "resistance": 0.671,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "kerala-coast-e23",
+        "source": "kerala-coast-p12",
+        "target": "kerala-coast-p14",
+        "strength": 0.601,
+        "distanceKm": 3.1,
+        "resistance": 0.357,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "kerala-coast-e24",
+        "source": "kerala-coast-p12",
+        "target": "kerala-coast-p13",
+        "strength": 0.51,
+        "distanceKm": 4.71,
+        "resistance": 0.469,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "kerala-coast-e25",
+        "source": "kerala-coast-p13",
+        "target": "kerala-coast-p15",
+        "strength": 0.836,
+        "distanceKm": 1.25,
+        "resistance": 0.183,
+        "critical": false,
+        "speciesFlow": [
+          "Milkfish juveniles",
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "kerala-coast-e26",
+        "source": "kerala-coast-p13",
+        "target": "kerala-coast-p14",
+        "strength": 0.476,
+        "distanceKm": 3.97,
+        "resistance": 0.461,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "kerala-coast-e27",
+        "source": "kerala-coast-p14",
+        "target": "kerala-coast-p15",
+        "strength": 0.462,
+        "distanceKm": 4.57,
+        "resistance": 0.494,
+        "critical": false,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "kerala-coast-e28",
+        "source": "kerala-coast-p15",
+        "target": "kerala-coast-p16",
+        "strength": 0.456,
+        "distanceKm": 4.08,
+        "resistance": 0.477,
+        "critical": true,
+        "speciesFlow": [
+          "Whimbrel",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "kerala-coast-e29",
+        "source": "kerala-coast-p16",
+        "target": "kerala-coast-p17",
+        "strength": 0.323,
+        "distanceKm": 4.91,
+        "resistance": 0.602,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "kerala-coast-e30",
+        "source": "kerala-coast-p17",
+        "target": "kerala-coast-p18",
+        "strength": 0.359,
+        "distanceKm": 3.59,
+        "resistance": 0.509,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "kerala-coast-e31",
+        "source": "kerala-coast-p18",
+        "target": "kerala-coast-p16",
+        "strength": 0.166,
+        "distanceKm": 8.07,
+        "resistance": 0.91,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat",
+          "Saltwater crocodile"
+        ]
+      }
+    ],
+    "clusters": [
+      {
+        "id": "kerala-coast-c1",
+        "label": "Northern Block",
+        "nodeIds": [
+          "kerala-coast-p10",
+          "kerala-coast-p11",
+          "kerala-coast-p12",
+          "kerala-coast-p13",
+          "kerala-coast-p14",
+          "kerala-coast-p15"
+        ],
+        "color": "#00c896"
+      },
+      {
+        "id": "kerala-coast-c2",
+        "label": "Central Core",
+        "nodeIds": [
+          "kerala-coast-p01",
+          "kerala-coast-p02",
+          "kerala-coast-p03",
+          "kerala-coast-p04",
+          "kerala-coast-p16",
+          "kerala-coast-p17",
+          "kerala-coast-p18"
+        ],
+        "color": "#38bdf8"
+      },
+      {
+        "id": "kerala-coast-c3",
+        "label": "Southern Fringe",
+        "nodeIds": [
+          "kerala-coast-p05",
+          "kerala-coast-p06",
+          "kerala-coast-p07",
+          "kerala-coast-p08",
+          "kerala-coast-p09"
+        ],
+        "color": "#a78bfa"
+      }
+    ]
+  },
+  "sundarbans": {
+    "sceneId": "sundarbans",
+    "nodes": [
+      {
+        "id": "sundarbans-p01",
+        "patchId": "sundarbans-p01",
+        "label": "Sajnekhali Core",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 775,
+          "y": 330
+        },
+        "areaHa": 283.5,
+        "quality": 0.629,
+        "connectivity": 0.449,
+        "sensitivity": "high",
+        "bridgeScore": 0.558,
+        "importance": 0.629,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Sajnekhali Core scores 63/100 on ecological importance. It maintains 3 functional links, contributes ~19% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 63% with 87% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p02",
+        "patchId": "sundarbans-p02",
+        "label": "Netidhopani Block",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 824,
+          "y": 415
+        },
+        "areaHa": 377.9,
+        "quality": 0.471,
+        "connectivity": 0.312,
+        "sensitivity": "low",
+        "bridgeScore": 0.076,
+        "importance": 0.288,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Netidhopani Block scores 29/100 on ecological importance. It maintains 3 functional links, contributes ~13% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 47% with 96% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p03",
+        "patchId": "sundarbans-p03",
+        "label": "Pirkhali Compartment",
+        "habitatClass": "water",
+        "position": {
+          "x": 695,
+          "y": 458
+        },
+        "areaHa": 216.2,
+        "quality": 0.932,
+        "connectivity": 0.667,
+        "sensitivity": "high",
+        "bridgeScore": 0.606,
+        "importance": 0.823,
+        "degree": 6,
+        "isHub": true,
+        "explanation": "Pirkhali Compartment scores 82/100 on ecological importance. It maintains 6 functional links, contributes ~28% of landscape connectivity, and has 5 alternative routes if removed. Habitat quality is 93% with 93% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p04",
+        "patchId": "sundarbans-p04",
+        "label": "Panchamukhani Creek",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 542,
+          "y": 432
+        },
+        "areaHa": 740.1,
+        "quality": 0.496,
+        "connectivity": 0.701,
+        "sensitivity": "high",
+        "bridgeScore": 0.627,
+        "importance": 0.763,
+        "degree": 5,
+        "isHub": true,
+        "explanation": "Panchamukhani Creek scores 76/100 on ecological importance. It maintains 5 functional links, contributes ~29% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 50% with 89% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p05",
+        "patchId": "sundarbans-p05",
+        "label": "Chamta Block",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 558,
+          "y": 592
+        },
+        "areaHa": 79,
+        "quality": 0.887,
+        "connectivity": 0.463,
+        "sensitivity": "high",
+        "bridgeScore": 0.724,
+        "importance": 0.771,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Chamta Block scores 77/100 on ecological importance. It maintains 3 functional links, contributes ~19% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 89% with 89% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p06",
+        "patchId": "sundarbans-p06",
+        "label": "Jhingakhali Forest",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 430,
+          "y": 549
+        },
+        "areaHa": 864.6,
+        "quality": 0.471,
+        "connectivity": 0.682,
+        "sensitivity": "medium",
+        "bridgeScore": 0.053,
+        "importance": 0.461,
+        "degree": 7,
+        "isHub": false,
+        "explanation": "Jhingakhali Forest scores 46/100 on ecological importance. It maintains 7 functional links, contributes ~28% of landscape connectivity, and has 6 alternative routes if removed. Habitat quality is 47% with 85% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p07",
+        "patchId": "sundarbans-p07",
+        "label": "Bagmara Island",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 371,
+          "y": 450
+        },
+        "areaHa": 460.6,
+        "quality": 0.714,
+        "connectivity": 0.485,
+        "sensitivity": "medium",
+        "bridgeScore": 0.346,
+        "importance": 0.558,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Bagmara Island scores 56/100 on ecological importance. It maintains 4 functional links, contributes ~20% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 71% with 93% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p08",
+        "patchId": "sundarbans-p08",
+        "label": "Harinbhanga Fringe",
+        "habitatClass": "mangrove",
+        "position": {
+          "x": 187,
+          "y": 553
+        },
+        "areaHa": 217.5,
+        "quality": 0.424,
+        "connectivity": 0.367,
+        "sensitivity": "medium",
+        "bridgeScore": 0.34,
+        "importance": 0.438,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Harinbhanga Fringe scores 44/100 on ecological importance. It maintains 3 functional links, contributes ~15% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 42% with 88% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p09",
+        "patchId": "sundarbans-p09",
+        "label": "Arbesi Block",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 39,
+          "y": 519
+        },
+        "areaHa": 89.9,
+        "quality": 0.834,
+        "connectivity": 0.389,
+        "sensitivity": "medium",
+        "bridgeScore": 0.482,
+        "importance": 0.602,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Arbesi Block scores 60/100 on ecological importance. It maintains 3 functional links, contributes ~16% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 83% with 92% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p10",
+        "patchId": "sundarbans-p10",
+        "label": "Khatuajhuri Creek",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 102,
+          "y": 401
+        },
+        "areaHa": 274.3,
+        "quality": 0.655,
+        "connectivity": 0.516,
+        "sensitivity": "high",
+        "bridgeScore": 0.772,
+        "importance": 0.775,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Khatuajhuri Creek scores 78/100 on ecological importance. It maintains 3 functional links, contributes ~22% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 66% with 92% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p11",
+        "patchId": "sundarbans-p11",
+        "label": "Gosaba Fringe",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 171,
+          "y": 330
+        },
+        "areaHa": 520.9,
+        "quality": 0.874,
+        "connectivity": 0.622,
+        "sensitivity": "high",
+        "bridgeScore": 0.732,
+        "importance": 0.852,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Gosaba Fringe scores 85/100 on ecological importance. It maintains 4 functional links, contributes ~26% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 87% with 90% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p12",
+        "patchId": "sundarbans-p12",
+        "label": "Dulibhasani West",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 118,
+          "y": 262
+        },
+        "areaHa": 916.5,
+        "quality": 0.716,
+        "connectivity": 0.583,
+        "sensitivity": "medium",
+        "bridgeScore": 0.387,
+        "importance": 0.628,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Dulibhasani West scores 63/100 on ecological importance. It maintains 4 functional links, contributes ~24% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 72% with 88% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p13",
+        "patchId": "sundarbans-p13",
+        "label": "Chandkhali Mudflat",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 151,
+          "y": 195
+        },
+        "areaHa": 493.9,
+        "quality": 0.527,
+        "connectivity": 0.535,
+        "sensitivity": "high",
+        "bridgeScore": 0.701,
+        "importance": 0.724,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Chandkhali Mudflat scores 72/100 on ecological importance. It maintains 3 functional links, contributes ~22% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 53% with 86% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p14",
+        "patchId": "sundarbans-p14",
+        "label": "Matla Estuary Bank",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 278,
+          "y": 190
+        },
+        "areaHa": 666.6,
+        "quality": 0.942,
+        "connectivity": 0.672,
+        "sensitivity": "medium",
+        "bridgeScore": 0.581,
+        "importance": 0.815,
+        "degree": 5,
+        "isHub": true,
+        "explanation": "Matla Estuary Bank scores 82/100 on ecological importance. It maintains 5 functional links, contributes ~28% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 94% with 91% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p15",
+        "patchId": "sundarbans-p15",
+        "label": "Bidyadhari Channel",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 281,
+          "y": 24
+        },
+        "areaHa": 599.6,
+        "quality": 0.458,
+        "connectivity": 0.372,
+        "sensitivity": "low",
+        "bridgeScore": 0.14,
+        "importance": 0.348,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Bidyadhari Channel scores 35/100 on ecological importance. It maintains 3 functional links, contributes ~16% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 46% with 98% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p16",
+        "patchId": "sundarbans-p16",
+        "label": "Jharkhali Buffer",
+        "habitatClass": "water",
+        "position": {
+          "x": 430,
+          "y": 204
+        },
+        "areaHa": 677.9,
+        "quality": 0.695,
+        "connectivity": 0.49,
+        "sensitivity": "medium",
+        "bridgeScore": 0.233,
+        "importance": 0.5,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Jharkhali Buffer scores 50/100 on ecological importance. It maintains 4 functional links, contributes ~20% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 70% with 86% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p17",
+        "patchId": "sundarbans-p17",
+        "label": "Datta Island",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 558,
+          "y": 68
+        },
+        "areaHa": 145,
+        "quality": 0.808,
+        "connectivity": 0.547,
+        "sensitivity": "high",
+        "bridgeScore": 0.945,
+        "importance": 0.908,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Datta Island scores 91/100 on ecological importance. It maintains 3 functional links, contributes ~23% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 81% with 81% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p18",
+        "patchId": "sundarbans-p18",
+        "label": "Bhagabatpur Belt",
+        "habitatClass": "urban",
+        "position": {
+          "x": 623,
+          "y": 153
+        },
+        "areaHa": 752.5,
+        "quality": 0.558,
+        "connectivity": 0.672,
+        "sensitivity": "critical",
+        "bridgeScore": 0.755,
+        "importance": 0.825,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Bhagabatpur Belt scores 83/100 on ecological importance. It maintains 4 functional links, contributes ~28% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 56% with 89% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p19",
+        "patchId": "sundarbans-p19",
+        "label": "Kalash Island",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 584,
+          "y": 256
+        },
+        "areaHa": 756.3,
+        "quality": 0.49,
+        "connectivity": 0.593,
+        "sensitivity": "medium",
+        "bridgeScore": 0.281,
+        "importance": 0.535,
+        "degree": 5,
+        "isHub": false,
+        "explanation": "Kalash Island scores 54/100 on ecological importance. It maintains 5 functional links, contributes ~25% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 49% with 87% segmentation confidence."
+      },
+      {
+        "id": "sundarbans-p20",
+        "patchId": "sundarbans-p20",
+        "label": "Mayadwip Sand Flat",
+        "habitatClass": "water",
+        "position": {
+          "x": 824,
+          "y": 245
+        },
+        "areaHa": 268,
+        "quality": 0.835,
+        "connectivity": 0.461,
+        "sensitivity": "medium",
+        "bridgeScore": 0.607,
+        "importance": 0.701,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Mayadwip Sand Flat scores 70/100 on ecological importance. It maintains 3 functional links, contributes ~19% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 84% with 87% segmentation confidence."
+      }
+    ],
+    "edges": [
+      {
+        "id": "sundarbans-e1",
+        "source": "sundarbans-p01",
+        "target": "sundarbans-p02",
+        "strength": 0.53,
+        "distanceKm": 2.88,
+        "resistance": 0.325,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "sundarbans-e2",
+        "source": "sundarbans-p01",
+        "target": "sundarbans-p20",
+        "strength": 0.502,
+        "distanceKm": 6.67,
+        "resistance": 0.444,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle"
+        ]
+      },
+      {
+        "id": "sundarbans-e3",
+        "source": "sundarbans-p01",
+        "target": "sundarbans-p03",
+        "strength": 0.515,
+        "distanceKm": 7.08,
+        "resistance": 0.445,
+        "critical": false,
+        "speciesFlow": [
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "sundarbans-e4",
+        "source": "sundarbans-p02",
+        "target": "sundarbans-p20",
+        "strength": 0.498,
+        "distanceKm": 5.47,
+        "resistance": 0.415,
+        "critical": false,
+        "speciesFlow": [
+          "Dugong",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "sundarbans-e5",
+        "source": "sundarbans-p02",
+        "target": "sundarbans-p19",
+        "strength": 0.256,
+        "distanceKm": 9.48,
+        "resistance": 0.686,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "sundarbans-e6",
+        "source": "sundarbans-p03",
+        "target": "sundarbans-p04",
+        "strength": 0.771,
+        "distanceKm": 1.62,
+        "resistance": 0.196,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "sundarbans-e7",
+        "source": "sundarbans-p03",
+        "target": "sundarbans-p07",
+        "strength": 0.682,
+        "distanceKm": 4.56,
+        "resistance": 0.301,
+        "critical": true,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Eurasian otter"
+        ]
+      },
+      {
+        "id": "sundarbans-e8",
+        "source": "sundarbans-p03",
+        "target": "sundarbans-p19",
+        "strength": 0.555,
+        "distanceKm": 5.22,
+        "resistance": 0.379,
+        "critical": true,
+        "speciesFlow": [
+          "Dugong",
+          "Mudskipper spp."
+        ]
+      },
+      {
+        "id": "sundarbans-e9",
+        "source": "sundarbans-p04",
+        "target": "sundarbans-p07",
+        "strength": 0.554,
+        "distanceKm": 3.45,
+        "resistance": 0.332,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "sundarbans-e10",
+        "source": "sundarbans-p04",
+        "target": "sundarbans-p06",
+        "strength": 0.42,
+        "distanceKm": 4.03,
+        "resistance": 0.41,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "sundarbans-e11",
+        "source": "sundarbans-p05",
+        "target": "sundarbans-p07",
+        "strength": 0.374,
+        "distanceKm": 10.92,
+        "resistance": 0.631,
+        "critical": false,
+        "speciesFlow": [
+          "Milkfish juveniles",
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "sundarbans-e12",
+        "source": "sundarbans-p05",
+        "target": "sundarbans-p06",
+        "strength": 0.278,
+        "distanceKm": 12.37,
+        "resistance": 0.753,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "sundarbans-e13",
+        "source": "sundarbans-p05",
+        "target": "sundarbans-p03",
+        "strength": 0.358,
+        "distanceKm": 12.82,
+        "resistance": 0.683,
+        "critical": false,
+        "speciesFlow": [
+          "Lesser flamingo",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "sundarbans-e14",
+        "source": "sundarbans-p06",
+        "target": "sundarbans-p07",
+        "strength": 0.632,
+        "distanceKm": 1.76,
+        "resistance": 0.252,
+        "critical": false,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "sundarbans-e15",
+        "source": "sundarbans-p06",
+        "target": "sundarbans-p03",
+        "strength": 0.535,
+        "distanceKm": 5.49,
+        "resistance": 0.397,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "sundarbans-e16",
+        "source": "sundarbans-p08",
+        "target": "sundarbans-p09",
+        "strength": 0.532,
+        "distanceKm": 4.33,
+        "resistance": 0.367,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "sundarbans-e17",
+        "source": "sundarbans-p08",
+        "target": "sundarbans-p10",
+        "strength": 0.368,
+        "distanceKm": 6.71,
+        "resistance": 0.523,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "sundarbans-e18",
+        "source": "sundarbans-p08",
+        "target": "sundarbans-p06",
+        "strength": 0.172,
+        "distanceKm": 13.1,
+        "resistance": 0.882,
+        "critical": false,
+        "speciesFlow": [
+          "Eurasian otter",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "sundarbans-e19",
+        "source": "sundarbans-p09",
+        "target": "sundarbans-p10",
+        "strength": 0.483,
+        "distanceKm": 7.28,
+        "resistance": 0.47,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "sundarbans-e20",
+        "source": "sundarbans-p09",
+        "target": "sundarbans-p06",
+        "strength": 0.367,
+        "distanceKm": 8.85,
+        "resistance": 0.586,
+        "critical": false,
+        "speciesFlow": [
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "sundarbans-e21",
+        "source": "sundarbans-p10",
+        "target": "sundarbans-p11",
+        "strength": 0.418,
+        "distanceKm": 9.17,
+        "resistance": 0.557,
+        "critical": true,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "sundarbans-e22",
+        "source": "sundarbans-p11",
+        "target": "sundarbans-p13",
+        "strength": 0.717,
+        "distanceKm": 2.22,
+        "resistance": 0.232,
+        "critical": false,
+        "speciesFlow": [
+          "Lesser flamingo",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "sundarbans-e23",
+        "source": "sundarbans-p11",
+        "target": "sundarbans-p12",
+        "strength": 0.498,
+        "distanceKm": 7.67,
+        "resistance": 0.469,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "sundarbans-e24",
+        "source": "sundarbans-p11",
+        "target": "sundarbans-p14",
+        "strength": 0.563,
+        "distanceKm": 7.78,
+        "resistance": 0.43,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Horseshoe crab"
+        ]
+      },
+      {
+        "id": "sundarbans-e25",
+        "source": "sundarbans-p12",
+        "target": "sundarbans-p14",
+        "strength": 0.861,
+        "distanceKm": 2.06,
+        "resistance": 0.172,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "sundarbans-e26",
+        "source": "sundarbans-p12",
+        "target": "sundarbans-p06",
+        "strength": 0.399,
+        "distanceKm": 6.89,
+        "resistance": 0.511,
+        "critical": true,
+        "speciesFlow": [
+          "Fishing cat",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "sundarbans-e27",
+        "source": "sundarbans-p13",
+        "target": "sundarbans-p14",
+        "strength": 0.442,
+        "distanceKm": 8.1,
+        "resistance": 0.515,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "sundarbans-e28",
+        "source": "sundarbans-p13",
+        "target": "sundarbans-p12",
+        "strength": 0.36,
+        "distanceKm": 8.53,
+        "resistance": 0.582,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "sundarbans-e29",
+        "source": "sundarbans-p14",
+        "target": "sundarbans-p16",
+        "strength": 0.526,
+        "distanceKm": 7.39,
+        "resistance": 0.446,
+        "critical": true,
+        "speciesFlow": [
+          "Eurasian otter",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "sundarbans-e30",
+        "source": "sundarbans-p15",
+        "target": "sundarbans-p16",
+        "strength": 0.422,
+        "distanceKm": 5.93,
+        "resistance": 0.469,
+        "critical": false,
+        "speciesFlow": [
+          "Whimbrel",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "sundarbans-e31",
+        "source": "sundarbans-p15",
+        "target": "sundarbans-p14",
+        "strength": 0.413,
+        "distanceKm": 8.34,
+        "resistance": 0.541,
+        "critical": false,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Black-capped kingfisher"
+        ]
+      },
+      {
+        "id": "sundarbans-e32",
+        "source": "sundarbans-p15",
+        "target": "sundarbans-p17",
+        "strength": 0.319,
+        "distanceKm": 10.06,
+        "resistance": 0.655,
+        "critical": false,
+        "speciesFlow": [
+          "Curlew sandpiper",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "sundarbans-e33",
+        "source": "sundarbans-p16",
+        "target": "sundarbans-p18",
+        "strength": 0.446,
+        "distanceKm": 6.25,
+        "resistance": 0.465,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "sundarbans-e34",
+        "source": "sundarbans-p17",
+        "target": "sundarbans-p16",
+        "strength": 0.438,
+        "distanceKm": 8.46,
+        "resistance": 0.527,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "sundarbans-e35",
+        "source": "sundarbans-p17",
+        "target": "sundarbans-p18",
+        "strength": 0.26,
+        "distanceKm": 13.19,
+        "resistance": 0.792,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "sundarbans-e36",
+        "source": "sundarbans-p18",
+        "target": "sundarbans-p19",
+        "strength": 0.502,
+        "distanceKm": 2.96,
+        "resistance": 0.34,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "sundarbans-e37",
+        "source": "sundarbans-p18",
+        "target": "sundarbans-p04",
+        "strength": 0.356,
+        "distanceKm": 6.83,
+        "resistance": 0.534,
+        "critical": false,
+        "speciesFlow": [
+          "Dugong",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "sundarbans-e38",
+        "source": "sundarbans-p19",
+        "target": "sundarbans-p04",
+        "strength": 0.376,
+        "distanceKm": 5.48,
+        "resistance": 0.479,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "sundarbans-e39",
+        "source": "sundarbans-p20",
+        "target": "sundarbans-p19",
+        "strength": 0.394,
+        "distanceKm": 8.25,
+        "resistance": 0.551,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Horseshoe crab"
+        ]
+      }
+    ],
+    "clusters": [
+      {
+        "id": "sundarbans-c1",
+        "label": "Northern Block",
+        "nodeIds": [
+          "sundarbans-p11",
+          "sundarbans-p12",
+          "sundarbans-p13",
+          "sundarbans-p14",
+          "sundarbans-p15"
+        ],
+        "color": "#00c896"
+      },
+      {
+        "id": "sundarbans-c2",
+        "label": "Central Core",
+        "nodeIds": [
+          "sundarbans-p16",
+          "sundarbans-p17",
+          "sundarbans-p18",
+          "sundarbans-p19",
+          "sundarbans-p20"
+        ],
+        "color": "#38bdf8"
+      },
+      {
+        "id": "sundarbans-c3",
+        "label": "Southern Fringe",
+        "nodeIds": [
+          "sundarbans-p01",
+          "sundarbans-p02",
+          "sundarbans-p03",
+          "sundarbans-p04",
+          "sundarbans-p05"
+        ],
+        "color": "#a78bfa"
+      },
+      {
+        "id": "sundarbans-c4",
+        "label": "Outer Islands",
+        "nodeIds": [
+          "sundarbans-p06",
+          "sundarbans-p07",
+          "sundarbans-p08",
+          "sundarbans-p09",
+          "sundarbans-p10"
+        ],
+        "color": "#f59e0b"
+      }
+    ]
+  },
+  "gulf-of-mannar": {
+    "sceneId": "gulf-of-mannar",
+    "nodes": [
+      {
+        "id": "gulf-of-mannar-p01",
+        "patchId": "gulf-of-mannar-p01",
+        "label": "Krusadai Island Reef",
+        "habitatClass": "water",
+        "position": {
+          "x": 620,
+          "y": 330
+        },
+        "areaHa": 195.2,
+        "quality": 0.837,
+        "connectivity": 0.84,
+        "sensitivity": "critical",
+        "bridgeScore": 0.925,
+        "importance": 1,
+        "degree": 5,
+        "isHub": true,
+        "explanation": "Krusadai Island Reef scores 100/100 on ecological importance. It maintains 5 functional links, contributes ~35% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 84% with 98% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p02",
+        "patchId": "gulf-of-mannar-p02",
+        "label": "Shingle Island",
+        "habitatClass": "water",
+        "position": {
+          "x": 816,
+          "y": 430
+        },
+        "areaHa": 599,
+        "quality": 0.619,
+        "connectivity": 0.595,
+        "sensitivity": "medium",
+        "bridgeScore": 0.56,
+        "importance": 0.701,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Shingle Island scores 70/100 on ecological importance. It maintains 3 functional links, contributes ~25% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 62% with 97% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p03",
+        "patchId": "gulf-of-mannar-p03",
+        "label": "Manoli Reef Flat",
+        "habitatClass": "coral",
+        "position": {
+          "x": 787,
+          "y": 547
+        },
+        "areaHa": 129.4,
+        "quality": 0.415,
+        "connectivity": 0.43,
+        "sensitivity": "medium",
+        "bridgeScore": 0.317,
+        "importance": 0.456,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Manoli Reef Flat scores 46/100 on ecological importance. It maintains 3 functional links, contributes ~18% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 42% with 84% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p04",
+        "patchId": "gulf-of-mannar-p04",
+        "label": "Poomarichan Meadow",
+        "habitatClass": "urban",
+        "position": {
+          "x": 515,
+          "y": 443
+        },
+        "areaHa": 648.8,
+        "quality": 0.527,
+        "connectivity": 0.67,
+        "sensitivity": "high",
+        "bridgeScore": 0.451,
+        "importance": 0.666,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Poomarichan Meadow scores 67/100 on ecological importance. It maintains 4 functional links, contributes ~28% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 53% with 95% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p05",
+        "patchId": "gulf-of-mannar-p05",
+        "label": "Pullivasal Reef",
+        "habitatClass": "urban",
+        "position": {
+          "x": 468,
+          "y": 605
+        },
+        "areaHa": 509.5,
+        "quality": 0.42,
+        "connectivity": 0.607,
+        "sensitivity": "high",
+        "bridgeScore": 0.653,
+        "importance": 0.714,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Pullivasal Reef scores 71/100 on ecological importance. It maintains 3 functional links, contributes ~25% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 42% with 92% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p06",
+        "patchId": "gulf-of-mannar-p06",
+        "label": "Hare Island Bank",
+        "habitatClass": "coral",
+        "position": {
+          "x": 340,
+          "y": 540
+        },
+        "areaHa": 253.1,
+        "quality": 0.563,
+        "connectivity": 0.542,
+        "sensitivity": "medium",
+        "bridgeScore": 0.283,
+        "importance": 0.525,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Hare Island Bank scores 53/100 on ecological importance. It maintains 4 functional links, contributes ~23% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 56% with 92% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p07",
+        "patchId": "gulf-of-mannar-p07",
+        "label": "Musal Island Shelf",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 316,
+          "y": 431
+        },
+        "areaHa": 835.8,
+        "quality": 0.46,
+        "connectivity": 0.806,
+        "sensitivity": "critical",
+        "bridgeScore": 0.769,
+        "importance": 0.88,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Musal Island Shelf scores 88/100 on ecological importance. It maintains 4 functional links, contributes ~34% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 46% with 88% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p08",
+        "patchId": "gulf-of-mannar-p08",
+        "label": "Vaan Island Reef",
+        "habitatClass": "urban",
+        "position": {
+          "x": 78,
+          "y": 475
+        },
+        "areaHa": 256.4,
+        "quality": 0.9,
+        "connectivity": 0.523,
+        "sensitivity": "medium",
+        "bridgeScore": 0.537,
+        "importance": 0.71,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Vaan Island Reef scores 71/100 on ecological importance. It maintains 3 functional links, contributes ~22% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 90% with 93% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p09",
+        "patchId": "gulf-of-mannar-p09",
+        "label": "Koswari Bank",
+        "habitatClass": "urban",
+        "position": {
+          "x": 108,
+          "y": 370
+        },
+        "areaHa": 141.1,
+        "quality": 0.731,
+        "connectivity": 0.66,
+        "sensitivity": "high",
+        "bridgeScore": 0.714,
+        "importance": 0.833,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Koswari Bank scores 83/100 on ecological importance. It maintains 4 functional links, contributes ~28% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 73% with 81% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p10",
+        "patchId": "gulf-of-mannar-p10",
+        "label": "Kariyachalli Reef",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 91,
+          "y": 288
+        },
+        "areaHa": 467.4,
+        "quality": 0.717,
+        "connectivity": 0.446,
+        "sensitivity": "medium",
+        "bridgeScore": 0.173,
+        "importance": 0.453,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Kariyachalli Reef scores 45/100 on ecological importance. It maintains 3 functional links, contributes ~19% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 72% with 84% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p11",
+        "patchId": "gulf-of-mannar-p11",
+        "label": "Vilanguchalli Shoal",
+        "habitatClass": "coral",
+        "position": {
+          "x": 78,
+          "y": 185
+        },
+        "areaHa": 530.1,
+        "quality": 0.73,
+        "connectivity": 0.528,
+        "sensitivity": "medium",
+        "bridgeScore": 0.394,
+        "importance": 0.607,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Vilanguchalli Shoal scores 61/100 on ecological importance. It maintains 3 functional links, contributes ~22% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 73% with 93% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p12",
+        "patchId": "gulf-of-mannar-p12",
+        "label": "Nallathanni Meadow",
+        "habitatClass": "dune",
+        "position": {
+          "x": 232,
+          "y": 156
+        },
+        "areaHa": 414.6,
+        "quality": 0.422,
+        "connectivity": 0.581,
+        "sensitivity": "medium",
+        "bridgeScore": 0.314,
+        "importance": 0.532,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Nallathanni Meadow scores 53/100 on ecological importance. It maintains 4 functional links, contributes ~24% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 42% with 94% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p13",
+        "patchId": "gulf-of-mannar-p13",
+        "label": "Anaipar Reef Flat",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 378,
+          "y": 208
+        },
+        "areaHa": 341.3,
+        "quality": 0.709,
+        "connectivity": 0.634,
+        "sensitivity": "high",
+        "bridgeScore": 0.517,
+        "importance": 0.717,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Anaipar Reef Flat scores 72/100 on ecological importance. It maintains 4 functional links, contributes ~26% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 71% with 89% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p14",
+        "patchId": "gulf-of-mannar-p14",
+        "label": "Valimunai Bank",
+        "habitatClass": "seagrass",
+        "position": {
+          "x": 468,
+          "y": 55
+        },
+        "areaHa": 511.3,
+        "quality": 0.898,
+        "connectivity": 0.41,
+        "sensitivity": "low",
+        "bridgeScore": 0.037,
+        "importance": 0.403,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Valimunai Bank scores 40/100 on ecological importance. It maintains 3 functional links, contributes ~17% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 90% with 81% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p15",
+        "patchId": "gulf-of-mannar-p15",
+        "label": "Appa Island Reef",
+        "habitatClass": "seagrass",
+        "position": {
+          "x": 576,
+          "y": 134
+        },
+        "areaHa": 349.3,
+        "quality": 0.46,
+        "connectivity": 0.67,
+        "sensitivity": "high",
+        "bridgeScore": 0.622,
+        "importance": 0.738,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Appa Island Reef scores 74/100 on ecological importance. It maintains 4 functional links, contributes ~28% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 46% with 83% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p16",
+        "patchId": "gulf-of-mannar-p16",
+        "label": "Talairi Seagrass Bed",
+        "habitatClass": "coral",
+        "position": {
+          "x": 685,
+          "y": 175
+        },
+        "areaHa": 459.2,
+        "quality": 0.405,
+        "connectivity": 0.617,
+        "sensitivity": "high",
+        "bridgeScore": 0.712,
+        "importance": 0.745,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Talairi Seagrass Bed scores 75/100 on ecological importance. It maintains 3 functional links, contributes ~26% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 41% with 97% segmentation confidence."
+      },
+      {
+        "id": "gulf-of-mannar-p17",
+        "patchId": "gulf-of-mannar-p17",
+        "label": "Uppatanni Shoal",
+        "habitatClass": "coral",
+        "position": {
+          "x": 816,
+          "y": 230
+        },
+        "areaHa": 147.7,
+        "quality": 0.602,
+        "connectivity": 0.482,
+        "sensitivity": "medium",
+        "bridgeScore": 0.475,
+        "importance": 0.599,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Uppatanni Shoal scores 60/100 on ecological importance. It maintains 3 functional links, contributes ~20% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 60% with 87% segmentation confidence."
+      }
+    ],
+    "edges": [
+      {
+        "id": "gulf-of-mannar-e1",
+        "source": "gulf-of-mannar-p01",
+        "target": "gulf-of-mannar-p02",
+        "strength": 0.702,
+        "distanceKm": 2.21,
+        "resistance": 0.254,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e2",
+        "source": "gulf-of-mannar-p01",
+        "target": "gulf-of-mannar-p03",
+        "strength": 0.569,
+        "distanceKm": 2.71,
+        "resistance": 0.328,
+        "critical": false,
+        "speciesFlow": [
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e3",
+        "source": "gulf-of-mannar-p01",
+        "target": "gulf-of-mannar-p04",
+        "strength": 0.49,
+        "distanceKm": 4.7,
+        "resistance": 0.438,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e4",
+        "source": "gulf-of-mannar-p02",
+        "target": "gulf-of-mannar-p04",
+        "strength": 0.527,
+        "distanceKm": 2.61,
+        "resistance": 0.343,
+        "critical": false,
+        "speciesFlow": [
+          "Dugong",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e5",
+        "source": "gulf-of-mannar-p02",
+        "target": "gulf-of-mannar-p03",
+        "strength": 0.474,
+        "distanceKm": 2.62,
+        "resistance": 0.366,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e6",
+        "source": "gulf-of-mannar-p03",
+        "target": "gulf-of-mannar-p04",
+        "strength": 0.384,
+        "distanceKm": 3.63,
+        "resistance": 0.451,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e7",
+        "source": "gulf-of-mannar-p05",
+        "target": "gulf-of-mannar-p06",
+        "strength": 0.418,
+        "distanceKm": 3.26,
+        "resistance": 0.419,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e8",
+        "source": "gulf-of-mannar-p05",
+        "target": "gulf-of-mannar-p04",
+        "strength": 0.312,
+        "distanceKm": 5.44,
+        "resistance": 0.569,
+        "critical": true,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e9",
+        "source": "gulf-of-mannar-p05",
+        "target": "gulf-of-mannar-p07",
+        "strength": 0.275,
+        "distanceKm": 5.89,
+        "resistance": 0.613,
+        "critical": false,
+        "speciesFlow": [
+          "Milkfish juveniles",
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e10",
+        "source": "gulf-of-mannar-p06",
+        "target": "gulf-of-mannar-p07",
+        "strength": 0.413,
+        "distanceKm": 3.7,
+        "resistance": 0.44,
+        "critical": false,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e11",
+        "source": "gulf-of-mannar-p06",
+        "target": "gulf-of-mannar-p09",
+        "strength": 0.368,
+        "distanceKm": 6.68,
+        "resistance": 0.582,
+        "critical": false,
+        "speciesFlow": [
+          "Whimbrel",
+          "Black-capped kingfisher"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e12",
+        "source": "gulf-of-mannar-p07",
+        "target": "gulf-of-mannar-p09",
+        "strength": 0.398,
+        "distanceKm": 5.31,
+        "resistance": 0.512,
+        "critical": false,
+        "speciesFlow": [
+          "Curlew sandpiper",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e13",
+        "source": "gulf-of-mannar-p08",
+        "target": "gulf-of-mannar-p09",
+        "strength": 0.544,
+        "distanceKm": 5.33,
+        "resistance": 0.425,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e14",
+        "source": "gulf-of-mannar-p08",
+        "target": "gulf-of-mannar-p06",
+        "strength": 0.33,
+        "distanceKm": 8.64,
+        "resistance": 0.678,
+        "critical": false,
+        "speciesFlow": [
+          "Eurasian otter",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e15",
+        "source": "gulf-of-mannar-p08",
+        "target": "gulf-of-mannar-p07",
+        "strength": 0.28,
+        "distanceKm": 9.43,
+        "resistance": 0.751,
+        "critical": false,
+        "speciesFlow": [
+          "Whimbrel",
+          "Horseshoe crab"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e16",
+        "source": "gulf-of-mannar-p10",
+        "target": "gulf-of-mannar-p12",
+        "strength": 0.653,
+        "distanceKm": 0.73,
+        "resistance": 0.22,
+        "critical": false,
+        "speciesFlow": [
+          "Dugong",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e17",
+        "source": "gulf-of-mannar-p10",
+        "target": "gulf-of-mannar-p11",
+        "strength": 0.549,
+        "distanceKm": 4.24,
+        "resistance": 0.391,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e18",
+        "source": "gulf-of-mannar-p10",
+        "target": "gulf-of-mannar-p13",
+        "strength": 0.408,
+        "distanceKm": 6.63,
+        "resistance": 0.553,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Black-capped kingfisher"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e19",
+        "source": "gulf-of-mannar-p11",
+        "target": "gulf-of-mannar-p12",
+        "strength": 0.404,
+        "distanceKm": 4.9,
+        "resistance": 0.493,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e20",
+        "source": "gulf-of-mannar-p11",
+        "target": "gulf-of-mannar-p09",
+        "strength": 0.34,
+        "distanceKm": 8.39,
+        "resistance": 0.661,
+        "critical": true,
+        "speciesFlow": [
+          "Saltwater crocodile",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e21",
+        "source": "gulf-of-mannar-p12",
+        "target": "gulf-of-mannar-p13",
+        "strength": 0.352,
+        "distanceKm": 5.92,
+        "resistance": 0.564,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e22",
+        "source": "gulf-of-mannar-p13",
+        "target": "gulf-of-mannar-p14",
+        "strength": 0.475,
+        "distanceKm": 6.35,
+        "resistance": 0.498,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e23",
+        "source": "gulf-of-mannar-p14",
+        "target": "gulf-of-mannar-p15",
+        "strength": 0.311,
+        "distanceKm": 8.51,
+        "resistance": 0.69,
+        "critical": true,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e24",
+        "source": "gulf-of-mannar-p14",
+        "target": "gulf-of-mannar-p12",
+        "strength": 0.226,
+        "distanceKm": 10.99,
+        "resistance": 0.861,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e25",
+        "source": "gulf-of-mannar-p15",
+        "target": "gulf-of-mannar-p17",
+        "strength": 0.337,
+        "distanceKm": 5.74,
+        "resistance": 0.567,
+        "critical": false,
+        "speciesFlow": [
+          "Curlew sandpiper",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e26",
+        "source": "gulf-of-mannar-p15",
+        "target": "gulf-of-mannar-p16",
+        "strength": 0.27,
+        "distanceKm": 5.88,
+        "resistance": 0.615,
+        "critical": false,
+        "speciesFlow": [
+          "Whimbrel",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e27",
+        "source": "gulf-of-mannar-p15",
+        "target": "gulf-of-mannar-p13",
+        "strength": 0.309,
+        "distanceKm": 7.3,
+        "resistance": 0.648,
+        "critical": true,
+        "speciesFlow": [
+          "Milkfish juveniles",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e28",
+        "source": "gulf-of-mannar-p16",
+        "target": "gulf-of-mannar-p17",
+        "strength": 0.534,
+        "distanceKm": 1.39,
+        "resistance": 0.291,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e29",
+        "source": "gulf-of-mannar-p16",
+        "target": "gulf-of-mannar-p01",
+        "strength": 0.37,
+        "distanceKm": 6.29,
+        "resistance": 0.566,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "gulf-of-mannar-e30",
+        "source": "gulf-of-mannar-p17",
+        "target": "gulf-of-mannar-p01",
+        "strength": 0.37,
+        "distanceKm": 7.55,
+        "resistance": 0.61,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat"
+        ]
+      }
+    ],
+    "clusters": [
+      {
+        "id": "gulf-of-mannar-c1",
+        "label": "Northern Block",
+        "nodeIds": [
+          "gulf-of-mannar-p10",
+          "gulf-of-mannar-p11",
+          "gulf-of-mannar-p12",
+          "gulf-of-mannar-p13",
+          "gulf-of-mannar-p14"
+        ],
+        "color": "#00c896"
+      },
+      {
+        "id": "gulf-of-mannar-c2",
+        "label": "Central Core",
+        "nodeIds": [
+          "gulf-of-mannar-p01",
+          "gulf-of-mannar-p02",
+          "gulf-of-mannar-p03",
+          "gulf-of-mannar-p04",
+          "gulf-of-mannar-p15",
+          "gulf-of-mannar-p16",
+          "gulf-of-mannar-p17"
+        ],
+        "color": "#38bdf8"
+      },
+      {
+        "id": "gulf-of-mannar-c3",
+        "label": "Southern Fringe",
+        "nodeIds": [
+          "gulf-of-mannar-p05",
+          "gulf-of-mannar-p06",
+          "gulf-of-mannar-p07",
+          "gulf-of-mannar-p08",
+          "gulf-of-mannar-p09"
+        ],
+        "color": "#a78bfa"
+      }
+    ]
+  },
+  "odisha-coast": {
+    "sceneId": "odisha-coast",
+    "nodes": [
+      {
+        "id": "odisha-coast-p01",
+        "patchId": "odisha-coast-p01",
+        "label": "Bhitarkanika Core",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 775,
+          "y": 330
+        },
+        "areaHa": 665,
+        "quality": 0.456,
+        "connectivity": 0.521,
+        "sensitivity": "medium",
+        "bridgeScore": 0.291,
+        "importance": 0.497,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Bhitarkanika Core scores 50/100 on ecological importance. It maintains 3 functional links, contributes ~22% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 46% with 90% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p02",
+        "patchId": "odisha-coast-p02",
+        "label": "Dangmal Block",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 669,
+          "y": 396
+        },
+        "areaHa": 345.2,
+        "quality": 0.942,
+        "connectivity": 0.578,
+        "sensitivity": "medium",
+        "bridgeScore": 0.033,
+        "importance": 0.494,
+        "degree": 5,
+        "isHub": false,
+        "explanation": "Dangmal Block scores 49/100 on ecological importance. It maintains 5 functional links, contributes ~24% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 94% with 98% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p03",
+        "patchId": "odisha-coast-p03",
+        "label": "Habalikhati Dune Belt",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 662,
+          "y": 485
+        },
+        "areaHa": 334.9,
+        "quality": 0.493,
+        "connectivity": 0.646,
+        "sensitivity": "high",
+        "bridgeScore": 0.561,
+        "importance": 0.702,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Habalikhati Dune Belt scores 70/100 on ecological importance. It maintains 4 functional links, contributes ~27% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 49% with 82% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p04",
+        "patchId": "odisha-coast-p04",
+        "label": "Ekakula Sand Ridge",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 503,
+          "y": 447
+        },
+        "areaHa": 566.1,
+        "quality": 0.844,
+        "connectivity": 0.66,
+        "sensitivity": "medium",
+        "bridgeScore": 0.158,
+        "importance": 0.578,
+        "degree": 5,
+        "isHub": false,
+        "explanation": "Ekakula Sand Ridge scores 58/100 on ecological importance. It maintains 5 functional links, contributes ~28% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 84% with 96% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p05",
+        "patchId": "odisha-coast-p05",
+        "label": "Gahirmatha Rookery Flat",
+        "habitatClass": "mangrove",
+        "position": {
+          "x": 430,
+          "y": 606
+        },
+        "areaHa": 788.5,
+        "quality": 0.424,
+        "connectivity": 0.653,
+        "sensitivity": "high",
+        "bridgeScore": 0.629,
+        "importance": 0.726,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Gahirmatha Rookery Flat scores 73/100 on ecological importance. It maintains 3 functional links, contributes ~27% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 42% with 88% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p06",
+        "patchId": "odisha-coast-p06",
+        "label": "Kalibhanjadia Island",
+        "habitatClass": "mangrove",
+        "position": {
+          "x": 245,
+          "y": 627
+        },
+        "areaHa": 804.6,
+        "quality": 0.529,
+        "connectivity": 0.581,
+        "sensitivity": "medium",
+        "bridgeScore": 0.398,
+        "importance": 0.595,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Kalibhanjadia Island scores 60/100 on ecological importance. It maintains 3 functional links, contributes ~24% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 53% with 93% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p07",
+        "patchId": "odisha-coast-p07",
+        "label": "Baunsagada Creek",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 296,
+          "y": 419
+        },
+        "areaHa": 790.4,
+        "quality": 0.413,
+        "connectivity": 0.564,
+        "sensitivity": "low",
+        "bridgeScore": 0.043,
+        "importance": 0.386,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Baunsagada Creek scores 39/100 on ecological importance. It maintains 4 functional links, contributes ~24% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 41% with 89% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p08",
+        "patchId": "odisha-coast-p08",
+        "label": "Thakurdia Mangroves",
+        "habitatClass": "estuary",
+        "position": {
+          "x": 48,
+          "y": 436
+        },
+        "areaHa": 943.5,
+        "quality": 0.592,
+        "connectivity": 0.516,
+        "sensitivity": "medium",
+        "bridgeScore": 0.116,
+        "importance": 0.434,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Thakurdia Mangroves scores 43/100 on ecological importance. It maintains 3 functional links, contributes ~22% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 59% with 83% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p09",
+        "patchId": "odisha-coast-p09",
+        "label": "Kanika Sands",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 102,
+          "y": 330
+        },
+        "areaHa": 55.1,
+        "quality": 0.676,
+        "connectivity": 0.437,
+        "sensitivity": "low",
+        "bridgeScore": 0.074,
+        "importance": 0.391,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Kanika Sands scores 39/100 on ecological importance. It maintains 4 functional links, contributes ~18% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 68% with 86% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p10",
+        "patchId": "odisha-coast-p10",
+        "label": "Suajore Creek Bank",
+        "habitatClass": "urban",
+        "position": {
+          "x": 255,
+          "y": 282
+        },
+        "areaHa": 464.6,
+        "quality": 0.588,
+        "connectivity": 0.84,
+        "sensitivity": "high",
+        "bridgeScore": 0.773,
+        "importance": 0.924,
+        "degree": 5,
+        "isHub": true,
+        "explanation": "Suajore Creek Bank scores 92/100 on ecological importance. It maintains 5 functional links, contributes ~35% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 59% with 88% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p11",
+        "patchId": "odisha-coast-p11",
+        "label": "Barunei Muhan",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 247,
+          "y": 208
+        },
+        "areaHa": 446.1,
+        "quality": 0.862,
+        "connectivity": 0.821,
+        "sensitivity": "high",
+        "bridgeScore": 0.727,
+        "importance": 0.946,
+        "degree": 5,
+        "isHub": true,
+        "explanation": "Barunei Muhan scores 95/100 on ecological importance. It maintains 5 functional links, contributes ~34% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 86% with 94% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p12",
+        "patchId": "odisha-coast-p12",
+        "label": "Mahinsamunda Marsh",
+        "habitatClass": "saltmarsh",
+        "position": {
+          "x": 305,
+          "y": 128
+        },
+        "areaHa": 263.5,
+        "quality": 0.538,
+        "connectivity": 0.739,
+        "sensitivity": "critical",
+        "bridgeScore": 0.886,
+        "importance": 0.92,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Mahinsamunda Marsh scores 92/100 on ecological importance. It maintains 4 functional links, contributes ~31% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 54% with 91% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p13",
+        "patchId": "odisha-coast-p13",
+        "label": "Rajnagar Buffer",
+        "habitatClass": "mudflat",
+        "position": {
+          "x": 430,
+          "y": 204
+        },
+        "areaHa": 441.3,
+        "quality": 0.92,
+        "connectivity": 0.862,
+        "sensitivity": "critical",
+        "bridgeScore": 0.856,
+        "importance": 1,
+        "degree": 5,
+        "isHub": true,
+        "explanation": "Rajnagar Buffer scores 100/100 on ecological importance. It maintains 5 functional links, contributes ~36% of landscape connectivity, and has 4 alternative routes if removed. Habitat quality is 92% with 91% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p14",
+        "patchId": "odisha-coast-p14",
+        "label": "Jambu Estuary Mouth",
+        "habitatClass": "dune",
+        "position": {
+          "x": 588,
+          "y": 75
+        },
+        "areaHa": 277.8,
+        "quality": 0.779,
+        "connectivity": 0.552,
+        "sensitivity": "high",
+        "bridgeScore": 0.612,
+        "importance": 0.738,
+        "degree": 3,
+        "isHub": false,
+        "explanation": "Jambu Estuary Mouth scores 74/100 on ecological importance. It maintains 3 functional links, contributes ~23% of landscape connectivity, and has 2 alternative routes if removed. Habitat quality is 78% with 84% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p15",
+        "patchId": "odisha-coast-p15",
+        "label": "Praharajpur Fringe",
+        "habitatClass": "mangrove",
+        "position": {
+          "x": 662,
+          "y": 175
+        },
+        "areaHa": 640.2,
+        "quality": 0.507,
+        "connectivity": 0.701,
+        "sensitivity": "high",
+        "bridgeScore": 0.553,
+        "importance": 0.728,
+        "degree": 4,
+        "isHub": true,
+        "explanation": "Praharajpur Fringe scores 73/100 on ecological importance. It maintains 4 functional links, contributes ~29% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 51% with 84% segmentation confidence."
+      },
+      {
+        "id": "odisha-coast-p16",
+        "patchId": "odisha-coast-p16",
+        "label": "Batighar Channel Edge",
+        "habitatClass": "mangrove",
+        "position": {
+          "x": 605,
+          "y": 282
+        },
+        "areaHa": 330.7,
+        "quality": 0.512,
+        "connectivity": 0.545,
+        "sensitivity": "medium",
+        "bridgeScore": 0.247,
+        "importance": 0.498,
+        "degree": 4,
+        "isHub": false,
+        "explanation": "Batighar Channel Edge scores 50/100 on ecological importance. It maintains 4 functional links, contributes ~23% of landscape connectivity, and has 3 alternative routes if removed. Habitat quality is 51% with 83% segmentation confidence."
+      }
+    ],
+    "edges": [
+      {
+        "id": "odisha-coast-e1",
+        "source": "odisha-coast-p01",
+        "target": "odisha-coast-p16",
+        "strength": 0.244,
+        "distanceKm": 7.11,
+        "resistance": 0.715,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "odisha-coast-e2",
+        "source": "odisha-coast-p01",
+        "target": "odisha-coast-p02",
+        "strength": 0.305,
+        "distanceKm": 8.23,
+        "resistance": 0.709,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "odisha-coast-e3",
+        "source": "odisha-coast-p01",
+        "target": "odisha-coast-p15",
+        "strength": 0.178,
+        "distanceKm": 9.53,
+        "resistance": 0.889,
+        "critical": false,
+        "speciesFlow": [
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "odisha-coast-e4",
+        "source": "odisha-coast-p02",
+        "target": "odisha-coast-p03",
+        "strength": 0.7,
+        "distanceKm": 1.94,
+        "resistance": 0.252,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "odisha-coast-e5",
+        "source": "odisha-coast-p02",
+        "target": "odisha-coast-p04",
+        "strength": 0.734,
+        "distanceKm": 3.28,
+        "resistance": 0.278,
+        "critical": true,
+        "speciesFlow": [
+          "Dugong",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "odisha-coast-e6",
+        "source": "odisha-coast-p02",
+        "target": "odisha-coast-p16",
+        "strength": 0.435,
+        "distanceKm": 5.78,
+        "resistance": 0.522,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat",
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "odisha-coast-e7",
+        "source": "odisha-coast-p03",
+        "target": "odisha-coast-p04",
+        "strength": 0.646,
+        "distanceKm": 2.01,
+        "resistance": 0.277,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "odisha-coast-e8",
+        "source": "odisha-coast-p03",
+        "target": "odisha-coast-p07",
+        "strength": 0.281,
+        "distanceKm": 5.49,
+        "resistance": 0.612,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Eurasian otter"
+        ]
+      },
+      {
+        "id": "odisha-coast-e9",
+        "source": "odisha-coast-p04",
+        "target": "odisha-coast-p07",
+        "strength": 0.48,
+        "distanceKm": 3.86,
+        "resistance": 0.425,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "odisha-coast-e10",
+        "source": "odisha-coast-p05",
+        "target": "odisha-coast-p04",
+        "strength": 0.414,
+        "distanceKm": 5.08,
+        "resistance": 0.51,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "odisha-coast-e11",
+        "source": "odisha-coast-p05",
+        "target": "odisha-coast-p02",
+        "strength": 0.397,
+        "distanceKm": 5.99,
+        "resistance": 0.555,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "odisha-coast-e12",
+        "source": "odisha-coast-p05",
+        "target": "odisha-coast-p06",
+        "strength": 0.268,
+        "distanceKm": 6.24,
+        "resistance": 0.656,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "odisha-coast-e13",
+        "source": "odisha-coast-p06",
+        "target": "odisha-coast-p07",
+        "strength": 0.392,
+        "distanceKm": 3.18,
+        "resistance": 0.439,
+        "critical": false,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "odisha-coast-e14",
+        "source": "odisha-coast-p06",
+        "target": "odisha-coast-p04",
+        "strength": 0.412,
+        "distanceKm": 5.74,
+        "resistance": 0.536,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "odisha-coast-e15",
+        "source": "odisha-coast-p07",
+        "target": "odisha-coast-p09",
+        "strength": 0.339,
+        "distanceKm": 5.45,
+        "resistance": 0.572,
+        "critical": false,
+        "speciesFlow": [
+          "Curlew sandpiper",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "odisha-coast-e16",
+        "source": "odisha-coast-p08",
+        "target": "odisha-coast-p09",
+        "strength": 0.321,
+        "distanceKm": 7.08,
+        "resistance": 0.653,
+        "critical": false,
+        "speciesFlow": [
+          "Green sea turtle",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "odisha-coast-e17",
+        "source": "odisha-coast-p08",
+        "target": "odisha-coast-p10",
+        "strength": 0.197,
+        "distanceKm": 10.33,
+        "resistance": 0.903,
+        "critical": false,
+        "speciesFlow": [
+          "Fishing cat",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "odisha-coast-e18",
+        "source": "odisha-coast-p08",
+        "target": "odisha-coast-p11",
+        "strength": 0.227,
+        "distanceKm": 10.88,
+        "resistance": 0.887,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter",
+          "Green sea turtle"
+        ]
+      },
+      {
+        "id": "odisha-coast-e19",
+        "source": "odisha-coast-p09",
+        "target": "odisha-coast-p10",
+        "strength": 0.362,
+        "distanceKm": 6.12,
+        "resistance": 0.585,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter"
+        ]
+      },
+      {
+        "id": "odisha-coast-e20",
+        "source": "odisha-coast-p09",
+        "target": "odisha-coast-p11",
+        "strength": 0.42,
+        "distanceKm": 6.48,
+        "resistance": 0.556,
+        "critical": true,
+        "speciesFlow": [
+          "Saltwater crocodile"
+        ]
+      },
+      {
+        "id": "odisha-coast-e21",
+        "source": "odisha-coast-p10",
+        "target": "odisha-coast-p11",
+        "strength": 0.844,
+        "distanceKm": 0.56,
+        "resistance": 0.15,
+        "critical": false,
+        "speciesFlow": [
+          "Olive ridley turtle",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "odisha-coast-e22",
+        "source": "odisha-coast-p10",
+        "target": "odisha-coast-p13",
+        "strength": 0.495,
+        "distanceKm": 5.04,
+        "resistance": 0.459,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Black-capped kingfisher"
+        ]
+      },
+      {
+        "id": "odisha-coast-e23",
+        "source": "odisha-coast-p10",
+        "target": "odisha-coast-p12",
+        "strength": 0.357,
+        "distanceKm": 5.31,
+        "resistance": 0.555,
+        "critical": false,
+        "speciesFlow": [
+          "Dugong",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "odisha-coast-e24",
+        "source": "odisha-coast-p11",
+        "target": "odisha-coast-p13",
+        "strength": 0.628,
+        "distanceKm": 4.49,
+        "resistance": 0.364,
+        "critical": false,
+        "speciesFlow": [
+          "Lesser flamingo",
+          "Milkfish juveniles"
+        ]
+      },
+      {
+        "id": "odisha-coast-e25",
+        "source": "odisha-coast-p11",
+        "target": "odisha-coast-p12",
+        "strength": 0.475,
+        "distanceKm": 4.78,
+        "resistance": 0.462,
+        "critical": false,
+        "speciesFlow": [
+          "Indo-Pacific humpback dolphin",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "odisha-coast-e26",
+        "source": "odisha-coast-p12",
+        "target": "odisha-coast-p13",
+        "strength": 0.761,
+        "distanceKm": 1.41,
+        "resistance": 0.209,
+        "critical": false,
+        "speciesFlow": [
+          "Black-capped kingfisher",
+          "Whimbrel"
+        ]
+      },
+      {
+        "id": "odisha-coast-e27",
+        "source": "odisha-coast-p12",
+        "target": "odisha-coast-p14",
+        "strength": 0.427,
+        "distanceKm": 5.14,
+        "resistance": 0.504,
+        "critical": false,
+        "speciesFlow": [
+          "Mudskipper spp.",
+          "Curlew sandpiper"
+        ]
+      },
+      {
+        "id": "odisha-coast-e28",
+        "source": "odisha-coast-p14",
+        "target": "odisha-coast-p15",
+        "strength": 0.463,
+        "distanceKm": 4.32,
+        "resistance": 0.452,
+        "critical": true,
+        "speciesFlow": [
+          "Horseshoe crab",
+          "Indo-Pacific humpback dolphin"
+        ]
+      },
+      {
+        "id": "odisha-coast-e29",
+        "source": "odisha-coast-p14",
+        "target": "odisha-coast-p13",
+        "strength": 0.537,
+        "distanceKm": 5.34,
+        "resistance": 0.442,
+        "critical": false,
+        "speciesFlow": [
+          "Penaeid shrimp larvae",
+          "Olive ridley turtle"
+        ]
+      },
+      {
+        "id": "odisha-coast-e30",
+        "source": "odisha-coast-p15",
+        "target": "odisha-coast-p16",
+        "strength": 0.323,
+        "distanceKm": 5.31,
+        "resistance": 0.576,
+        "critical": false,
+        "speciesFlow": [
+          "Whimbrel",
+          "Penaeid shrimp larvae"
+        ]
+      },
+      {
+        "id": "odisha-coast-e31",
+        "source": "odisha-coast-p15",
+        "target": "odisha-coast-p13",
+        "strength": 0.345,
+        "distanceKm": 7.45,
+        "resistance": 0.647,
+        "critical": true,
+        "speciesFlow": [
+          "Milkfish juveniles",
+          "Lesser flamingo"
+        ]
+      },
+      {
+        "id": "odisha-coast-e32",
+        "source": "odisha-coast-p16",
+        "target": "odisha-coast-p03",
+        "strength": 0.306,
+        "distanceKm": 5.62,
+        "resistance": 0.601,
+        "critical": false,
+        "speciesFlow": [
+          "Smooth-coated otter",
+          "Green sea turtle"
+        ]
+      }
+    ],
+    "clusters": [
+      {
+        "id": "odisha-coast-c1",
+        "label": "Northern Block",
+        "nodeIds": [
+          "odisha-coast-p10",
+          "odisha-coast-p11",
+          "odisha-coast-p12",
+          "odisha-coast-p13",
+          "odisha-coast-p14"
+        ],
+        "color": "#00c896"
+      },
+      {
+        "id": "odisha-coast-c2",
+        "label": "Central Core",
+        "nodeIds": [
+          "odisha-coast-p01",
+          "odisha-coast-p02",
+          "odisha-coast-p03",
+          "odisha-coast-p15",
+          "odisha-coast-p16"
+        ],
+        "color": "#38bdf8"
+      },
+      {
+        "id": "odisha-coast-c3",
+        "label": "Southern Fringe",
+        "nodeIds": [
+          "odisha-coast-p04",
+          "odisha-coast-p05",
+          "odisha-coast-p06",
+          "odisha-coast-p07",
+          "odisha-coast-p08",
+          "odisha-coast-p09"
+        ],
+        "color": "#a78bfa"
+      }
+    ]
+  }
+}

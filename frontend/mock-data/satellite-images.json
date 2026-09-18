@@ -1,0 +1,225 @@
+{
+  "scenes": [
+    {
+      "id": "kerala-coast",
+      "name": "Kerala Coast — Vembanad Wetland Complex",
+      "shortName": "Kerala Coast",
+      "region": "Vembanad–Kol Wetland, Kochi",
+      "state": "Kerala",
+      "sensor": "Sentinel-2 MSI L2A",
+      "productId": "S2B_MSIL2A_20250914T051649_N0511_R062_T43PFP",
+      "acquisitionDate": "2025-09-14",
+      "cloudCover": 4.2,
+      "resolutionM": 10,
+      "bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08",
+        "B11",
+        "B12",
+        "NDVI",
+        "NDWI"
+      ],
+      "epsg": "EPSG:32643",
+      "sizeMb": 1148,
+      "center": [
+        9.878,
+        76.372
+      ],
+      "zoom": 12,
+      "areaKm2": 486,
+      "thumbnailGradient": [
+        "#00c896",
+        "#0f766e"
+      ],
+      "description": "Ramsar-listed backwater system where mangrove fringes, seagrass beds and reclaimed paddy polders meet the Arabian Sea.",
+      "tags": [
+        "Ramsar Site",
+        "Mangrove",
+        "Estuarine",
+        "High Priority"
+      ],
+      "bounds": [
+        [
+          9.778,
+          76.272
+        ],
+        [
+          9.978,
+          76.472
+        ]
+      ],
+      "protectedAreas": [
+        "Vembanad Ramsar Site",
+        "Mangalavanam Bird Sanctuary",
+        "Kumarakom Bird Sanctuary"
+      ]
+    },
+    {
+      "id": "sundarbans",
+      "name": "Sundarbans — Western Delta Block",
+      "shortName": "Sundarbans",
+      "region": "Sundarban Biosphere Reserve",
+      "state": "West Bengal",
+      "sensor": "Sentinel-2 MSI L2A",
+      "productId": "S2A_MSIL2A_20250822T043701_N0511_R033_T45QXF",
+      "acquisitionDate": "2025-08-22",
+      "cloudCover": 11.7,
+      "resolutionM": 10,
+      "bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08",
+        "B11",
+        "B12",
+        "NDVI",
+        "MNDWI"
+      ],
+      "epsg": "EPSG:32645",
+      "sizeMb": 1622,
+      "center": [
+        21.94,
+        88.72
+      ],
+      "zoom": 11,
+      "areaKm2": 1284,
+      "thumbnailGradient": [
+        "#0f766e",
+        "#134e4a"
+      ],
+      "description": "The world's largest contiguous mangrove forest — a tidal delta of braided creeks, tiger habitat and cyclone-exposed island blocks.",
+      "tags": [
+        "UNESCO",
+        "Tiger Reserve",
+        "Mangrove",
+        "Cyclone Exposed"
+      ],
+      "bounds": [
+        [
+          21.77,
+          88.55
+        ],
+        [
+          22.11,
+          88.89
+        ]
+      ],
+      "protectedAreas": [
+        "Sundarban National Park",
+        "Sajnekhali Wildlife Sanctuary",
+        "Sundarban Biosphere Reserve"
+      ]
+    },
+    {
+      "id": "gulf-of-mannar",
+      "name": "Gulf of Mannar — Island Reef Chain",
+      "shortName": "Gulf of Mannar",
+      "region": "Gulf of Mannar Marine National Park",
+      "state": "Tamil Nadu",
+      "sensor": "Landsat-9 OLI-2",
+      "productId": "LC09_L2SP_143054_20250731_02_T1",
+      "acquisitionDate": "2025-07-31",
+      "cloudCover": 2.1,
+      "resolutionM": 30,
+      "bands": [
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B7",
+        "NDVI"
+      ],
+      "epsg": "EPSG:32644",
+      "sizeMb": 742,
+      "center": [
+        9.128,
+        79.208
+      ],
+      "zoom": 11,
+      "areaKm2": 826,
+      "thumbnailGradient": [
+        "#38bdf8",
+        "#0369a1"
+      ],
+      "description": "A 21-island chain of fringing coral reefs and seagrass meadows supporting dugong, sea turtle and reef fish populations.",
+      "tags": [
+        "Marine National Park",
+        "Coral",
+        "Seagrass",
+        "Dugong Habitat"
+      ],
+      "bounds": [
+        [
+          8.998,
+          79.078
+        ],
+        [
+          9.258,
+          79.338
+        ]
+      ],
+      "protectedAreas": [
+        "Gulf of Mannar Marine National Park",
+        "Gulf of Mannar Biosphere Reserve"
+      ]
+    },
+    {
+      "id": "odisha-coast",
+      "name": "Odisha Coast — Bhitarkanika Delta",
+      "shortName": "Odisha Coast",
+      "region": "Bhitarkanika National Park, Kendrapara",
+      "state": "Odisha",
+      "sensor": "Sentinel-2 MSI L2A",
+      "productId": "S2A_MSIL2A_20250905T044701_N0511_R076_T45QWE",
+      "acquisitionDate": "2025-09-05",
+      "cloudCover": 7.6,
+      "resolutionM": 10,
+      "bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08",
+        "B11",
+        "NDVI",
+        "NDWI"
+      ],
+      "epsg": "EPSG:32645",
+      "sizeMb": 968,
+      "center": [
+        20.712,
+        86.898
+      ],
+      "zoom": 11,
+      "areaKm2": 672,
+      "thumbnailGradient": [
+        "#f59e0b",
+        "#b45309"
+      ],
+      "description": "Brahmani–Baitarani deltaic mangroves fronting the Gahirmatha turtle rookery, India's densest saltwater crocodile habitat.",
+      "tags": [
+        "Ramsar Site",
+        "Turtle Rookery",
+        "Mangrove",
+        "Crocodile Habitat"
+      ],
+      "bounds": [
+        [
+          20.592,
+          86.778
+        ],
+        [
+          20.832,
+          87.018
+        ]
+      ],
+      "protectedAreas": [
+        "Bhitarkanika National Park",
+        "Gahirmatha Marine Sanctuary",
+        "Bhitarkanika Ramsar Site"
+      ]
+    }
+  ]
+}

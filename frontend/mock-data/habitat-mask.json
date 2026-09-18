@@ -1,0 +1,4842 @@
+{
+  "kerala-coast": {
+    "sceneId": "kerala-coast",
+    "generatedAt": "2026-08-08T09:14:00Z",
+    "modelVersion": "EcoSeg-v3.2 (Swin-UNet, 12-band)",
+    "classes": [
+      {
+        "habitatClass": "estuary",
+        "label": "Estuarine Channel",
+        "color": "#818cf8",
+        "areaHa": 2866.4,
+        "coveragePct": 41.2,
+        "meanConfidence": 0.882
+      },
+      {
+        "habitatClass": "seagrass",
+        "label": "Seagrass Meadow",
+        "color": "#38bdf8",
+        "areaHa": 1269.1,
+        "coveragePct": 18.2,
+        "meanConfidence": 0.896
+      },
+      {
+        "habitatClass": "saltmarsh",
+        "label": "Salt Marsh",
+        "color": "#a3e635",
+        "areaHa": 1150.5,
+        "coveragePct": 16.5,
+        "meanConfidence": 0.92
+      },
+      {
+        "habitatClass": "urban",
+        "label": "Built-up / Aquaculture",
+        "color": "#94a3b8",
+        "areaHa": 725.3,
+        "coveragePct": 10.4,
+        "meanConfidence": 0.9
+      },
+      {
+        "habitatClass": "mangrove",
+        "label": "Mangrove Forest",
+        "color": "#00c896",
+        "areaHa": 590.2,
+        "coveragePct": 8.5,
+        "meanConfidence": 0.865
+      },
+      {
+        "habitatClass": "mudflat",
+        "label": "Intertidal Mudflat",
+        "color": "#f59e0b",
+        "areaHa": 358.2,
+        "coveragePct": 5.1,
+        "meanConfidence": 0.868
+      }
+    ],
+    "patches": [
+      {
+        "id": "kerala-coast-p01",
+        "name": "Kumarakom North Fringe",
+        "habitatClass": "mangrove",
+        "areaHa": 531.7,
+        "center": [
+          9.89148,
+          76.44935
+        ],
+        "polygon": [
+          [
+            9.89148,
+            76.46272
+          ],
+          [
+            9.89675,
+            76.45843
+          ],
+          [
+            9.90508,
+            76.45488
+          ],
+          [
+            9.9031,
+            76.44463
+          ],
+          [
+            9.90057,
+            76.43371
+          ],
+          [
+            9.89148,
+            76.43334
+          ],
+          [
+            9.88682,
+            76.44134
+          ],
+          [
+            9.88297,
+            76.4459
+          ],
+          [
+            9.88289,
+            76.45284
+          ],
+          [
+            9.88489,
+            76.46068
+          ]
+        ],
+        "confidence": 0.908,
+        "quality": 0.713,
+        "connectivityContribution": 0.268,
+        "bridgeScore": 0.516,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 115911,
+        "speciesSupported": 70,
+        "degradationRisk": 0.625,
+        "notes": "A high-value mangrove forest linking 3 neighbouring patches. It contributes about 27% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "kerala-coast-p02",
+        "name": "Pathiramanal Island",
+        "habitatClass": "mudflat",
+        "areaHa": 211.6,
+        "center": [
+          9.88856,
+          76.41058
+        ],
+        "polygon": [
+          [
+            9.88856,
+            76.41888
+          ],
+          [
+            9.89208,
+            76.41665
+          ],
+          [
+            9.89287,
+            76.41233
+          ],
+          [
+            9.89357,
+            76.40855
+          ],
+          [
+            9.89202,
+            76.40463
+          ],
+          [
+            9.88856,
+            76.40271
+          ],
+          [
+            9.88405,
+            76.40283
+          ],
+          [
+            9.88274,
+            76.40822
+          ],
+          [
+            9.88126,
+            76.41355
+          ],
+          [
+            9.88447,
+            76.41762
+          ]
+        ],
+        "confidence": 0.846,
+        "quality": 0.824,
+        "connectivityContribution": 0.329,
+        "bridgeScore": 0.763,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Mangalavanam Bird Sanctuary",
+        "carbonStockTonnes": 7194,
+        "speciesSupported": 81,
+        "degradationRisk": 0.099,
+        "notes": "A high-value intertidal mudflat linking 4 neighbouring patches. It contributes about 33% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "kerala-coast-p03",
+        "name": "Vembanad Core Belt",
+        "habitatClass": "estuary",
+        "areaHa": 159.6,
+        "center": [
+          9.88967,
+          76.38701
+        ],
+        "polygon": [
+          [
+            9.88967,
+            76.39668
+          ],
+          [
+            9.89401,
+            76.39348
+          ],
+          [
+            9.89625,
+            76.38846
+          ],
+          [
+            9.89578,
+            76.38259
+          ],
+          [
+            9.89203,
+            76.37888
+          ],
+          [
+            9.88819,
+            76.38194
+          ],
+          [
+            9.8854,
+            76.38392
+          ],
+          [
+            9.88437,
+            76.38817
+          ],
+          [
+            9.88437,
+            76.3949
+          ]
+        ],
+        "confidence": 0.857,
+        "quality": 0.474,
+        "connectivityContribution": 0.264,
+        "bridgeScore": 0.312,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 5426,
+        "speciesSupported": 51,
+        "degradationRisk": 0.262,
+        "notes": "A moderately connected estuarine channel with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "kerala-coast-p04",
+        "name": "Aroor Backwater Fringe",
+        "habitatClass": "saltmarsh",
+        "areaHa": 172.3,
+        "center": [
+          9.93989,
+          76.41126
+        ],
+        "polygon": [
+          [
+            9.93989,
+            76.42271
+          ],
+          [
+            9.94363,
+            76.41936
+          ],
+          [
+            9.94609,
+            76.41574
+          ],
+          [
+            9.94655,
+            76.41126
+          ],
+          [
+            9.94503,
+            76.40755
+          ],
+          [
+            9.942,
+            76.40669
+          ],
+          [
+            9.93989,
+            76.40365
+          ],
+          [
+            9.93617,
+            76.40322
+          ],
+          [
+            9.93226,
+            76.40576
+          ],
+          [
+            9.93399,
+            76.41126
+          ],
+          [
+            9.93354,
+            76.41584
+          ],
+          [
+            9.93733,
+            76.41679
+          ]
+        ],
+        "confidence": 0.926,
+        "quality": 0.895,
+        "connectivityContribution": 0.211,
+        "bridgeScore": 0.298,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Vembanad Ramsar Site",
+        "carbonStockTonnes": 24467,
+        "speciesSupported": 82,
+        "degradationRisk": 0.402,
+        "notes": "A moderately connected salt marsh with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "kerala-coast-p05",
+        "name": "Kadamakkudy Cluster",
+        "habitatClass": "estuary",
+        "areaHa": 657.2,
+        "center": [
+          9.89475,
+          76.3683
+        ],
+        "polygon": [
+          [
+            9.89475,
+            76.38724
+          ],
+          [
+            9.90021,
+            76.3777
+          ],
+          [
+            9.90965,
+            76.37435
+          ],
+          [
+            9.90311,
+            76.3649
+          ],
+          [
+            9.90031,
+            76.35872
+          ],
+          [
+            9.89475,
+            76.35268
+          ],
+          [
+            9.88576,
+            76.35284
+          ],
+          [
+            9.88105,
+            76.36274
+          ],
+          [
+            9.88124,
+            76.37378
+          ],
+          [
+            9.88893,
+            76.37829
+          ]
+        ],
+        "confidence": 0.933,
+        "quality": 0.711,
+        "connectivityContribution": 0.308,
+        "bridgeScore": 0.35,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Mangalavanam Bird Sanctuary",
+        "carbonStockTonnes": 22345,
+        "speciesSupported": 77,
+        "degradationRisk": 0.659,
+        "notes": "A moderately connected estuarine channel with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "kerala-coast-p06",
+        "name": "Panangad Channel Bank",
+        "habitatClass": "mudflat",
+        "areaHa": 146.6,
+        "center": [
+          9.92693,
+          76.37793
+        ],
+        "polygon": [
+          [
+            9.92693,
+            76.38508
+          ],
+          [
+            9.92983,
+            76.3842
+          ],
+          [
+            9.93417,
+            76.38315
+          ],
+          [
+            9.93482,
+            76.37793
+          ],
+          [
+            9.93191,
+            76.37434
+          ],
+          [
+            9.92911,
+            76.37322
+          ],
+          [
+            9.92693,
+            76.36989
+          ],
+          [
+            9.92469,
+            76.37309
+          ],
+          [
+            9.92229,
+            76.37458
+          ],
+          [
+            9.91958,
+            76.37793
+          ],
+          [
+            9.92075,
+            76.38239
+          ],
+          [
+            9.92376,
+            76.38481
+          ]
+        ],
+        "confidence": 0.89,
+        "quality": 0.523,
+        "connectivityContribution": 0.31,
+        "bridgeScore": 0.662,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 4984,
+        "speciesSupported": 52,
+        "degradationRisk": 0.82,
+        "notes": "A high-value intertidal mudflat linking 4 neighbouring patches. It contributes about 31% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "kerala-coast-p07",
+        "name": "Puthenvelikkara Mangroves",
+        "habitatClass": "seagrass",
+        "areaHa": 314.4,
+        "center": [
+          9.94958,
+          76.35804
+        ],
+        "polygon": [
+          [
+            9.94958,
+            76.37165
+          ],
+          [
+            9.95384,
+            76.36538
+          ],
+          [
+            9.95993,
+            76.36225
+          ],
+          [
+            9.96001,
+            76.35381
+          ],
+          [
+            9.95364,
+            76.35106
+          ],
+          [
+            9.94958,
+            76.3503
+          ],
+          [
+            9.94344,
+            76.34748
+          ],
+          [
+            9.93946,
+            76.35393
+          ],
+          [
+            9.9401,
+            76.36189
+          ],
+          [
+            9.94401,
+            76.36763
+          ]
+        ],
+        "confidence": 0.829,
+        "quality": 0.883,
+        "connectivityContribution": 0.21,
+        "bridgeScore": 0.209,
+        "sensitivity": "low",
+        "protected": true,
+        "protectedAreaName": "Vembanad Ramsar Site",
+        "carbonStockTonnes": 30182,
+        "speciesSupported": 86,
+        "degradationRisk": 0.258,
+        "notes": "A peripheral seagrass meadow with 3 link(s). It contributes marginally to landscape connectivity but supports local species richness."
+      },
+      {
+        "id": "kerala-coast-p08",
+        "name": "Cherai Sand Spit",
+        "habitatClass": "mangrove",
+        "areaHa": 58.5,
+        "center": [
+          9.9102,
+          76.27335
+        ],
+        "polygon": [
+          [
+            9.9102,
+            76.28009
+          ],
+          [
+            9.91213,
+            76.27667
+          ],
+          [
+            9.91657,
+            76.27593
+          ],
+          [
+            9.91398,
+            76.27181
+          ],
+          [
+            9.91312,
+            76.26831
+          ],
+          [
+            9.9102,
+            76.26756
+          ],
+          [
+            9.90674,
+            76.26739
+          ],
+          [
+            9.90694,
+            76.27202
+          ],
+          [
+            9.90611,
+            76.27501
+          ],
+          [
+            9.90787,
+            76.27736
+          ]
+        ],
+        "confidence": 0.821,
+        "quality": 0.675,
+        "connectivityContribution": 0.244,
+        "bridgeScore": 0.611,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Mangalavanam Bird Sanctuary",
+        "carbonStockTonnes": 12753,
+        "speciesSupported": 68,
+        "degradationRisk": 0.449,
+        "notes": "A high-value mangrove forest linking 3 neighbouring patches. It contributes about 24% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "kerala-coast-p09",
+        "name": "Munambam Estuary Mouth",
+        "habitatClass": "estuary",
+        "areaHa": 492.2,
+        "center": [
+          9.88966,
+          76.33609
+        ],
+        "polygon": [
+          [
+            9.88966,
+            76.35036
+          ],
+          [
+            9.89722,
+            76.35079
+          ],
+          [
+            9.89871,
+            76.34125
+          ],
+          [
+            9.89948,
+            76.33433
+          ],
+          [
+            9.89992,
+            76.32498
+          ],
+          [
+            9.89394,
+            76.31787
+          ],
+          [
+            9.88617,
+            76.32122
+          ],
+          [
+            9.87962,
+            76.32521
+          ],
+          [
+            9.87595,
+            76.33363
+          ],
+          [
+            9.88162,
+            76.34068
+          ],
+          [
+            9.88443,
+            76.34627
+          ]
+        ],
+        "confidence": 0.85,
+        "quality": 0.894,
+        "connectivityContribution": 0.301,
+        "bridgeScore": 0.392,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 16735,
+        "speciesSupported": 93,
+        "degradationRisk": 0.667,
+        "notes": "A high-value estuarine channel linking 4 neighbouring patches. It contributes about 30% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "kerala-coast-p10",
+        "name": "Vypin Fringe Forest",
+        "habitatClass": "seagrass",
+        "areaHa": 599.5,
+        "center": [
+          9.86156,
+          76.2909
+        ],
+        "polygon": [
+          [
+            9.86156,
+            76.30955
+          ],
+          [
+            9.87055,
+            76.30429
+          ],
+          [
+            9.87298,
+            76.29342
+          ],
+          [
+            9.87236,
+            76.28311
+          ],
+          [
+            9.86692,
+            76.2725
+          ],
+          [
+            9.85875,
+            76.28126
+          ],
+          [
+            9.85388,
+            76.28536
+          ],
+          [
+            9.84551,
+            76.29444
+          ],
+          [
+            9.85043,
+            76.30748
+          ]
+        ],
+        "confidence": 0.97,
+        "quality": 0.771,
+        "connectivityContribution": 0.255,
+        "bridgeScore": 0.377,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Vembanad Ramsar Site",
+        "carbonStockTonnes": 57552,
+        "speciesSupported": 80,
+        "degradationRisk": 0.377,
+        "notes": "A moderately connected seagrass meadow with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "kerala-coast-p11",
+        "name": "Kannamali Seagrass Bed",
+        "habitatClass": "urban",
+        "areaHa": 135,
+        "center": [
+          9.84646,
+          76.26332
+        ],
+        "polygon": [
+          [
+            9.84646,
+            76.27233
+          ],
+          [
+            9.84903,
+            76.2689
+          ],
+          [
+            9.85127,
+            76.2668
+          ],
+          [
+            9.85074,
+            76.26332
+          ],
+          [
+            9.85022,
+            76.26061
+          ],
+          [
+            9.84842,
+            76.25907
+          ],
+          [
+            9.84646,
+            76.25518
+          ],
+          [
+            9.84307,
+            76.25599
+          ],
+          [
+            9.84136,
+            76.25964
+          ],
+          [
+            9.84122,
+            76.26332
+          ],
+          [
+            9.84197,
+            76.26656
+          ],
+          [
+            9.8439,
+            76.26886
+          ]
+        ],
+        "confidence": 0.908,
+        "quality": 0.672,
+        "connectivityContribution": 0.223,
+        "bridgeScore": 0.406,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 4590,
+        "speciesSupported": 73,
+        "degradationRisk": 0.891,
+        "notes": "A high-value built-up / aquaculture linking 3 neighbouring patches. It contributes about 22% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "kerala-coast-p12",
+        "name": "Chellanam Shoreline",
+        "habitatClass": "estuary",
+        "areaHa": 610.1,
+        "center": [
+          9.82943,
+          76.32338
+        ],
+        "polygon": [
+          [
+            9.82943,
+            76.3393
+          ],
+          [
+            9.83983,
+            76.33886
+          ],
+          [
+            9.84148,
+            76.32603
+          ],
+          [
+            9.83827,
+            76.317
+          ],
+          [
+            9.83408,
+            76.30741
+          ],
+          [
+            9.82512,
+            76.30856
+          ],
+          [
+            9.81566,
+            76.31344
+          ],
+          [
+            9.81961,
+            76.32554
+          ],
+          [
+            9.82053,
+            76.33664
+          ]
+        ],
+        "confidence": 0.866,
+        "quality": 0.912,
+        "connectivityContribution": 0.385,
+        "bridgeScore": 0.947,
+        "sensitivity": "critical",
+        "protected": true,
+        "protectedAreaName": "Kumarakom Bird Sanctuary",
+        "carbonStockTonnes": 20743,
+        "speciesSupported": 86,
+        "degradationRisk": 0.445,
+        "notes": "This estuarine channel acts as the primary bridge between 4 habitat clusters and carries roughly 39% of landscape connectivity. Loss here would sever the northern and southern sub-networks."
+      },
+      {
+        "id": "kerala-coast-p13",
+        "name": "Thanneermukkom Bund North",
+        "habitatClass": "saltmarsh",
+        "areaHa": 157.6,
+        "center": [
+          9.84943,
+          76.36127
+        ],
+        "polygon": [
+          [
+            9.84943,
+            76.36774
+          ],
+          [
+            9.85416,
+            76.36941
+          ],
+          [
+            9.85344,
+            76.3629
+          ],
+          [
+            9.85533,
+            76.35887
+          ],
+          [
+            9.85193,
+            76.35696
+          ],
+          [
+            9.84943,
+            76.35347
+          ],
+          [
+            9.84565,
+            76.35478
+          ],
+          [
+            9.8439,
+            76.35902
+          ],
+          [
+            9.84154,
+            76.36447
+          ],
+          [
+            9.84441,
+            76.36991
+          ]
+        ],
+        "confidence": 0.952,
+        "quality": 0.765,
+        "connectivityContribution": 0.273,
+        "bridgeScore": 0.381,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 22379,
+        "speciesSupported": 82,
+        "degradationRisk": 0.186,
+        "notes": "A moderately connected salt marsh with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "kerala-coast-p14",
+        "name": "Muhamma Marsh",
+        "habitatClass": "saltmarsh",
+        "areaHa": 820.6,
+        "center": [
+          9.81595,
+          76.34816
+        ],
+        "polygon": [
+          [
+            9.81595,
+            76.36485
+          ],
+          [
+            9.82228,
+            76.35759
+          ],
+          [
+            9.83013,
+            76.35128
+          ],
+          [
+            9.8345,
+            76.33477
+          ],
+          [
+            9.82085,
+            76.33134
+          ],
+          [
+            9.81215,
+            76.33511
+          ],
+          [
+            9.79769,
+            76.33498
+          ],
+          [
+            9.79797,
+            76.35212
+          ],
+          [
+            9.80459,
+            76.36509
+          ]
+        ],
+        "confidence": 0.883,
+        "quality": 0.635,
+        "connectivityContribution": 0.328,
+        "bridgeScore": 0.792,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 116525,
+        "speciesSupported": 66,
+        "degradationRisk": 0.321,
+        "notes": "A high-value salt marsh linking 3 neighbouring patches. It contributes about 33% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "kerala-coast-p15",
+        "name": "Perumbalam Island",
+        "habitatClass": "estuary",
+        "areaHa": 684.3,
+        "center": [
+          9.84939,
+          76.37268
+        ],
+        "polygon": [
+          [
+            9.84939,
+            76.38959
+          ],
+          [
+            9.85657,
+            76.38502
+          ],
+          [
+            9.85912,
+            76.37663
+          ],
+          [
+            9.86289,
+            76.36719
+          ],
+          [
+            9.85965,
+            76.35502
+          ],
+          [
+            9.84939,
+            76.36028
+          ],
+          [
+            9.84228,
+            76.36044
+          ],
+          [
+            9.83539,
+            76.36699
+          ],
+          [
+            9.84108,
+            76.37605
+          ],
+          [
+            9.84224,
+            76.38499
+          ]
+        ],
+        "confidence": 0.912,
+        "quality": 0.855,
+        "connectivityContribution": 0.241,
+        "bridgeScore": 0.226,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Kumarakom Bird Sanctuary",
+        "carbonStockTonnes": 23266,
+        "speciesSupported": 76,
+        "degradationRisk": 0.692,
+        "notes": "A moderately connected estuarine channel with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "kerala-coast-p16",
+        "name": "Kothad Mangrove Patch",
+        "habitatClass": "estuary",
+        "areaHa": 263,
+        "center": [
+          9.84723,
+          76.40978
+        ],
+        "polygon": [
+          [
+            9.84723,
+            76.41854
+          ],
+          [
+            9.85189,
+            76.41885
+          ],
+          [
+            9.85419,
+            76.41375
+          ],
+          [
+            9.85733,
+            76.40797
+          ],
+          [
+            9.85098,
+            76.40572
+          ],
+          [
+            9.84957,
+            76.39984
+          ],
+          [
+            9.8447,
+            76.39901
+          ],
+          [
+            9.84311,
+            76.40532
+          ],
+          [
+            9.83686,
+            76.40792
+          ],
+          [
+            9.83748,
+            76.41535
+          ],
+          [
+            9.84338,
+            76.41727
+          ]
+        ],
+        "confidence": 0.872,
+        "quality": 0.507,
+        "connectivityContribution": 0.27,
+        "bridgeScore": 0.297,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 8942,
+        "speciesSupported": 51,
+        "degradationRisk": 0.659,
+        "notes": "A moderately connected estuarine channel with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "kerala-coast-p17",
+        "name": "Valanthakad Wetland",
+        "habitatClass": "seagrass",
+        "areaHa": 355.2,
+        "center": [
+          9.83617,
+          76.45309
+        ],
+        "polygon": [
+          [
+            9.83617,
+            76.46124
+          ],
+          [
+            9.84132,
+            76.46423
+          ],
+          [
+            9.84697,
+            76.46089
+          ],
+          [
+            9.84243,
+            76.45309
+          ],
+          [
+            9.84479,
+            76.44688
+          ],
+          [
+            9.84039,
+            76.44396
+          ],
+          [
+            9.83617,
+            76.43942
+          ],
+          [
+            9.8305,
+            76.44081
+          ],
+          [
+            9.82941,
+            76.44821
+          ],
+          [
+            9.82857,
+            76.45309
+          ],
+          [
+            9.82656,
+            76.46003
+          ],
+          [
+            9.83054,
+            76.46529
+          ]
+        ],
+        "confidence": 0.888,
+        "quality": 0.589,
+        "connectivityContribution": 0.187,
+        "bridgeScore": 0.016,
+        "sensitivity": "low",
+        "protected": true,
+        "protectedAreaName": "Mangalavanam Bird Sanctuary",
+        "carbonStockTonnes": 34099,
+        "speciesSupported": 63,
+        "degradationRisk": 0.657,
+        "notes": "A peripheral seagrass meadow with 3 link(s). It contributes marginally to landscape connectivity but supports local species richness."
+      },
+      {
+        "id": "kerala-coast-p18",
+        "name": "Nettoor Channel Edge",
+        "habitatClass": "urban",
+        "areaHa": 590.3,
+        "center": [
+          9.84851,
+          76.48339
+        ],
+        "polygon": [
+          [
+            9.84851,
+            76.50181
+          ],
+          [
+            9.85295,
+            76.49301
+          ],
+          [
+            9.86265,
+            76.4936
+          ],
+          [
+            9.86245,
+            76.48339
+          ],
+          [
+            9.8563,
+            76.47777
+          ],
+          [
+            9.85331,
+            76.47301
+          ],
+          [
+            9.84851,
+            76.46541
+          ],
+          [
+            9.84458,
+            76.47488
+          ],
+          [
+            9.83994,
+            76.4772
+          ],
+          [
+            9.84045,
+            76.48339
+          ],
+          [
+            9.83688,
+            76.49179
+          ],
+          [
+            9.84281,
+            76.49572
+          ]
+        ],
+        "confidence": 0.892,
+        "quality": 0.407,
+        "connectivityContribution": 0.326,
+        "bridgeScore": 0.909,
+        "sensitivity": "critical",
+        "protected": true,
+        "protectedAreaName": "Kumarakom Bird Sanctuary",
+        "carbonStockTonnes": 20070,
+        "speciesSupported": 45,
+        "degradationRisk": 0.797,
+        "notes": "This built-up / aquaculture acts as the primary bridge between 3 habitat clusters and carries roughly 33% of landscape connectivity. Loss here would sever the northern and southern sub-networks."
+      }
+    ],
+    "totals": {
+      "habitatAreaHa": 6959.7,
+      "patchCount": 18,
+      "meanPatchSizeHa": 386.7,
+      "largestPatchIndex": 11.8,
+      "edgeDensity": 4.45,
+      "meanConfidence": 0.889
+    }
+  },
+  "sundarbans": {
+    "sceneId": "sundarbans",
+    "generatedAt": "2026-08-08T09:14:00Z",
+    "modelVersion": "EcoSeg-v3.2 (Swin-UNet, 12-band)",
+    "classes": [
+      {
+        "habitatClass": "estuary",
+        "label": "Estuarine Channel",
+        "color": "#818cf8",
+        "areaHa": 3899.4,
+        "coveragePct": 41.5,
+        "meanConfidence": 0.891
+      },
+      {
+        "habitatClass": "saltmarsh",
+        "label": "Salt Marsh",
+        "color": "#a3e635",
+        "areaHa": 2350.9,
+        "coveragePct": 25,
+        "meanConfidence": 0.895
+      },
+      {
+        "habitatClass": "water",
+        "label": "Open Water",
+        "color": "#0ea5e9",
+        "areaHa": 1162.1,
+        "coveragePct": 12.4,
+        "meanConfidence": 0.887
+      },
+      {
+        "habitatClass": "mudflat",
+        "label": "Intertidal Mudflat",
+        "color": "#f59e0b",
+        "areaHa": 1018.4,
+        "coveragePct": 10.8,
+        "meanConfidence": 0.907
+      },
+      {
+        "habitatClass": "urban",
+        "label": "Built-up / Aquaculture",
+        "color": "#94a3b8",
+        "areaHa": 752.5,
+        "coveragePct": 8,
+        "meanConfidence": 0.894
+      },
+      {
+        "habitatClass": "mangrove",
+        "label": "Mangrove Forest",
+        "color": "#00c896",
+        "areaHa": 217.5,
+        "coveragePct": 2.3,
+        "meanConfidence": 0.879
+      }
+    ],
+    "patches": [
+      {
+        "id": "sundarbans-p01",
+        "name": "Sajnekhali Core",
+        "habitatClass": "mudflat",
+        "areaHa": 283.5,
+        "center": [
+          21.97367,
+          88.82629
+        ],
+        "polygon": [
+          [
+            21.97367,
+            88.84053
+          ],
+          [
+            21.97757,
+            88.83388
+          ],
+          [
+            21.98263,
+            88.83141
+          ],
+          [
+            21.9841,
+            88.82442
+          ],
+          [
+            21.97847,
+            88.8211
+          ],
+          [
+            21.97625,
+            88.81531
+          ],
+          [
+            21.97205,
+            88.81939
+          ],
+          [
+            21.96893,
+            88.82116
+          ],
+          [
+            21.96724,
+            88.82514
+          ],
+          [
+            21.96834,
+            88.82934
+          ],
+          [
+            21.9702,
+            88.83304
+          ]
+        ],
+        "confidence": 0.872,
+        "quality": 0.629,
+        "connectivityContribution": 0.187,
+        "bridgeScore": 0.558,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Sundarban National Park",
+        "carbonStockTonnes": 9639,
+        "speciesSupported": 61,
+        "degradationRisk": 0.684,
+        "notes": "A high-value intertidal mudflat linking 3 neighbouring patches. It contributes about 19% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p02",
+        "name": "Netidhopani Block",
+        "habitatClass": "estuary",
+        "areaHa": 377.9,
+        "center": [
+          21.96729,
+          88.85334
+        ],
+        "polygon": [
+          [
+            21.96729,
+            88.86847
+          ],
+          [
+            21.97084,
+            88.85945
+          ],
+          [
+            21.97982,
+            88.85843
+          ],
+          [
+            21.97358,
+            88.85079
+          ],
+          [
+            21.97285,
+            88.84378
+          ],
+          [
+            21.96729,
+            88.8405
+          ],
+          [
+            21.9605,
+            88.84165
+          ],
+          [
+            21.9584,
+            88.84973
+          ],
+          [
+            21.95671,
+            88.85764
+          ],
+          [
+            21.9612,
+            88.86382
+          ]
+        ],
+        "confidence": 0.964,
+        "quality": 0.471,
+        "connectivityContribution": 0.13,
+        "bridgeScore": 0.076,
+        "sensitivity": "low",
+        "protected": true,
+        "protectedAreaName": "Sajnekhali Wildlife Sanctuary",
+        "carbonStockTonnes": 12849,
+        "speciesSupported": 64,
+        "degradationRisk": 0.624,
+        "notes": "A peripheral estuarine channel with 3 link(s). It contributes marginally to landscape connectivity but supports local species richness."
+      },
+      {
+        "id": "sundarbans-p03",
+        "name": "Pirkhali Compartment",
+        "habitatClass": "water",
+        "areaHa": 216.2,
+        "center": [
+          21.97365,
+          88.75769
+        ],
+        "polygon": [
+          [
+            21.97365,
+            88.76865
+          ],
+          [
+            21.97791,
+            88.76691
+          ],
+          [
+            21.9781,
+            88.7609
+          ],
+          [
+            21.98254,
+            88.75769
+          ],
+          [
+            21.98167,
+            88.75191
+          ],
+          [
+            21.9771,
+            88.75023
+          ],
+          [
+            21.97365,
+            88.74597
+          ],
+          [
+            21.96862,
+            88.74679
+          ],
+          [
+            21.96889,
+            88.75426
+          ],
+          [
+            21.96469,
+            88.75769
+          ],
+          [
+            21.96513,
+            88.76385
+          ],
+          [
+            21.96946,
+            88.76677
+          ]
+        ],
+        "confidence": 0.933,
+        "quality": 0.932,
+        "connectivityContribution": 0.278,
+        "bridgeScore": 0.606,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Sundarban Biosphere Reserve",
+        "carbonStockTonnes": 7351,
+        "speciesSupported": 95,
+        "degradationRisk": 0.24,
+        "notes": "A high-value open water linking 6 neighbouring patches. It contributes about 28% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p04",
+        "name": "Panchamukhani Creek",
+        "habitatClass": "estuary",
+        "areaHa": 740.1,
+        "center": [
+          21.96964,
+          88.74256
+        ],
+        "polygon": [
+          [
+            21.96964,
+            88.76162
+          ],
+          [
+            21.97473,
+            88.75245
+          ],
+          [
+            21.98411,
+            88.75081
+          ],
+          [
+            21.98947,
+            88.739
+          ],
+          [
+            21.97868,
+            88.73277
+          ],
+          [
+            21.97388,
+            88.72455
+          ],
+          [
+            21.96435,
+            88.72001
+          ],
+          [
+            21.95755,
+            88.72946
+          ],
+          [
+            21.96069,
+            88.74095
+          ],
+          [
+            21.95507,
+            88.75088
+          ],
+          [
+            21.96292,
+            88.75565
+          ]
+        ],
+        "confidence": 0.886,
+        "quality": 0.496,
+        "connectivityContribution": 0.292,
+        "bridgeScore": 0.627,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 25163,
+        "speciesSupported": 62,
+        "degradationRisk": 0.421,
+        "notes": "A high-value estuarine channel linking 5 neighbouring patches. It contributes about 29% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p05",
+        "name": "Chamta Block",
+        "habitatClass": "saltmarsh",
+        "areaHa": 79,
+        "center": [
+          22.08732,
+          88.73327
+        ],
+        "polygon": [
+          [
+            22.08732,
+            88.73871
+          ],
+          [
+            22.08907,
+            88.73705
+          ],
+          [
+            22.09202,
+            88.73666
+          ],
+          [
+            22.09269,
+            88.73327
+          ],
+          [
+            22.09341,
+            88.72888
+          ],
+          [
+            22.09056,
+            88.72626
+          ],
+          [
+            22.08732,
+            88.72685
+          ],
+          [
+            22.08492,
+            88.72807
+          ],
+          [
+            22.08378,
+            88.73071
+          ],
+          [
+            22.08078,
+            88.73327
+          ],
+          [
+            22.0809,
+            88.73791
+          ],
+          [
+            22.08544,
+            88.73734
+          ]
+        ],
+        "confidence": 0.888,
+        "quality": 0.887,
+        "connectivityContribution": 0.193,
+        "bridgeScore": 0.724,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Sajnekhali Wildlife Sanctuary",
+        "carbonStockTonnes": 11218,
+        "speciesSupported": 85,
+        "degradationRisk": 0.769,
+        "notes": "A high-value salt marsh linking 3 neighbouring patches. It contributes about 19% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p06",
+        "name": "Jhingakhali Forest",
+        "habitatClass": "estuary",
+        "areaHa": 864.6,
+        "center": [
+          21.97868,
+          88.70476
+        ],
+        "polygon": [
+          [
+            21.97868,
+            88.7291
+          ],
+          [
+            21.98545,
+            88.71485
+          ],
+          [
+            21.99955,
+            88.70936
+          ],
+          [
+            21.99122,
+            88.69571
+          ],
+          [
+            21.9827,
+            88.69095
+          ],
+          [
+            21.97337,
+            88.68653
+          ],
+          [
+            21.96743,
+            88.69664
+          ],
+          [
+            21.96579,
+            88.7076
+          ],
+          [
+            21.97067,
+            88.71669
+          ]
+        ],
+        "confidence": 0.846,
+        "quality": 0.471,
+        "connectivityContribution": 0.284,
+        "bridgeScore": 0.053,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 29396,
+        "speciesSupported": 54,
+        "degradationRisk": 0.517,
+        "notes": "A moderately connected estuarine channel with 7 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p07",
+        "name": "Bagmara Island",
+        "habitatClass": "mudflat",
+        "areaHa": 460.6,
+        "center": [
+          21.98976,
+          88.71704
+        ],
+        "polygon": [
+          [
+            21.98976,
+            88.73081
+          ],
+          [
+            21.99387,
+            88.7241
+          ],
+          [
+            22.00354,
+            88.72263
+          ],
+          [
+            22.00161,
+            88.71222
+          ],
+          [
+            21.99419,
+            88.70941
+          ],
+          [
+            21.98976,
+            88.70165
+          ],
+          [
+            21.98252,
+            88.70458
+          ],
+          [
+            21.98181,
+            88.71381
+          ],
+          [
+            21.97824,
+            88.72172
+          ],
+          [
+            21.98461,
+            88.72589
+          ]
+        ],
+        "confidence": 0.932,
+        "quality": 0.714,
+        "connectivityContribution": 0.202,
+        "bridgeScore": 0.346,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Sundarban National Park",
+        "carbonStockTonnes": 15660,
+        "speciesSupported": 68,
+        "degradationRisk": 0.155,
+        "notes": "A moderately connected intertidal mudflat with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p08",
+        "name": "Harinbhanga Fringe",
+        "habitatClass": "mangrove",
+        "areaHa": 217.5,
+        "center": [
+          22.04246,
+          88.59772
+        ],
+        "polygon": [
+          [
+            22.04246,
+            88.60404
+          ],
+          [
+            22.04516,
+            88.60356
+          ],
+          [
+            22.04838,
+            88.60199
+          ],
+          [
+            22.0518,
+            88.59772
+          ],
+          [
+            22.05103,
+            88.59153
+          ],
+          [
+            22.04579,
+            88.59052
+          ],
+          [
+            22.04246,
+            88.58888
+          ],
+          [
+            22.03945,
+            88.59121
+          ],
+          [
+            22.03394,
+            88.59157
+          ],
+          [
+            22.03618,
+            88.59772
+          ],
+          [
+            22.03431,
+            88.6036
+          ],
+          [
+            22.03827,
+            88.60678
+          ]
+        ],
+        "confidence": 0.879,
+        "quality": 0.424,
+        "connectivityContribution": 0.153,
+        "bridgeScore": 0.34,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 47415,
+        "speciesSupported": 61,
+        "degradationRisk": 0.741,
+        "notes": "A moderately connected mangrove forest with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p09",
+        "name": "Arbesi Block",
+        "habitatClass": "saltmarsh",
+        "areaHa": 89.9,
+        "center": [
+          22.01647,
+          88.62913
+        ],
+        "polygon": [
+          [
+            22.01647,
+            88.63778
+          ],
+          [
+            22.02012,
+            88.63621
+          ],
+          [
+            22.02209,
+            88.63233
+          ],
+          [
+            22.02335,
+            88.62789
+          ],
+          [
+            22.02073,
+            88.62452
+          ],
+          [
+            22.01772,
+            88.62381
+          ],
+          [
+            22.01454,
+            88.62091
+          ],
+          [
+            22.01163,
+            88.62388
+          ],
+          [
+            22.01169,
+            88.62827
+          ],
+          [
+            22.01252,
+            88.63138
+          ],
+          [
+            22.01325,
+            88.63539
+          ]
+        ],
+        "confidence": 0.921,
+        "quality": 0.834,
+        "connectivityContribution": 0.162,
+        "bridgeScore": 0.482,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 12766,
+        "speciesSupported": 76,
+        "degradationRisk": 0.265,
+        "notes": "A moderately connected salt marsh with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p10",
+        "name": "Khatuajhuri Creek",
+        "habitatClass": "mudflat",
+        "areaHa": 274.3,
+        "center": [
+          21.99035,
+          88.56439
+        ],
+        "polygon": [
+          [
+            21.99035,
+            88.57671
+          ],
+          [
+            21.99534,
+            88.57183
+          ],
+          [
+            21.99734,
+            88.56594
+          ],
+          [
+            21.99575,
+            88.56049
+          ],
+          [
+            21.99346,
+            88.5537
+          ],
+          [
+            21.98664,
+            88.55167
+          ],
+          [
+            21.98123,
+            88.55781
+          ],
+          [
+            21.98336,
+            88.56593
+          ],
+          [
+            21.98559,
+            88.57147
+          ]
+        ],
+        "confidence": 0.916,
+        "quality": 0.655,
+        "connectivityContribution": 0.215,
+        "bridgeScore": 0.772,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Sundarban National Park",
+        "carbonStockTonnes": 9326,
+        "speciesSupported": 70,
+        "degradationRisk": 0.648,
+        "notes": "A high-value intertidal mudflat linking 3 neighbouring patches. It contributes about 22% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p11",
+        "name": "Gosaba Fringe",
+        "habitatClass": "saltmarsh",
+        "areaHa": 520.9,
+        "center": [
+          21.91524,
+          88.60202
+        ],
+        "polygon": [
+          [
+            21.91524,
+            88.62081
+          ],
+          [
+            21.91977,
+            88.61185
+          ],
+          [
+            21.92514,
+            88.60917
+          ],
+          [
+            21.92804,
+            88.60202
+          ],
+          [
+            21.92265,
+            88.59667
+          ],
+          [
+            21.9207,
+            88.59018
+          ],
+          [
+            21.91524,
+            88.58904
+          ],
+          [
+            21.90938,
+            88.58935
+          ],
+          [
+            21.90688,
+            88.59599
+          ],
+          [
+            21.90076,
+            88.60202
+          ],
+          [
+            21.90436,
+            88.60987
+          ],
+          [
+            21.91047,
+            88.61233
+          ]
+        ],
+        "confidence": 0.897,
+        "quality": 0.874,
+        "connectivityContribution": 0.259,
+        "bridgeScore": 0.732,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 73968,
+        "speciesSupported": 79,
+        "degradationRisk": 0.797,
+        "notes": "A high-value salt marsh linking 4 neighbouring patches. It contributes about 26% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p12",
+        "name": "Dulibhasani West",
+        "habitatClass": "saltmarsh",
+        "areaHa": 916.5,
+        "center": [
+          21.92246,
+          88.67588
+        ],
+        "polygon": [
+          [
+            21.92246,
+            88.69416
+          ],
+          [
+            21.93254,
+            88.6955
+          ],
+          [
+            21.93513,
+            88.68311
+          ],
+          [
+            21.93983,
+            88.67276
+          ],
+          [
+            21.93266,
+            88.66483
+          ],
+          [
+            21.92701,
+            88.65648
+          ],
+          [
+            21.9174,
+            88.65434
+          ],
+          [
+            21.91293,
+            88.66556
+          ],
+          [
+            21.90143,
+            88.6721
+          ],
+          [
+            21.90613,
+            88.6852
+          ],
+          [
+            21.9147,
+            88.69097
+          ]
+        ],
+        "confidence": 0.879,
+        "quality": 0.716,
+        "connectivityContribution": 0.243,
+        "bridgeScore": 0.387,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Sundarban Biosphere Reserve",
+        "carbonStockTonnes": 130143,
+        "speciesSupported": 74,
+        "degradationRisk": 0.363,
+        "notes": "A moderately connected salt marsh with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p13",
+        "name": "Chandkhali Mudflat",
+        "habitatClass": "estuary",
+        "areaHa": 493.9,
+        "center": [
+          21.89545,
+          88.59848
+        ],
+        "polygon": [
+          [
+            21.89545,
+            88.60939
+          ],
+          [
+            21.9018,
+            88.60794
+          ],
+          [
+            21.9079,
+            88.60123
+          ],
+          [
+            21.90417,
+            88.59218
+          ],
+          [
+            21.89825,
+            88.58887
+          ],
+          [
+            21.89144,
+            88.58472
+          ],
+          [
+            21.88307,
+            88.58955
+          ],
+          [
+            21.887,
+            88.60034
+          ],
+          [
+            21.89041,
+            88.60598
+          ]
+        ],
+        "confidence": 0.864,
+        "quality": 0.527,
+        "connectivityContribution": 0.223,
+        "bridgeScore": 0.701,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 16793,
+        "speciesSupported": 56,
+        "degradationRisk": 0.429,
+        "notes": "A high-value estuarine channel linking 3 neighbouring patches. It contributes about 22% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p14",
+        "name": "Matla Estuary Bank",
+        "habitatClass": "estuary",
+        "areaHa": 666.6,
+        "center": [
+          21.90388,
+          88.67638
+        ],
+        "polygon": [
+          [
+            21.90388,
+            88.69895
+          ],
+          [
+            21.91384,
+            88.69123
+          ],
+          [
+            21.91691,
+            88.67926
+          ],
+          [
+            21.91868,
+            88.6657
+          ],
+          [
+            21.9076,
+            88.6636
+          ],
+          [
+            21.90011,
+            88.66344
+          ],
+          [
+            21.88846,
+            88.66526
+          ],
+          [
+            21.89555,
+            88.67822
+          ],
+          [
+            21.8964,
+            88.68752
+          ]
+        ],
+        "confidence": 0.913,
+        "quality": 0.942,
+        "connectivityContribution": 0.28,
+        "bridgeScore": 0.581,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Sajnekhali Wildlife Sanctuary",
+        "carbonStockTonnes": 22664,
+        "speciesSupported": 97,
+        "degradationRisk": 0.146,
+        "notes": "A moderately connected estuarine channel with 5 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p15",
+        "name": "Bidyadhari Channel",
+        "habitatClass": "saltmarsh",
+        "areaHa": 599.6,
+        "center": [
+          21.8285,
+          88.67882
+        ],
+        "polygon": [
+          [
+            21.8285,
+            88.69717
+          ],
+          [
+            21.83811,
+            88.69537
+          ],
+          [
+            21.83625,
+            88.68197
+          ],
+          [
+            21.83784,
+            88.67503
+          ],
+          [
+            21.83846,
+            88.66167
+          ],
+          [
+            21.8285,
+            88.66454
+          ],
+          [
+            21.82324,
+            88.66978
+          ],
+          [
+            21.81845,
+            88.67474
+          ],
+          [
+            21.82037,
+            88.68212
+          ],
+          [
+            21.82032,
+            88.69288
+          ]
+        ],
+        "confidence": 0.977,
+        "quality": 0.458,
+        "connectivityContribution": 0.155,
+        "bridgeScore": 0.14,
+        "sensitivity": "low",
+        "protected": true,
+        "protectedAreaName": "Sundarban Biosphere Reserve",
+        "carbonStockTonnes": 85143,
+        "speciesSupported": 63,
+        "degradationRisk": 0.089,
+        "notes": "A peripheral salt marsh with 3 link(s). It contributes marginally to landscape connectivity but supports local species richness."
+      },
+      {
+        "id": "sundarbans-p16",
+        "name": "Jharkhali Buffer",
+        "habitatClass": "water",
+        "areaHa": 677.9,
+        "center": [
+          21.85703,
+          88.7274
+        ],
+        "polygon": [
+          [
+            21.85703,
+            88.74932
+          ],
+          [
+            21.86501,
+            88.74467
+          ],
+          [
+            21.86648,
+            88.73422
+          ],
+          [
+            21.87437,
+            88.7274
+          ],
+          [
+            21.86942,
+            88.71846
+          ],
+          [
+            21.86155,
+            88.71763
+          ],
+          [
+            21.85703,
+            88.71362
+          ],
+          [
+            21.84905,
+            88.71012
+          ],
+          [
+            21.8489,
+            88.72153
+          ],
+          [
+            21.84603,
+            88.7274
+          ],
+          [
+            21.84449,
+            88.73645
+          ],
+          [
+            21.85184,
+            88.73864
+          ]
+        ],
+        "confidence": 0.86,
+        "quality": 0.695,
+        "connectivityContribution": 0.204,
+        "bridgeScore": 0.233,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Sundarban National Park",
+        "carbonStockTonnes": 23049,
+        "speciesSupported": 77,
+        "degradationRisk": 0.52,
+        "notes": "A moderately connected open water with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p17",
+        "name": "Datta Island",
+        "habitatClass": "saltmarsh",
+        "areaHa": 145,
+        "center": [
+          21.79009,
+          88.76711
+        ],
+        "polygon": [
+          [
+            21.79009,
+            88.77684
+          ],
+          [
+            21.79448,
+            88.77566
+          ],
+          [
+            21.79675,
+            88.77091
+          ],
+          [
+            21.7982,
+            88.76565
+          ],
+          [
+            21.79605,
+            88.76065
+          ],
+          [
+            21.7914,
+            88.76153
+          ],
+          [
+            21.78876,
+            88.76145
+          ],
+          [
+            21.78561,
+            88.76226
+          ],
+          [
+            21.78293,
+            88.76582
+          ],
+          [
+            21.78453,
+            88.77029
+          ],
+          [
+            21.78735,
+            88.77243
+          ]
+        ],
+        "confidence": 0.81,
+        "quality": 0.808,
+        "connectivityContribution": 0.228,
+        "bridgeScore": 0.945,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 20590,
+        "speciesSupported": 83,
+        "degradationRisk": 0.107,
+        "notes": "A high-value salt marsh linking 3 neighbouring patches. It contributes about 23% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "sundarbans-p18",
+        "name": "Bhagabatpur Belt",
+        "habitatClass": "urban",
+        "areaHa": 752.5,
+        "center": [
+          21.90855,
+          88.75222
+        ],
+        "polygon": [
+          [
+            21.90855,
+            88.76574
+          ],
+          [
+            21.91374,
+            88.76346
+          ],
+          [
+            21.92451,
+            88.76374
+          ],
+          [
+            21.92398,
+            88.75222
+          ],
+          [
+            21.92433,
+            88.74083
+          ],
+          [
+            21.91842,
+            88.73085
+          ],
+          [
+            21.90855,
+            88.73252
+          ],
+          [
+            21.90209,
+            88.73824
+          ],
+          [
+            21.8961,
+            88.74324
+          ],
+          [
+            21.89604,
+            88.75222
+          ],
+          [
+            21.8951,
+            88.76192
+          ],
+          [
+            21.89934,
+            88.77215
+          ]
+        ],
+        "confidence": 0.894,
+        "quality": 0.558,
+        "connectivityContribution": 0.28,
+        "bridgeScore": 0.755,
+        "sensitivity": "critical",
+        "protected": false,
+        "carbonStockTonnes": 25585,
+        "speciesSupported": 57,
+        "degradationRisk": 0.846,
+        "notes": "This built-up / aquaculture acts as the primary bridge between 4 habitat clusters and carries roughly 28% of landscape connectivity. Loss here would sever the northern and southern sub-networks."
+      },
+      {
+        "id": "sundarbans-p19",
+        "name": "Kalash Island",
+        "habitatClass": "estuary",
+        "areaHa": 756.3,
+        "center": [
+          21.92823,
+          88.77165
+        ],
+        "polygon": [
+          [
+            21.92823,
+            88.79107
+          ],
+          [
+            21.9393,
+            88.79069
+          ],
+          [
+            21.94113,
+            88.77689
+          ],
+          [
+            21.94614,
+            88.76438
+          ],
+          [
+            21.93599,
+            88.7583
+          ],
+          [
+            21.92823,
+            88.75881
+          ],
+          [
+            21.91878,
+            88.75539
+          ],
+          [
+            21.91266,
+            88.76533
+          ],
+          [
+            21.91458,
+            88.7772
+          ],
+          [
+            21.92271,
+            88.78115
+          ]
+        ],
+        "confidence": 0.874,
+        "quality": 0.49,
+        "connectivityContribution": 0.247,
+        "bridgeScore": 0.281,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 25714,
+        "speciesSupported": 55,
+        "degradationRisk": 0.229,
+        "notes": "A moderately connected estuarine channel with 5 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "sundarbans-p20",
+        "name": "Mayadwip Sand Flat",
+        "habitatClass": "water",
+        "areaHa": 268,
+        "center": [
+          21.91784,
+          88.85071
+        ],
+        "polygon": [
+          [
+            21.91784,
+            88.85951
+          ],
+          [
+            21.92079,
+            88.85578
+          ],
+          [
+            21.92836,
+            88.85498
+          ],
+          [
+            21.92647,
+            88.8472
+          ],
+          [
+            21.92187,
+            88.84378
+          ],
+          [
+            21.91784,
+            88.83705
+          ],
+          [
+            21.91315,
+            88.84264
+          ],
+          [
+            21.91134,
+            88.84807
+          ],
+          [
+            21.90747,
+            88.85492
+          ],
+          [
+            21.91473,
+            88.85605
+          ]
+        ],
+        "confidence": 0.868,
+        "quality": 0.835,
+        "connectivityContribution": 0.192,
+        "bridgeScore": 0.607,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Sajnekhali Wildlife Sanctuary",
+        "carbonStockTonnes": 9112,
+        "speciesSupported": 82,
+        "degradationRisk": 0.169,
+        "notes": "A moderately connected open water with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      }
+    ],
+    "totals": {
+      "habitatAreaHa": 9400.8,
+      "patchCount": 20,
+      "meanPatchSizeHa": 470,
+      "largestPatchIndex": 9.7,
+      "edgeDensity": 4.15,
+      "meanConfidence": 0.894
+    }
+  },
+  "gulf-of-mannar": {
+    "sceneId": "gulf-of-mannar",
+    "generatedAt": "2026-08-08T09:14:00Z",
+    "modelVersion": "EcoSeg-v3.2 (Swin-UNet, 12-band)",
+    "classes": [
+      {
+        "habitatClass": "mudflat",
+        "label": "Intertidal Mudflat",
+        "color": "#f59e0b",
+        "areaHa": 1644.5,
+        "coveragePct": 24.2,
+        "meanConfidence": 0.867
+      },
+      {
+        "habitatClass": "urban",
+        "label": "Built-up / Aquaculture",
+        "color": "#94a3b8",
+        "areaHa": 1555.8,
+        "coveragePct": 22.9,
+        "meanConfidence": 0.9
+      },
+      {
+        "habitatClass": "coral",
+        "label": "Coral Reef",
+        "color": "#f472b6",
+        "areaHa": 1519.5,
+        "coveragePct": 22.4,
+        "meanConfidence": 0.906
+      },
+      {
+        "habitatClass": "seagrass",
+        "label": "Seagrass Meadow",
+        "color": "#38bdf8",
+        "areaHa": 860.6,
+        "coveragePct": 12.7,
+        "meanConfidence": 0.822
+      },
+      {
+        "habitatClass": "water",
+        "label": "Open Water",
+        "color": "#0ea5e9",
+        "areaHa": 794.2,
+        "coveragePct": 11.7,
+        "meanConfidence": 0.972
+      },
+      {
+        "habitatClass": "dune",
+        "label": "Coastal Dune",
+        "color": "#fbbf24",
+        "areaHa": 414.6,
+        "coveragePct": 6.1,
+        "meanConfidence": 0.944
+      }
+    ],
+    "patches": [
+      {
+        "id": "gulf-of-mannar-p01",
+        "name": "Krusadai Island Reef",
+        "habitatClass": "water",
+        "areaHa": 195.2,
+        "center": [
+          9.12473,
+          79.2454
+        ],
+        "polygon": [
+          [
+            9.12473,
+            79.25759
+          ],
+          [
+            9.12876,
+            79.25325
+          ],
+          [
+            9.1288,
+            79.24772
+          ],
+          [
+            9.13096,
+            79.24428
+          ],
+          [
+            9.13134,
+            79.23824
+          ],
+          [
+            9.12692,
+            79.23608
+          ],
+          [
+            9.12217,
+            79.23449
+          ],
+          [
+            9.11856,
+            79.23872
+          ],
+          [
+            9.11953,
+            79.24447
+          ],
+          [
+            9.11798,
+            79.24925
+          ],
+          [
+            9.12079,
+            79.25305
+          ]
+        ],
+        "confidence": 0.979,
+        "quality": 0.837,
+        "connectivityContribution": 0.35,
+        "bridgeScore": 0.925,
+        "sensitivity": "critical",
+        "protected": false,
+        "carbonStockTonnes": 6637,
+        "speciesSupported": 82,
+        "degradationRisk": 0.68,
+        "notes": "This open water acts as the primary bridge between 5 habitat clusters and carries roughly 35% of landscape connectivity. Loss here would sever the northern and southern sub-networks."
+      },
+      {
+        "id": "gulf-of-mannar-p02",
+        "name": "Shingle Island",
+        "habitatClass": "water",
+        "areaHa": 599,
+        "center": [
+          9.1433,
+          79.23804
+        ],
+        "polygon": [
+          [
+            9.1433,
+            79.24979
+          ],
+          [
+            9.14994,
+            79.25097
+          ],
+          [
+            9.15528,
+            79.24488
+          ],
+          [
+            9.15545,
+            79.23586
+          ],
+          [
+            9.15454,
+            79.22587
+          ],
+          [
+            9.14653,
+            79.22426
+          ],
+          [
+            9.1406,
+            79.22655
+          ],
+          [
+            9.13407,
+            79.22805
+          ],
+          [
+            9.13343,
+            79.23627
+          ],
+          [
+            9.13112,
+            79.24499
+          ],
+          [
+            9.13715,
+            79.25
+          ]
+        ],
+        "confidence": 0.965,
+        "quality": 0.619,
+        "connectivityContribution": 0.248,
+        "bridgeScore": 0.56,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 20366,
+        "speciesSupported": 70,
+        "degradationRisk": 0.103,
+        "notes": "A moderately connected open water with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "gulf-of-mannar-p03",
+        "name": "Manoli Reef Flat",
+        "habitatClass": "coral",
+        "areaHa": 129.4,
+        "center": [
+          9.14288,
+          79.26192
+        ],
+        "polygon": [
+          [
+            9.14288,
+            79.26947
+          ],
+          [
+            9.14833,
+            79.27003
+          ],
+          [
+            9.14844,
+            79.26314
+          ],
+          [
+            9.14839,
+            79.25794
+          ],
+          [
+            9.14432,
+            79.25696
+          ],
+          [
+            9.14077,
+            79.25467
+          ],
+          [
+            9.13599,
+            79.25694
+          ],
+          [
+            9.13544,
+            79.26356
+          ],
+          [
+            9.13951,
+            79.26693
+          ]
+        ],
+        "confidence": 0.841,
+        "quality": 0.415,
+        "connectivityContribution": 0.179,
+        "bridgeScore": 0.317,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 4400,
+        "speciesSupported": 55,
+        "degradationRisk": 0.233,
+        "notes": "A moderately connected coral reef with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "gulf-of-mannar-p04",
+        "name": "Poomarichan Meadow",
+        "habitatClass": "urban",
+        "areaHa": 648.8,
+        "center": [
+          9.16684,
+          79.23929
+        ],
+        "polygon": [
+          [
+            9.16684,
+            79.25348
+          ],
+          [
+            9.17631,
+            79.25338
+          ],
+          [
+            9.17711,
+            79.24155
+          ],
+          [
+            9.18211,
+            79.22827
+          ],
+          [
+            9.1706,
+            79.2264
+          ],
+          [
+            9.16324,
+            79.22691
+          ],
+          [
+            9.15975,
+            79.23417
+          ],
+          [
+            9.15843,
+            79.24114
+          ],
+          [
+            9.16075,
+            79.24836
+          ]
+        ],
+        "confidence": 0.947,
+        "quality": 0.527,
+        "connectivityContribution": 0.279,
+        "bridgeScore": 0.451,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 22059,
+        "speciesSupported": 56,
+        "degradationRisk": 0.86,
+        "notes": "A high-value built-up / aquaculture linking 4 neighbouring patches. It contributes about 28% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "gulf-of-mannar-p05",
+        "name": "Pullivasal Reef",
+        "habitatClass": "urban",
+        "areaHa": 509.5,
+        "center": [
+          9.20301,
+          79.20579
+        ],
+        "polygon": [
+          [
+            9.20301,
+            79.22334
+          ],
+          [
+            9.20756,
+            79.21255
+          ],
+          [
+            9.21129,
+            79.20761
+          ],
+          [
+            9.21339,
+            79.1983
+          ],
+          [
+            9.20597,
+            79.19564
+          ],
+          [
+            9.19871,
+            79.191
+          ],
+          [
+            9.19505,
+            79.20004
+          ],
+          [
+            9.19511,
+            79.20753
+          ],
+          [
+            9.198,
+            79.21326
+          ]
+        ],
+        "confidence": 0.916,
+        "quality": 0.42,
+        "connectivityContribution": 0.253,
+        "bridgeScore": 0.653,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Marine National Park",
+        "carbonStockTonnes": 17323,
+        "speciesSupported": 45,
+        "degradationRisk": 0.863,
+        "notes": "A high-value built-up / aquaculture linking 3 neighbouring patches. It contributes about 25% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "gulf-of-mannar-p06",
+        "name": "Hare Island Bank",
+        "habitatClass": "coral",
+        "areaHa": 253.1,
+        "center": [
+          9.1935,
+          79.17768
+        ],
+        "polygon": [
+          [
+            9.1935,
+            79.1911
+          ],
+          [
+            9.19897,
+            79.18709
+          ],
+          [
+            9.20229,
+            79.18125
+          ],
+          [
+            9.2021,
+            79.17419
+          ],
+          [
+            9.19915,
+            79.16796
+          ],
+          [
+            9.1935,
+            79.1704
+          ],
+          [
+            9.18907,
+            79.17005
+          ],
+          [
+            9.18751,
+            79.17525
+          ],
+          [
+            9.18837,
+            79.17977
+          ],
+          [
+            9.1895,
+            79.18457
+          ]
+        ],
+        "confidence": 0.923,
+        "quality": 0.563,
+        "connectivityContribution": 0.226,
+        "bridgeScore": 0.283,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Biosphere Reserve",
+        "carbonStockTonnes": 8605,
+        "speciesSupported": 61,
+        "degradationRisk": 0.397,
+        "notes": "A moderately connected coral reef with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "gulf-of-mannar-p07",
+        "name": "Musal Island Shelf",
+        "habitatClass": "mudflat",
+        "areaHa": 835.8,
+        "center": [
+          9.16025,
+          79.17386
+        ],
+        "polygon": [
+          [
+            9.16025,
+            79.19327
+          ],
+          [
+            9.16792,
+            79.18529
+          ],
+          [
+            9.17726,
+            79.17761
+          ],
+          [
+            9.17501,
+            79.1632
+          ],
+          [
+            9.16727,
+            79.14975
+          ],
+          [
+            9.15559,
+            79.15786
+          ],
+          [
+            9.14134,
+            79.16021
+          ],
+          [
+            9.14919,
+            79.1763
+          ],
+          [
+            9.14941,
+            79.19001
+          ]
+        ],
+        "confidence": 0.875,
+        "quality": 0.46,
+        "connectivityContribution": 0.336,
+        "bridgeScore": 0.769,
+        "sensitivity": "critical",
+        "protected": false,
+        "carbonStockTonnes": 28417,
+        "speciesSupported": 56,
+        "degradationRisk": 0.732,
+        "notes": "This intertidal mudflat acts as the primary bridge between 4 habitat clusters and carries roughly 34% of landscape connectivity. Loss here would sever the northern and southern sub-networks."
+      },
+      {
+        "id": "gulf-of-mannar-p08",
+        "name": "Vaan Island Reef",
+        "habitatClass": "urban",
+        "areaHa": 256.4,
+        "center": [
+          9.20303,
+          79.0996
+        ],
+        "polygon": [
+          [
+            9.20303,
+            79.10645
+          ],
+          [
+            9.20643,
+            79.10622
+          ],
+          [
+            9.21209,
+            79.10477
+          ],
+          [
+            9.21233,
+            79.09793
+          ],
+          [
+            9.21113,
+            79.09083
+          ],
+          [
+            9.20594,
+            79.08722
+          ],
+          [
+            9.20164,
+            79.09367
+          ],
+          [
+            9.19651,
+            79.09253
+          ],
+          [
+            9.19438,
+            79.09804
+          ],
+          [
+            9.19424,
+            79.10462
+          ],
+          [
+            9.19931,
+            79.10684
+          ]
+        ],
+        "confidence": 0.925,
+        "quality": 0.9,
+        "connectivityContribution": 0.218,
+        "bridgeScore": 0.537,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 8718,
+        "speciesSupported": 85,
+        "degradationRisk": 0.221,
+        "notes": "A moderately connected built-up / aquaculture with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "gulf-of-mannar-p09",
+        "name": "Koswari Bank",
+        "habitatClass": "urban",
+        "areaHa": 141.1,
+        "center": [
+          9.16238,
+          79.1256
+        ],
+        "polygon": [
+          [
+            9.16238,
+            79.13208
+          ],
+          [
+            9.1649,
+            79.12993
+          ],
+          [
+            9.1687,
+            79.12816
+          ],
+          [
+            9.16922,
+            79.12282
+          ],
+          [
+            9.16539,
+            79.12042
+          ],
+          [
+            9.16238,
+            79.11656
+          ],
+          [
+            9.15751,
+            79.11721
+          ],
+          [
+            9.1564,
+            79.12317
+          ],
+          [
+            9.15838,
+            79.12722
+          ],
+          [
+            9.1578,
+            79.13348
+          ]
+        ],
+        "confidence": 0.813,
+        "quality": 0.731,
+        "connectivityContribution": 0.275,
+        "bridgeScore": 0.714,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Marine National Park",
+        "carbonStockTonnes": 4797,
+        "speciesSupported": 72,
+        "degradationRisk": 0.17,
+        "notes": "A high-value built-up / aquaculture linking 4 neighbouring patches. It contributes about 28% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "gulf-of-mannar-p10",
+        "name": "Kariyachalli Reef",
+        "habitatClass": "mudflat",
+        "areaHa": 467.4,
+        "center": [
+          9.09752,
+          79.13762
+        ],
+        "polygon": [
+          [
+            9.09752,
+            79.1508
+          ],
+          [
+            9.10548,
+            79.1531
+          ],
+          [
+            9.10473,
+            79.14174
+          ],
+          [
+            9.11199,
+            79.13502
+          ],
+          [
+            9.10292,
+            79.13178
+          ],
+          [
+            9.10018,
+            79.12632
+          ],
+          [
+            9.09437,
+            79.12418
+          ],
+          [
+            9.08862,
+            79.12798
+          ],
+          [
+            9.09038,
+            79.13634
+          ],
+          [
+            9.08954,
+            79.14218
+          ],
+          [
+            9.0914,
+            79.14954
+          ]
+        ],
+        "confidence": 0.838,
+        "quality": 0.717,
+        "connectivityContribution": 0.186,
+        "bridgeScore": 0.173,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 15892,
+        "speciesSupported": 77,
+        "degradationRisk": 0.81,
+        "notes": "A moderately connected intertidal mudflat with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "gulf-of-mannar-p11",
+        "name": "Vilanguchalli Shoal",
+        "habitatClass": "coral",
+        "areaHa": 530.1,
+        "center": [
+          9.09106,
+          79.09958
+        ],
+        "polygon": [
+          [
+            9.09106,
+            79.11027
+          ],
+          [
+            9.09822,
+            79.11189
+          ],
+          [
+            9.10269,
+            79.1043
+          ],
+          [
+            9.10362,
+            79.09448
+          ],
+          [
+            9.09657,
+            79.09011
+          ],
+          [
+            9.09106,
+            79.08943
+          ],
+          [
+            9.0853,
+            79.08967
+          ],
+          [
+            9.07674,
+            79.09376
+          ],
+          [
+            9.0773,
+            79.10517
+          ],
+          [
+            9.08498,
+            79.11004
+          ]
+        ],
+        "confidence": 0.929,
+        "quality": 0.73,
+        "connectivityContribution": 0.22,
+        "bridgeScore": 0.394,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Marine National Park",
+        "carbonStockTonnes": 18023,
+        "speciesSupported": 69,
+        "degradationRisk": 0.639,
+        "notes": "A moderately connected coral reef with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "gulf-of-mannar-p12",
+        "name": "Nallathanni Meadow",
+        "habitatClass": "dune",
+        "areaHa": 414.6,
+        "center": [
+          9.0955,
+          79.14396
+        ],
+        "polygon": [
+          [
+            9.0955,
+            79.15339
+          ],
+          [
+            9.09872,
+            79.15094
+          ],
+          [
+            9.1061,
+            79.15161
+          ],
+          [
+            9.10834,
+            79.14396
+          ],
+          [
+            9.10118,
+            79.13986
+          ],
+          [
+            9.10055,
+            79.13301
+          ],
+          [
+            9.0955,
+            79.13114
+          ],
+          [
+            9.08921,
+            79.13035
+          ],
+          [
+            9.08602,
+            79.13712
+          ],
+          [
+            9.08891,
+            79.14396
+          ],
+          [
+            9.08768,
+            79.1496
+          ],
+          [
+            9.09143,
+            79.15276
+          ]
+        ],
+        "confidence": 0.944,
+        "quality": 0.422,
+        "connectivityContribution": 0.242,
+        "bridgeScore": 0.314,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Biosphere Reserve",
+        "carbonStockTonnes": 14096,
+        "speciesSupported": 57,
+        "degradationRisk": 0.723,
+        "notes": "A moderately connected coastal dune with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "gulf-of-mannar-p13",
+        "name": "Anaipar Reef Flat",
+        "habitatClass": "mudflat",
+        "areaHa": 341.3,
+        "center": [
+          9.06749,
+          79.18985
+        ],
+        "polygon": [
+          [
+            9.06749,
+            79.19987
+          ],
+          [
+            9.0727,
+            79.19761
+          ],
+          [
+            9.07606,
+            79.19174
+          ],
+          [
+            9.07284,
+            79.18599
+          ],
+          [
+            9.07172,
+            79.1753
+          ],
+          [
+            9.06492,
+            79.18105
+          ],
+          [
+            9.05713,
+            79.18238
+          ],
+          [
+            9.0585,
+            79.19183
+          ],
+          [
+            9.06088,
+            79.19969
+          ]
+        ],
+        "confidence": 0.888,
+        "quality": 0.709,
+        "connectivityContribution": 0.264,
+        "bridgeScore": 0.517,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Marine National Park",
+        "carbonStockTonnes": 11604,
+        "speciesSupported": 81,
+        "degradationRisk": 0.508,
+        "notes": "A high-value intertidal mudflat linking 4 neighbouring patches. It contributes about 26% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "gulf-of-mannar-p14",
+        "name": "Valimunai Bank",
+        "habitatClass": "seagrass",
+        "areaHa": 511.3,
+        "center": [
+          9.01031,
+          79.19541
+        ],
+        "polygon": [
+          [
+            9.01031,
+            79.20926
+          ],
+          [
+            9.01806,
+            79.21048
+          ],
+          [
+            9.01866,
+            79.20018
+          ],
+          [
+            9.02576,
+            79.19263
+          ],
+          [
+            9.0217,
+            79.18307
+          ],
+          [
+            9.01283,
+            79.18468
+          ],
+          [
+            9.00755,
+            79.18367
+          ],
+          [
+            8.99894,
+            79.1831
+          ],
+          [
+            9.00265,
+            79.19404
+          ],
+          [
+            8.99876,
+            79.20201
+          ],
+          [
+            9.0054,
+            79.20495
+          ]
+        ],
+        "confidence": 0.81,
+        "quality": 0.898,
+        "connectivityContribution": 0.171,
+        "bridgeScore": 0.037,
+        "sensitivity": "low",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Biosphere Reserve",
+        "carbonStockTonnes": 49085,
+        "speciesSupported": 94,
+        "degradationRisk": 0.711,
+        "notes": "A peripheral seagrass meadow with 3 link(s). It contributes marginally to landscape connectivity but supports local species richness."
+      },
+      {
+        "id": "gulf-of-mannar-p15",
+        "name": "Appa Island Reef",
+        "habitatClass": "seagrass",
+        "areaHa": 349.3,
+        "center": [
+          9.05873,
+          79.25563
+        ],
+        "polygon": [
+          [
+            9.05873,
+            79.26607
+          ],
+          [
+            9.0648,
+            79.26608
+          ],
+          [
+            9.07042,
+            79.26038
+          ],
+          [
+            9.06624,
+            79.25258
+          ],
+          [
+            9.06529,
+            79.24432
+          ],
+          [
+            9.05873,
+            79.24782
+          ],
+          [
+            9.05262,
+            79.24512
+          ],
+          [
+            9.04817,
+            79.25134
+          ],
+          [
+            9.05139,
+            79.25861
+          ],
+          [
+            9.05374,
+            79.2642
+          ]
+        ],
+        "confidence": 0.834,
+        "quality": 0.46,
+        "connectivityContribution": 0.279,
+        "bridgeScore": 0.622,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 33533,
+        "speciesSupported": 60,
+        "degradationRisk": 0.802,
+        "notes": "A high-value seagrass meadow linking 4 neighbouring patches. It contributes about 28% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "gulf-of-mannar-p16",
+        "name": "Talairi Seagrass Bed",
+        "habitatClass": "coral",
+        "areaHa": 459.2,
+        "center": [
+          9.09543,
+          79.2944
+        ],
+        "polygon": [
+          [
+            9.09543,
+            79.31116
+          ],
+          [
+            9.10096,
+            79.30391
+          ],
+          [
+            9.10664,
+            79.29895
+          ],
+          [
+            9.10732,
+            79.28956
+          ],
+          [
+            9.09966,
+            79.28712
+          ],
+          [
+            9.09543,
+            79.27872
+          ],
+          [
+            9.08918,
+            79.28364
+          ],
+          [
+            9.08659,
+            79.29081
+          ],
+          [
+            9.08882,
+            79.29708
+          ],
+          [
+            9.09062,
+            79.30267
+          ]
+        ],
+        "confidence": 0.971,
+        "quality": 0.405,
+        "connectivityContribution": 0.257,
+        "bridgeScore": 0.712,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Biosphere Reserve",
+        "carbonStockTonnes": 15613,
+        "speciesSupported": 45,
+        "degradationRisk": 0.807,
+        "notes": "A high-value coral reef linking 3 neighbouring patches. It contributes about 26% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "gulf-of-mannar-p17",
+        "name": "Uppatanni Shoal",
+        "habitatClass": "coral",
+        "areaHa": 147.7,
+        "center": [
+          9.08462,
+          79.30093
+        ],
+        "polygon": [
+          [
+            9.08462,
+            79.30947
+          ],
+          [
+            9.08754,
+            79.30725
+          ],
+          [
+            9.09156,
+            79.30594
+          ],
+          [
+            9.09111,
+            79.30093
+          ],
+          [
+            9.09033,
+            79.29681
+          ],
+          [
+            9.0874,
+            79.29491
+          ],
+          [
+            9.08462,
+            79.29214
+          ],
+          [
+            9.08211,
+            79.2955
+          ],
+          [
+            9.08049,
+            79.29795
+          ],
+          [
+            9.08043,
+            79.30093
+          ],
+          [
+            9.07874,
+            79.30517
+          ],
+          [
+            9.08263,
+            79.30523
+          ]
+        ],
+        "confidence": 0.866,
+        "quality": 0.602,
+        "connectivityContribution": 0.201,
+        "bridgeScore": 0.475,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Gulf of Mannar Marine National Park",
+        "carbonStockTonnes": 5022,
+        "speciesSupported": 59,
+        "degradationRisk": 0.265,
+        "notes": "A moderately connected coral reef with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      }
+    ],
+    "totals": {
+      "habitatAreaHa": 6789.2,
+      "patchCount": 17,
+      "meanPatchSizeHa": 399.4,
+      "largestPatchIndex": 12.3,
+      "edgeDensity": 4.42,
+      "meanConfidence": 0.898
+    }
+  },
+  "odisha-coast": {
+    "sceneId": "odisha-coast",
+    "generatedAt": "2026-08-08T09:14:00Z",
+    "modelVersion": "EcoSeg-v3.2 (Swin-UNet, 12-band)",
+    "classes": [
+      {
+        "habitatClass": "estuary",
+        "label": "Estuarine Channel",
+        "color": "#818cf8",
+        "areaHa": 2733.8,
+        "coveragePct": 33.5,
+        "meanConfidence": 0.86
+      },
+      {
+        "habitatClass": "mangrove",
+        "label": "Mangrove Forest",
+        "color": "#00c896",
+        "areaHa": 2564,
+        "coveragePct": 31.4,
+        "meanConfidence": 0.87
+      },
+      {
+        "habitatClass": "mudflat",
+        "label": "Intertidal Mudflat",
+        "color": "#f59e0b",
+        "areaHa": 1232.6,
+        "coveragePct": 15.1,
+        "meanConfidence": 0.946
+      },
+      {
+        "habitatClass": "saltmarsh",
+        "label": "Salt Marsh",
+        "color": "#a3e635",
+        "areaHa": 884.7,
+        "coveragePct": 10.8,
+        "meanConfidence": 0.909
+      },
+      {
+        "habitatClass": "urban",
+        "label": "Built-up / Aquaculture",
+        "color": "#94a3b8",
+        "areaHa": 464.6,
+        "coveragePct": 5.7,
+        "meanConfidence": 0.882
+      },
+      {
+        "habitatClass": "dune",
+        "label": "Coastal Dune",
+        "color": "#fbbf24",
+        "areaHa": 277.8,
+        "coveragePct": 3.4,
+        "meanConfidence": 0.843
+      }
+    ],
+    "patches": [
+      {
+        "id": "odisha-coast-p01",
+        "name": "Bhitarkanika Core",
+        "habitatClass": "estuary",
+        "areaHa": 665,
+        "center": [
+          20.70638,
+          87.00877
+        ],
+        "polygon": [
+          [
+            20.70638,
+            87.02775
+          ],
+          [
+            20.71441,
+            87.02258
+          ],
+          [
+            20.71506,
+            87.01229
+          ],
+          [
+            20.71963,
+            87.00339
+          ],
+          [
+            20.7126,
+            86.99807
+          ],
+          [
+            20.70638,
+            86.98975
+          ],
+          [
+            20.69582,
+            86.99061
+          ],
+          [
+            20.69403,
+            87.00375
+          ],
+          [
+            20.69499,
+            87.0134
+          ],
+          [
+            20.69705,
+            87.02482
+          ]
+        ],
+        "confidence": 0.897,
+        "quality": 0.456,
+        "connectivityContribution": 0.217,
+        "bridgeScore": 0.291,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Bhitarkanika National Park",
+        "carbonStockTonnes": 22610,
+        "speciesSupported": 57,
+        "degradationRisk": 0.847,
+        "notes": "A moderately connected estuarine channel with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "odisha-coast-p02",
+        "name": "Dangmal Block",
+        "habitatClass": "mudflat",
+        "areaHa": 345.2,
+        "center": [
+          20.73872,
+          86.93757
+        ],
+        "polygon": [
+          [
+            20.73872,
+            86.95121
+          ],
+          [
+            20.74594,
+            86.94999
+          ],
+          [
+            20.7487,
+            86.94162
+          ],
+          [
+            20.75035,
+            86.93284
+          ],
+          [
+            20.74536,
+            86.92615
+          ],
+          [
+            20.73872,
+            86.92712
+          ],
+          [
+            20.7333,
+            86.92823
+          ],
+          [
+            20.72861,
+            86.93346
+          ],
+          [
+            20.72885,
+            86.94158
+          ],
+          [
+            20.73297,
+            86.94747
+          ]
+        ],
+        "confidence": 0.984,
+        "quality": 0.942,
+        "connectivityContribution": 0.241,
+        "bridgeScore": 0.033,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Gahirmatha Marine Sanctuary",
+        "carbonStockTonnes": 11737,
+        "speciesSupported": 98,
+        "degradationRisk": 0.699,
+        "notes": "A moderately connected intertidal mudflat with 5 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "odisha-coast-p03",
+        "name": "Habalikhati Dune Belt",
+        "habitatClass": "estuary",
+        "areaHa": 334.9,
+        "center": [
+          20.73251,
+          86.92011
+        ],
+        "polygon": [
+          [
+            20.73251,
+            86.93046
+          ],
+          [
+            20.73861,
+            86.93331
+          ],
+          [
+            20.74221,
+            86.92711
+          ],
+          [
+            20.73943,
+            86.92011
+          ],
+          [
+            20.74202,
+            86.91325
+          ],
+          [
+            20.73683,
+            86.91076
+          ],
+          [
+            20.73251,
+            86.91217
+          ],
+          [
+            20.72755,
+            86.90937
+          ],
+          [
+            20.72517,
+            86.91481
+          ],
+          [
+            20.72289,
+            86.92011
+          ],
+          [
+            20.72482,
+            86.92566
+          ],
+          [
+            20.72896,
+            86.92779
+          ]
+        ],
+        "confidence": 0.824,
+        "quality": 0.493,
+        "connectivityContribution": 0.269,
+        "bridgeScore": 0.561,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 11387,
+        "speciesSupported": 65,
+        "degradationRisk": 0.583,
+        "notes": "A high-value estuarine channel linking 4 neighbouring patches. It contributes about 27% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "odisha-coast-p04",
+        "name": "Ekakula Sand Ridge",
+        "habitatClass": "saltmarsh",
+        "areaHa": 566.1,
+        "center": [
+          20.74587,
+          86.90695
+        ],
+        "polygon": [
+          [
+            20.74587,
+            86.92409
+          ],
+          [
+            20.75357,
+            86.91842
+          ],
+          [
+            20.7589,
+            86.90982
+          ],
+          [
+            20.75516,
+            86.90025
+          ],
+          [
+            20.75134,
+            86.88818
+          ],
+          [
+            20.74027,
+            86.88772
+          ],
+          [
+            20.73152,
+            86.89658
+          ],
+          [
+            20.7345,
+            86.90945
+          ],
+          [
+            20.74019,
+            86.91542
+          ]
+        ],
+        "confidence": 0.956,
+        "quality": 0.844,
+        "connectivityContribution": 0.275,
+        "bridgeScore": 0.158,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 80386,
+        "speciesSupported": 88,
+        "degradationRisk": 0.315,
+        "notes": "A moderately connected salt marsh with 5 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "odisha-coast-p05",
+        "name": "Gahirmatha Rookery Flat",
+        "habitatClass": "mangrove",
+        "areaHa": 788.5,
+        "center": [
+          20.79021,
+          86.91972
+        ],
+        "polygon": [
+          [
+            20.79021,
+            86.93945
+          ],
+          [
+            20.79804,
+            86.93666
+          ],
+          [
+            20.79879,
+            86.92591
+          ],
+          [
+            20.80707,
+            86.91972
+          ],
+          [
+            20.80262,
+            86.91076
+          ],
+          [
+            20.80056,
+            86.89732
+          ],
+          [
+            20.79021,
+            86.89969
+          ],
+          [
+            20.7849,
+            86.9082
+          ],
+          [
+            20.77332,
+            86.90753
+          ],
+          [
+            20.77627,
+            86.91972
+          ],
+          [
+            20.77486,
+            86.9308
+          ],
+          [
+            20.78133,
+            86.93895
+          ]
+        ],
+        "confidence": 0.883,
+        "quality": 0.424,
+        "connectivityContribution": 0.272,
+        "bridgeScore": 0.629,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Gahirmatha Marine Sanctuary",
+        "carbonStockTonnes": 171893,
+        "speciesSupported": 49,
+        "degradationRisk": 0.817,
+        "notes": "A high-value mangrove forest linking 3 neighbouring patches. It contributes about 27% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "odisha-coast-p06",
+        "name": "Kalibhanjadia Island",
+        "habitatClass": "mangrove",
+        "areaHa": 804.6,
+        "center": [
+          20.7756,
+          86.86176
+        ],
+        "polygon": [
+          [
+            20.7756,
+            86.87776
+          ],
+          [
+            20.78181,
+            86.8752
+          ],
+          [
+            20.78676,
+            86.86982
+          ],
+          [
+            20.79547,
+            86.86176
+          ],
+          [
+            20.78865,
+            86.85234
+          ],
+          [
+            20.78219,
+            86.8475
+          ],
+          [
+            20.7756,
+            86.83826
+          ],
+          [
+            20.76523,
+            86.83931
+          ],
+          [
+            20.75836,
+            86.84933
+          ],
+          [
+            20.75865,
+            86.86176
+          ],
+          [
+            20.76312,
+            86.87077
+          ],
+          [
+            20.76766,
+            86.87895
+          ]
+        ],
+        "confidence": 0.932,
+        "quality": 0.529,
+        "connectivityContribution": 0.242,
+        "bridgeScore": 0.398,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Bhitarkanika Ramsar Site",
+        "carbonStockTonnes": 175403,
+        "speciesSupported": 53,
+        "degradationRisk": 0.092,
+        "notes": "A moderately connected mangrove forest with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "odisha-coast-p07",
+        "name": "Baunsagada Creek",
+        "habitatClass": "estuary",
+        "areaHa": 790.4,
+        "center": [
+          20.74788,
+          86.86993
+        ],
+        "polygon": [
+          [
+            20.74788,
+            86.8818
+          ],
+          [
+            20.75339,
+            86.8794
+          ],
+          [
+            20.76292,
+            86.87603
+          ],
+          [
+            20.76605,
+            86.86255
+          ],
+          [
+            20.76017,
+            86.84879
+          ],
+          [
+            20.74788,
+            86.85561
+          ],
+          [
+            20.73779,
+            86.85256
+          ],
+          [
+            20.72961,
+            86.86251
+          ],
+          [
+            20.73299,
+            86.87598
+          ],
+          [
+            20.7384,
+            86.88625
+          ]
+        ],
+        "confidence": 0.893,
+        "quality": 0.413,
+        "connectivityContribution": 0.235,
+        "bridgeScore": 0.043,
+        "sensitivity": "low",
+        "protected": true,
+        "protectedAreaName": "Bhitarkanika National Park",
+        "carbonStockTonnes": 26874,
+        "speciesSupported": 52,
+        "degradationRisk": 0.428,
+        "notes": "A peripheral estuarine channel with 4 link(s). It contributes marginally to landscape connectivity but supports local species richness."
+      },
+      {
+        "id": "odisha-coast-p08",
+        "name": "Thakurdia Mangroves",
+        "habitatClass": "estuary",
+        "areaHa": 943.5,
+        "center": [
+          20.72285,
+          86.75754
+        ],
+        "polygon": [
+          [
+            20.72285,
+            86.77585
+          ],
+          [
+            20.72916,
+            86.76838
+          ],
+          [
+            20.73481,
+            86.7624
+          ],
+          [
+            20.74151,
+            86.74996
+          ],
+          [
+            20.73037,
+            86.74461
+          ],
+          [
+            20.72285,
+            86.73843
+          ],
+          [
+            20.71226,
+            86.73932
+          ],
+          [
+            20.70425,
+            86.74998
+          ],
+          [
+            20.71079,
+            86.76244
+          ],
+          [
+            20.71066,
+            86.77852
+          ]
+        ],
+        "confidence": 0.825,
+        "quality": 0.592,
+        "connectivityContribution": 0.215,
+        "bridgeScore": 0.116,
+        "sensitivity": "medium",
+        "protected": true,
+        "protectedAreaName": "Gahirmatha Marine Sanctuary",
+        "carbonStockTonnes": 32079,
+        "speciesSupported": 62,
+        "degradationRisk": 0.568,
+        "notes": "A moderately connected estuarine channel with 3 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      },
+      {
+        "id": "odisha-coast-p09",
+        "name": "Kanika Sands",
+        "habitatClass": "saltmarsh",
+        "areaHa": 55.1,
+        "center": [
+          20.72166,
+          86.82556
+        ],
+        "polygon": [
+          [
+            20.72166,
+            86.82963
+          ],
+          [
+            20.72365,
+            86.82942
+          ],
+          [
+            20.7266,
+            86.82838
+          ],
+          [
+            20.72531,
+            86.8249
+          ],
+          [
+            20.72611,
+            86.82074
+          ],
+          [
+            20.72285,
+            86.82052
+          ],
+          [
+            20.71992,
+            86.81812
+          ],
+          [
+            20.71814,
+            86.82175
+          ],
+          [
+            20.71644,
+            86.82462
+          ],
+          [
+            20.71762,
+            86.82786
+          ],
+          [
+            20.71971,
+            86.82936
+          ]
+        ],
+        "confidence": 0.857,
+        "quality": 0.676,
+        "connectivityContribution": 0.182,
+        "bridgeScore": 0.074,
+        "sensitivity": "low",
+        "protected": false,
+        "carbonStockTonnes": 7824,
+        "speciesSupported": 77,
+        "degradationRisk": 0.396,
+        "notes": "A peripheral salt marsh with 4 link(s). It contributes marginally to landscape connectivity but supports local species richness."
+      },
+      {
+        "id": "odisha-coast-p10",
+        "name": "Suajore Creek Bank",
+        "habitatClass": "urban",
+        "areaHa": 464.6,
+        "center": [
+          20.66745,
+          86.83745
+        ],
+        "polygon": [
+          [
+            20.66745,
+            86.85593
+          ],
+          [
+            20.67403,
+            86.85171
+          ],
+          [
+            20.67348,
+            86.8418
+          ],
+          [
+            20.67765,
+            86.83745
+          ],
+          [
+            20.67975,
+            86.82857
+          ],
+          [
+            20.67148,
+            86.82872
+          ],
+          [
+            20.66745,
+            86.8243
+          ],
+          [
+            20.66296,
+            86.82774
+          ],
+          [
+            20.65976,
+            86.8319
+          ],
+          [
+            20.65776,
+            86.83745
+          ],
+          [
+            20.6617,
+            86.8416
+          ],
+          [
+            20.6638,
+            86.84535
+          ]
+        ],
+        "confidence": 0.882,
+        "quality": 0.588,
+        "connectivityContribution": 0.35,
+        "bridgeScore": 0.773,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 15796,
+        "speciesSupported": 61,
+        "degradationRisk": 0.55,
+        "notes": "A high-value built-up / aquaculture linking 5 neighbouring patches. It contributes about 35% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "odisha-coast-p11",
+        "name": "Barunei Muhan",
+        "habitatClass": "mudflat",
+        "areaHa": 446.1,
+        "center": [
+          20.66519,
+          86.84222
+        ],
+        "polygon": [
+          [
+            20.66519,
+            86.8547
+          ],
+          [
+            20.66951,
+            86.85063
+          ],
+          [
+            20.67143,
+            86.84578
+          ],
+          [
+            20.67937,
+            86.83967
+          ],
+          [
+            20.67458,
+            86.83204
+          ],
+          [
+            20.66788,
+            86.83075
+          ],
+          [
+            20.66274,
+            86.83181
+          ],
+          [
+            20.65968,
+            86.83625
+          ],
+          [
+            20.6518,
+            86.83981
+          ],
+          [
+            20.65887,
+            86.84583
+          ],
+          [
+            20.65835,
+            86.85551
+          ]
+        ],
+        "confidence": 0.944,
+        "quality": 0.862,
+        "connectivityContribution": 0.342,
+        "bridgeScore": 0.727,
+        "sensitivity": "high",
+        "protected": true,
+        "protectedAreaName": "Gahirmatha Marine Sanctuary",
+        "carbonStockTonnes": 15167,
+        "speciesSupported": 80,
+        "degradationRisk": 0.233,
+        "notes": "A high-value intertidal mudflat linking 5 neighbouring patches. It contributes about 34% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "odisha-coast-p12",
+        "name": "Mahinsamunda Marsh",
+        "habitatClass": "saltmarsh",
+        "areaHa": 263.5,
+        "center": [
+          20.6344,
+          86.87448
+        ],
+        "polygon": [
+          [
+            20.6344,
+            86.88663
+          ],
+          [
+            20.64063,
+            86.88375
+          ],
+          [
+            20.64246,
+            86.87625
+          ],
+          [
+            20.63905,
+            86.87112
+          ],
+          [
+            20.63698,
+            86.86561
+          ],
+          [
+            20.63214,
+            86.86674
+          ],
+          [
+            20.62926,
+            86.87077
+          ],
+          [
+            20.62747,
+            86.876
+          ],
+          [
+            20.63068,
+            86.88002
+          ]
+        ],
+        "confidence": 0.913,
+        "quality": 0.538,
+        "connectivityContribution": 0.308,
+        "bridgeScore": 0.886,
+        "sensitivity": "critical",
+        "protected": true,
+        "protectedAreaName": "Bhitarkanika Ramsar Site",
+        "carbonStockTonnes": 37417,
+        "speciesSupported": 64,
+        "degradationRisk": 0.434,
+        "notes": "This salt marsh acts as the primary bridge between 4 habitat clusters and carries roughly 31% of landscape connectivity. Loss here would sever the northern and southern sub-networks."
+      },
+      {
+        "id": "odisha-coast-p13",
+        "name": "Rajnagar Buffer",
+        "habitatClass": "mudflat",
+        "areaHa": 441.3,
+        "center": [
+          20.64597,
+          86.88015
+        ],
+        "polygon": [
+          [
+            20.64597,
+            86.89397
+          ],
+          [
+            20.6502,
+            86.88743
+          ],
+          [
+            20.65406,
+            86.88343
+          ],
+          [
+            20.65267,
+            86.87742
+          ],
+          [
+            20.65059,
+            86.87219
+          ],
+          [
+            20.64597,
+            86.87046
+          ],
+          [
+            20.63842,
+            86.86717
+          ],
+          [
+            20.63562,
+            86.87594
+          ],
+          [
+            20.63245,
+            86.88564
+          ],
+          [
+            20.63789,
+            86.89403
+          ]
+        ],
+        "confidence": 0.91,
+        "quality": 0.92,
+        "connectivityContribution": 0.359,
+        "bridgeScore": 0.856,
+        "sensitivity": "critical",
+        "protected": false,
+        "carbonStockTonnes": 15004,
+        "speciesSupported": 94,
+        "degradationRisk": 0.471,
+        "notes": "This intertidal mudflat acts as the primary bridge between 5 habitat clusters and carries roughly 36% of landscape connectivity. Loss here would sever the northern and southern sub-networks."
+      },
+      {
+        "id": "odisha-coast-p14",
+        "name": "Jambu Estuary Mouth",
+        "habitatClass": "dune",
+        "areaHa": 277.8,
+        "center": [
+          20.61457,
+          86.91913
+        ],
+        "polygon": [
+          [
+            20.61457,
+            86.92857
+          ],
+          [
+            20.61842,
+            86.92487
+          ],
+          [
+            20.6241,
+            86.92123
+          ],
+          [
+            20.62126,
+            86.9143
+          ],
+          [
+            20.61652,
+            86.9124
+          ],
+          [
+            20.61147,
+            86.9085
+          ],
+          [
+            20.60859,
+            86.91482
+          ],
+          [
+            20.60842,
+            86.92048
+          ],
+          [
+            20.60993,
+            86.92603
+          ]
+        ],
+        "confidence": 0.843,
+        "quality": 0.779,
+        "connectivityContribution": 0.23,
+        "bridgeScore": 0.612,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 9445,
+        "speciesSupported": 88,
+        "degradationRisk": 0.462,
+        "notes": "A high-value coastal dune linking 3 neighbouring patches. It contributes about 23% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "odisha-coast-p15",
+        "name": "Praharajpur Fringe",
+        "habitatClass": "mangrove",
+        "areaHa": 640.2,
+        "center": [
+          20.63928,
+          86.95128
+        ],
+        "polygon": [
+          [
+            20.63928,
+            86.96229
+          ],
+          [
+            20.64487,
+            86.96216
+          ],
+          [
+            20.64714,
+            86.95577
+          ],
+          [
+            20.65585,
+            86.9483
+          ],
+          [
+            20.64542,
+            86.94462
+          ],
+          [
+            20.64394,
+            86.9314
+          ],
+          [
+            20.63444,
+            86.93069
+          ],
+          [
+            20.63208,
+            86.94348
+          ],
+          [
+            20.62398,
+            86.94853
+          ],
+          [
+            20.62559,
+            86.95909
+          ],
+          [
+            20.62977,
+            86.96977
+          ]
+        ],
+        "confidence": 0.837,
+        "quality": 0.507,
+        "connectivityContribution": 0.292,
+        "bridgeScore": 0.553,
+        "sensitivity": "high",
+        "protected": false,
+        "carbonStockTonnes": 139564,
+        "speciesSupported": 60,
+        "degradationRisk": 0.785,
+        "notes": "A high-value mangrove forest linking 4 neighbouring patches. It contributes about 29% of connectivity and has limited alternative routes if degraded."
+      },
+      {
+        "id": "odisha-coast-p16",
+        "name": "Batighar Channel Edge",
+        "habitatClass": "mangrove",
+        "areaHa": 330.7,
+        "center": [
+          20.6868,
+          86.94375
+        ],
+        "polygon": [
+          [
+            20.6868,
+            86.95534
+          ],
+          [
+            20.69186,
+            86.9547
+          ],
+          [
+            20.69247,
+            86.94784
+          ],
+          [
+            20.69286,
+            86.94375
+          ],
+          [
+            20.69531,
+            86.9376
+          ],
+          [
+            20.68986,
+            86.93712
+          ],
+          [
+            20.6868,
+            86.93191
+          ],
+          [
+            20.68065,
+            86.93045
+          ],
+          [
+            20.67614,
+            86.93605
+          ],
+          [
+            20.67458,
+            86.94375
+          ],
+          [
+            20.67971,
+            86.94886
+          ],
+          [
+            20.68106,
+            86.95617
+          ]
+        ],
+        "confidence": 0.826,
+        "quality": 0.512,
+        "connectivityContribution": 0.227,
+        "bridgeScore": 0.247,
+        "sensitivity": "medium",
+        "protected": false,
+        "carbonStockTonnes": 72093,
+        "speciesSupported": 60,
+        "degradationRisk": 0.191,
+        "notes": "A moderately connected mangrove forest with 4 functional links. Redundant pathways exist, so short-term loss is partially absorbed by the network."
+      }
+    ],
+    "totals": {
+      "habitatAreaHa": 8157.5,
+      "patchCount": 16,
+      "meanPatchSizeHa": 509.8,
+      "largestPatchIndex": 11.6,
+      "edgeDensity": 3.92,
+      "meanConfidence": 0.888
+    }
+  }
+}

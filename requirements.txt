@@ -1,0 +1,42 @@
+# EcoConnectAI — Python dependencies
+# Tested on Python 3.14 / macOS (Apple Silicon, MPS). CUDA works unchanged on Linux.
+# torch is pinned to the version already present locally to avoid a 200 MB re-download;
+# any torch >= 2.2 works.
+
+# --- deep learning (segmentation stage) ---
+torch==2.13.0
+torchvision==0.28.*
+timm>=1.0
+segmentation-models-pytorch>=0.5
+
+# --- geospatial / raster ---
+rasterio>=1.4
+shapely>=2.0
+geopandas>=1.0
+pyproj>=3.6
+scikit-image>=0.24
+opencv-python-headless>=4.10 ; python_version < "3.14"
+
+# --- numerics / graph ---
+numpy>=2.0
+scipy>=1.13
+pandas>=2.2
+networkx>=3.3
+scikit-learn>=1.5
+
+# --- config / plotting / testing ---
+pyyaml>=6.0
+matplotlib>=3.9
+pytest>=8.0
+tqdm>=4.66
+
+# --- backend API ---
+fastapi>=0.115
+uvicorn[standard]>=0.30
+
+# --- optional: satellite acquisition without GEE credentials (STAC) ---
+pystac-client>=0.8
+planetary-computer>=1.0
+
+# --- optional: Google Earth Engine (only needed for gee/ module) ---
+# earthengine-api>=1.0

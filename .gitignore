@@ -1,0 +1,35 @@
+# python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# node / next
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
+
+# data & large artefacts — never committed (see docs/DATASET_SETUP.md)
+data/**
+!data/README.md
+models/**
+!models/README.md
+outputs/**/*.tif
+outputs/**/*.tiff
+outputs/**/*.pth
+outputs/**/*.pt
+outputs/**/*.npy
+
+# secrets / local env
+.env
+.env.*
+!.env.example
+*.json.private
+service-account*.json
+
+# os
+.DS_Store

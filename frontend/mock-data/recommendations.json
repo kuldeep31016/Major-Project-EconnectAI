@@ -1,0 +1,1002 @@
+{
+  "kerala-coast": {
+    "sceneId": "kerala-coast",
+    "currency": "INR",
+    "baselineScore": 74.6,
+    "budgetBands": [
+      {
+        "minLakh": 10,
+        "maxLakh": 60,
+        "label": "Pilot Intervention",
+        "actionIds": [
+          "kerala-coast-r1"
+        ],
+        "totalGain": 7.9,
+        "totalCostLakh": 119.9,
+        "confidence": 0.857,
+        "summary": "1 prioritised intervention delivering an estimated +7.9 connectivity points within 26 months."
+      },
+      {
+        "minLakh": 60,
+        "maxLakh": 180,
+        "label": "District Programme",
+        "actionIds": [
+          "kerala-coast-r1",
+          "kerala-coast-r2"
+        ],
+        "totalGain": 14.2,
+        "totalCostLakh": 316.1,
+        "confidence": 0.887,
+        "summary": "2 prioritised interventions delivering an estimated +14.2 connectivity points within 26 months."
+      },
+      {
+        "minLakh": 180,
+        "maxLakh": 500,
+        "label": "State Programme",
+        "actionIds": [
+          "kerala-coast-r1",
+          "kerala-coast-r2",
+          "kerala-coast-r3",
+          "kerala-coast-r4"
+        ],
+        "totalGain": 25,
+        "totalCostLakh": 853.9,
+        "confidence": 0.878,
+        "summary": "4 prioritised interventions delivering an estimated +25 connectivity points within 30 months."
+      },
+      {
+        "minLakh": 500,
+        "maxLakh": 5000,
+        "label": "Landscape Programme",
+        "actionIds": [
+          "kerala-coast-r1",
+          "kerala-coast-r2",
+          "kerala-coast-r3",
+          "kerala-coast-r4",
+          "kerala-coast-r5",
+          "kerala-coast-r6"
+        ],
+        "totalGain": 39.6,
+        "totalCostLakh": 1429.6,
+        "confidence": 0.861,
+        "summary": "6 prioritised interventions delivering an estimated +39.6 connectivity points within 44 months."
+      }
+    ],
+    "actions": [
+      {
+        "id": "kerala-coast-r1",
+        "rank": 1,
+        "name": "Restore Nettoor Channel Edge",
+        "patchId": "kerala-coast-p18",
+        "location": "Nettoor Channel Edge",
+        "center": [
+          9.84851,
+          76.48339
+        ],
+        "interventionType": "Assisted mangrove regeneration",
+        "areaHa": 23.8,
+        "costLakh": 119.9,
+        "connectivityGain": 7.9,
+        "scoreAfter": 82.5,
+        "confidence": 0.857,
+        "timeToImpactMonths": 26,
+        "carbonSequestrationTonnes": 3760,
+        "speciesBenefited": 36,
+        "costEffectiveness": 6.59,
+        "rationale": "Nettoor Channel Edge sits on a high-resistance gap between adjacent clusters. Restoring 23.8 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 7.9 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "kerala-coast-r2",
+        "rank": 2,
+        "name": "Restore Panangad Channel Bank",
+        "patchId": "kerala-coast-p06",
+        "location": "Panangad Channel Bank",
+        "center": [
+          9.92693,
+          76.37793
+        ],
+        "interventionType": "Tidal creek re-excavation",
+        "areaHa": 34.6,
+        "costLakh": 196.2,
+        "connectivityGain": 6.3,
+        "scoreAfter": 80.9,
+        "confidence": 0.916,
+        "timeToImpactMonths": 24,
+        "carbonSequestrationTonnes": 6091,
+        "speciesBenefited": 13,
+        "costEffectiveness": 3.21,
+        "rationale": "Panangad Channel Bank sits on a high-resistance gap between adjacent clusters. Restoring 34.6 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6.3 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "kerala-coast-r3",
+        "rank": 3,
+        "name": "Restore Chellanam Shoreline",
+        "patchId": "kerala-coast-p12",
+        "location": "Chellanam Shoreline",
+        "center": [
+          9.82943,
+          76.32338
+        ],
+        "interventionType": "Aquaculture pond reconversion",
+        "areaHa": 69,
+        "costLakh": 336.3,
+        "connectivityGain": 7.6,
+        "scoreAfter": 82.2,
+        "confidence": 0.943,
+        "timeToImpactMonths": 11,
+        "carbonSequestrationTonnes": 16116,
+        "speciesBenefited": 13,
+        "costEffectiveness": 2.26,
+        "rationale": "Chellanam Shoreline sits on a high-resistance gap between adjacent clusters. Restoring 69 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 7.6 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "kerala-coast-r4",
+        "rank": 4,
+        "name": "Restore Kannamali Seagrass Bed",
+        "patchId": "kerala-coast-p11",
+        "location": "Kannamali Seagrass Bed",
+        "center": [
+          9.84646,
+          76.26332
+        ],
+        "interventionType": "Seagrass transplantation",
+        "areaHa": 78.3,
+        "costLakh": 201.5,
+        "connectivityGain": 3.2,
+        "scoreAfter": 77.8,
+        "confidence": 0.796,
+        "timeToImpactMonths": 30,
+        "carbonSequestrationTonnes": 15861,
+        "speciesBenefited": 38,
+        "costEffectiveness": 1.59,
+        "rationale": "Kannamali Seagrass Bed sits on a high-resistance gap between adjacent clusters. Restoring 78.3 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 3.2 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "kerala-coast-r5",
+        "rank": 5,
+        "name": "Restore Kumarakom North Fringe",
+        "patchId": "kerala-coast-p01",
+        "location": "Kumarakom North Fringe",
+        "center": [
+          9.89148,
+          76.44935
+        ],
+        "interventionType": "Coral fragment nursery",
+        "areaHa": 53.4,
+        "costLakh": 302.9,
+        "connectivityGain": 7.2,
+        "scoreAfter": 81.8,
+        "confidence": 0.795,
+        "timeToImpactMonths": 44,
+        "carbonSequestrationTonnes": 10147,
+        "speciesBenefited": 44,
+        "costEffectiveness": 2.38,
+        "rationale": "Kumarakom North Fringe sits on a high-resistance gap between adjacent clusters. Restoring 53.4 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 7.2 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "kerala-coast-r6",
+        "rank": 6,
+        "name": "Restore Cherai Sand Spit",
+        "patchId": "kerala-coast-p08",
+        "location": "Cherai Sand Spit",
+        "center": [
+          9.9102,
+          76.27335
+        ],
+        "interventionType": "Bund breach and hydrology restoration",
+        "areaHa": 69.5,
+        "costLakh": 272.8,
+        "connectivityGain": 7.4,
+        "scoreAfter": 82,
+        "confidence": 0.859,
+        "timeToImpactMonths": 18,
+        "carbonSequestrationTonnes": 15214,
+        "speciesBenefited": 43,
+        "costEffectiveness": 2.71,
+        "rationale": "Cherai Sand Spit sits on a high-resistance gap between adjacent clusters. Restoring 69.5 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 7.4 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "kerala-coast-r7",
+        "rank": 7,
+        "name": "Restore Munambam Estuary Mouth",
+        "patchId": "kerala-coast-p09",
+        "location": "Munambam Estuary Mouth",
+        "center": [
+          9.88966,
+          76.33609
+        ],
+        "interventionType": "Invasive species removal",
+        "areaHa": 143,
+        "costLakh": 807.2,
+        "connectivityGain": 3.3,
+        "scoreAfter": 77.9,
+        "confidence": 0.828,
+        "timeToImpactMonths": 30,
+        "carbonSequestrationTonnes": 31988,
+        "speciesBenefited": 40,
+        "costEffectiveness": 0.41,
+        "rationale": "Munambam Estuary Mouth sits on a high-resistance gap between adjacent clusters. Restoring 143 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 3.3 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "kerala-coast-r8",
+        "rank": 8,
+        "name": "Restore Muhamma Marsh",
+        "patchId": "kerala-coast-p14",
+        "location": "Muhamma Marsh",
+        "center": [
+          9.81595,
+          76.34816
+        ],
+        "interventionType": "Sediment nourishment",
+        "areaHa": 101.7,
+        "costLakh": 466.3,
+        "connectivityGain": 6,
+        "scoreAfter": 80.6,
+        "confidence": 0.886,
+        "timeToImpactMonths": 17,
+        "carbonSequestrationTonnes": 20167,
+        "speciesBenefited": 39,
+        "costEffectiveness": 1.29,
+        "rationale": "Muhamma Marsh sits on a high-resistance gap between adjacent clusters. Restoring 101.7 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      }
+    ]
+  },
+  "sundarbans": {
+    "sceneId": "sundarbans",
+    "currency": "INR",
+    "baselineScore": 81.3,
+    "budgetBands": [
+      {
+        "minLakh": 10,
+        "maxLakh": 60,
+        "label": "Pilot Intervention",
+        "actionIds": [
+          "sundarbans-r1"
+        ],
+        "totalGain": 7.1,
+        "totalCostLakh": 465.5,
+        "confidence": 0.938,
+        "summary": "1 prioritised intervention delivering an estimated +7.1 connectivity points within 26 months."
+      },
+      {
+        "minLakh": 60,
+        "maxLakh": 180,
+        "label": "District Programme",
+        "actionIds": [
+          "sundarbans-r1",
+          "sundarbans-r2"
+        ],
+        "totalGain": 15.8,
+        "totalCostLakh": 1284,
+        "confidence": 0.858,
+        "summary": "2 prioritised interventions delivering an estimated +15.8 connectivity points within 31 months."
+      },
+      {
+        "minLakh": 180,
+        "maxLakh": 500,
+        "label": "State Programme",
+        "actionIds": [
+          "sundarbans-r1",
+          "sundarbans-r2",
+          "sundarbans-r3",
+          "sundarbans-r4"
+        ],
+        "totalGain": 29,
+        "totalCostLakh": 2158.2,
+        "confidence": 0.85,
+        "summary": "4 prioritised interventions delivering an estimated +29 connectivity points within 37 months."
+      },
+      {
+        "minLakh": 500,
+        "maxLakh": 5000,
+        "label": "Landscape Programme",
+        "actionIds": [
+          "sundarbans-r1",
+          "sundarbans-r2",
+          "sundarbans-r3",
+          "sundarbans-r4",
+          "sundarbans-r5",
+          "sundarbans-r6"
+        ],
+        "totalGain": 41.7,
+        "totalCostLakh": 3579,
+        "confidence": 0.829,
+        "summary": "6 prioritised interventions delivering an estimated +41.7 connectivity points within 37 months."
+      }
+    ],
+    "actions": [
+      {
+        "id": "sundarbans-r1",
+        "rank": 1,
+        "name": "Restore Bhagabatpur Belt",
+        "patchId": "sundarbans-p18",
+        "location": "Bhagabatpur Belt",
+        "center": [
+          21.90855,
+          88.75222
+        ],
+        "interventionType": "Assisted mangrove regeneration",
+        "areaHa": 130.7,
+        "costLakh": 465.5,
+        "connectivityGain": 7.1,
+        "scoreAfter": 88.4,
+        "confidence": 0.938,
+        "timeToImpactMonths": 26,
+        "carbonSequestrationTonnes": 27171,
+        "speciesBenefited": 45,
+        "costEffectiveness": 1.53,
+        "rationale": "Bhagabatpur Belt sits on a high-resistance gap between adjacent clusters. Restoring 130.7 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 7.1 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "sundarbans-r2",
+        "rank": 2,
+        "name": "Restore Gosaba Fringe",
+        "patchId": "sundarbans-p11",
+        "location": "Gosaba Fringe",
+        "center": [
+          21.91524,
+          88.60202
+        ],
+        "interventionType": "Tidal creek re-excavation",
+        "areaHa": 161.5,
+        "costLakh": 818.5,
+        "connectivityGain": 8.7,
+        "scoreAfter": 90,
+        "confidence": 0.778,
+        "timeToImpactMonths": 31,
+        "carbonSequestrationTonnes": 29842,
+        "speciesBenefited": 43,
+        "costEffectiveness": 1.06,
+        "rationale": "Gosaba Fringe sits on a high-resistance gap between adjacent clusters. Restoring 161.5 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 8.7 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "sundarbans-r3",
+        "rank": 3,
+        "name": "Restore Chamta Block",
+        "patchId": "sundarbans-p05",
+        "location": "Chamta Block",
+        "center": [
+          22.08732,
+          88.73327
+        ],
+        "interventionType": "Aquaculture pond reconversion",
+        "areaHa": 99.2,
+        "costLakh": 393.3,
+        "connectivityGain": 5.6,
+        "scoreAfter": 86.9,
+        "confidence": 0.815,
+        "timeToImpactMonths": 37,
+        "carbonSequestrationTonnes": 14128,
+        "speciesBenefited": 29,
+        "costEffectiveness": 1.42,
+        "rationale": "Chamta Block sits on a high-resistance gap between adjacent clusters. Restoring 99.2 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 5.6 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "sundarbans-r4",
+        "rank": 4,
+        "name": "Restore Khatuajhuri Creek",
+        "patchId": "sundarbans-p10",
+        "location": "Khatuajhuri Creek",
+        "center": [
+          21.99035,
+          88.56439
+        ],
+        "interventionType": "Seagrass transplantation",
+        "areaHa": 111.3,
+        "costLakh": 480.9,
+        "connectivityGain": 7.6,
+        "scoreAfter": 88.9,
+        "confidence": 0.868,
+        "timeToImpactMonths": 8,
+        "carbonSequestrationTonnes": 22683,
+        "speciesBenefited": 10,
+        "costEffectiveness": 1.58,
+        "rationale": "Khatuajhuri Creek sits on a high-resistance gap between adjacent clusters. Restoring 111.3 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 7.6 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "sundarbans-r5",
+        "rank": 5,
+        "name": "Restore Sajnekhali Core",
+        "patchId": "sundarbans-p01",
+        "location": "Sajnekhali Core",
+        "center": [
+          21.97367,
+          88.82629
+        ],
+        "interventionType": "Coral fragment nursery",
+        "areaHa": 148.9,
+        "costLakh": 798.2,
+        "connectivityGain": 6.8,
+        "scoreAfter": 88.1,
+        "confidence": 0.744,
+        "timeToImpactMonths": 18,
+        "carbonSequestrationTonnes": 35450,
+        "speciesBenefited": 34,
+        "costEffectiveness": 0.85,
+        "rationale": "Sajnekhali Core sits on a high-resistance gap between adjacent clusters. Restoring 148.9 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6.8 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "sundarbans-r6",
+        "rank": 6,
+        "name": "Restore Chandkhali Mudflat",
+        "patchId": "sundarbans-p13",
+        "location": "Chandkhali Mudflat",
+        "center": [
+          21.89545,
+          88.59848
+        ],
+        "interventionType": "Bund breach and hydrology restoration",
+        "areaHa": 107.3,
+        "costLakh": 622.6,
+        "connectivityGain": 5.9,
+        "scoreAfter": 87.2,
+        "confidence": 0.828,
+        "timeToImpactMonths": 17,
+        "carbonSequestrationTonnes": 23258,
+        "speciesBenefited": 12,
+        "costEffectiveness": 0.95,
+        "rationale": "Chandkhali Mudflat sits on a high-resistance gap between adjacent clusters. Restoring 107.3 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 5.9 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "sundarbans-r7",
+        "rank": 7,
+        "name": "Restore Panchamukhani Creek",
+        "patchId": "sundarbans-p04",
+        "location": "Panchamukhani Creek",
+        "center": [
+          21.96964,
+          88.74256
+        ],
+        "interventionType": "Invasive species removal",
+        "areaHa": 94.3,
+        "costLakh": 528.5,
+        "connectivityGain": 6.9,
+        "scoreAfter": 88.2,
+        "confidence": 0.914,
+        "timeToImpactMonths": 44,
+        "carbonSequestrationTonnes": 20031,
+        "speciesBenefited": 33,
+        "costEffectiveness": 1.31,
+        "rationale": "Panchamukhani Creek sits on a high-resistance gap between adjacent clusters. Restoring 94.3 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6.9 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "sundarbans-r8",
+        "rank": 8,
+        "name": "Restore Harinbhanga Fringe",
+        "patchId": "sundarbans-p08",
+        "location": "Harinbhanga Fringe",
+        "center": [
+          22.04246,
+          88.59772
+        ],
+        "interventionType": "Sediment nourishment",
+        "areaHa": 26.9,
+        "costLakh": 105.3,
+        "connectivityGain": 3.6,
+        "scoreAfter": 84.9,
+        "confidence": 0.94,
+        "timeToImpactMonths": 37,
+        "carbonSequestrationTonnes": 4642,
+        "speciesBenefited": 40,
+        "costEffectiveness": 3.42,
+        "rationale": "Harinbhanga Fringe sits on a high-resistance gap between adjacent clusters. Restoring 26.9 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 3.6 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      }
+    ]
+  },
+  "gulf-of-mannar": {
+    "sceneId": "gulf-of-mannar",
+    "currency": "INR",
+    "baselineScore": 68.2,
+    "budgetBands": [
+      {
+        "minLakh": 10,
+        "maxLakh": 60,
+        "label": "Pilot Intervention",
+        "actionIds": [
+          "gulf-of-mannar-r1"
+        ],
+        "totalGain": 9.2,
+        "totalCostLakh": 176,
+        "confidence": 0.818,
+        "summary": "1 prioritised intervention delivering an estimated +9.2 connectivity points within 10 months."
+      },
+      {
+        "minLakh": 60,
+        "maxLakh": 180,
+        "label": "District Programme",
+        "actionIds": [
+          "gulf-of-mannar-r1",
+          "gulf-of-mannar-r2"
+        ],
+        "totalGain": 15.9,
+        "totalCostLakh": 484.2,
+        "confidence": 0.875,
+        "summary": "2 prioritised interventions delivering an estimated +15.9 connectivity points within 13 months."
+      },
+      {
+        "minLakh": 180,
+        "maxLakh": 500,
+        "label": "State Programme",
+        "actionIds": [
+          "gulf-of-mannar-r1",
+          "gulf-of-mannar-r2",
+          "gulf-of-mannar-r3",
+          "gulf-of-mannar-r4"
+        ],
+        "totalGain": 27.6,
+        "totalCostLakh": 1586.6,
+        "confidence": 0.834,
+        "summary": "4 prioritised interventions delivering an estimated +27.6 connectivity points within 37 months."
+      },
+      {
+        "minLakh": 500,
+        "maxLakh": 5000,
+        "label": "Landscape Programme",
+        "actionIds": [
+          "gulf-of-mannar-r1",
+          "gulf-of-mannar-r2",
+          "gulf-of-mannar-r3",
+          "gulf-of-mannar-r4",
+          "gulf-of-mannar-r5",
+          "gulf-of-mannar-r6"
+        ],
+        "totalGain": 40.6,
+        "totalCostLakh": 2184.7,
+        "confidence": 0.854,
+        "summary": "6 prioritised interventions delivering an estimated +40.6 connectivity points within 37 months."
+      }
+    ],
+    "actions": [
+      {
+        "id": "gulf-of-mannar-r1",
+        "rank": 1,
+        "name": "Restore Krusadai Island Reef",
+        "patchId": "gulf-of-mannar-p01",
+        "location": "Krusadai Island Reef",
+        "center": [
+          9.12473,
+          79.2454
+        ],
+        "interventionType": "Assisted mangrove regeneration",
+        "areaHa": 65.4,
+        "costLakh": 176,
+        "connectivityGain": 9.2,
+        "scoreAfter": 77.4,
+        "confidence": 0.818,
+        "timeToImpactMonths": 10,
+        "carbonSequestrationTonnes": 11662,
+        "speciesBenefited": 40,
+        "costEffectiveness": 5.23,
+        "rationale": "Krusadai Island Reef sits on a high-resistance gap between adjacent clusters. Restoring 65.4 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 9.2 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "gulf-of-mannar-r2",
+        "rank": 2,
+        "name": "Restore Talairi Seagrass Bed",
+        "patchId": "gulf-of-mannar-p16",
+        "location": "Talairi Seagrass Bed",
+        "center": [
+          9.09543,
+          79.2944
+        ],
+        "interventionType": "Tidal creek re-excavation",
+        "areaHa": 54.7,
+        "costLakh": 308.2,
+        "connectivityGain": 6.7,
+        "scoreAfter": 74.9,
+        "confidence": 0.931,
+        "timeToImpactMonths": 13,
+        "carbonSequestrationTonnes": 12760,
+        "speciesBenefited": 26,
+        "costEffectiveness": 2.17,
+        "rationale": "Talairi Seagrass Bed sits on a high-resistance gap between adjacent clusters. Restoring 54.7 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6.7 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "gulf-of-mannar-r3",
+        "rank": 3,
+        "name": "Restore Pullivasal Reef",
+        "patchId": "gulf-of-mannar-p05",
+        "location": "Pullivasal Reef",
+        "center": [
+          9.20301,
+          79.20579
+        ],
+        "interventionType": "Aquaculture pond reconversion",
+        "areaHa": 162.5,
+        "costLakh": 676.7,
+        "connectivityGain": 5.7,
+        "scoreAfter": 73.9,
+        "confidence": 0.806,
+        "timeToImpactMonths": 37,
+        "carbonSequestrationTonnes": 33960,
+        "speciesBenefited": 45,
+        "costEffectiveness": 0.84,
+        "rationale": "Pullivasal Reef sits on a high-resistance gap between adjacent clusters. Restoring 162.5 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 5.7 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "gulf-of-mannar-r4",
+        "rank": 4,
+        "name": "Restore Musal Island Shelf",
+        "patchId": "gulf-of-mannar-p07",
+        "location": "Musal Island Shelf",
+        "center": [
+          9.16025,
+          79.17386
+        ],
+        "interventionType": "Seagrass transplantation",
+        "areaHa": 103.7,
+        "costLakh": 425.7,
+        "connectivityGain": 6,
+        "scoreAfter": 74.2,
+        "confidence": 0.781,
+        "timeToImpactMonths": 11,
+        "carbonSequestrationTonnes": 18310,
+        "speciesBenefited": 42,
+        "costEffectiveness": 1.41,
+        "rationale": "Musal Island Shelf sits on a high-resistance gap between adjacent clusters. Restoring 103.7 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "gulf-of-mannar-r5",
+        "rank": 5,
+        "name": "Restore Appa Island Reef",
+        "patchId": "gulf-of-mannar-p15",
+        "location": "Appa Island Reef",
+        "center": [
+          9.05873,
+          79.25563
+        ],
+        "interventionType": "Coral fragment nursery",
+        "areaHa": 104.7,
+        "costLakh": 303,
+        "connectivityGain": 6.9,
+        "scoreAfter": 75.1,
+        "confidence": 0.841,
+        "timeToImpactMonths": 30,
+        "carbonSequestrationTonnes": 15225,
+        "speciesBenefited": 15,
+        "costEffectiveness": 2.28,
+        "rationale": "Appa Island Reef sits on a high-resistance gap between adjacent clusters. Restoring 104.7 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6.9 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "gulf-of-mannar-r6",
+        "rank": 6,
+        "name": "Restore Poomarichan Meadow",
+        "patchId": "gulf-of-mannar-p04",
+        "location": "Poomarichan Meadow",
+        "center": [
+          9.16684,
+          79.23929
+        ],
+        "interventionType": "Bund breach and hydrology restoration",
+        "areaHa": 52.6,
+        "costLakh": 295.1,
+        "connectivityGain": 6.1,
+        "scoreAfter": 74.3,
+        "confidence": 0.947,
+        "timeToImpactMonths": 22,
+        "carbonSequestrationTonnes": 10338,
+        "speciesBenefited": 27,
+        "costEffectiveness": 2.07,
+        "rationale": "Poomarichan Meadow sits on a high-resistance gap between adjacent clusters. Restoring 52.6 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6.1 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "gulf-of-mannar-r7",
+        "rank": 7,
+        "name": "Restore Anaipar Reef Flat",
+        "patchId": "gulf-of-mannar-p13",
+        "location": "Anaipar Reef Flat",
+        "center": [
+          9.06749,
+          79.18985
+        ],
+        "interventionType": "Invasive species removal",
+        "areaHa": 67.8,
+        "costLakh": 399,
+        "connectivityGain": 5.9,
+        "scoreAfter": 74.1,
+        "confidence": 0.752,
+        "timeToImpactMonths": 47,
+        "carbonSequestrationTonnes": 12484,
+        "speciesBenefited": 32,
+        "costEffectiveness": 1.48,
+        "rationale": "Anaipar Reef Flat sits on a high-resistance gap between adjacent clusters. Restoring 67.8 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 5.9 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "gulf-of-mannar-r8",
+        "rank": 8,
+        "name": "Restore Vilanguchalli Shoal",
+        "patchId": "gulf-of-mannar-p11",
+        "location": "Vilanguchalli Shoal",
+        "center": [
+          9.09106,
+          79.09958
+        ],
+        "interventionType": "Sediment nourishment",
+        "areaHa": 166.9,
+        "costLakh": 484.9,
+        "connectivityGain": 4.1,
+        "scoreAfter": 72.3,
+        "confidence": 0.757,
+        "timeToImpactMonths": 25,
+        "carbonSequestrationTonnes": 37782,
+        "speciesBenefited": 22,
+        "costEffectiveness": 0.85,
+        "rationale": "Vilanguchalli Shoal sits on a high-resistance gap between adjacent clusters. Restoring 166.9 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 4.1 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      }
+    ]
+  },
+  "odisha-coast": {
+    "sceneId": "odisha-coast",
+    "currency": "INR",
+    "baselineScore": 71.9,
+    "budgetBands": [
+      {
+        "minLakh": 10,
+        "maxLakh": 60,
+        "label": "Pilot Intervention",
+        "actionIds": [
+          "odisha-coast-r1"
+        ],
+        "totalGain": 4.7,
+        "totalCostLakh": 934.5,
+        "confidence": 0.823,
+        "summary": "1 prioritised intervention delivering an estimated +4.7 connectivity points within 14 months."
+      },
+      {
+        "minLakh": 60,
+        "maxLakh": 180,
+        "label": "District Programme",
+        "actionIds": [
+          "odisha-coast-r1",
+          "odisha-coast-r2"
+        ],
+        "totalGain": 9.9,
+        "totalCostLakh": 1590.2,
+        "confidence": 0.887,
+        "summary": "2 prioritised interventions delivering an estimated +9.9 connectivity points within 14 months."
+      },
+      {
+        "minLakh": 180,
+        "maxLakh": 500,
+        "label": "State Programme",
+        "actionIds": [
+          "odisha-coast-r1",
+          "odisha-coast-r2",
+          "odisha-coast-r3",
+          "odisha-coast-r4"
+        ],
+        "totalGain": 26.8,
+        "totalCostLakh": 2455.5,
+        "confidence": 0.87,
+        "summary": "4 prioritised interventions delivering an estimated +26.8 connectivity points within 33 months."
+      },
+      {
+        "minLakh": 500,
+        "maxLakh": 5000,
+        "label": "Landscape Programme",
+        "actionIds": [
+          "odisha-coast-r1",
+          "odisha-coast-r2",
+          "odisha-coast-r3",
+          "odisha-coast-r4",
+          "odisha-coast-r5",
+          "odisha-coast-r6"
+        ],
+        "totalGain": 41.2,
+        "totalCostLakh": 3336.8,
+        "confidence": 0.848,
+        "summary": "6 prioritised interventions delivering an estimated +41.2 connectivity points within 37 months."
+      }
+    ],
+    "actions": [
+      {
+        "id": "odisha-coast-r1",
+        "rank": 1,
+        "name": "Restore Gahirmatha Rookery Flat",
+        "patchId": "odisha-coast-p05",
+        "location": "Gahirmatha Rookery Flat",
+        "center": [
+          20.79021,
+          86.91972
+        ],
+        "interventionType": "Assisted mangrove regeneration",
+        "areaHa": 168.9,
+        "costLakh": 934.5,
+        "connectivityGain": 4.7,
+        "scoreAfter": 76.6,
+        "confidence": 0.823,
+        "timeToImpactMonths": 14,
+        "carbonSequestrationTonnes": 29976,
+        "speciesBenefited": 15,
+        "costEffectiveness": 0.5,
+        "rationale": "Gahirmatha Rookery Flat sits on a high-resistance gap between adjacent clusters. Restoring 168.9 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 4.7 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "odisha-coast-r2",
+        "rank": 2,
+        "name": "Restore Praharajpur Fringe",
+        "patchId": "odisha-coast-p15",
+        "location": "Praharajpur Fringe",
+        "center": [
+          20.63928,
+          86.95128
+        ],
+        "interventionType": "Tidal creek re-excavation",
+        "areaHa": 115.3,
+        "costLakh": 655.7,
+        "connectivityGain": 5.2,
+        "scoreAfter": 77.1,
+        "confidence": 0.951,
+        "timeToImpactMonths": 13,
+        "carbonSequestrationTonnes": 18999,
+        "speciesBenefited": 48,
+        "costEffectiveness": 0.79,
+        "rationale": "Praharajpur Fringe sits on a high-resistance gap between adjacent clusters. Restoring 115.3 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 5.2 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      },
+      {
+        "id": "odisha-coast-r3",
+        "rank": 3,
+        "name": "Restore Suajore Creek Bank",
+        "patchId": "odisha-coast-p10",
+        "location": "Suajore Creek Bank",
+        "center": [
+          20.66745,
+          86.83745
+        ],
+        "interventionType": "Aquaculture pond reconversion",
+        "areaHa": 87.7,
+        "costLakh": 459.7,
+        "connectivityGain": 7.8,
+        "scoreAfter": 79.7,
+        "confidence": 0.841,
+        "timeToImpactMonths": 28,
+        "carbonSequestrationTonnes": 18715,
+        "speciesBenefited": 35,
+        "costEffectiveness": 1.7,
+        "rationale": "Suajore Creek Bank sits on a high-resistance gap between adjacent clusters. Restoring 87.7 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 7.8 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "odisha-coast-r4",
+        "rank": 4,
+        "name": "Restore Rajnagar Buffer",
+        "patchId": "odisha-coast-p13",
+        "location": "Rajnagar Buffer",
+        "center": [
+          20.64597,
+          86.88015
+        ],
+        "interventionType": "Seagrass transplantation",
+        "areaHa": 127.9,
+        "costLakh": 405.6,
+        "connectivityGain": 9.1,
+        "scoreAfter": 81,
+        "confidence": 0.863,
+        "timeToImpactMonths": 33,
+        "carbonSequestrationTonnes": 21889,
+        "speciesBenefited": 26,
+        "costEffectiveness": 2.24,
+        "rationale": "Rajnagar Buffer sits on a high-resistance gap between adjacent clusters. Restoring 127.9 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 9.1 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "odisha-coast-r5",
+        "rank": 5,
+        "name": "Restore Mahinsamunda Marsh",
+        "patchId": "odisha-coast-p12",
+        "location": "Mahinsamunda Marsh",
+        "center": [
+          20.6344,
+          86.87448
+        ],
+        "interventionType": "Coral fragment nursery",
+        "areaHa": 123,
+        "costLakh": 714.2,
+        "connectivityGain": 8,
+        "scoreAfter": 79.9,
+        "confidence": 0.853,
+        "timeToImpactMonths": 37,
+        "carbonSequestrationTonnes": 21979,
+        "speciesBenefited": 17,
+        "costEffectiveness": 1.12,
+        "rationale": "Mahinsamunda Marsh sits on a high-resistance gap between adjacent clusters. Restoring 123 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 8 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "odisha-coast-r6",
+        "rank": 6,
+        "name": "Restore Habalikhati Dune Belt",
+        "patchId": "odisha-coast-p03",
+        "location": "Habalikhati Dune Belt",
+        "center": [
+          20.73251,
+          86.92011
+        ],
+        "interventionType": "Bund breach and hydrology restoration",
+        "areaHa": 67.2,
+        "costLakh": 167.1,
+        "connectivityGain": 6.4,
+        "scoreAfter": 78.3,
+        "confidence": 0.755,
+        "timeToImpactMonths": 25,
+        "carbonSequestrationTonnes": 9741,
+        "speciesBenefited": 40,
+        "costEffectiveness": 3.83,
+        "rationale": "Habalikhati Dune Belt sits on a high-resistance gap between adjacent clusters. Restoring 67.2 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 6.4 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "odisha-coast-r7",
+        "rank": 7,
+        "name": "Restore Jambu Estuary Mouth",
+        "patchId": "odisha-coast-p14",
+        "location": "Jambu Estuary Mouth",
+        "center": [
+          20.61457,
+          86.91913
+        ],
+        "interventionType": "Invasive species removal",
+        "areaHa": 34,
+        "costLakh": 113.8,
+        "connectivityGain": 4.8,
+        "scoreAfter": 76.7,
+        "confidence": 0.888,
+        "timeToImpactMonths": 40,
+        "carbonSequestrationTonnes": 6966,
+        "speciesBenefited": 35,
+        "costEffectiveness": 4.22,
+        "rationale": "Jambu Estuary Mouth sits on a high-resistance gap between adjacent clusters. Restoring 34 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 4.8 points — the highest return per rupee in this budget band.",
+        "risks": "Low residual risk. Site is within a notified protected area with active local stewardship."
+      },
+      {
+        "id": "odisha-coast-r8",
+        "rank": 8,
+        "name": "Restore Bhitarkanika Core",
+        "patchId": "odisha-coast-p01",
+        "location": "Bhitarkanika Core",
+        "center": [
+          20.70638,
+          87.00877
+        ],
+        "interventionType": "Sediment nourishment",
+        "areaHa": 80.2,
+        "costLakh": 238.1,
+        "connectivityGain": 4,
+        "scoreAfter": 75.9,
+        "confidence": 0.764,
+        "timeToImpactMonths": 19,
+        "carbonSequestrationTonnes": 14116,
+        "speciesBenefited": 34,
+        "costEffectiveness": 1.68,
+        "rationale": "Bhitarkanika Core sits on a high-resistance gap between adjacent clusters. Restoring 80.2 ha here re-establishes a stepping-stone link, lifting landscape connectivity by an estimated 4 points — the highest return per rupee in this budget band.",
+        "risks": "Elevated residual pressure: without concurrent enforcement of the buffer notification, re-degradation within 5 years is likely."
+      }
+    ]
+  }
+}

@@ -1,0 +1,343 @@
+"use client";
+
+import { Suspense, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import {
+  BookOpen,
+  Building2,
+  Calendar,
+  Download,
+  FileText,
+  Hash,
+  Loader2,
+  Printer,
+  Quote,
+  Share2,
+  User,
+} from "lucide-react";
+
+import { AppShell } from "@/components/dashboard/app-shell";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { EASE } from "@/components/shared/motion";
+import { getReports } from "@/lib/data";
+import { fmtDate } from "@/utils/format";
+import { cn } from "@/lib/utils";
+
+function ReportsView() {
+  const params = useSearchParams();
+  const reports = getReports();
+  const [activeId, setActiveId] = useState(params.get("id") ?? reports[0].id);
+  const [downloading, setDownloading] = useState(false);
+  const printRef = useRef<HTMLDivElement>(null);
+
+  const report = useMemo(
+    () => reports.find((r) => r.id === activeId) ?? reports[0],
+    [reports, activeId],
+  );
+
+  // The prototype has no PDF backend — print-to-PDF is the honest equivalent.
+  const handleDownload = () => {
+    setDownloading(true);
+    window.setTimeout(() => {
+      setDownloading(false);
+      window.print();
+    }, 900);
+  };
+
+  return (
+    <AppShell
+      title="Scientific Reports"
+      subtitle={`${reports.length} published assessments`}
+      actions={
+        <>
+          <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+            <Share2 className="h-3.5 w-3.5" />
+            Share
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleDownload}
+            disabled={downloading}
+            className="bg-gradient-eco font-semibold text-[#04231b]"
+          >
+            {downloading ? (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Preparing…
+              </>
+            ) : (
+              <>
+                <Download className="h-3.5 w-3.5" />
+                Download PDF
+              </>
+            )}
+          </Button>
+        </>
+      }
+    >
+      <div className="mx-auto grid max-w-[1500px] gap-5 lg:grid-cols-[268px_1fr]">
+        {/* ------------------------------------------------- report list */}
+        <aside className="space-y-2 print:hidden">
+          <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+            Assessments
+          </div>
+          {reports.map((r, i) => (
+            <motion.button
+              key={r.id}
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: i * 0.06, ease: EASE }}
+              onClick={() => setActiveId(r.id)}
+              className={cn(
+                "w-full rounded-2xl border p-3.5 text-left transition-all",
+                r.id === activeId
+                  ? "border-[#00c896]/35 bg-[#00c896]/10"
+                  : "border-foreground/[0.08] bg-card/70 hover:border-foreground/15 hover:bg-foreground/[0.06]",
+              )}
+            >
+              <div className="flex items-start gap-2.5">
+                <div
+                  className={cn(
+                    "grid h-8 w-8 shrink-0 place-items-center rounded-lg",
+                    r.id === activeId
+                      ? "bg-[#00c896]/18 text-[#00c896]"
+                      : "bg-foreground/[0.06] text-muted-foreground",
+                  )}
+                >
+                  <FileText className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="line-clamp-2 text-[12px] font-medium leading-snug">
+                    {r.title}
+                  </div>
+                  <div className="mt-1.5 flex items-center gap-1.5">
+                    <Badge
+                      variant={
+                        r.status === "final"
+                          ? "success"
+                          : r.status === "draft"
+                            ? "secondary"
+                            : "warning"
+                      }
+                    >
+                      {r.status}
+                    </Badge>
+                    <span className="text-[10px] text-muted-foreground">{r.pages} pp</span>
+                  </div>
+                </div>
+              </div>
+            </motion.button>
+          ))}
+        </aside>
+
+        {/* ----------------------------------------------- report body */}
+        <motion.div
+          key={report.id}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: EASE }}
+        >
+          <Card className="overflow-hidden print:border-0 print:bg-white">
+            {/* cover */}
+            <div className="relative overflow-hidden border-b border-foreground/[0.08] bg-gradient-to-br from-[#00c896]/12 via-transparent to-[#38bdf8]/10 p-6 sm:p-9">
+              <div className="pointer-events-none absolute inset-0 bg-grid opacity-30" />
+              <div className="relative">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="default">
+                    <BookOpen className="h-3 w-3" />
+                    {report.id}
+                  </Badge>
+                  <Badge
+                    variant={
+                      report.status === "final"
+                        ? "success"
+                        : report.status === "draft"
+                          ? "secondary"
+                          : "warning"
+                    }
+                  >
+                    {report.status}
+                  </Badge>
+                  <Badge variant="secondary">v{report.version}</Badge>
+                </div>
+
+                <h1 className="mt-4 max-w-3xl text-balance text-xl font-bold leading-tight tracking-tight sm:text-2xl lg:text-[27px]">
+                  {report.title}
+                </h1>
+
+                <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2.5 text-[11.5px] text-muted-foreground">
+                  <span className="flex items-center gap-1.5">
+                    <User className="h-3.5 w-3.5" />
+                    {report.author}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Building2 className="h-3.5 w-3.5" />
+                    {report.organisation}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5" />
+                    {fmtDate(report.generatedAt, true)}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Hash className="h-3.5 w-3.5" />
+                    {report.doi}
+                  </span>
+                </div>
+
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {report.keywords.map((k) => (
+                    <Badge key={k} variant="secondary">
+                      {k}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <CardContent ref={printRef} className="p-6 sm:p-9">
+              {/* abstract */}
+              <div className="rounded-2xl border border-[#00c896]/20 bg-[#00c896]/6 p-5">
+                <div className="mb-2.5 flex items-center gap-2">
+                  <Quote className="h-3.5 w-3.5 text-[#00c896]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#00c896]">
+                    Abstract
+                  </span>
+                </div>
+                <p className="text-[13px] leading-relaxed text-foreground/90">{report.abstract}</p>
+              </div>
+
+              {/* sections */}
+              <div className="mt-8 space-y-9">
+                {report.sections.map((s, i) => (
+                  <motion.section
+                    key={s.id}
+                    initial={{ opacity: 0, y: 14 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.15 }}
+                    transition={{ duration: 0.5, delay: Math.min(i * 0.04, 0.2), ease: EASE }}
+                  >
+                    <h2 className="text-[16px] font-bold tracking-tight sm:text-[17px]">
+                      {s.heading}
+                    </h2>
+                    <div className="mt-1 h-px bg-gradient-to-r from-[#00c896]/40 to-transparent" />
+
+                    <div className="mt-4 space-y-3.5">
+                      {s.body.map((p, j) => (
+                        <p key={j} className="text-[13px] leading-[1.75] text-muted-foreground">
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+
+                    {s.bullets && (
+                      <ul className="mt-4 space-y-2">
+                        {s.bullets.map((b, j) => (
+                          <li key={j} className="flex gap-2.5">
+                            <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-[#00c896]" />
+                            <span className="text-[12.5px] leading-relaxed text-muted-foreground">
+                              {b}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {s.table && (
+                      <div className="scroll-slim mt-5 overflow-x-auto rounded-2xl border border-foreground/[0.08]">
+                        <table className="w-full min-w-[520px] border-collapse text-left">
+                          <thead>
+                            <tr className="bg-foreground/[0.04]">
+                              {s.table.columns.map((c) => (
+                                <th
+                                  key={c}
+                                  className="whitespace-nowrap px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground"
+                                >
+                                  {c}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {s.table.rows.map((row, ri) => (
+                              <tr
+                                key={ri}
+                                className="border-t border-foreground/[0.08] transition-colors hover:bg-foreground/[0.03]"
+                              >
+                                {row.map((cell, ci) => (
+                                  <td
+                                    key={ci}
+                                    className={cn(
+                                      "whitespace-nowrap px-4 py-2.5 text-[12px]",
+                                      ci === 0
+                                        ? "font-medium text-foreground"
+                                        : "tabular text-muted-foreground",
+                                      typeof cell === "string" &&
+                                        cell.startsWith("−") &&
+                                        "text-[#ef4444]",
+                                      typeof cell === "string" &&
+                                        cell.startsWith("+") &&
+                                        "text-[#00c896]",
+                                    )}
+                                  >
+                                    {cell}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </motion.section>
+                ))}
+              </div>
+
+              {/* footer */}
+              <div className="mt-10 flex flex-col gap-4 border-t border-foreground/[0.08] pt-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-[11px] text-muted-foreground">
+                  <div className="font-medium text-foreground">
+                    {report.id} · v{report.version}
+                  </div>
+                  <div className="mt-0.5">
+                    Generated by EcoConnectAI · {report.pages} pages · {report.doi}
+                  </div>
+                </div>
+                <div className="flex gap-2 print:hidden">
+                  <Button variant="outline" size="sm" onClick={() => window.print()}>
+                    <Printer className="h-3.5 w-3.5" />
+                    Print
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleDownload}
+                    className="bg-gradient-eco font-semibold text-[#04231b]"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Download PDF
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    </AppShell>
+  );
+}
+
+export default function ReportsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="grid min-h-screen place-items-center bg-background">
+          <Loader2 className="h-6 w-6 animate-spin text-[#00c896]" />
+        </div>
+      }
+    >
+      <ReportsView />
+    </Suspense>
+  );
+}
