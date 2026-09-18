@@ -1,0 +1,31 @@
+# MODE B - CLOUD_TRAINING_MODE / FULL EXPERIMENT.  UNB7 exactly as in the paper.
+# Intended for a CUDA GPU (Colab / Kaggle, >= 16 GB).  B7 at 512x512 will not fit a 16 GB laptop.
+mode: full
+dataset_config: configs/dataset_s1s2.yaml
+
+model:
+  encoder: efficientnet-b7        # UNB7 (paper Section IV-A, Fig. 3)
+  encoder_weights: imagenet
+
+training:
+  epochs: 60
+  learning_rate: 1.0e-4
+  weight_decay: 1.0e-4
+  loss: bce_dice
+  loss_kwargs: {}
+  scheduler: cosine
+  early_stopping_patience: 10
+  monitor: iou
+  threshold: 0.5
+  mixed_precision: true
+  grad_clip: 1.0
+  seed: 42
+  device: auto
+  max_train_batches_per_epoch: null
+
+# override dataset settings for the full run
+dataset_overrides:
+  dataset: {image_size: 512}
+  loader: {batch_size: 4, num_workers: 4, pin_memory: true}
+
+output_root: outputs/segmentation

@@ -62,6 +62,7 @@ def test_ml_stage_end_to_end(synthetic_aoi, tmp_path, monkeypatch):
 
     tcfg, dcfg = resolve_training_config("configs/train_dev.yaml")
     dcfg["dataset"]["image_size"] = 64
+    dcfg["dataset"]["bands"] = None                       # fixture has 4 synthetic bands
     dcfg["loader"].update(batch_size=4, num_workers=0)
     dcfg["development"].update(max_train_samples=12, max_val_samples=6, max_test_samples=6)
     tcfg["model"].update(encoder="efficientnet-b0", encoder_weights=None)
@@ -71,7 +72,7 @@ def test_ml_stage_end_to_end(synthetic_aoi, tmp_path, monkeypatch):
     x, y, tid = datasets["train"][0]
     assert x.shape == (4, 64, 64) and y.shape == (64, 64) and x.dtype == torch.float32
     assert info["n_train"] == 12 and info["in_channels"] == 4
-    assert (ds_root / "stats.json").exists()                      # normaliser fitted on train only
+    assert list(ds_root.glob("stats_bands-*.json"))               # normaliser fitted on train only, per band subset
     # nodata pixels are masked out of the label
     raw, mask, _ = datasets["train"].read_raw(0)
     assert set(np.unique(mask)).issubset({0, 1, 255})

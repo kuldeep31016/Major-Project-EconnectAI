@@ -141,9 +141,11 @@ def build_datasets(cfg: dict, mode: str = "development") -> tuple[dict[str, Tile
     normalizer = None
     if d["normalization"] != "none":
         train_ids = read_split(paths.splits["train"], limits["max_train_samples"], seed)
+        band_tag = "all" if d["bands"] is None else "-".join(str(b) for b in d["bands"])
+        stats_path = paths.stats.with_name(f"stats_bands-{band_tag}.json")   # one cache per band subset
         normalizer = fit_normalizer(
             paths, train_ids, bands=d["bands"], method=d["normalization"],
-            clip_percentiles=tuple(d["clip_percentiles"]), cache=paths.stats, nodata=d.get("nodata_value"),
+            clip_percentiles=tuple(d["clip_percentiles"]), cache=stats_path, nodata=d.get("nodata_value"),
         )
     common = dict(image_size=d["image_size"], bands=d["bands"], num_classes=d["num_classes"],
                   ignore_index=d["ignore_index"], normalizer=normalizer, seed=seed, nodata_value=d.get("nodata_value"))

@@ -1,3 +1,4 @@
+# E2 ablation - Sentinel-2 bands only. Same tiles/splits as dataset.yaml.
 # Dataset configuration.  DATA_ROOT may be overridden by the DATA_ROOT env var / .env file.
 # Never hard-code personal paths here.
 #
@@ -17,7 +18,7 @@ dataset:
   #   [0, 1]        E1  S1 VV/VH only        -> paper baseline (SAR drives segmentation)   <- default
   #   [2,3,4,5,6,7,8,9]  E2  S2 only         -> complementary optical ablation
   #   null (all)    E3  S1 + S2 early fusion -> ablation; NOT the model described in the paper
-  bands: [0, 1]
+  bands: [2, 3, 4, 5, 6, 7, 8, 9]   # E2 - Sentinel-2 only (ablation)
   num_classes: 1                   # 1 = binary habitat (sigmoid); >1 = multi-class (softmax)
   ignore_index: 255
   nodata_value: null               # per metadata.json if null
