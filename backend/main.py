@@ -241,7 +241,9 @@ def timeline(study_area: str, critical_threshold: float = 0.10):
         })
         prev = y
     return {"sceneId": study_area, "years": years,
-            "note": "Real timeline: each year is an actual pipeline run; change = binary-mask difference between consecutive runs. No interpolation."}
+            "note": ("Real timeline: each year is an actual pipeline run; change = binary-mask difference between consecutive "
+                     "runs at their thresholds. No interpolation. For development-mode models, prediction noise can dominate "
+                     "the year-to-year difference - treat lost/gained as model output, not as measured habitat change.")}
 
 
 # --------------------------------------------------------------------------- interactive computations

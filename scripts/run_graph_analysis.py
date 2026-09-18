@@ -39,6 +39,7 @@ def main() -> int:
     ap.add_argument("--result-kind", choices=["development", "experiment", "external", "synthetic"], default=None)
     ap.add_argument("--run-id", default=None)
     ap.add_argument("--model-checkpoint", default=None, help="recorded in provenance")
+    ap.add_argument("--no-latest", action="store_true", help="do not move the study area's LATEST pointer to this run")
     args = ap.parse_args()
 
     cfg = load_config(args.config)
@@ -74,6 +75,7 @@ def main() -> int:
     run_dir = run_graph_analysis(
         study_area_id=args.study_area, study_area_meta=meta, patches=patches, landscape_area_ha=a_l,
         cfg=cfg, data_source=src, result_kind=kind, candidates=cands, run_id=args.run_id,
+        write_latest_pointer=not args.no_latest,
     )
     import json
     m = json.loads((run_dir / "metrics.json").read_text())
