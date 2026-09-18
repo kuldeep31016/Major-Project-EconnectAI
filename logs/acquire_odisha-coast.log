@@ -9,3 +9,6 @@
   S2 granules covering the AOI: MGRS-45QVC (83%), MGRS-45QVD (54%)
   S2 S2B_45QVC_20200214_1_L2A  cloud=0.0%  AOI overlap=83%
   S2 S2B_45QVC_20201130_1_L2A  cloud=0.0%  AOI overlap=83%
+ERROR 1: Request for https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/45/Q/VC/2020/11/S2B_45QVC_20201130_1_L2A/B04.tif range 58310780-62432948 failed with response_code=206
+  read failed (RasterioIOError); retry 1/4 in 2s: s2-l2a-cogs/45/Q/VC/2020/11/S2B_45QVC_20201130_1_L2A/B04.tif
+  S2 S2B_45QVD_20200214_1_L2A  cloud=0.0%  AOI overlap=54%

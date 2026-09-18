@@ -31,8 +31,27 @@ from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT, load_study_areas,
 RUNS_DIR = OUTPUTS_DIR / "runs"
 SEG_DIR = OUTPUTS_DIR / "segmentation"
 
-app = FastAPI(title="EcoConnectAI API", version=__version__,
-              description="Coastal habitat connectivity analysis - research outputs served from pipeline runs.")
+from contextlib import asynccontextmanager  # noqa: E402
+from backend.db import SessionLocal, init_db  # noqa: E402
+from backend.auth import seed_demo_users  # noqa: E402
+from backend.registry import sync_all  # noqa: E402
+from backend.routers import router as workflow_router  # noqa: E402
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Create the database, mirror on-disk artefacts into the provenance registry, seed demo accounts."""
+    init_db()
+    with SessionLocal() as db:
+        summary = sync_all(db)
+        created = seed_demo_users(db)
+    print(f"[startup] registry synced {summary}; demo users created: {created or 'none (exist)'}")
+    yield
+
+
+app = FastAPI(title="EcoConnectAI API", version=__version__, lifespan=lifespan,
+              description="Coastal Ecosystem Intelligence and Decision-Support Platform - API over pipeline runs and application state.")
+app.include_router(workflow_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=os.environ.get("ECO_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(","),
@@ -373,6 +392,8 @@ def segment(req: SegmentRequest):
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT)
     if r.returncode != 0:
         raise HTTPException(500, f"run_graph_analysis.py failed:\n{r.stderr[-2000:]}")
+    with SessionLocal() as db:            # register the new analysis version in the provenance registry
+        sync_all(db)
     return {**_run_summary(_resolve_run(req.study_area, "latest")), "scene": req.scene_tif, "checkpoint": req.checkpoint,
             "thresholdUsed": req.threshold}
 
