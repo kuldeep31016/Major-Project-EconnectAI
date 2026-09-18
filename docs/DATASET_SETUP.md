@@ -76,3 +76,15 @@ recorded in `experiment.json` of every run.
 A 22 × 22 km AOI at 10 m → ~2200² px. Scene (10 bands float32, deflate) ≈ 60–150 MB; 256² tiles at stride 128
 ≈ 280 tiles ≈ 300 MB uncompressed. Four study areas fit in < 2 GB. Never extract the full GMW zip (~1.5 GB); the
 loader extracts only the intersecting 1° tiles.
+
+## What the acquisition produced (log)
+
+| Area | Year | S1 scenes | S2 scenes (granules) | GMW tile | Mangrove in AOI | Note |
+|---|---|---|---|---|---|---|
+| kerala-coast | 2020 | 6 (desc.) | 6 (43PFL, 43PFM) | N10E076 | 102 ha = 0.21 % | thin fringes 1–3 px; hard training area |
+| kerala-coast | 2025 | 6 (desc.) | — | — | — | inference only (timeline) |
+| odisha-coast | 2020 | 6 | see `data/scenes/odisha-coast/*.json` | see label .json | see label .json | |
+| sundarbans | 2020 | — | — | — | — | NOT YET RUN |
+| gulf-of-mannar | 2020 | — | — | — | — | NOT YET RUN |
+
+Update this table from the `.json` sidecars after each acquisition; never from memory.
