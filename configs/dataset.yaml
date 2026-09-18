@@ -1,0 +1,53 @@
+# Dataset configuration.  DATA_ROOT may be overridden by the DATA_ROOT env var / .env file.
+# Never hard-code personal paths here.
+#
+# Canonical tile layout (see docs/DATASET_SETUP.md):
+#   ${DATA_ROOT}/${dataset.name}/
+#       metadata.json          bands, nodata, class map, source description, crs
+#       tiles/images/<id>.tif  (C, H, W)  input tile
+#       tiles/masks/<id>.tif   (H, W) uint8 label tile; ignore_index marks unlabelled pixels
+#       splits/{train,val,test}.txt   one tile id per line
+#       stats.json             per-band mean/std computed on the TRAIN split only (scripts/compute_stats.py)
+
+dataset:
+  name: ecoconnect_tiles           # folder under DATA_ROOT
+  data_root: ${DATA_ROOT}          # resolved from the environment
+  image_size: 256                  # tiles are center-cropped / padded to this (DEV mode); FULL mode may use 512
+  bands: null                      # null = all bands in the tile, else list of 0-based indices
+  num_classes: 1                   # 1 = binary habitat (sigmoid); >1 = multi-class (softmax)
+  ignore_index: 255
+  nodata_value: null               # per metadata.json if null
+  normalization: zscore            # zscore (from stats.json) | minmax | none
+  clip_percentiles: [1, 99]        # applied before z-score when computing stats (robust to outliers)
+
+splits:
+  train: splits/train.txt
+  val: splits/val.txt
+  test: splits/test.txt
+
+loader:
+  batch_size: 8
+  num_workers: 2
+  pin_memory: false
+  seed: 42
+
+# ------------------------------------------------------------------ MODE A: development subset
+# Small real subset for debugging / pipeline verification / screenshots.  Results from this mode
+# are labelled "DEVELOPMENT-SUBSET RESULT - NOT FINAL" everywhere.
+development:
+  max_train_samples: 300
+  max_val_samples: 80
+  max_test_samples: 80
+
+# ------------------------------------------------------------------ MODE B: full experiment
+# null = use every tile listed in the split files.
+full:
+  max_train_samples: null
+  max_val_samples: null
+  max_test_samples: null
+
+augmentation:                      # TRAIN split only; validation/test are never augmented
+  hflip: 0.5
+  vflip: 0.5
+  rot90: 0.5
+  brightness_jitter: 0.0           # multiplicative jitter range on optical bands (0 = off)

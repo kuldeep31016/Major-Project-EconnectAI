@@ -18,3 +18,4 @@ dependencies = {file = ["requirements.txt"]}
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+filterwarnings = ["ignore::PendingDeprecationWarning:rasterio.*"]
