@@ -40,9 +40,9 @@ loader:
 # Small real subset for debugging / pipeline verification / screenshots.  Results from this mode
 # are labelled "DEVELOPMENT-SUBSET RESULT - NOT FINAL" everywhere.
 development:
-  max_train_samples: 300
-  max_val_samples: 80
-  max_test_samples: 80
+  max_train_samples: 800
+  max_val_samples: 200
+  max_test_samples: 200
 
 # ------------------------------------------------------------------ MODE B: full experiment
 # null = use every tile listed in the split files.
