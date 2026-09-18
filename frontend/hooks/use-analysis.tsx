@@ -17,8 +17,8 @@ import {
   registerLiveTimeline,
   type DataSource,
 } from "@/lib/data";
-import { apiHealth, fetchBundle, fetchTimeline, postWhatIf } from "@/lib/api";
-import type { SatelliteScene, WhatIfResult } from "@/types";
+import { apiHealth, fetchBundle, fetchRuns, fetchTimeline, postWhatIf } from "@/lib/api";
+import type { RunSummary, SatelliteScene, WhatIfResult } from "@/types";
 
 interface AnalysisState {
   sceneId: string;
@@ -53,6 +53,10 @@ interface AnalysisState {
   whatIfError: string | null;
   /** Re-fetch the latest run for the current scene (e.g. after POST /segment). */
   refreshBundle: () => Promise<void>;
+  /** Runs available for the current scene (newest first) and the one being displayed ("latest" = LATEST pointer). */
+  runs: RunSummary[];
+  runId: string;
+  setRunId: (id: string) => void;
 }
 
 const AnalysisContext = createContext<AnalysisState | null>(null);
@@ -67,6 +71,8 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   const [activeScenarioId, setActiveScenarioId] = useState<string | null>(null);
   const [year, setYear] = useState(2025);
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
+  const [runs, setRuns] = useState<RunSummary[]>([]);
+  const [runId, setRunIdState] = useState("latest");
   const [bundleLoading, setBundleLoading] = useState(false);
   const [bundleVersion, setBundleVersion] = useState(0);
   const [whatIfRaw, setWhatIf] = useState<WhatIfResult | null>(null);
@@ -82,17 +88,19 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
 
   // Load the latest real run for the scene. Falls back silently to mock when the API is
   // offline or no run exists; the UI shows which through `dataSource`.
-  const loadBundle = useCallback(async (id: string) => {
+  const loadBundle = useCallback(async (id: string, run = "latest") => {
     setBundleLoading(true);
     try {
       const ok = await apiHealth();
       setApiOnline(ok);
       if (!ok) {
         registerLiveBundle(id, null);
+        setRuns([]);
         return;
       }
-      const bundle = await fetchBundle(id);
+      const [bundle, runList] = await Promise.all([fetchBundle(id, run), fetchRuns(id).catch(() => [] as RunSummary[])]);
       registerLiveBundle(id, bundle);
+      setRuns(runList);
       try {
         registerLiveTimeline(id, await fetchTimeline(id));
       } catch {
@@ -108,10 +116,14 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void loadBundle(sceneId);
-  }, [sceneId, loadBundle]);
+    void loadBundle(sceneId, runId);
+  }, [sceneId, runId, loadBundle]);
 
-  const refreshBundle = useCallback(() => loadBundle(sceneId), [loadBundle, sceneId]);
+  const refreshBundle = useCallback(() => loadBundle(sceneId, runId), [loadBundle, sceneId, runId]);
+  const setRunId = useCallback((id: string) => {
+    setRunIdState(id);
+    setRemovedPatchIds([]);
+  }, []);
 
   // Exact what-if: every change of the removed set is recomputed on the actual graph. The
   // effect only launches the request; consumers compare `whatIf.removed_patch_ids` with the
@@ -119,7 +131,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (getDataSource(sceneId).mode !== "live" || removedPatchIds.length === 0) return;
     let cancelled = false;
-    postWhatIf(sceneId, removedPatchIds)
+    postWhatIf(sceneId, removedPatchIds, runId)
       .then((r) => {
         if (cancelled) return;
         setWhatIf(r);
@@ -134,10 +146,11 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     };
     // bundleVersion: re-run once the bundle for this scene has arrived
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sceneId, removedPatchIds, bundleVersion]);
+  }, [sceneId, runId, removedPatchIds, bundleVersion]);
 
   const setSceneId = useCallback((id: string) => {
     setSceneIdState(id);
+    setRunIdState("latest");
     setSelectedPatchId(null);
     setRemovedPatchIds([]);
     setActiveScenarioId(null);
@@ -188,6 +201,9 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       whatIfLoading,
       whatIfError,
       refreshBundle,
+      runs,
+      runId,
+      setRunId,
     }),
     // bundleVersion forces a refresh of dataSource when a bundle lands
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,6 +225,9 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       whatIfLoading,
       whatIfError,
       refreshBundle,
+      runs,
+      runId,
+      setRunId,
     ],
   );
 

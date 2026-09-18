@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { ProvenanceBadge } from "@/components/shared/provenance-badge";
+import { RunSelector } from "@/components/shared/run-selector";
 import { getScenes } from "@/lib/data";
 import { EASE } from "@/components/shared/motion";
 import { cn } from "@/lib/utils";
@@ -215,6 +216,7 @@ export function AppShell({
           </div>
 
           <div className="flex shrink-0 items-center gap-2">
+            <RunSelector />
             <ProvenanceBadge />
             {actions}
           </div>
