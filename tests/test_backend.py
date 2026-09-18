@@ -63,3 +63,21 @@ def test_restoration_with_and_without_costs(client):
 def test_404s(client):
     assert client.get("/api/runs/nowhere/latest/bundle").status_code == 404
     assert client.get("/api/runs/kerala-coast/zzz/bundle").status_code == 404
+
+
+def test_report_is_built_from_run_artefacts(client):
+    r = client.get("/api/runs/kerala-coast/latest/report")
+    assert r.status_code == 200
+    rep = r.json()
+    assert rep["provenance"]["resultKind"] == "synthetic" and "PROTOTYPE" in rep["abstract"]
+    headings = [s["heading"] for s in rep["sections"]]
+    assert any("criticality" in h.lower() for h in headings) and any("restoration" in h.lower() for h in headings)
+    crit = client.get("/api/runs/kerala-coast/latest/criticality").json()
+    table = next(s for s in rep["sections"] if s["id"] == "criticality")["table"]
+    assert table["rows"][0][1] == crit[0]["patch_id"]          # report quotes the computed ranking
+
+
+def test_timeline_excludes_synthetic_runs(client):
+    t = client.get("/api/runs/kerala-coast/timeline").json()
+    assert t["years"] == []                                   # synthetic runs never form a timeline
+    assert "note" in t
