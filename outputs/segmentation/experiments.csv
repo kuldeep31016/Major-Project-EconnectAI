@@ -1,0 +1,4 @@
+experiment_id,timestamp,mode,result_label,dataset,train_tiles,val_tiles,test_tiles,model,encoder,batch_size,learning_rate,epochs_run,seed,device,training_time_s,best_epoch,val_iou,val_dice,val_precision,val_recall,val_f1
+kerala_E1_s1_b0_dev,2026-09-18T17:04:49.804780+00:00,development,DEVELOPMENT-SUBSET RESULT - NOT FINAL,ecoconnect_tiles,176,32,48,U-Net/efficientnet-b0 (dev or alt config),efficientnet-b0,8,0.0003,33,42,mps,283.2,21,0.0784,0.1453,0.1351,0.1572,0.1453
+kerala_E2_s2_b0_dev,2026-09-18T17:10:14.916948+00:00,development,DEVELOPMENT-SUBSET RESULT - NOT FINAL,ecoconnect_tiles,176,32,48,U-Net/efficientnet-b0 (dev or alt config),efficientnet-b0,8,0.0003,16,42,mps,171.9,4,0.2858,0.4445,0.4337,0.4558,0.4445
+kerala_E3_s1s2_b0_dev,2026-09-18T17:13:12.084955+00:00,development,DEVELOPMENT-SUBSET RESULT - NOT FINAL,ecoconnect_tiles,176,32,48,U-Net/efficientnet-b0 (dev or alt config),efficientnet-b0,8,0.0003,27,42,mps,301.4,15,0.2498,0.3998,0.3745,0.4287,0.3998

@@ -39,7 +39,7 @@ import { EASE } from "@/components/shared/motion";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { getConnectivity, getGraph, getHabitatMask, getHeatmap } from "@/lib/data";
 import { SENSITIVITY_META, type BasemapId } from "@/lib/constants";
-import { fmtArea, fmtDate, fmtRatio } from "@/utils/format";
+import { fmtArea, fmtDate, fmtRatio, fmtIndex } from "@/utils/format";
 import { cn } from "@/lib/utils";
 
 // Leaflet touches window on import — must not run during SSR.
@@ -307,10 +307,10 @@ export default function AnalysisPage() {
                   </div>
                   <div className="mt-2 flex gap-3 text-[10px] text-muted-foreground">
                     <span>
-                      PC <b className="text-foreground">{conn.pcIndex.toFixed(2)}</b>
+                      PC <b className="text-foreground">{fmtIndex(conn.pcIndex)}</b>
                     </span>
                     <span>
-                      IIC <b className="text-foreground">{conn.iicIndex.toFixed(2)}</b>
+                      IIC <b className="text-foreground">{fmtIndex(conn.iicIndex)}</b>
                     </span>
                   </div>
                 </div>

@@ -43,7 +43,7 @@ import {
   getReports,
   getRestoration,
 } from "@/lib/data";
-import { fmtArea, fmtCurrency, fmtDate, relativeTime } from "@/utils/format";
+import { fmtArea, fmtCurrency, fmtDate, relativeTime, fmtIndex } from "@/utils/format";
 import { SENSITIVITY_META } from "@/lib/constants";
 
 export default function DashboardPage() {
@@ -162,8 +162,8 @@ export default function DashboardPage() {
 
               <div className="mt-5 grid w-full grid-cols-3 gap-2 text-center">
                 {[
-                  ["PC index", conn.pcIndex.toFixed(2)],
-                  ["IIC index", conn.iicIndex.toFixed(2)],
+                  ["PC index", fmtIndex(conn.pcIndex)],
+                  ["IIC index", fmtIndex(conn.iicIndex)],
                   ["Confidence", conn.confidence.toFixed(2)],
                 ].map(([k, v]) => (
                   <div key={k} className="rounded-xl border border-foreground/[0.08] bg-foreground/[0.04] py-2.5">

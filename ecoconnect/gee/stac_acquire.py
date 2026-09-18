@@ -143,8 +143,16 @@ def sentinel2_composite(aoi: AOI, grid: TargetGrid, cfg: dict, acq: dict, log=pr
         by_tile.setdefault(tile, []).append(it)
     chosen = []
     for tile, its in by_tile.items():
-        its.sort(key=lambda it: it["properties"]["eo:cloud_cover"])
-        chosen += its[: acq["max_scenes_s2"]]
+        best = max(i["_overlap"] for i in its)
+        full = [i for i in its if i["_overlap"] >= 0.6 * best]      # drop partial (datastrip-edge) granules
+        full.sort(key=lambda it: (it["properties"]["datetime"][:10], -int(it["id"].split("_")[-2]) if it["id"].split("_")[-2].isdigit() else 0))
+        seen_dates, dedup = set(), []
+        for it in full:                                              # one item per acquisition date (latest reprocessing)
+            d = it["properties"]["datetime"][:10]
+            if d not in seen_dates:
+                seen_dates.add(d); dedup.append(it)
+        dedup.sort(key=lambda it: it["properties"]["eo:cloud_cover"])
+        chosen += dedup[: acq["max_scenes_s2"]]
     if not chosen:
         raise RuntimeError("no Sentinel-2 scene overlaps the AOI by >= 2 %")
     log(f"  S2 granules covering the AOI: " + ", ".join(f"{t} ({max(i['_overlap'] for i in its):.0%})" for t, its in by_tile.items()))

@@ -8,13 +8,13 @@ model:
   encoder_weights: imagenet       # null for fully offline runs
 
 training:
-  epochs: 15
+  epochs: 40
   learning_rate: 3.0e-4
   weight_decay: 1.0e-4
   loss: bce_dice
-  loss_kwargs: {}
+  loss_kwargs: {pos_weight: 25.0}   # class imbalance: Vembanad AOI has ~0.2 % mangrove pixels (documented in TRAINING.md)
   scheduler: cosine               # cosine | plateau | none
-  early_stopping_patience: 6
+  early_stopping_patience: 12
   monitor: iou                    # validation metric that selects best_model.pth
   threshold: 0.5                  # for validation metrics; SEGMENTATION_THRESHOLD in analysis is separate
   mixed_precision: true           # only takes effect on CUDA

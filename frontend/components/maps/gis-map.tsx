@@ -159,14 +159,14 @@ export default function GisMap({
         {!layers.satellite && (
           <TileLayer
             key="dark-fallback"
-            url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-            attribution="OpenStreetMap, CARTO"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+            attribution="Esri, HERE, Garmin"
             maxZoom={19}
           />
         )}
         {basemap === "hybrid" && layers.labels && (
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
             attribution=""
             maxZoom={19}
           />

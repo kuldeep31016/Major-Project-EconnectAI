@@ -80,8 +80,8 @@ export const BASEMAPS = [
   {
     id: "dark",
     label: "Dark",
-    url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-    attribution: "OpenStreetMap, CARTO",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Esri, HERE, Garmin",
   },
   {
     id: "hybrid",

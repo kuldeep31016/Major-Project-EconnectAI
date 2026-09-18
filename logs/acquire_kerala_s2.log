@@ -2,4 +2,10 @@
 [acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
 [acquire] Sentinel-2 L2A (Earth Search) ...
   S2 granules covering the AOI: MGRS-43PFM (59%), MGRS-43PFL (85%)
-  S2 S2A_43PFM_20200112_1_L2A  cloud=0.0%  AOI overlap=22%
+  S2 S2B_43PFM_20200203_1_L2A  cloud=0.0%  AOI overlap=59%
+  S2 S2B_43PFM_20200203_0_L2A  cloud=0.0%  AOI overlap=59%
+  S2 S2A_43PFM_20200218_1_L2A  cloud=0.1%  AOI overlap=59%
+  S2 S2B_43PFL_20200124_1_L2A  cloud=0.0%  AOI overlap=85%
+  S2 S2B_43PFL_20200213_1_L2A  cloud=0.0%  AOI overlap=85%
+  S2 S2B_43PFL_20200213_0_L2A  cloud=0.0%  AOI overlap=85%
+[acquire] wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s2_10m.tif (116.2 MB) bands=['s2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi']

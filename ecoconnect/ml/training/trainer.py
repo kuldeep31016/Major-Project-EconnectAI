@@ -182,7 +182,8 @@ def train(cfg: dict, loaders: dict[str, DataLoader], dataset_info: dict, *, mode
         plot_history(hist_path, out)
     except Exception as e:  # plotting must never kill a run
         print(f"[train] plotting skipped: {e}")
-    _append_registry(out_root, exp, vm)
+    best_vm = json.loads((out / "metrics.json").read_text())["val"] if (out / "metrics.json").exists() else vm
+    _append_registry(out_root, exp, best_vm)     # best-epoch validation metrics, not the last epoch
     print(f"[train] done. best {monitor}={best_val:.4f} at epoch {best_epoch}. outputs: {out}")
     return out
 
