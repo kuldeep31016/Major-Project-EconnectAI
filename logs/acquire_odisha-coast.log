@@ -8,3 +8,4 @@
 [acquire] Sentinel-2 L2A (Earth Search) ...
   S2 granules covering the AOI: MGRS-45QVC (83%), MGRS-45QVD (54%)
   S2 S2B_45QVC_20200214_1_L2A  cloud=0.0%  AOI overlap=83%
+  S2 S2B_45QVC_20201130_1_L2A  cloud=0.0%  AOI overlap=83%

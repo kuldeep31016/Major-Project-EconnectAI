@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import {
+  ImageOverlay,
   MapContainer,
   Polygon,
   Polyline,
@@ -24,6 +25,8 @@ const NO_IDS: string[] = [];
 
 export interface LayerState {
   satellite: boolean;
+  /** Model habitat-probability raster (real runs only). */
+  probability: boolean;
   habitat: boolean;
   heatmap: boolean;
   connectivity: boolean;
@@ -52,6 +55,8 @@ interface Props {
   drawnPolygon?: LatLng[];
   onDrawPoint?: (point: LatLng) => void;
   className?: string;
+  /** Habitat-probability overlay of a real run: PNG url + WGS84 bounds. */
+  probabilityOverlay?: { url: string; bounds: [[number, number], [number, number]] } | null;
 }
 
 /* ------------------------------------------------------------------ */
@@ -118,6 +123,7 @@ export default function GisMap({
   drawnPolygon = [],
   onDrawPoint,
   className,
+  probabilityOverlay = null,
 }: Props) {
   const base = BASEMAPS.find((b) => b.id === basemap) ?? BASEMAPS[0];
   const bounds = scene.bounds as LatLngBoundsExpression;
@@ -170,6 +176,11 @@ export default function GisMap({
             attribution=""
             maxZoom={19}
           />
+        )}
+
+        {/* ------------------------------------ model probability raster */}
+        {layers.probability && probabilityOverlay && (
+          <ImageOverlay url={probabilityOverlay.url} bounds={probabilityOverlay.bounds} opacity={0.9} zIndex={350} />
         )}
 
         {/* ------------------------------------------------ heatmap */}

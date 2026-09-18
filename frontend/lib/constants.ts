@@ -99,6 +99,7 @@ export const NAV_ITEMS = [
   { href: "/dashboard", label: "Overview", icon: "LayoutDashboard" },
   { href: "/analysis", label: "Analysis", icon: "Map" },
   { href: "/simulation", label: "Simulation", icon: "FlaskConical" },
+  { href: "/experiments", label: "Experiments", icon: "Cpu" },
   { href: "/reports", label: "Reports", icon: "FileText" },
   { href: "/history", label: "History", icon: "History" },
   { href: "/settings", label: "Settings", icon: "Settings" },

@@ -45,6 +45,8 @@ import {
   getTimeline,
 } from "@/lib/data";
 import { fmtArea, fmtCurrency, fmtRatio } from "@/utils/format";
+import { applyRestorationRanking, postRestoration } from "@/lib/api";
+import { applyRestorationActions } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import type { LatLng, ScenarioId } from "@/types";
 
@@ -84,7 +86,10 @@ export default function SimulationPage() {
     dataSource,
     whatIf: exactWhatIf,
     whatIfError,
+    runId,
+    bump,
   } = useAnalysis();
+  const [costNote, setCostNote] = useState<string | null>(null);
   const isLive = dataSource.mode === "live";
 
   const mask = getHabitatMask(sceneId);
@@ -210,6 +215,7 @@ export default function SimulationPage() {
 
   const layers: LayerState = {
     satellite: true,
+    probability: false,
     habitat: true,
     heatmap: mode === "scenario" || mode === "timeline",
     connectivity: true,
@@ -804,10 +810,43 @@ export default function SimulationPage() {
                           Ranked by recomputed connectivity gain R<sub>i</sub> = C(G + v<sub>i</sub>) − C(G) · Eq. (11)
                         </CardDescription>
                       </CardHeader>
-                      <CardContent className="text-[11.5px] leading-relaxed text-muted-foreground">
-                        {restoration.rankingBasis === "gain_per_cost"
-                          ? "Cost data supplied — ranking is gain per unit cost (Eq. 12)."
-                          : "No cost data supplied, so Priority_i reduces to R_i (paper Section IV-F). Candidate sites are marginal-probability components from the segmentation output; costs are never invented."}
+                      <CardContent className="space-y-3 text-[11.5px] leading-relaxed text-muted-foreground">
+                        <p>
+                          {restoration.rankingBasis === "gain_per_cost"
+                            ? "Cost data supplied — ranking is gain per unit cost (Eq. 12)."
+                            : "No cost data supplied, so Priority_i reduces to R_i (paper Section IV-F). Candidate sites are marginal-probability components from the segmentation output; costs are never invented."}
+                        </p>
+                        <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-dashed border-foreground/15 px-3 py-2 hover:border-[#00c896]/50">
+                          <span>
+                            <b className="text-foreground">Upload cost table</b> (CSV: <code>candidate_id,cost</code>) to switch to Eq. 12
+                          </span>
+                          <input
+                            type="file"
+                            accept=".csv,text/csv"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const f = e.target.files?.[0];
+                              if (!f) return;
+                              const text = await f.text();
+                              const costs: Record<string, number> = {};
+                              text.split(/\r?\n/).forEach((line, i) => {
+                                const [id, cost] = line.split(",").map((x) => x.trim());
+                                if (i === 0 && (id?.toLowerCase() === "candidate_id" || Number.isNaN(Number(cost)))) return;
+                                if (id && cost && !Number.isNaN(Number(cost))) costs[id] = Number(cost);
+                              });
+                              try {
+                                const r = await postRestoration(sceneId, { costs, cost_unit: "user units" }, runId);
+                                applyRestorationActions(sceneId, applyRestorationRanking(restoration.actions, r), r.ranking_basis);
+                                setCostNote(`${Object.keys(costs).length} costs applied — ranking basis: ${r.ranking_basis}`);
+                                bump();
+                              } catch (err) {
+                                setCostNote(`upload failed: ${err instanceof Error ? err.message : String(err)}`);
+                              }
+                            }}
+                          />
+                          <span className="rounded-lg bg-[#00c896]/15 px-2 py-1 text-[10.5px] font-semibold text-[#00c896]">Choose CSV</span>
+                        </label>
+                        {costNote && <p className="text-[11px] text-[#38bdf8]">{costNote}</p>}
                       </CardContent>
                     </Card>
                   )}

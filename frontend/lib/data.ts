@@ -83,6 +83,64 @@ export function registerLiveBundle(sceneId: string, bundle: FrontendBundle | nul
 }
 export const getLiveBundle = (sceneId: string) => live.get(sceneId) ?? null;
 
+/** Apply an exact re-analysis (other tau / k / metric) to the live bundle of a scene, in place. */
+export function applyReanalysis(sceneId: string, r: import("@/lib/api").ReanalyseResult) {
+  const b = live.get(sceneId);
+  if (!b) return;
+  const byId = new Map(r.criticality.map((c) => [c.patch_id, c]));
+  const maxS = Math.max(...r.criticality.map((c) => c.criticality_score), 1e-9);
+  b.habitatMask.patches.forEach((p) => {
+    const c = byId.get(p.id);
+    if (!c) return;
+    p.sensitivity = c.level;
+    p.connectivityContribution = c.criticality_score;
+    p.criticalityRank = c.rank;
+    p.criticalityScore = c.criticality_score;
+    p.deltaPct = c.delta_pct;
+    p.degree = c.degree;
+    p.isCutVertex = c.is_cut_vertex;
+    p.componentCountAfter = c.component_count_after;
+  });
+  b.graph.nodes.forEach((n) => {
+    const c = byId.get(n.patchId);
+    if (!c) return;
+    n.sensitivity = c.level;
+    n.importance = c.criticality_score;
+    n.connectivity = c.criticality_score / maxS;
+    n.degree = c.degree;
+    n.criticalityRank = c.rank;
+    n.isCutVertex = c.is_cut_vertex;
+  });
+  b.graph.edges = r.edges.map((e, i) => ({
+    id: `${sceneId}-re${i + 1}`, source: e.source, target: e.target, strength: e.weight,
+    distanceKm: e.distance_km, resistance: 1 - e.weight, critical: false, speciesFlow: [],
+  }));
+  b.connectivity.iicIndex = r.summary.iic;
+  b.connectivity.pcIndex = r.summary.pc;
+  b.connectivity.equivalentConnectedArea = r.summary.eca_ha;
+  b.connectivity.ecaPctOfHabitat = r.summary.eca_pct_of_habitat;
+  b.connectivity.score = r.interface_score;
+  b.connectivity.fragmentationIndex = r.summary.n_components / Math.max(r.summary.n_patches, 1);
+  if (b.connectivity.research) {
+    b.connectivity.research.iic = r.summary.iic;
+    b.connectivity.research.pc = r.summary.pc;
+    b.connectivity.research.ecaHa = r.summary.eca_ha;
+    b.connectivity.research.nEdges = r.summary.n_edges;
+    b.connectivity.research.nComponents = r.summary.n_components;
+    b.connectivity.research.tauKm = r.parameters.tau_km;
+    b.connectivity.research.k = r.parameters.k;
+  }
+  b.provenance.parameters = { ...b.provenance.parameters, tauKm: r.parameters.tau_km, k: r.parameters.k, metric: r.parameters.metric };
+}
+
+/** Replace the restoration ranking of a live bundle (e.g. after a user cost upload). */
+export function applyRestorationActions(sceneId: string, actions: import("@/types").RestorationAction[], basis: "gain_per_cost" | "raw_gain") {
+  const b = live.get(sceneId);
+  if (!b) return;
+  b.restoration.actions = actions;
+  b.restoration.rankingBasis = basis;
+}
+
 const liveTimelines = new Map<string, TimelineData>();
 /** Register a REAL timeline (>= 1 year with an actual pipeline run); `null` clears it. */
 export function registerLiveTimeline(sceneId: string, t: TimelineData | null) {

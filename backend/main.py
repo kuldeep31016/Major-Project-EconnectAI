@@ -375,3 +375,112 @@ def segment(req: SegmentRequest):
         raise HTTPException(500, f"run_graph_analysis.py failed:\n{r.stderr[-2000:]}")
     return {**_run_summary(_resolve_run(req.study_area, "latest")), "scene": req.scene_tif, "checkpoint": req.checkpoint,
             "thresholdUsed": req.threshold}
+
+
+# =========================================================================== research tools
+from fastapi.responses import Response  # noqa: E402
+from ecoconnect.graph import compute_criticality, summarise, composite_interface_score  # noqa: E402
+from ecoconnect.graph.explain import criticality_level  # noqa: E402
+
+
+class ReanalyseRequest(BaseModel):
+    tau_km: Optional[float] = None
+    k: Optional[int] = None
+    metric: Optional[str] = None       # iic | pc | largest_component
+
+
+@app.post("/api/runs/{study_area}/{run_id}/reanalyse")
+def reanalyse(study_area: str, run_id: str, req: ReanalyseRequest):
+    """Parameter sensitivity explorer: rebuild the graph of an existing run with another tau / k / metric
+    and recompute IIC/PC/ECA, criticality and components exactly. Patches are unchanged (they come from the
+    segmentation); nothing is re-trained. Milliseconds for tens of patches."""
+    run_dir = _resolve_run(study_area, run_id)
+    m = _read_json(run_dir / "manifest.json")
+    inp = _read_json(run_dir / "patches_input.json")
+    g = m["config"]["graph"]
+    patches = [Patch(**{**p, "centroid": tuple(p["centroid"]), "bbox": tuple(p["bbox"]) if p.get("bbox") else None})
+               for p in inp["patches"]]
+    tau = req.tau_km or g["tau_km"]
+    k = req.k or g["k_neighbors"]
+    metric = req.metric or m["config"]["connectivity"]["research_metric"]
+    graph = build_graph(patches, k=k, tau_km=tau, distance_mode=g["distance_mode"])
+    a_l = inp["landscape_area_ha"]
+    s = summarise(graph, a_l)
+    rows, c_base = compute_criticality(graph, a_l, metric)
+    thr = tuple(m["config"]["criticality"]["level_thresholds"])
+    return {
+        "parameters": {"tau_km": tau, "k": k, "metric": metric},
+        "summary": s.to_dict(),
+        "interface_score": composite_interface_score(graph, a_l, m["config"]["connectivity"]["interface_score_weights"],
+                                                     iic_value=s.iic, pc_value=s.pc)["score"],
+        "edges": [e.to_dict() for e in graph.edges.values()],
+        "criticality": [{"patch_id": r.patch_id, "rank": r.rank, "criticality_score": r.criticality_score,
+                         "delta_pct": r.delta_pct, "degree": r.degree, "is_cut_vertex": r.is_cut_vertex,
+                         "component_count_after": r.component_count_after, "rank_by_area": r.rank_by_area,
+                         "level": criticality_level(r.criticality_score, thr)} for r in rows],
+    }
+
+
+@app.get("/api/runs/{study_area}/{run_id}/probability.png")
+def probability_png(study_area: str, run_id: str, alpha: float = 0.85):
+    """The run's habitat-probability raster rendered as a WGS84-bounded PNG for a Leaflet ImageOverlay.
+    Bounds are returned in the X-Bounds header as min_lat,min_lon,max_lat,max_lon."""
+    import io
+    import numpy as np
+    from PIL import Image
+    from rasterio.warp import transform_bounds, reproject, Resampling
+    from rasterio.crs import CRS
+    from ecoconnect.geospatial.raster_processing.io import read_raster
+    m = _read_json(_resolve_run(study_area, run_id) / "manifest.json")
+    src = m["data_source"]
+    if src.get("type") != "probability_raster":
+        raise HTTPException(404, "this run has no probability raster (synthetic geometry)")
+    prob, meta = read_raster(src["path"], bands=[1])
+    prob = prob[0]
+    # reproject to EPSG:4326 (Leaflet ImageOverlay is equirectangular) at ~1000 px width
+    b = transform_bounds(meta.crs, CRS.from_epsg(4326), *meta.bounds)
+    w = 1000
+    h = int(w * (b[3] - b[1]) / (b[2] - b[0]))
+    from rasterio.transform import from_bounds as _fb
+    dst = np.full((h, w), np.nan, np.float32)
+    reproject(np.nan_to_num(prob, nan=-1), dst, src_transform=meta.transform, src_crs=meta.crs, src_nodata=-1,
+              dst_transform=_fb(*b, w, h), dst_crs=CRS.from_epsg(4326), dst_nodata=np.nan, resampling=Resampling.bilinear)
+    valid = np.isfinite(dst) & (dst >= 0)
+    v = np.clip(np.nan_to_num(dst), 0, 1)
+    # green ramp: transparent below 0.2, saturating to bright green
+    rgba = np.zeros((h, w, 4), np.uint8)
+    rgba[..., 0] = (20 + 60 * (1 - v)).astype(np.uint8)
+    rgba[..., 1] = (120 + 135 * v).astype(np.uint8)
+    rgba[..., 2] = (60 + 40 * (1 - v)).astype(np.uint8)
+    a = np.clip((v - 0.15) / 0.85, 0, 1) ** 0.8 * alpha * 255
+    rgba[..., 3] = np.where(valid, a, 0).astype(np.uint8)
+    buf = io.BytesIO()
+    Image.fromarray(rgba, "RGBA").save(buf, "PNG", optimize=True)
+    return Response(buf.getvalue(), media_type="image/png",
+                    headers={"X-Bounds": f"{b[1]},{b[0]},{b[3]},{b[2]}", "Access-Control-Expose-Headers": "X-Bounds",
+                             "Cache-Control": "public, max-age=3600"})
+
+
+@app.get("/api/models/{experiment_id}")
+def model_detail(experiment_id: str):
+    """Everything about one segmentation experiment: metrics, config, history, calibration, asset list."""
+    d = SEG_DIR / Path(experiment_id).name
+    if not (d / "metrics.json").exists():
+        raise HTTPException(404, "experiment not found")
+    out = {"experimentId": d.name, "metrics": _read_json(d / "metrics.json")}
+    for k, f in (("experiment", "experiment.json"), ("calibration", "threshold_calibration.json")):
+        if (d / f).exists():
+            out[k] = _read_json(d / f)
+    if (d / "history.csv").exists():
+        import csv
+        out["history"] = list(csv.DictReader((d / "history.csv").open()))
+    out["assets"] = sorted(p.name for p in d.glob("*.png")) + sorted(f"sample_predictions/{p.name}" for p in (d / "sample_predictions").glob("*.png")) if d.exists() else []
+    return out
+
+
+@app.get("/api/models/{experiment_id}/asset/{name:path}")
+def model_asset(experiment_id: str, name: str):
+    p = (SEG_DIR / Path(experiment_id).name / name).resolve()
+    if not str(p).startswith(str(SEG_DIR.resolve())) or not p.exists() or p.suffix != ".png":
+        raise HTTPException(404, "asset not found")
+    return FileResponse(p, headers={"Cache-Control": "public, max-age=3600"})

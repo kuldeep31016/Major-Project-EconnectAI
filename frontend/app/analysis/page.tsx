@@ -38,6 +38,8 @@ import { ScoreGauge, CompositionChart, ConnectivityTrendChart } from "@/componen
 import { EASE } from "@/components/shared/motion";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { getConnectivity, getGraph, getHabitatMask, getHeatmap } from "@/lib/data";
+import { fetchProbabilityBounds, probabilityPngUrl } from "@/lib/api";
+import { SensitivityExplorer } from "@/components/analysis/sensitivity-explorer";
 import { SENSITIVITY_META, type BasemapId } from "@/lib/constants";
 import { fmtArea, fmtDate, fmtRatio, fmtIndex } from "@/utils/format";
 import { cn } from "@/lib/utils";
@@ -58,7 +60,24 @@ const GisMap = dynamic(() => import("@/components/maps/gis-map"), {
 type ViewMode = "map" | "split";
 
 export default function AnalysisPage() {
-  const { sceneId, scene, selectedPatchId, setSelectedPatchId } = useAnalysis();
+  const { sceneId, scene, selectedPatchId, setSelectedPatchId, dataSource, runId, bundleVersion } = useAnalysis();
+  // Real runs expose their probability raster as a bounded PNG overlay.
+  const [probOverlay, setProbOverlay] = useState<{ url: string; bounds: [[number, number], [number, number]] } | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    const prov = dataSource.provenance;
+    if (dataSource.mode !== "live" || !prov || prov.dataSource.type !== "probability_raster") {
+      setProbOverlay(null);
+      return;
+    }
+    fetchProbabilityBounds(sceneId, prov.runId).then((b) => {
+      if (!cancelled) setProbOverlay(b ? { url: probabilityPngUrl(sceneId, prov.runId), bounds: b } : null);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sceneId, runId, dataSource.provenance?.runId, bundleVersion]);
 
   const mask = getHabitatMask(sceneId);
   const graph = getGraph(sceneId);
@@ -66,8 +85,10 @@ export default function AnalysisPage() {
   const conn = getConnectivity(sceneId);
 
   const [view, setView] = useState<ViewMode>("split");
+  const [explorerOpen, setExplorerOpen] = useState(false);
   const [layers, setLayers] = useState<LayerState>({
     satellite: true,
+    probability: true,
     habitat: true,
     heatmap: true,
     connectivity: true,
@@ -116,6 +137,7 @@ export default function AnalysisPage() {
         layers={view === "split" ? { ...layers, heatmap: false } : layers}
         basemap={basemap}
         heatOpacity={heatOpacity}
+        probabilityOverlay={probOverlay}
         selectedPatchId={selectedPatchId}
         onSelectPatch={(id) => {
           setSelectedPatchId(id);
@@ -170,6 +192,17 @@ export default function AnalysisPage() {
           setSelectedCellId(null);
         }}
       />
+
+      {/* τ / k / metric sensitivity explorer (real runs) */}
+      <div className="absolute left-3 top-24 z-[900] w-[300px] max-w-[calc(100%-1.5rem)]">
+        <button
+          onClick={() => setExplorerOpen((o) => !o)}
+          className="rounded-full border border-foreground/10 bg-sidebar/90 px-3 py-1.5 text-[11px] font-semibold text-foreground shadow backdrop-blur hover:bg-sidebar"
+        >
+          {explorerOpen ? "Hide" : "Open"} sensitivity explorer (τ · k · metric)
+        </button>
+        {explorerOpen && <div className="mt-2 max-h-[70vh] overflow-y-auto scroll-slim"><SensitivityExplorer /></div>}
+      </div>
     </div>
   );
 
@@ -248,6 +281,7 @@ export default function AnalysisPage() {
                   heatmap={heatmap}
                   layers={{
                     satellite: false,
+                    probability: false,
                     habitat: false,
                     heatmap: true,
                     connectivity: layers.connectivity,

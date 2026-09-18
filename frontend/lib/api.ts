@@ -128,3 +128,45 @@ export function applyRestorationRanking(actions: RestorationAction[], r: Restora
     })
     .sort((a, b) => a.rank - b.rank);
 }
+
+/* ------------------------------------------------------------------ research tools */
+
+export interface ReanalyseResult {
+  parameters: { tau_km: number; k: number; metric: string };
+  summary: { n_patches: number; n_edges: number; n_components: number; iic: number; pc: number; eca_ha: number; eca_pct_of_habitat: number; mean_degree: number };
+  interface_score: number;
+  edges: { source: string; target: string; distance_km: number; weight: number }[];
+  criticality: { patch_id: string; rank: number; criticality_score: number; delta_pct: number; degree: number; is_cut_vertex: boolean; component_count_after: number; rank_by_area: number; level: "low" | "medium" | "high" | "critical" }[];
+}
+/** Exact re-analysis of an existing run's patches with another tau / k / metric (no re-segmentation). */
+export const postReanalyse = (studyArea: string, runId: string, body: { tau_km?: number; k?: number; metric?: string }) =>
+  getJson<ReanalyseResult>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/reanalyse`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+  });
+
+export const probabilityPngUrl = (studyArea: string, runId: string) =>
+  `${API_URL}/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/probability.png`;
+
+/** Fetch the overlay bounds (min_lat,min_lon,max_lat,max_lon) via a HEAD-like GET of the PNG headers. */
+export async function fetchProbabilityBounds(studyArea: string, runId: string): Promise<[[number, number], [number, number]] | null> {
+  try {
+    const res = await fetch(probabilityPngUrl(studyArea, runId), { method: "GET", cache: "force-cache" });
+    const b = res.headers.get("X-Bounds");
+    if (!res.ok || !b) return null;
+    const [minLat, minLon, maxLat, maxLon] = b.split(",").map(Number);
+    return [[minLat, minLon], [maxLat, maxLon]];
+  } catch {
+    return null;
+  }
+}
+
+export interface ModelDetail {
+  experimentId: string;
+  metrics: { mode?: string; result_label?: string; model?: string; encoder?: string; best_epoch?: number; val?: Record<string, number>; test?: Record<string, number> | null; test_threshold?: number };
+  experiment?: Record<string, unknown> & { dataset?: { n_train?: number; n_val?: number; n_test?: number; bands?: number[] | null; name?: string }; training_time_s?: number; hardware?: { device?: string }; parameters?: number; epochs_run?: number; learning_rate?: number; batch_size?: number; seed?: number };
+  calibration?: { selected_threshold: number; criterion: string; scope: string; rows: { threshold: number; iou: number; f1: number; precision: number; recall: number }[] };
+  history?: Record<string, string>[];
+  assets: string[];
+}
+export const fetchModelDetail = (id: string) => getJson<ModelDetail>(`/api/models/${encodeURIComponent(id)}`);
+export const modelAssetUrl = (id: string, name: string) => `${API_URL}/api/models/${encodeURIComponent(id)}/asset/${name}`;

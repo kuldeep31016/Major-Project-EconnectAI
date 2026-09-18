@@ -57,6 +57,9 @@ interface AnalysisState {
   runs: RunSummary[];
   runId: string;
   setRunId: (id: string) => void;
+  /** Re-render consumers after the live bundle was patched in place (re-analysis, cost upload). */
+  bump: () => void;
+  bundleVersion: number;
 }
 
 const AnalysisContext = createContext<AnalysisState | null>(null);
@@ -120,6 +123,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   }, [sceneId, runId, loadBundle]);
 
   const refreshBundle = useCallback(() => loadBundle(sceneId, runId), [loadBundle, sceneId, runId]);
+  const bump = useCallback(() => setBundleVersion((v) => v + 1), []);
   const setRunId = useCallback((id: string) => {
     setRunIdState(id);
     setRemovedPatchIds([]);
@@ -204,6 +208,8 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       runs,
       runId,
       setRunId,
+      bump,
+      bundleVersion,
     }),
     // bundleVersion forces a refresh of dataSource when a bundle lands
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -228,6 +234,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       runs,
       runId,
       setRunId,
+      bump,
     ],
   );
 

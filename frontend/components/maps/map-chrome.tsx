@@ -33,6 +33,7 @@ import type { HabitatMask } from "@/types";
 
 const LAYER_LABELS: { key: keyof LayerState; label: string; hint: string }[] = [
   { key: "satellite", label: "Satellite imagery", hint: "Base scene" },
+  { key: "probability", label: "Model probability", hint: "P(mangrove) raster — real runs" },
   { key: "habitat", label: "Habitat mask", hint: "Segmented patches" },
   { key: "heatmap", label: "Sensitivity heatmap", hint: "Marginal importance" },
   { key: "connectivity", label: "Connectivity graph", hint: "Functional links" },
