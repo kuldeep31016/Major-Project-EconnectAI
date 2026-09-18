@@ -3,7 +3,8 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, ArrowRight, Bell, ClipboardCheck, FolderKanban, Layers, RefreshCw, TrendingDown } from "lucide-react";
+import { AlertTriangle, ArrowRight, Bell, ClipboardCheck, FolderKanban, Layers, RefreshCw, Ruler, TrendingDown } from "lucide-react";
+import type { LatLng } from "@/types";
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,10 @@ export default function CommandCenter() {
   const [detections, setDetections] = useState<DetectionItem[]>([]);
   const [projects, setProjects] = useState<ProjectItem[]>([]);
   const [busy, setBusy] = useState(false);
+  const [measuring, setMeasuring] = useState(false);
+  const [measurePoints, setMeasurePoints] = useState<LatLng[]>([]);
+  const [showAlerts, setShowAlerts] = useState(true);
+  const [showTasks, setShowTasks] = useState(true);
 
   const load = async () => {
     const [a, al, pr, de] = await Promise.all([
@@ -57,6 +62,10 @@ export default function CommandCenter() {
   const pendingVerification = detections.filter((d) => ["AI_DETECTED", "UNDER_REVIEW", "FIELD_ASSIGNED"].includes(d.status));
   const change = alerts.find((a) => a.study_area_id === sceneId && (a.type === "habitat_change" || a.type === "connectivity_degradation"));
   const restoration = alerts.filter((a) => a.study_area_id === sceneId && a.type === "restoration_opportunity");
+  const markers = [
+    ...(showAlerts ? areaAlerts.filter((a) => a.lat != null && a.lon != null).map((a) => ({ id: `al${a.id}`, lat: a.lat!, lon: a.lon!, color: SEV[a.severity], label: `${a.severity.toUpperCase()} · ${a.title}`, kind: "alert" as const })) : []),
+    ...(showTasks ? tasks.filter((t) => t.study_area_id === sceneId).map((t) => ({ id: `t${t.id}`, lat: t.lat, lon: t.lon, color: t.status === "VERIFIED" ? "#15803d" : "#1e5f8a", label: `${t.status} · ${t.title}`, kind: "task" as const })) : []),
+  ];
 
   const regenerate = async () => {
     setBusy(true);
@@ -136,7 +145,16 @@ export default function CommandCenter() {
             selectedPatchId={selectedPatchId}
             onSelectPatch={setSelectedPatchId}
             className="h-full w-full"
+            markers={markers}
+            measuring={measuring}
+            measurePoints={measurePoints}
+            onMeasurePoint={(p) => setMeasurePoints((s) => [...s, p])}
           />
+          <div className="absolute right-3 top-3 z-[900] flex flex-col gap-1 rounded-lg bg-white/95 p-1.5 text-[11px] shadow">
+            <label className="flex items-center gap-1.5 px-1"><input type="checkbox" checked={showAlerts} onChange={(e) => setShowAlerts(e.target.checked)} /> Alerts</label>
+            <label className="flex items-center gap-1.5 px-1"><input type="checkbox" checked={showTasks} onChange={(e) => setShowTasks(e.target.checked)} /> Field tasks / observations</label>
+            <button onClick={() => { setMeasuring((m) => !m); if (measuring) setMeasurePoints([]); }} className={cn("flex items-center gap-1.5 rounded px-1 py-0.5", measuring ? "bg-[#0f5132] text-white" : "hover:bg-black/5")}><Ruler className="h-3 w-3" /> {measuring ? "Stop measuring" : "Measure distance"}</button>
+          </div>
           <div className="pointer-events-none absolute left-3 top-3 z-[900] rounded-lg bg-white/90 px-3 py-1.5 text-[11px] text-[#0b1120] shadow">
             {live ? `${dataSource.provenance?.resultKind === "development" ? "REAL DATA · development model · not final" : dataSource.label}` : apiOnline === false ? "DEMONSTRATION DATA · backend offline" : "DEMONSTRATION DATA"}
           </div>

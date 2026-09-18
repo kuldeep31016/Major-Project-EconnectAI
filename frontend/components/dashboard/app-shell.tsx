@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   Cpu,
   Sprout,
+  ScrollText,
   Bell,
   ClipboardCheck,
   FolderKanban,
@@ -49,6 +50,7 @@ const NAV: { href: string; label: string; icon: typeof LayoutDashboard; cap?: st
   { href: "/reports", label: "Reports", icon: FileText },
   { href: "/experiments", label: "Models", icon: Cpu, cap: "view_models", roles: ["gis_officer", "analyst", "state_admin", "senior_officer"] },
   { href: "/history", label: "Analyses", icon: History, roles: ["gis_officer", "analyst", "state_admin", "senior_officer", "range_officer"] },
+  { href: "/audit", label: "Audit", icon: ScrollText, roles: ["state_admin", "senior_officer"] },
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard, roles: ["analyst", "gis_officer", "state_admin"] },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

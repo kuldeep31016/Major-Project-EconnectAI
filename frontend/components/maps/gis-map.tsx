@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import {
+  CircleMarker,
   ImageOverlay,
   MapContainer,
   Polygon,
@@ -57,6 +58,31 @@ interface Props {
   className?: string;
   /** Habitat-probability overlay of a real run: PNG url + WGS84 bounds. */
   probabilityOverlay?: { url: string; bounds: [[number, number], [number, number]] } | null;
+  /** Point layers (alerts, field tasks/observations, candidates). */
+  markers?: MapMarker[];
+  /** Measure mode: clicks add vertices; the distance along the line is shown. */
+  measuring?: boolean;
+  measurePoints?: LatLng[];
+  onMeasurePoint?: (p: LatLng) => void;
+}
+
+export interface MapMarker {
+  id: string;
+  lat: number;
+  lon: number;
+  color: string;
+  label: string;
+  kind?: "alert" | "task" | "observation" | "candidate";
+  onClick?: () => void;
+}
+
+const R_EARTH_KM = 6371.0088;
+export function haversineKm(a: LatLng, b: LatLng) {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b[0] - a[0]);
+  const dLon = toRad(b[1] - a[1]);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a[0])) * Math.cos(toRad(b[0])) * Math.sin(dLon / 2) ** 2;
+  return 2 * R_EARTH_KM * Math.asin(Math.sqrt(h));
 }
 
 /* ------------------------------------------------------------------ */
@@ -136,7 +162,12 @@ export default function GisMap({
   onDrawPoint,
   className,
   probabilityOverlay = null,
+  markers = [],
+  measuring = false,
+  measurePoints = [],
+  onMeasurePoint,
 }: Props) {
+  const measureKm = measurePoints.reduce((acc, p, i) => (i ? acc + haversineKm(measurePoints[i - 1], p) : 0), 0);
   const base = BASEMAPS.find((b) => b.id === basemap) ?? BASEMAPS[0];
   const bounds = scene.bounds as LatLngBoundsExpression;
 
@@ -166,9 +197,30 @@ export default function GisMap({
         <CursorTracker
           onMove={onCursorMove}
           onClick={(p) => {
-            if (drawing) onDrawPoint?.(p);
+            if (measuring) onMeasurePoint?.(p);
+            else if (drawing) onDrawPoint?.(p);
           }}
         />
+
+        {/* ------------------------------------------------ measure */}
+        {measurePoints.length > 0 && (
+          <Polyline positions={measurePoints as [number, number][]} pathOptions={{ color: "#0b1120", weight: 2, dashArray: "6 4" }}>
+            <LTooltip permanent direction="top">{measureKm >= 1 ? `${measureKm.toFixed(2)} km` : `${(measureKm * 1000).toFixed(0)} m`}</LTooltip>
+          </Polyline>
+        )}
+
+        {/* ------------------------------------------------ point layers */}
+        {markers.map((mk) => (
+          <CircleMarker
+            key={mk.id}
+            center={[mk.lat, mk.lon]}
+            radius={mk.kind === "task" || mk.kind === "observation" ? 6 : 7}
+            pathOptions={{ color: "#ffffff", weight: 1.5, fillColor: mk.color, fillOpacity: 0.95 }}
+            eventHandlers={{ click: () => mk.onClick?.() }}
+          >
+            <LTooltip direction="top">{mk.label}</LTooltip>
+          </CircleMarker>
+        ))}
 
         {/* ------------------------------------------------ basemap */}
         {layers.satellite && (
