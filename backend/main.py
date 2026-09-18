@@ -70,8 +70,19 @@ def _run_summary(run_dir: Path) -> dict:
         "resultKind": m["result_kind"], "resultLabel": m["result_label"],
         "dataSourceType": m["data_source"].get("type"), "nPatches": rm["n_patches"], "nEdges": rm["n_edges"],
         "nComponents": rm["n_components"], "iic": rm["iic"], "pc": rm["pc"], "ecaHa": rm["eca_ha"],
-        "interfaceScore": metrics["interface_score"]["score"],
+        "ecaPctOfHabitat": rm["eca_pct_of_habitat"], "habitatAreaHa": rm["habitat_area_ha"],
+        "interfaceScore": metrics["interface_score"]["score"], "elapsedS": m.get("elapsed_s"),
+        "sceneYear": m["data_source"].get("scene_year"), "model": m["data_source"].get("model"),
+        "threshold": m["data_source"].get("threshold"),
+        "criticalPatches": _count_critical(run_dir),
     }
+
+
+def _count_critical(run_dir: Path, s_threshold: float = 0.10) -> Optional[int]:
+    p = run_dir / "criticality.json"
+    if not p.exists():
+        return None
+    return sum(1 for r in json.loads(p.read_text()) if r["criticality_score"] >= s_threshold)
 
 
 def _load_graph(run_dir: Path):

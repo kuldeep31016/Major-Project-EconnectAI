@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertTriangle,
@@ -25,7 +25,33 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs } from "@/components/ui/tabs";
 import { EASE } from "@/components/shared/motion";
-import { getHistory, getScenes } from "@/lib/data";
+import { getHistory, getScenes, getScene } from "@/lib/data";
+import { fetchRuns } from "@/lib/api";
+import type { AnalysisHistoryEntry, RunSummary } from "@/types";
+
+/** Map a real pipeline run onto the prototype's history row shape. */
+function runToEntry(r: RunSummary): AnalysisHistoryEntry {
+  const scene = getScene(r.studyAreaId);
+  const kind = r.resultKind;
+  return {
+    id: r.runId,
+    sceneId: r.studyAreaId,
+    name: `${scene.shortName} · ${r.runId}`,
+    region: scene.region,
+    state: scene.state,
+    runAt: r.timestamp,
+    durationSec: r.elapsedS ?? 0,
+    connectivityScore: r.interfaceScore,
+    scoreDelta: 0,
+    habitatAreaHa: r.habitatAreaHa ?? 0,
+    criticalPatches: r.criticalPatches ?? 0,
+    status: "completed",
+    analyst:
+      kind === "synthetic" ? "exact maths · synthetic geometry" : kind === "development" ? "real pipeline · dev subset · NOT FINAL" : kind === "experiment" ? "our experimental result" : kind,
+    sensor: r.model && r.model !== "none (synthetic geometry)" ? `model ${r.model.split("/").slice(-2, -1)[0] ?? r.model}` : "no model (synthetic)",
+    tags: [kind, r.dataSourceType ?? "", r.sceneYear ? String(r.sceneYear) : "", `${r.nPatches} patches`, `IIC ${r.iic.toExponential(2)}`].filter(Boolean),
+  };
+}
 import { fmtArea, fmtDate, fmtDuration, relativeTime } from "@/utils/format";
 import { cn } from "@/lib/utils";
 
@@ -39,8 +65,24 @@ const STATUS_META = {
 };
 
 export default function HistoryPage() {
-  const history = getHistory();
   const scenes = getScenes();
+  // Real runs from the backend when available; otherwise the prototype's demonstration entries.
+  const [runs, setRuns] = useState<RunSummary[] | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchRuns()
+      .then((r) => {
+        if (!cancelled) setRuns(r);
+      })
+      .catch(() => {
+        if (!cancelled) setRuns(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  const isLive = runs !== null && runs.length > 0;
+  const history = useMemo(() => (isLive ? runs!.map(runToEntry) : getHistory()), [isLive, runs]);
 
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
@@ -81,7 +123,11 @@ export default function HistoryPage() {
   return (
     <AppShell
       title="Analysis History"
-      subtitle={`${history.length} runs across ${scenes.length} landscapes`}
+      subtitle={
+        isLive
+          ? `${history.length} real pipeline run${history.length === 1 ? "" : "s"} (outputs/runs) — labels per run`
+          : `${history.length} demonstration entries (prototype) — backend offline or no runs yet`
+      }
       actions={
         <Button asChild size="sm" className="bg-gradient-eco font-semibold text-[#04231b]">
           <Link href="/upload">

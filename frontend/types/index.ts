@@ -544,5 +544,12 @@ export interface RunSummary {
   iic: number;
   pc: number;
   ecaHa: number;
+  ecaPctOfHabitat?: number;
+  habitatAreaHa?: number;
   interfaceScore: number;
+  elapsedS?: number | null;
+  sceneYear?: number | null;
+  model?: string | null;
+  threshold?: number | null;
+  criticalPatches?: number | null;
 }
