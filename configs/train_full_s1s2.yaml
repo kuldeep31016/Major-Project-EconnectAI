@@ -1,5 +1,5 @@
 # MODE B - CLOUD_TRAINING_MODE / FULL EXPERIMENT.  UNB7 exactly as in the paper.
-# Intended for a CUDA GPU (Colab / Kaggle, >= 16 GB).  B7 at 512x512 will not fit a 16 GB laptop.
+# Intended for a CUDA GPU (Colab / Kaggle, >= 16 GB).  See notebooks/colab_train_unb7.ipynb.
 mode: full
 dataset_config: configs/dataset_s1s2.yaml
 
@@ -25,7 +25,7 @@ training:
 
 # override dataset settings for the full run
 dataset_overrides:
-  dataset: {image_size: 512}
-  loader: {batch_size: 4, num_workers: 4, pin_memory: true}
+  dataset: {image_size: 256}      # tiles are cut at 256 (scripts/build_tiles.py --tile); larger would only reflect-pad
+  loader: {batch_size: 8, num_workers: 4, pin_memory: true}
 
 output_root: outputs/segmentation
