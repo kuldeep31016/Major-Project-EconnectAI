@@ -101,3 +101,20 @@ def test_model_cards_keep_categories_separate(client):
     assert "NOT OURS" in mc["foundationPaper"]["label"]
     assert mc["prototype"]["label"].startswith("PROTOTYPE")
     assert isinstance(mc["ours"], list)
+
+
+def test_scenarios_and_feasibility(client):
+    R = "/api/runs/odisha-coast/wf_test_run"
+    crit = client.get(R + "/criticality").json()
+    r = client.post(R + "/scenario", json={"type": "remove_patches", "patch_ids": [crit[0]["patch_id"]]}).json()
+    assert r["label"] == "SIMULATED" and r["difference"]["c"] < 0 and "lowers" in r["explanation"]
+    assert abs(r["difference"]["c_pct"] + crit[0]["delta_pct"]) < 1e-6          # scenario == criticality row
+    t = client.post(R + "/scenario", json={"type": "tau", "taus_km": [3, 5, 8]}).json()
+    assert [v["tau_km"] for v in t["variants"]] == [3, 5, 8] and t["variants"][1]["spearman_vs_reference"] == 1.0
+    fe = client.get(R + "/restoration/feasibility").json()
+    assert fe["candidates"] and all(c["verdict"] in ("recommended", "conditional", "not_recommended") for c in fe["candidates"])
+    assert all("cost not assessed" in " ".join(c["not_assessed"]) for c in fe["candidates"])
+    ids = [c["candidate_id"] for c in fe["candidates"][:2]]
+    m = client.post(R + "/scenario", json={"type": "restore_multi", "candidate_ids": ids}).json()
+    assert m["difference"]["c"] > 0 and len(m["individual"]) == 2
+    assert client.post(R + "/scenario", json={"type": "threshold"}).status_code == 400   # synthetic geometry has no raster

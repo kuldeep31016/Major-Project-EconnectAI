@@ -13,6 +13,7 @@ import {
   History,
   LayoutDashboard,
   Cpu,
+  Sprout,
   Bell,
   ClipboardCheck,
   FolderKanban,
@@ -40,7 +41,8 @@ import { cn } from "@/lib/utils";
 const NAV: { href: string; label: string; icon: typeof LayoutDashboard; cap?: string; roles?: string[] }[] = [
   { href: "/command", label: "Command Center", icon: LayoutDashboard },
   { href: "/analysis", label: "Landscape", icon: MapIcon },
-  { href: "/simulation", label: "Scenario Lab", icon: FlaskConical },
+  { href: "/scenario", label: "Scenario Lab", icon: FlaskConical },
+  { href: "/restoration", label: "Restoration", icon: Sprout },
   { href: "/alerts", label: "Alerts", icon: Bell },
   { href: "/field", label: "Field Work", icon: ClipboardCheck },
   { href: "/projects", label: "Projects", icon: FolderKanban },

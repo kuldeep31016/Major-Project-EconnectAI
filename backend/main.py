@@ -505,3 +505,41 @@ def model_asset(experiment_id: str, name: str):
     if not str(p).startswith(str(SEG_DIR.resolve())) or not p.exists() or p.suffix != ".png":
         raise HTTPException(404, "asset not found")
     return FileResponse(p, headers={"Cache-Control": "public, max-age=3600"})
+
+
+# =========================================================================== scenario lab + restoration planner
+from backend.scenarios import run_scenario, restoration_feasibility  # noqa: E402
+
+
+class ScenarioBody(BaseModel):
+    type: str                                   # remove_patches | remove_polygon | restore | restore_multi | tau | threshold | compare_periods
+    patch_ids: Optional[list[str]] = None
+    polygon: Optional[list[list[float]]] = None  # [[lat, lon], ...]
+    candidate_ids: Optional[list[str]] = None
+    taus_km: Optional[list[float]] = None
+    thresholds: Optional[list[float]] = None
+    other_run_id: Optional[str] = None
+
+
+@app.post("/api/runs/{study_area}/{run_id}/scenario")
+def scenario(study_area: str, run_id: str, body: ScenarioBody):
+    """Scenario Lab: exact baseline → scenario → difference over the run's patches. Labelled SIMULATED,
+    except compare_periods which is OBSERVED (MODEL OUTPUT)."""
+    run_dir = _resolve_run(study_area, run_id)
+    other = _resolve_run(study_area, body.other_run_id) if body.other_run_id else None
+    try:
+        return run_scenario(run_dir, body.model_dump(exclude_none=True), other)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+@app.get("/api/runs/{study_area}/{run_id}/restoration/feasibility")
+def restoration_feasibility_ep(study_area: str, run_id: str):
+    """Restoration Planner: gain ranking + rule-based feasibility (why / why not / not assessed)."""
+    run_dir = _resolve_run(study_area, run_id)
+    m = _read_json(run_dir / "manifest.json")
+    scene = None
+    prob = m["data_source"].get("path")
+    if prob and Path(prob).with_suffix(".json").exists():
+        scene = json.loads(Path(prob).with_suffix(".json").read_text()).get("scene")
+    return restoration_feasibility(run_dir, scene)

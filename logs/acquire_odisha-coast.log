@@ -13,3 +13,8 @@ ERROR 1: Request for https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s
   read failed (RasterioIOError); retry 1/4 in 2s: s2-l2a-cogs/45/Q/VC/2020/11/S2B_45QVC_20201130_1_L2A/B04.tif
   S2 S2B_45QVD_20200214_1_L2A  cloud=0.0%  AOI overlap=54%
   S2 S2B_45QVD_20201130_1_L2A  cloud=0.0%  AOI overlap=54%
+wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi'] (210.2 MB)
+[acquire] scene /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif (210.2 MB) bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi']
+[acquire] GMW weak labels (Zenodo) ...
+  GMW tiles for ['N21E086', 'N21E087']: ['GMW_N21E086_2020_v3.tif', 'GMW_N21E087_2020_v3.tif']
+[acquire] wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/odisha-coast/gmw_2020.tif  mangrove fraction of labelled pixels = 0.162  labelled fraction = 1.000

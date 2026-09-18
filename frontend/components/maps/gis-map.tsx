@@ -82,7 +82,19 @@ function CursorTracker({
 function SceneFitter({ bounds, sceneId }: { bounds: LatLngBoundsExpression; sceneId: string }) {
   const map = useMap();
   useEffect(() => {
-    map.flyToBounds(bounds, { padding: [28, 28], duration: 0.9 });
+    // The container may not be laid out yet (grid pages); defer and guard so Leaflet never sees a 0x0 map.
+    const t = window.setTimeout(() => {
+      map.invalidateSize();
+      const size = map.getSize();
+      if (size.x > 0 && size.y > 0) {
+        try {
+          map.flyToBounds(bounds, { padding: [28, 28], duration: 0.9 });
+        } catch {
+          map.fitBounds(bounds);
+        }
+      }
+    }, 60);
+    return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sceneId]);
   return null;

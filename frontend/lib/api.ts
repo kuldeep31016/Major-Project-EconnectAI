@@ -232,3 +232,23 @@ export interface AuditItem { id: number; username: string; role: string; action:
 export const fetchAudit = (limit = 200) => getJson<AuditItem[]>(`/api/audit?limit=${limit}`);
 export const fetchRegistry = (studyArea: string) => getJson<Record<string, unknown>>(`/api/registry/${encodeURIComponent(studyArea)}`);
 export const fetchModelCards = () => getJson<{ foundationPaper: Record<string, unknown>; prototype: Record<string, unknown>; ours: Record<string, unknown>[] }>("/api/model-cards");
+
+/* ------------------------------------------------------------------ scenario lab + restoration planner */
+
+export interface ScenarioSummary { n_patches: number; n_edges: number; n_components: number; habitat_area_ha: number; iic: number; pc: number; eca_ha: number; eca_pct_of_habitat: number; metric: string; c: number }
+export interface ScenarioResult {
+  type: string; label: string; parameters: Record<string, unknown>; baseline: ScenarioSummary; explanation: string;
+  scenario?: ScenarioSummary; difference?: Record<string, number>;
+  affected_patch_ids?: string[]; removed_patch_ids?: string[]; newly_isolated_patch_ids?: string[];
+  severed_edges?: { source: string; target: string }[]; edges_after?: { source: string; target: string; distance_km: number; weight: number }[];
+  variants?: Record<string, unknown>[]; lost_patch_ids?: string[]; gained_patch_ids?: string[];
+  matched?: { patch_a: string; patch_b: string; area_a: number; area_b: number; S_a: number; S_b: number; rank_a: number; rank_b: number }[];
+}
+export const postScenario = (studyArea: string, runId: string, body: Record<string, unknown>) =>
+  getJson<ScenarioResult>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/scenario`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }, 120000);
+export const saveScenario = (body: { study_area_id: string; run_id: string; type: string; params: unknown; result: unknown }) =>
+  getJson<{ id: number }>("/api/scenarios", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+export interface FeasibilityCandidate { candidate_id: string; rank: number; area_ha: number; centroid: [number, number]; gain_pct: number; new_links: number; linked_patch_ids: string[]; nearest_habitat_km: number | null; ndwi_mean: number | null; overlaps_existing: boolean; overlap_fraction: number; verdict: "recommended" | "conditional" | "not_recommended"; why: string[]; why_not: string[]; not_assessed: string[]; geometry: unknown }
+export interface Feasibility { metric: string; baseline_c: number; ranking_basis: string; candidate_method: string; rules: Record<string, unknown>; candidates: FeasibilityCandidate[] }
+export const fetchFeasibility = (studyArea: string, runId: string) => getJson<Feasibility>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/restoration/feasibility`, undefined, 60000);
