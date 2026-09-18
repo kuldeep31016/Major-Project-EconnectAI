@@ -1,0 +1,4 @@
+[acquire] sundarbans  bbox=(21.8, 88.6, 22.1, 88.9)  grid=3137x3358 @ 10 m  EPSG:32645
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1B_IW_GRDH_1SDV_20200105T000353_20200105T000418_019674_0252FB_rtc  2020-01-05  descending

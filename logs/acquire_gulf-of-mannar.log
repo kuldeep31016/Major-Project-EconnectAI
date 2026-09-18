@@ -1,0 +1,4 @@
+[acquire] gulf-of-mannar  bbox=(9.0, 78.9, 9.3, 79.3)  grid=4415x3343 @ 10 m  EPSG:32644
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1A_IW_GRDH_1SDV_20200102T003240_20200102T003305_030614_0381E6_rtc  2020-01-02  descending
