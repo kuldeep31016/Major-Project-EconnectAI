@@ -1,0 +1,452 @@
+[
+ {
+  "rank": 1,
+  "patch_id": "P02",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 16.079999999999714,
+  "area_pct": 13.668820129207687,
+  "degree": 3,
+  "confidence": 0.89411623486832,
+  "quality": 0.89411623486832,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 6.924761364510163e-08,
+  "delta_connectivity": 2.8470920868138604e-08,
+  "criticality_score": 0.29135640449336636,
+  "delta_pct": 29.135640449336638,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 2,
+  "neighbour_ids": [
+   "P10",
+   "P03",
+   "P07"
+  ],
+  "neighbour_distances_km": [
+   0.976,
+   1.848,
+   3.218
+  ]
+ },
+ {
+  "rank": 2,
+  "patch_id": "P03",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 12.089999999999787,
+  "area_pct": 10.277116626997572,
+  "degree": 3,
+  "confidence": 0.8910727044390291,
+  "quality": 0.8910727044390291,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 7.631222647245693e-08,
+  "delta_connectivity": 2.1406308040783305e-08,
+  "criticality_score": 0.21906087875154215,
+  "delta_pct": 21.906087875154213,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 3,
+  "neighbour_ids": [
+   "P07",
+   "P02",
+   "P10"
+  ],
+  "neighbour_distances_km": [
+   1.379,
+   1.848,
+   2.824
+  ]
+ },
+ {
+  "rank": 3,
+  "patch_id": "P01",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 17.419999999999924,
+  "area_pct": 14.807888473308527,
+  "degree": 3,
+  "confidence": 0.8212829776253684,
+  "quality": 0.8212829776253684,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 7.660709202351288e-08,
+  "delta_connectivity": 2.1111442489727356e-08,
+  "criticality_score": 0.21604338004953288,
+  "delta_pct": 21.604338004953288,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 1,
+  "neighbour_ids": [
+   "P14",
+   "P13",
+   "P16"
+  ],
+  "neighbour_distances_km": [
+   0.501,
+   1.081,
+   2.125
+  ]
+ },
+ {
+  "rank": 4,
+  "patch_id": "P04",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 12.019999999999788,
+  "area_pct": 10.21761305678336,
+  "degree": 2,
+  "confidence": 0.8306717144669391,
+  "quality": 0.8306717144669391,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 8.56951280559054e-08,
+  "delta_connectivity": 1.2023406457334838e-08,
+  "criticality_score": 0.12304120725127886,
+  "delta_pct": 12.304120725127886,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 4,
+  "neighbour_ids": [
+   "P08",
+   "P11"
+  ],
+  "neighbour_distances_km": [
+   1.793,
+   2.183
+  ]
+ },
+ {
+  "rank": 5,
+  "patch_id": "P07",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 6.149999999999913,
+  "area_pct": 5.227813668820124,
+  "degree": 3,
+  "confidence": 0.8809510996671227,
+  "quality": 0.8809510996671227,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 8.682946962897076e-08,
+  "delta_connectivity": 1.0889064884269475e-08,
+  "criticality_score": 0.11143295321108276,
+  "delta_pct": 11.143295321108276,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 7,
+  "neighbour_ids": [
+   "P03",
+   "P02",
+   "P10"
+  ],
+  "neighbour_distances_km": [
+   1.379,
+   3.218,
+   4.194
+  ]
+ },
+ {
+  "rank": 6,
+  "patch_id": "P05",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 11.539999999999798,
+  "area_pct": 9.809588575314475,
+  "degree": 1,
+  "confidence": 0.8426190196847998,
+  "quality": 0.8426190196847998,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 8.95073967620107e-08,
+  "delta_connectivity": 8.211137751229538e-09,
+  "criticality_score": 0.08402845777549992,
+  "delta_pct": 8.402845777549992,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 5,
+  "neighbour_ids": [
+   "P12"
+  ],
+  "neighbour_distances_km": [
+   1.2
+  ]
+ },
+ {
+  "rank": 7,
+  "patch_id": "P10",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 4.249999999999954,
+  "area_pct": 3.612716763005788,
+  "degree": 3,
+  "confidence": 0.8431423397625194,
+  "quality": 0.8431423397625194,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.01935709753304e-08,
+  "delta_connectivity": 7.52496353790983e-09,
+  "criticality_score": 0.07700651238164286,
+  "delta_pct": 7.700651238164285,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 10,
+  "neighbour_ids": [
+   "P02",
+   "P03",
+   "P07"
+  ],
+  "neighbour_distances_km": [
+   0.976,
+   2.824,
+   4.194
+  ]
+ },
+ {
+  "rank": 8,
+  "patch_id": "P08",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 5.589999999999925,
+  "area_pct": 4.751785107106425,
+  "degree": 2,
+  "confidence": 0.8050283510271253,
+  "quality": 0.8050283510271253,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.212695031220012e-08,
+  "delta_connectivity": 5.591584201040108e-09,
+  "criticality_score": 0.05722132683316576,
+  "delta_pct": 5.722132683316576,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 8,
+  "neighbour_ids": [
+   "P11",
+   "P04"
+  ],
+  "neighbour_distances_km": [
+   1.12,
+   1.793
+  ]
+ },
+ {
+  "rank": 9,
+  "patch_id": "P13",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 3.5899999999999674,
+  "area_pct": 3.051683100986071,
+  "degree": 3,
+  "confidence": 0.832285360041435,
+  "quality": 0.832285360041435,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.336778373608056e-08,
+  "delta_connectivity": 4.350750777159668e-09,
+  "criticality_score": 0.044523291296086405,
+  "delta_pct": 4.45232912960864,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 13,
+  "neighbour_ids": [
+   "P14",
+   "P01",
+   "P16"
+  ],
+  "neighbour_distances_km": [
+   0.587,
+   1.081,
+   1.66
+  ]
+ },
+ {
+  "rank": 10,
+  "patch_id": "P11",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 4.179999999999955,
+  "area_pct": 3.5532131927915755,
+  "degree": 2,
+  "confidence": 0.8164357380433516,
+  "quality": 0.8164357380433516,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.353734990494904e-08,
+  "delta_connectivity": 4.1811846082911874e-09,
+  "criticality_score": 0.0427880404584318,
+  "delta_pct": 4.27880404584318,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 11,
+  "neighbour_ids": [
+   "P08",
+   "P04"
+  ],
+  "neighbour_distances_km": [
+   1.12,
+   2.183
+  ]
+ },
+ {
+  "rank": 11,
+  "patch_id": "P14",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 3.379999999999972,
+  "area_pct": 2.8731723903434343,
+  "degree": 3,
+  "confidence": 0.7513813454018542,
+  "quality": 0.7513813454018542,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.362228447791998e-08,
+  "delta_connectivity": 4.0962500353202476e-09,
+  "criticality_score": 0.04191886478573041,
+  "delta_pct": 4.191886478573041,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 14,
+  "neighbour_ids": [
+   "P01",
+   "P13",
+   "P16"
+  ],
+  "neighbour_distances_km": [
+   0.501,
+   0.587,
+   1.907
+  ]
+ },
+ {
+  "rank": 12,
+  "patch_id": "P06",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 7.419999999999886,
+  "area_pct": 6.307378442706548,
+  "degree": 1,
+  "confidence": 0.7749009705136086,
+  "quality": 0.7749009705136086,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.410796590805372e-08,
+  "delta_connectivity": 3.6105686051865116e-09,
+  "criticality_score": 0.03694865690702006,
+  "delta_pct": 3.694865690702006,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 6,
+  "neighbour_ids": [
+   "P15"
+  ],
+  "neighbour_distances_km": [
+   0.972
+  ]
+ },
+ {
+  "rank": 13,
+  "patch_id": "P12",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 3.9599999999999596,
+  "area_pct": 3.3662019721183367,
+  "degree": 1,
+  "confidence": 0.7985921736919519,
+  "quality": 0.7985921736919519,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.490084772858951e-08,
+  "delta_connectivity": 2.8176867846507226e-09,
+  "criticality_score": 0.02883472207894137,
+  "delta_pct": 2.8834722078941373,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 12,
+  "neighbour_ids": [
+   "P05"
+  ],
+  "neighbour_distances_km": [
+   1.2
+  ]
+ },
+ {
+  "rank": 14,
+  "patch_id": "P16",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 2.010000000000001,
+  "area_pct": 1.7086025161509923,
+  "degree": 3,
+  "confidence": 0.7719972201840795,
+  "quality": 0.7719972201840795,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.528259884134858e-08,
+  "delta_connectivity": 2.435935671891652e-09,
+  "criticality_score": 0.02492808231340799,
+  "delta_pct": 2.492808231340799,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 16,
+  "neighbour_ids": [
+   "P13",
+   "P14",
+   "P01"
+  ],
+  "neighbour_distances_km": [
+   1.66,
+   1.907,
+   2.125
+  ]
+ },
+ {
+  "rank": 15,
+  "patch_id": "P15",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 3.179999999999976,
+  "area_pct": 2.703162189731399,
+  "degree": 1,
+  "confidence": 0.8341398769579593,
+  "quality": 0.8341398769579593,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.617114796816027e-08,
+  "delta_connectivity": 1.54738654507996e-09,
+  "criticality_score": 0.01583513867443744,
+  "delta_pct": 1.583513867443744,
+  "component_count_before": 6,
+  "component_count_after": 6,
+  "is_cut_vertex": false,
+  "rank_by_area": 15,
+  "neighbour_ids": [
+   "P06"
+  ],
+  "neighbour_distances_km": [
+   0.972
+  ]
+ },
+ {
+  "rank": 16,
+  "patch_id": "P09",
+  "name": null,
+  "habitat_class": "mangrove",
+  "area_ha": 4.7799999999999425,
+  "area_pct": 4.063243794627682,
+  "degree": 0,
+  "confidence": 0.8445582263888675,
+  "quality": 0.8445582263888675,
+  "c_before": 9.771853451324023e-08,
+  "c_after": 9.666966460886727e-08,
+  "delta_connectivity": 1.0488699043729613e-09,
+  "criticality_score": 0.010733582012845744,
+  "delta_pct": 1.0733582012845744,
+  "component_count_before": 6,
+  "component_count_after": 5,
+  "is_cut_vertex": false,
+  "rank_by_area": 9,
+  "neighbour_ids": [],
+  "neighbour_distances_km": []
+ }
+]

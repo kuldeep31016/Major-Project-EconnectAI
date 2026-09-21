@@ -1,0 +1,23 @@
+mode: development
+dataset_config: configs/dataset.yaml
+model:
+  encoder: efficientnet-b0
+  encoder_weights: imagenet
+training:
+  epochs: 40
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  loss: bce_dice
+  loss_kwargs:
+    pos_weight: 25.0
+  scheduler: cosine
+  early_stopping_patience: 12
+  monitor: iou
+  threshold: 0.5
+  mixed_precision: true
+  grad_clip: 1.0
+  seed: 42
+  device: auto
+  max_train_batches_per_epoch: null
+output_root: outputs/segmentation
+experiment_id: multi_E1_s1_b0_dev

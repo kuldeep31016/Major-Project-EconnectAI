@@ -38,3 +38,4 @@ service-account*.json
 outputs/ecoconnect.db*
 outputs/quicklooks/
 outputs/.jwt_secret
+logs/

@@ -1,0 +1,806 @@
+[
+ {
+  "patch_id": "P01",
+  "text": "P01 ranks #1 of 21 by criticality (S = 0.605): removing it lowers IIC by 60.5%. It holds 7132.6 ha, 47.7% of mapped habitat (#1 by area). It maintains 3 links to P14 (1.9 km), P17 (2.3 km), P19 (3.3 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 93%.",
+  "evidence": {
+   "area_ha": 7132.590000109268,
+   "area_pct": 47.72945818985256,
+   "rank_by_area": 1,
+   "degree": 3,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P14",
+     "distance_km": 1.874021016583121,
+     "weight": 0.5985716470902954
+    },
+    {
+     "id": "P17",
+     "distance_km": 2.2997584826613364,
+     "weight": 0.5358324456641805
+    },
+    {
+     "id": "P19",
+     "distance_km": 3.3075669407896586,
+     "weight": 0.433689815909839
+    }
+   ],
+   "confidence": 0.9332978821234125,
+   "quality": 0.9332978821234125,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.0075662421490785906,
+   "delta_connectivity": 0.011565580180792616,
+   "criticality_score": 0.6045205721325803,
+   "delta_pct": 60.45205721325802,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "critical"
+ },
+ {
+  "patch_id": "P02",
+  "text": "P02 ranks #2 of 21 by criticality (S = 0.350): removing it lowers IIC by 35.0%. It holds 4870.7 ha, 32.6% of mapped habitat (#2 by area). It maintains 1 link to P09 (4.9 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 99%.",
+  "evidence": {
+   "area_ha": 4870.660000059895,
+   "area_pct": 32.59320426749394,
+   "rank_by_area": 2,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P09",
+     "distance_km": 4.853067525748694,
+     "weight": 0.3456506204180987
+    }
+   ],
+   "confidence": 0.9878910822256777,
+   "quality": 0.9878910822256777,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.012442520501702274,
+   "delta_connectivity": 0.006689301828168933,
+   "criticality_score": 0.3496426902169525,
+   "delta_pct": 34.96426902169525,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "critical"
+ },
+ {
+  "patch_id": "P09",
+  "text": "P09 ranks #3 of 21 by criticality (S = 0.071): removing it lowers IIC by 7.1%. It holds 55.6 ha, 0.4% of mapped habitat (#9 by area). Its structural importance exceeds what its size alone would suggest. It maintains 6 links to P13 (1.0 km), P15 (1.4 km), P07 (2.8 km). It is a cut vertex (bridge patch): its removal splits the network from 4 to 5 components. Segmentation confidence for this patch is 84%.",
+  "evidence": {
+   "area_ha": 55.56999999999751,
+   "area_pct": 0.3718601506001825,
+   "rank_by_area": 9,
+   "degree": 6,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "P13",
+     "distance_km": 1.0397174053443643,
+     "weight": 0.719602781470837
+    },
+    {
+     "id": "P15",
+     "distance_km": 1.4216302139362997,
+     "weight": 0.6022822799495207
+    },
+    {
+     "id": "P07",
+     "distance_km": 2.7581315591427007,
+     "weight": 0.4936794497523908
+    },
+    {
+     "id": "P18",
+     "distance_km": 2.7710854017399775,
+     "weight": 0.4560649687616291
+    },
+    {
+     "id": "P05",
+     "distance_km": 3.893832663283879,
+     "weight": 0.40838715208430476
+    },
+    {
+     "id": "P02",
+     "distance_km": 4.853067525748694,
+     "weight": 0.3456506204180987
+    }
+   ],
+   "confidence": 0.8426161817730342,
+   "quality": 0.8426161817730342,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.017781082087959796,
+   "delta_connectivity": 0.0013507402419114106,
+   "criticality_score": 0.07060175547430476,
+   "delta_pct": 7.060175547430477,
+   "components_before": 4,
+   "components_after": 5,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "P08",
+  "text": "P08 ranks #4 of 21 by criticality (S = 0.058): removing it lowers IIC by 5.8%. It holds 62.6 ha, 0.4% of mapped habitat (#8 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P03 (4.1 km), P04 (4.4 km), P10 (4.4 km). It is a cut vertex (bridge patch): its removal splits the network from 4 to 6 components. Segmentation confidence for this patch is 97%.",
+  "evidence": {
+   "area_ha": 62.599999999996115,
+   "area_pct": 0.4189031028895271,
+   "rank_by_area": 8,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "P03",
+     "distance_km": 4.114165851117604,
+     "weight": 0.42858184495005364
+    },
+    {
+     "id": "P04",
+     "distance_km": 4.421986838836959,
+     "weight": 0.3974024963746441
+    },
+    {
+     "id": "P10",
+     "distance_km": 4.426561051875364,
+     "weight": 0.39770319087466155
+    }
+   ],
+   "confidence": 0.9682724504044261,
+   "quality": 0.9682724504044261,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.01801683527368469,
+   "delta_connectivity": 0.001114987056186515,
+   "criticality_score": 0.058279187259942584,
+   "delta_pct": 5.827918725994259,
+   "components_before": 4,
+   "components_after": 6,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "P10",
+  "text": "P10 ranks #5 of 21 by criticality (S = 0.050): removing it lowers IIC by 5.0%. It holds 38.0 ha, 0.3% of mapped habitat (#10 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P05 (3.3 km), P08 (4.4 km), P18 (4.8 km). It is a cut vertex (bridge patch): its removal splits the network from 4 to 5 components. Segmentation confidence for this patch is 96%.",
+  "evidence": {
+   "area_ha": 38.01000000000101,
+   "area_pct": 0.25435314601968584,
+   "rank_by_area": 10,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "P05",
+     "distance_km": 3.3275085992854616,
+     "weight": 0.48808330390428667
+    },
+    {
+     "id": "P08",
+     "distance_km": 4.426561051875364,
+     "weight": 0.39770319087466155
+    },
+    {
+     "id": "P18",
+     "distance_km": 4.765645550528852,
+     "weight": 0.326597622682191
+    }
+   ],
+   "confidence": 0.9596060801261164,
+   "quality": 0.9596060801261164,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.018168915139699288,
+   "delta_connectivity": 0.0009629071901719188,
+   "criticality_score": 0.050330134451881094,
+   "delta_pct": 5.033013445188109,
+   "components_before": 4,
+   "components_after": 5,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "P04",
+  "text": "P04 ranks #6 of 21 by criticality (S = 0.045): removing it lowers IIC by 4.5%. It holds 910.0 ha, 6.1% of mapped habitat (#4 by area). It maintains 3 links to P16 (2.9 km), P06 (3.7 km), P08 (4.4 km). It is a cut vertex (bridge patch): its removal splits the network from 4 to 5 components. Segmentation confidence for this patch is 96%.",
+  "evidence": {
+   "area_ha": 910.0299999993174,
+   "area_pct": 6.089686752752301,
+   "rank_by_area": 4,
+   "degree": 3,
+   "is_cut_vertex": true,
+   "neighbours": [
+    {
+     "id": "P16",
+     "distance_km": 2.917413262417759,
+     "weight": 0.48637596153057855
+    },
+    {
+     "id": "P06",
+     "distance_km": 3.686792693345212,
+     "weight": 0.46130784352547166
+    },
+    {
+     "id": "P08",
+     "distance_km": 4.421986838836959,
+     "weight": 0.3974024963746441
+    }
+   ],
+   "confidence": 0.9564040350395,
+   "quality": 0.9564040350395,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.018269272214842328,
+   "delta_connectivity": 0.0008625501150288789,
+   "criticality_score": 0.045084576897943915,
+   "delta_pct": 4.508457689794391,
+   "components_before": 4,
+   "components_after": 5,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "P03",
+  "text": "P03 ranks #7 of 21 by criticality (S = 0.042): removing it lowers IIC by 4.2%. It holds 954.3 ha, 6.4% of mapped habitat (#3 by area). It is large but structurally redundant: other patches carry its links. It maintains 1 link to P08 (4.1 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 98%.",
+  "evidence": {
+   "area_ha": 954.3399999992771,
+   "area_pct": 6.386197878774972,
+   "rank_by_area": 3,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P08",
+     "distance_km": 4.114165851117604,
+     "weight": 0.42858184495005364
+    }
+   ],
+   "confidence": 0.9834986666499398,
+   "quality": 0.9834986666499398,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.01833536945427513,
+   "delta_connectivity": 0.0007964528755960779,
+   "criticality_score": 0.041629744509625054,
+   "delta_pct": 4.162974450962506,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "P05",
+  "text": "P05 ranks #8 of 21 by criticality (S = 0.032): removing it lowers IIC by 3.2%. It holds 539.3 ha, 3.6% of mapped habitat (#5 by area). It is large but structurally redundant: other patches carry its links. It maintains 3 links to P18 (1.6 km), P10 (3.3 km), P09 (3.9 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 94%.",
+  "evidence": {
+   "area_ha": 539.3499999996545,
+   "area_pct": 3.6091915102769287,
+   "rank_by_area": 5,
+   "degree": 3,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P18",
+     "distance_km": 1.6408155165172222,
+     "weight": 0.603749789997639
+    },
+    {
+     "id": "P10",
+     "distance_km": 3.3275085992854616,
+     "weight": 0.48808330390428667
+    },
+    {
+     "id": "P09",
+     "distance_km": 3.893832663283879,
+     "weight": 0.40838715208430476
+    }
+   ],
+   "confidence": 0.9395986017752502,
+   "quality": 0.9395986017752502,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.018522188286341133,
+   "delta_connectivity": 0.0006096340435300732,
+   "criticality_score": 0.03186492290272994,
+   "delta_pct": 3.1864922902729944,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "medium"
+ },
+ {
+  "patch_id": "P06",
+  "text": "P06 ranks #9 of 21 by criticality (S = 0.007): removing it lowers IIC by 0.7%. It holds 172.1 ha, 1.2% of mapped habitat (#6 by area). It is large but structurally redundant: other patches carry its links. It maintains 2 links to P16 (3.3 km), P04 (3.7 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 97%.",
+  "evidence": {
+   "area_ha": 172.12999999998843,
+   "area_pct": 1.1518496980890405,
+   "rank_by_area": 6,
+   "degree": 2,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P16",
+     "distance_km": 3.3148981902328982,
+     "weight": 0.4529259291430729
+    },
+    {
+     "id": "P04",
+     "distance_km": 3.686792693345212,
+     "weight": 0.46130784352547166
+    }
+   ],
+   "confidence": 0.9723033165000909,
+   "quality": 0.9723033165000909,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019004049066126825,
+   "delta_connectivity": 0.00012777326374438167,
+   "criticality_score": 0.006678572565713442,
+   "delta_pct": 0.6678572565713442,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P07",
+  "text": "P07 ranks #10 of 21 by criticality (S = 0.004): removing it lowers IIC by 0.4%. It holds 77.2 ha, 0.5% of mapped habitat (#7 by area). It is large but structurally redundant: other patches carry its links. It maintains 3 links to P15 (1.5 km), P13 (2.2 km), P09 (2.8 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 87%.",
+  "evidence": {
+   "area_ha": 77.15000000000256,
+   "area_pct": 0.5162679614685318,
+   "rank_by_area": 7,
+   "degree": 3,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P15",
+     "distance_km": 1.4521703891489892,
+     "weight": 0.6088788901958784
+    },
+    {
+     "id": "P13",
+     "distance_km": 2.193649845692289,
+     "weight": 0.5810948849150211
+    },
+    {
+     "id": "P09",
+     "distance_km": 2.7581315591427007,
+     "weight": 0.4936794497523908
+    }
+   ],
+   "confidence": 0.8717597837271972,
+   "quality": 0.8717597837271972,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019053519070775616,
+   "delta_connectivity": 7.830325909559052e-05,
+   "criticality_score": 0.004092828050850797,
+   "delta_pct": 0.4092828050850797,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P11",
+  "text": "P11 ranks #11 of 21 by criticality (S = 0.002): removing it lowers IIC by 0.2%. It holds 31.2 ha, 0.2% of mapped habitat (#11 by area). It maintains 2 links to P17 (4.3 km), P14 (4.9 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 95%.",
+  "evidence": {
+   "area_ha": 31.230000000002082,
+   "area_pct": 0.20898312944475425,
+   "rank_by_area": 11,
+   "degree": 2,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P17",
+     "distance_km": 4.300854806388076,
+     "weight": 0.3622218518205289
+    },
+    {
+     "id": "P14",
+     "distance_km": 4.906004891535496,
+     "weight": 0.3292456347251829
+    }
+   ],
+   "confidence": 0.949593197810814,
+   "quality": 0.949593197810814,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.01909789068290872,
+   "delta_connectivity": 3.393164696248799e-05,
+   "criticality_score": 0.001773571088913432,
+   "delta_pct": 0.17735710889134318,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P13",
+  "text": "P13 ranks #12 of 21 by criticality (S = 0.002): removing it lowers IIC by 0.2%. It holds 27.5 ha, 0.2% of mapped habitat (#13 by area). Its structural importance exceeds what its size alone would suggest. It maintains 4 links to P15 (0.8 km), P09 (1.0 km), P07 (2.2 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 93%.",
+  "evidence": {
+   "area_ha": 27.45000000000149,
+   "area_pct": 0.18368834144279325,
+   "rank_by_area": 13,
+   "degree": 4,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P15",
+     "distance_km": 0.7535460879925869,
+     "weight": 0.7237705039729614
+    },
+    {
+     "id": "P09",
+     "distance_km": 1.0397174053443643,
+     "weight": 0.719602781470837
+    },
+    {
+     "id": "P07",
+     "distance_km": 2.193649845692289,
+     "weight": 0.5810948849150211
+    },
+    {
+     "id": "P18",
+     "distance_km": 3.6026970061586456,
+     "weight": 0.40603698371302893
+    }
+   ],
+   "confidence": 0.9314794633557888,
+   "quality": 0.9314794633557888,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019103052902392684,
+   "delta_connectivity": 2.8769427478522736e-05,
+   "criticality_score": 0.0015037473682579618,
+   "delta_pct": 0.1503747368257962,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P14",
+  "text": "P14 ranks #13 of 21 by criticality (S = 0.001): removing it lowers IIC by 0.1%. It holds 16.5 ha, 0.1% of mapped habitat (#14 by area). Its structural importance exceeds what its size alone would suggest. It maintains 4 links to P17 (0.6 km), P01 (1.9 km), P19 (4.5 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 81%.",
+  "evidence": {
+   "area_ha": 16.519999999999783,
+   "area_pct": 0.11054759200855152,
+   "rank_by_area": 14,
+   "degree": 4,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P17",
+     "distance_km": 0.6428914155873727,
+     "weight": 0.6963280831839717
+    },
+    {
+     "id": "P01",
+     "distance_km": 1.874021016583121,
+     "weight": 0.5985716470902954
+    },
+    {
+     "id": "P19",
+     "distance_km": 4.499124197041723,
+     "weight": 0.31882556222770664
+    },
+    {
+     "id": "P11",
+     "distance_km": 4.906004891535496,
+     "weight": 0.3292456347251829
+    }
+   ],
+   "confidence": 0.8123866860499971,
+   "quality": 0.8123866860499971,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.01910499609662204,
+   "delta_connectivity": 2.6826233249167136e-05,
+   "criticality_score": 0.0014021786731357195,
+   "delta_pct": 0.14021786731357194,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P17",
+  "text": "P17 ranks #14 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 4.5 ha, 0.0% of mapped habitat (#17 by area). Its structural importance exceeds what its size alone would suggest. It maintains 4 links to P14 (0.6 km), P01 (2.3 km), P11 (4.3 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 77%.",
+  "evidence": {
+   "area_ha": 4.459999999999949,
+   "area_pct": 0.029845173145165903,
+   "rank_by_area": 17,
+   "degree": 4,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P14",
+     "distance_km": 0.6428914155873727,
+     "weight": 0.6963280831839717
+    },
+    {
+     "id": "P01",
+     "distance_km": 2.2997584826613364,
+     "weight": 0.5358324456641805
+    },
+    {
+     "id": "P11",
+     "distance_km": 4.300854806388076,
+     "weight": 0.3622218518205289
+    },
+    {
+     "id": "P19",
+     "distance_km": 4.476921128078309,
+     "weight": 0.31215738984808894
+    }
+   ],
+   "confidence": 0.7718745149304514,
+   "quality": 0.7718745149304514,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019124579896439533,
+   "delta_connectivity": 7.242433431673551e-06,
+   "criticality_score": 0.00037855429068906193,
+   "delta_pct": 0.03785542906890619,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P15",
+  "text": "P15 ranks #15 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 6.7 ha, 0.0% of mapped habitat (#15 by area). It maintains 3 links to P13 (0.8 km), P09 (1.4 km), P07 (1.5 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 76%.",
+  "evidence": {
+   "area_ha": 6.709999999999901,
+   "area_pct": 0.044901594574901914,
+   "rank_by_area": 15,
+   "degree": 3,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P13",
+     "distance_km": 0.7535460879925869,
+     "weight": 0.7237705039729614
+    },
+    {
+     "id": "P09",
+     "distance_km": 1.4216302139362997,
+     "weight": 0.6022822799495207
+    },
+    {
+     "id": "P07",
+     "distance_km": 1.4521703891489892,
+     "weight": 0.6088788901958784
+    }
+   ],
+   "confidence": 0.7602087066532425,
+   "quality": 0.7602087066532425,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019125012026973837,
+   "delta_connectivity": 6.810302897369835e-06,
+   "criticality_score": 0.0003559672873784043,
+   "delta_pct": 0.03559672873784043,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P18",
+  "text": "P18 ranks #16 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 3.8 ha, 0.0% of mapped habitat (#18 by area). Its structural importance exceeds what its size alone would suggest. It maintains 4 links to P05 (1.6 km), P09 (2.8 km), P13 (3.6 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 75%.",
+  "evidence": {
+   "area_ha": 3.799999999999963,
+   "area_pct": 0.025428622859110003,
+   "rank_by_area": 18,
+   "degree": 4,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P05",
+     "distance_km": 1.6408155165172222,
+     "weight": 0.603749789997639
+    },
+    {
+     "id": "P09",
+     "distance_km": 2.7710854017399775,
+     "weight": 0.4560649687616291
+    },
+    {
+     "id": "P13",
+     "distance_km": 3.6026970061586456,
+     "weight": 0.40603698371302893
+    },
+    {
+     "id": "P10",
+     "distance_km": 4.765645550528852,
+     "weight": 0.326597622682191
+    }
+   ],
+   "confidence": 0.7478430697792455,
+   "quality": 0.7478430697792455,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019126618044950902,
+   "delta_connectivity": 5.204284920304336e-06,
+   "criticality_score": 0.0002720224362620542,
+   "delta_pct": 0.027202243626205422,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P19",
+  "text": "P19 ranks #17 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 2.4 ha, 0.0% of mapped habitat (#19 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P01 (3.3 km), P17 (4.5 km), P14 (4.5 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 76%.",
+  "evidence": {
+   "area_ha": 2.4199999999999924,
+   "area_pct": 0.01619401771553858,
+   "rank_by_area": 19,
+   "degree": 3,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P01",
+     "distance_km": 3.3075669407896586,
+     "weight": 0.433689815909839
+    },
+    {
+     "id": "P17",
+     "distance_km": 4.476921128078309,
+     "weight": 0.31215738984808894
+    },
+    {
+     "id": "P14",
+     "distance_km": 4.499124197041723,
+     "weight": 0.31882556222770664
+    }
+   ],
+   "confidence": 0.7566959264357228,
+   "quality": 0.7566959264357228,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019127898270863596,
+   "delta_connectivity": 3.924059007610198e-06,
+   "criticality_score": 0.0002051063897600294,
+   "delta_pct": 0.020510638976002943,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P16",
+  "text": "P16 ranks #18 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 4.9 ha, 0.0% of mapped habitat (#16 by area). It maintains 2 links to P04 (2.9 km), P06 (3.3 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 79%.",
+  "evidence": {
+   "area_ha": 4.869999999999941,
+   "area_pct": 0.03258878771680669,
+   "rank_by_area": 16,
+   "degree": 2,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P04",
+     "distance_km": 2.917413262417759,
+     "weight": 0.48637596153057855
+    },
+    {
+     "id": "P06",
+     "distance_km": 3.3148981902328982,
+     "weight": 0.4529259291430729
+    }
+   ],
+   "confidence": 0.7945283489795192,
+   "quality": 0.7945283489795192,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019128207295917597,
+   "delta_connectivity": 3.615033953609237e-06,
+   "criticality_score": 0.0001889539789403623,
+   "delta_pct": 0.01889539789403623,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P12",
+  "text": "P12 ranks #19 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 29.4 ha, 0.2% of mapped habitat (#12 by area). It is large but structurally redundant: other patches carry its links. It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 86%.",
+  "evidence": {
+   "area_ha": 29.4300000000018,
+   "area_pct": 0.1969379923009633,
+   "rank_by_area": 12,
+   "degree": 0,
+   "is_cut_vertex": false,
+   "neighbours": [],
+   "confidence": 0.8595320487403156,
+   "quality": 0.8595320487403156,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.01913162663959834,
+   "delta_connectivity": 1.956902728680876e-07,
+   "criticality_score": 1.0228522379833588e-05,
+   "delta_pct": 0.0010228522379833588,
+   "components_before": 4,
+   "components_after": 3,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P20",
+  "text": "P20 ranks #20 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 2.3 ha, 0.0% of mapped habitat (#20 by area). It maintains 1 link to P21 (1.5 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 80%.",
+  "evidence": {
+   "area_ha": 2.289999999999995,
+   "area_pct": 0.015324091144042724,
+   "rank_by_area": 20,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P21",
+     "distance_km": 1.4690706883431521,
+     "weight": 0.5791407386151187
+    }
+   ],
+   "confidence": 0.798395534790239,
+   "quality": 0.798395534790239,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.019131820017105068,
+   "delta_connectivity": 2.312766138323763e-09,
+   "criticality_score": 1.2088582563892816e-07,
+   "delta_pct": 1.2088582563892817e-05,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ },
+ {
+  "patch_id": "P21",
+  "text": "P21 ranks #21 of 21 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 2.2 ha, 0.0% of mapped habitat (#21 by area). It maintains 1 link to P20 (1.5 km). Alternative routes exist around it; the network stays in 4 components. Segmentation confidence for this patch is 76%.",
+  "evidence": {
+   "area_ha": 2.1799999999999975,
+   "area_pct": 0.014587999429700075,
+   "rank_by_area": 21,
+   "degree": 1,
+   "is_cut_vertex": false,
+   "neighbours": [
+    {
+     "id": "P20",
+     "distance_km": 1.4690706883431521,
+     "weight": 0.5791407386151187
+    }
+   ],
+   "confidence": 0.7560557999195309,
+   "quality": 0.7560557999195309,
+   "c_before": 0.019131822329871206,
+   "c_after": 0.01913182012819864,
+   "delta_connectivity": 2.2016725664819603e-09,
+   "criticality_score": 1.150790828244526e-07,
+   "delta_pct": 1.150790828244526e-05,
+   "components_before": 4,
+   "components_after": 4,
+   "metric": "IIC",
+   "habitat_class": "mangrove"
+  },
+  "level": "low"
+ }
+]

@@ -1,0 +1,96 @@
+{
+ "experiment_id": "multi_E1_s1_b0_dev",
+ "mode": "development",
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+ "model": "U-Net/efficientnet-b0 (dev or alt config)",
+ "encoder": "efficientnet-b0",
+ "best_epoch": 32,
+ "monitor": "iou",
+ "val": {
+  "accuracy": 0.9378478088959529,
+  "kappa": 0.8256047440442082,
+  "mean_iou": 0.8425360820258125,
+  "mean_dice": 0.91250010622719,
+  "per_class": {
+   "0": {
+    "iou": 0.9223281724585528,
+    "dice": 0.9595949179467577,
+    "precision": 0.991582014139658,
+    "recall": 0.9296070503599676,
+    "f1": 0.9595949179462581,
+    "support": 10140078
+   },
+   "1": {
+    "iou": 0.7627439915930722,
+    "dice": 0.8654052945076223,
+    "precision": 0.7814340673675082,
+    "recall": 0.969595998817639,
+    "f1": 0.865405294507128,
+    "support": 2632022
+   }
+  },
+  "confusion_matrix": [
+   [
+    9426288,
+    713790
+   ],
+   [
+    80024,
+    2551998
+   ]
+  ],
+  "n_pixels": 12772100,
+  "iou": 0.7627439915930722,
+  "dice": 0.8654052945076223,
+  "precision": 0.7814340673675082,
+  "recall": 0.969595998817639,
+  "f1": 0.865405294507128,
+  "threshold": 0.5
+ },
+ "val_loss": 1.2548122674990922,
+ "test": {
+  "accuracy": 0.9663867546855142,
+  "kappa": 0.8935182097368795,
+  "mean_iou": 0.9006544313105509,
+  "mean_dice": 0.946737196900612,
+  "per_class": {
+   "0": {
+    "iou": 0.9590331844932386,
+    "dice": 0.9790882483099138,
+    "precision": 0.9890033997774401,
+    "recall": 0.9693699301647869,
+    "f1": 0.9790882483094138,
+    "support": 10638043
+   },
+   "1": {
+    "iou": 0.8422756781278633,
+    "dice": 0.9143861454913103,
+    "precision": 0.8783352929733371,
+    "recall": 0.9535230433043146,
+    "f1": 0.9143861454908111,
+    "support": 2467029
+   }
+  },
+  "confusion_matrix": [
+   [
+    10312199,
+    325844
+   ],
+   [
+    114660,
+    2352369
+   ]
+  ],
+  "n_pixels": 13105072,
+  "iou": 0.8422756781278633,
+  "dice": 0.9143861454913103,
+  "precision": 0.8783352929733371,
+  "recall": 0.9535230433043146,
+  "f1": 0.9143861454908111,
+  "threshold": 0.5
+ },
+ "note": "val = best-epoch validation metrics; test filled by scripts/evaluate.py",
+ "test_threshold": 0.5,
+ "test_tta": false,
+ "n_test_tiles": 200
+}

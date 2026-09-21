@@ -1,0 +1,132 @@
+{
+ "run_id": "gulf-of-mannar_multi_E1_s1_b0_dev_t0.70",
+ "study_area_id": "gulf-of-mannar",
+ "study_area": {
+  "name": "Gulf of Mannar \u2014 Island Reef Chain",
+  "short_name": "Gulf of Mannar",
+  "state": "Tamil Nadu",
+  "protection": "Marine National Park / Biosphere Reserve",
+  "center": [
+   9.15,
+   79.1
+  ],
+  "bbox": [
+   9.0,
+   78.9,
+   9.3,
+   79.3
+  ],
+  "footprint_km2": 826,
+  "primary_habitat": "mangrove"
+ },
+ "timestamp_utc": "2026-09-18T21:17:12.079085+00:00",
+ "ecoconnect_version": "0.1.0",
+ "result_kind": "development",
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+ "data_source": {
+  "type": "probability_raster",
+  "path": "outputs/segmentation/multi_E1_s1_b0_dev/predictions/gulf-of-mannar_prob.tif",
+  "scene_year": 2020,
+  "crs": "EPSG:32644",
+  "width": 4415,
+  "height": 3343,
+  "pixel_size": [
+   10.0,
+   10.0
+  ],
+  "threshold": 0.7,
+  "mmu_ha": 2.0,
+  "connectivity": 8,
+  "candidate_threshold": 0.3,
+  "candidate_min_area_ha": 1.0,
+  "extraction_report": {
+   "threshold": 0.7,
+   "mmu_ha": 2.0,
+   "connectivity": 8,
+   "n_components_total": 31,
+   "n_patches_kept": 16,
+   "n_dropped_below_mmu": 15,
+   "habitat_pixels": 12247,
+   "valid_pixels": 14759345,
+   "habitat_coverage_pct": 0.08297793702904838,
+   "habitat_area_ha": 117.63999999999847,
+   "landscape_area_ha": 147593.44999999995,
+   "mean_confidence_habitat": 0.8359695672988892,
+   "crs": "EPSG:32644"
+  },
+  "model": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth",
+  "model_info": {
+   "checkpoint": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth"
+  }
+ },
+ "landscape_area_ha": 147593.44999999995,
+ "aoi_area_km2": 1475.93,
+ "valid_area_km2": 1475.93,
+ "habitat_area_ha": 117.64,
+ "comparability_note": "IIC and PC scale with the analysis extent A_L; do not compare raw values between study areas of different AOI size - use ECA as % of habitat area instead.",
+ "n_patches": 16,
+ "n_candidates": 12,
+ "config": {
+  "graph": {
+   "k_neighbors": 3,
+   "tau_km": 5.0,
+   "distance_mode": "haversine",
+   "tau_sensitivity_km": [
+    3.0,
+    5.0,
+    8.0
+   ]
+  },
+  "connectivity": {
+   "research_metric": "iic",
+   "pc_probability_at_tau": 0.5,
+   "interface_score_weights": {
+    "structural": 0.3,
+    "functional": 0.28,
+    "quality": 0.22,
+    "redundancy": 0.12,
+    "protection": 0.08
+   }
+  },
+  "criticality": {
+   "level_thresholds": [
+    0.25,
+    0.1,
+    0.03
+   ]
+  },
+  "restoration": {
+   "candidate_source": "sub_threshold",
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "candidate_max_count": 12,
+   "candidate_geojson": null,
+   "cost_csv": null,
+   "cost_unit": null,
+   "rebuild_edges_on_insert": false
+  },
+  "export": {
+   "heatmap_cell_m": 300,
+   "polygon_simplify_m": 15
+  }
+ },
+ "hardware": {
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.3"
+ },
+ "elapsed_s": 0.027,
+ "files": [
+  "criticality.csv",
+  "criticality.json",
+  "explanations.json",
+  "graph.json",
+  "metrics.json",
+  "patches.geojson",
+  "patches_input.json",
+  "restoration.csv",
+  "restoration.json",
+  "tau_sensitivity.json",
+  "what_if_top1.json"
+ ]
+}

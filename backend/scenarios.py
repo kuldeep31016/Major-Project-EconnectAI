@@ -67,12 +67,30 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
 
     if t in ("remove_patches", "remove_polygon"):
         if t == "remove_polygon":
-            poly = Polygon([(lon, lat) for lat, lon in body["polygon"]])
-            ids = [p.id for p in patches if p.geometry and (shape(p.geometry).intersects(poly) or poly.contains(shape(p.geometry).centroid))]
+            raw_pts = body.get("polygon", [])
+            if len(raw_pts) < 3:
+                raise ValueError("drawn polygon requires at least 3 points")
+            poly_lonlat = Polygon([(lon, lat) for lat, lon in raw_pts])
+            poly_latlon = Polygon([(lat, lon) for lat, lon in raw_pts])
+            ids = []
+            from shapely.geometry import Point
+            for p in patches:
+                geom = shape(p.geometry) if p.geometry else None
+                if geom and (geom.intersects(poly_lonlat) or poly_lonlat.contains(geom.centroid) or geom.intersects(poly_latlon) or poly_latlon.contains(geom.centroid)):
+                    ids.append(p.id)
+                elif p.centroid:
+                    pt1 = Point(p.centroid[1], p.centroid[0])
+                    pt2 = Point(p.centroid[0], p.centroid[1])
+                    if poly_lonlat.contains(pt1) or poly_latlon.contains(pt2) or poly_latlon.contains(pt1):
+                        ids.append(p.id)
+            if not ids and patches:
+                poly_c = poly_latlon.centroid
+                patches_by_dist = sorted(patches, key=lambda p: (p.centroid[0] - poly_c.x)**2 + (p.centroid[1] - poly_c.y)**2 if p.centroid else 999999)
+                ids = [patches_by_dist[0].id]
         else:
-            ids = list(body["patch_ids"])
+            ids = list(body.get("patch_ids", []))
         if not ids:
-            raise ValueError("no patches selected")
+            raise ValueError("No patches selected for removal.")
         res = simulate_removal(base_graph, ids, a_l, metric)
         sg = base_graph.without(*ids)
         scen = _summary(sg, a_l, metric)

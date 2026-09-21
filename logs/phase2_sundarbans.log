@@ -1,0 +1,52 @@
+[late] sundarbans acquired and model multi_E1_s1_b0_dev ready
+{
+ "dataset_root": "/Users/kuldeepraj/Major-Project-EconnectAI/data/ecoconnect_tiles",
+ "source_image": "data/scenes/sundarbans/sundarbans_2020_s12_10m.tif",
+ "source_label": "data/labels/sundarbans/gmw_2020.tif",
+ "tile_size": 256,
+ "stride": 128,
+ "n_tiles_written": 575,
+ "n_tiles_skipped_invalid": 0,
+ "n_tiles_skipped_unlabelled": 0,
+ "n_positive_tiles": 543,
+ "n_negative_tiles_dropped": 0,
+ "split_counts": {
+  "train": 387,
+  "val": 92,
+  "test": 96
+ },
+ "positive_fraction_train": 0.6451088379084032,
+ "crs": "EPSG:32645",
+ "pixel_size": [
+  10.0,
+  10.0
+ ],
+ "bands": [
+  "s1_vv_db",
+  "s1_vh_db",
+  "s2_blue",
+  "s2_green",
+  "s2_red",
+  "s2_nir",
+  "s2_swir16",
+  "s2_swir22",
+  "s2_ndvi",
+  "s2_ndwi"
+ ]
+}
+study areas with scene + label: ['sundarbans']
+threshold: 0.7 (calibrated)
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/run_graph_analysis.py --study-area sundarbans --probability /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/sundarbans_prob.tif --threshold 0.7 --mmu-ha 2.0 --result-kind development --model-checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --run-id sundarbans_multi_E1_s1_b0_dev_t0.70
+
+[DEVELOPMENT-SUBSET RESULT - NOT FINAL]
+run dir : /Users/kuldeepraj/Major-Project-EconnectAI/outputs/runs/sundarbans/sundarbans_multi_E1_s1_b0_dev_t0.70
+patches : 54  edges: 73  components: 13  habitat: 63829.7 ha of 105337 ha
+IIC     : 0.042929   PC: 0.087329   ECA: 31129 ha (48.8% of habitat)
+interface score (Eq.7, not a research metric): 42.8/100
+top criticality:
+  #1 P01                  A= 13750.9 ha (21.5%, area rank  1) deg=0 S=0.3970 comp 13->12
+  #2 P02                  A=  9395.1 ha (14.7%, area rank  2) deg=0 S=0.1853 comp 13->12
+  #3 P03                  A=  8016.7 ha (12.6%, area rank  3) deg=1 S=0.1350 comp 13->13
+  #4 P04                  A=  6831.7 ha (10.7%, area rank  4) deg=0 S=0.0980 comp 13->12
+  #5 P05                  A=  4791.1 ha ( 7.5%, area rank  5) deg=3 S=0.0601 comp 13->13
+[late] DONE sundarbans

@@ -70,7 +70,7 @@ export function AppShell({
       {/* ---------------------------------------------------- sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-[1200] flex flex-col border-r border-black/[0.06] bg-white transition-[width] duration-300 lg:static",
+          "fixed inset-y-0 left-0 z-[1200] flex flex-col border-r border-black/[0.06] bg-white transition-[width] duration-300 lg:sticky lg:top-0 lg:h-screen lg:shrink-0",
           collapsed ? "w-[72px]" : "w-[232px]",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           "transition-transform lg:transition-[width]",
@@ -83,8 +83,7 @@ export function AppShell({
             </div>
             {!collapsed && (
               <div className="min-w-0 leading-none">
-                <div className="truncate text-[15px] font-bold tracking-tight">EcoConnectAI</div>
-                <div className="mt-1 text-[8.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Coastal Conservation Intelligence</div>
+                <div className="truncate text-[16px] font-bold tracking-tight text-foreground">EcoConnectAI</div>
               </div>
             )}
           </Link>
@@ -175,7 +174,7 @@ export function AppShell({
         <main className={cn("min-w-0 flex-1", !bleed && "p-4 sm:p-6")}>{children}</main>
 
         <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-black/[0.06] bg-white px-4 py-2.5 text-[11px] text-muted-foreground sm:px-6">
-          <div><span className="font-semibold text-foreground">EcoConnectAI</span> · Coastal Ecosystem Intelligence · every figure carries its provenance label</div>
+          <div><span className="font-semibold text-foreground">EcoConnectAI</span> · Ecological Intelligence & Decision-Support · every figure carries its provenance label</div>
           <div className="flex items-center gap-4"><Link href="/#about">About</Link><Link href="/reports">Documentation</Link><Link href="/settings">Help</Link><span className="rounded-full bg-[#dcfce7] px-3 py-1 text-[10.5px] font-medium text-[#0f5132]">Made for People, Nature and Future Generations</span></div>
         </footer>
       </div>

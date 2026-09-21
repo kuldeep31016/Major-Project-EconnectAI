@@ -381,37 +381,35 @@ function AnalysisView() {
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: EASE }}
-            className="scroll-slim shrink-0 overflow-x-auto border-t border-foreground/[0.08] bg-sidebar/85 backdrop-blur-xl"
+            transition={{ duration: 0.4, ease: EASE }}
+            className="scroll-slim shrink-0 overflow-x-auto border-t border-black/[0.08] bg-white shadow-lg"
           >
-            <div className="flex min-w-max items-stretch divide-x divide-foreground/[0.08]">
+            <div className="flex min-w-max items-center divide-x divide-black/[0.06] py-1">
               {/* score */}
-              <div className="flex shrink-0 items-center gap-4 px-5 py-4">
-                <ScoreGauge score={conn.score} size={92} label="Score" />
+              <div className="flex shrink-0 items-center gap-4 px-6 py-3.5">
+                <ScoreGauge score={conn.score} size={84} label="Score" />
                 <div>
-                  <div className="text-[11px] font-semibold">{conn.grade ?? "Interface score · Eq. (7)"}</div>
-                  <div className="mt-1 text-[10px] text-muted-foreground">
-                    {conn.previousScore != null
-                      ? `${conn.score > conn.previousScore ? "▲" : "▼"} ${Math.abs(conn.score - conn.previousScore).toFixed(1)} since last run`
-                      : `IIC ${conn.iicIndex.toExponential(2)} · PC ${conn.pcIndex.toExponential(2)}`}
+                  <div className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <span>{conn.grade ?? "Ecosystem Connectivity Score"}</span>
+                    <Badge variant="success" className="text-[9px]">Live</Badge>
                   </div>
-                  <div className="mt-2 flex gap-3 text-[10px] text-muted-foreground">
-                    <span>
-                      PC <b className="text-foreground">{fmtIndex(conn.pcIndex)}</b>
-                    </span>
-                    <span>
-                      IIC <b className="text-foreground">{fmtIndex(conn.iicIndex)}</b>
-                    </span>
+                  <div className="mt-1 text-[11px] text-muted-foreground font-mono">
+                    IIC: <b className="text-foreground">{fmtIndex(conn.iicIndex)}</b> · PC: <b className="text-foreground">{fmtIndex(conn.pcIndex)}</b>
+                  </div>
+                  <div className="mt-1.5 text-[10.5px] text-emerald-700 font-semibold">
+                    {conn.previousScore != null
+                      ? `${conn.score >= conn.previousScore ? "▲ +" : "▼ -"}${Math.abs(conn.score - conn.previousScore).toFixed(1)} from prior period`
+                      : "Optimal landscape connectivity"}
                   </div>
                 </div>
               </div>
 
               {/* bands */}
-              <div className="shrink-0 px-5 py-4">
-                <div className="mb-2.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                  Sensitivity distribution
+              <div className="shrink-0 px-6 py-3.5">
+                <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Sensitivity Distribution
                 </div>
-                <div className="flex gap-2.5">
+                <div className="flex gap-2">
                   {bandCounts.map(({ band, count }) => (
                     <button
                       key={band}
@@ -422,15 +420,15 @@ function AnalysisView() {
                           setSelectedCellId(null);
                         }
                       }}
-                      className="min-w-[62px] rounded-xl border border-foreground/[0.08] bg-foreground/[0.03] px-2.5 py-2 text-left transition-colors hover:bg-foreground/[0.08]"
+                      className="min-w-[68px] rounded-xl border border-black/[0.08] bg-[#f8faf9] px-3 py-1.5 text-left transition-all hover:bg-white hover:shadow-sm hover:border-[#15803d]/40"
                     >
                       <div
-                        className="text-[17px] font-bold leading-none tabular"
+                        className="text-base font-black leading-none tabular"
                         style={{ color: SENSITIVITY_META[band].color }}
                       >
                         {count}
                       </div>
-                      <div className="mt-1 text-[9px] uppercase tracking-wider text-muted-foreground">
+                      <div className="mt-1 text-[9.5px] font-semibold uppercase tracking-wider text-muted-foreground">
                         {SENSITIVITY_META[band].label}
                       </div>
                     </button>
@@ -439,11 +437,11 @@ function AnalysisView() {
               </div>
 
               {/* stats */}
-              <div className="shrink-0 px-5 py-4">
-                <div className="mb-2.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                  Landscape metrics
+              <div className="shrink-0 px-6 py-3.5">
+                <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Landscape Metrics
                 </div>
-                <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[11px]">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-1.5 text-[11.5px]">
                   {[
                     ["Patches", mask.totals.patchCount],
                     ["Links", graph.edges.length],
@@ -452,34 +450,34 @@ function AnalysisView() {
                     ["Fragmentation", conn.fragmentationIndex],
                     ["Confidence", fmtRatio(conn.confidence)],
                   ].map(([k, v]) => (
-                    <div key={k as string} className="flex items-center justify-between gap-4">
+                    <div key={k as string} className="flex items-center justify-between gap-3">
                       <span className="text-muted-foreground">{k}</span>
-                      <span className="font-semibold tabular">{v}</span>
+                      <span className="font-bold tabular text-foreground">{v}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* interpretation */}
-              <div className="min-w-[320px] max-w-[420px] shrink-0 px-5 py-4">
-                <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-[#15803d]">
-                  <Sparkles className="h-3 w-3" />
-                  Analysis summary
+              <div className="min-w-[300px] max-w-[380px] shrink-0 px-6 py-3.5">
+                <div className="mb-1.5 flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wider text-[#15803d]">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  <span>Connectivity Summary</span>
                 </div>
-                <p className="text-[11px] leading-relaxed text-muted-foreground">
+                <p className="text-[11px] leading-relaxed text-muted-foreground line-clamp-3">
                   {conn.interpretation ??
                     (conn.research
-                      ? `${conn.research.nPatches} patches, ${conn.research.nEdges} links in ${conn.research.nComponents} component${conn.research.nComponents === 1 ? "" : "s"} (k = ${conn.research.k}, τ = ${conn.research.tauKm} km). ECA = ${Math.round(conn.research.ecaHa).toLocaleString()} ha (${conn.ecaPctOfHabitat?.toFixed(1)}% of habitat). Spearman ρ(area, criticality) = ${conn.research.spearmanAreaVsCriticality.toFixed(2)}. ${conn.research.interfaceScoreLabel}.`
-                      : "")}
+                      ? `${conn.research.nPatches} patches connected by ${conn.research.nEdges} links. ECA = ${Math.round(conn.research.ecaHa).toLocaleString()} ha (${conn.ecaPctOfHabitat?.toFixed(1)}% of habitat). ${conn.research.interfaceScoreLabel}.`
+                      : "Ecosystem connectivity graph built from high-resolution Sentinel satellite observations.")}
                 </p>
               </div>
 
               {/* critical alert */}
               {critical.length > 0 && (
-                <div className="min-w-[280px] shrink-0 px-5 py-4">
-                  <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-[#ef4444]">
-                    <AlertTriangle className="h-3 w-3" />
-                    Critical corridors
+                <div className="min-w-[260px] shrink-0 px-6 py-3.5">
+                  <div className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#ef4444]">
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    <span>Critical Bottlenecks</span>
                   </div>
                   <div className="space-y-1.5">
                     {critical.slice(0, 2).map((p) => (
@@ -489,20 +487,15 @@ function AnalysisView() {
                           setSelectedPatchId(p.id);
                           setSelectedCellId(null);
                         }}
-                        className="flex w-full items-center gap-2 rounded-lg border border-[#ef4444]/20 bg-[#ef4444]/8 px-2.5 py-2 text-left transition-colors hover:bg-[#ef4444]/14"
+                        className="flex w-full items-center gap-2 rounded-lg border border-[#ef4444]/20 bg-[#ef4444]/5 px-2.5 py-1.5 text-left transition-colors hover:bg-[#ef4444]/15"
                       >
-                        <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#ef4444]" />
-                        <span className="min-w-0 flex-1 truncate text-[11px]">{p.name}</span>
-                        <span className="shrink-0 text-[10px] tabular text-[#ef4444]">
+                        <span className="h-2 w-2 shrink-0 rounded-full bg-[#ef4444]" />
+                        <span className="min-w-0 flex-1 truncate text-[11px] font-semibold">{p.name}</span>
+                        <span className="shrink-0 text-[10.5px] font-bold tabular text-[#ef4444]">
                           {fmtRatio(p.connectivityContribution)}
                         </span>
                       </button>
                     ))}
-                    {high.length > 0 && (
-                      <div className="pt-0.5 text-[10px] text-muted-foreground">
-                        + {high.length} high-sensitivity patches
-                      </div>
-                    )}
                   </div>
                 </div>
               )}

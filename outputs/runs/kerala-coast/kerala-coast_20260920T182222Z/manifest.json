@@ -1,0 +1,132 @@
+{
+ "run_id": "kerala-coast_20260920T182222Z",
+ "study_area_id": "kerala-coast",
+ "study_area": {
+  "name": "Kerala Coast \u2014 Vembanad\u2013Kol Wetland",
+  "short_name": "Kerala Coast",
+  "state": "Kerala",
+  "protection": "Ramsar Site",
+  "center": [
+   9.878,
+   76.372
+  ],
+  "bbox": [
+   9.778,
+   76.272,
+   9.978,
+   76.472
+  ],
+  "footprint_km2": 486,
+  "primary_habitat": "mangrove"
+ },
+ "timestamp_utc": "2026-09-20T18:22:22.497248+00:00",
+ "ecoconnect_version": "0.1.0",
+ "result_kind": "development",
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+ "data_source": {
+  "type": "probability_raster",
+  "path": "outputs/segmentation/kerala-coast_development/predictions/kerala-coast_prob.tif",
+  "scene_year": 2025,
+  "crs": "EPSG:32643",
+  "width": 2203,
+  "height": 2221,
+  "pixel_size": [
+   10.0,
+   10.0
+  ],
+  "threshold": 0.5,
+  "mmu_ha": 2.0,
+  "connectivity": 8,
+  "candidate_threshold": 0.3,
+  "candidate_min_area_ha": 1.0,
+  "extraction_report": {
+   "threshold": 0.5,
+   "mmu_ha": 2.0,
+   "connectivity": 8,
+   "n_components_total": 60,
+   "n_patches_kept": 24,
+   "n_dropped_below_mmu": 36,
+   "habitat_pixels": 24136,
+   "valid_pixels": 4892863,
+   "habitat_coverage_pct": 0.49328992044126313,
+   "habitat_area_ha": 219.64000000000442,
+   "landscape_area_ha": 48928.63,
+   "mean_confidence_habitat": 0.836601734161377,
+   "crs": "EPSG:32643"
+  },
+  "model": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/kerala-coast_development/best_model.pth",
+  "model_info": {
+   "checkpoint": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/kerala-coast_development/best_model.pth"
+  }
+ },
+ "landscape_area_ha": 48928.63,
+ "aoi_area_km2": 489.29,
+ "valid_area_km2": 489.29,
+ "habitat_area_ha": 219.64,
+ "comparability_note": "IIC and PC scale with the analysis extent A_L; do not compare raw values between study areas of different AOI size - use ECA as % of habitat area instead.",
+ "n_patches": 24,
+ "n_candidates": 4,
+ "config": {
+  "graph": {
+   "k_neighbors": 3,
+   "tau_km": 5.0,
+   "distance_mode": "haversine",
+   "tau_sensitivity_km": [
+    3.0,
+    5.0,
+    8.0
+   ]
+  },
+  "connectivity": {
+   "research_metric": "iic",
+   "pc_probability_at_tau": 0.5,
+   "interface_score_weights": {
+    "structural": 0.3,
+    "functional": 0.28,
+    "quality": 0.22,
+    "redundancy": 0.12,
+    "protection": 0.08
+   }
+  },
+  "criticality": {
+   "level_thresholds": [
+    0.25,
+    0.1,
+    0.03
+   ]
+  },
+  "restoration": {
+   "candidate_source": "sub_threshold",
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "candidate_max_count": 12,
+   "candidate_geojson": null,
+   "cost_csv": null,
+   "cost_unit": null,
+   "rebuild_edges_on_insert": false
+  },
+  "export": {
+   "heatmap_cell_m": 300,
+   "polygon_simplify_m": 15
+  }
+ },
+ "hardware": {
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.3"
+ },
+ "elapsed_s": 0.05,
+ "files": [
+  "criticality.csv",
+  "criticality.json",
+  "explanations.json",
+  "graph.json",
+  "metrics.json",
+  "patches.geojson",
+  "patches_input.json",
+  "restoration.csv",
+  "restoration.json",
+  "tau_sensitivity.json",
+  "what_if_top1.json"
+ ]
+}

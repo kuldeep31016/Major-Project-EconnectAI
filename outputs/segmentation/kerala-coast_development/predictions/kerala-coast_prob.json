@@ -1,0 +1,25 @@
+{
+ "checkpoint": "outputs/segmentation/kerala-coast_development/best_model.pth",
+ "experiment_id": "kerala-coast_development",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/kerala-coast/kerala-coast_2025_s1_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 1.0,
+ "habitat_fraction_at_threshold": 0.004932899204412631,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/kerala-coast_development/predictions/kerala-coast_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/kerala-coast_development/predictions/kerala-coast_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/kerala-coast_development/predictions/kerala-coast_binary_t0.50.tif"
+ }
+}

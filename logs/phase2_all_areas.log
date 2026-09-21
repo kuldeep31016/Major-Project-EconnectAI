@@ -1,1 +1,374 @@
 [phase2] odisha-coast acquired
+[phase2] gulf-of-mannar acquired
+[phase2] building 4-area tile dataset
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/build_tiles.py --image /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/kerala-coast/gmw_2020.tif --name ecoconnect_tiles --tile 256 --stride 128 --bands s1_vv_db,s1_vh_db,s2_blue,s2_green,s2_red,s2_nir,s2_swir16,s2_swir22,s2_ndvi,s2_ndwi --max-negative-ratio 3.0 --min-positive-pixels 20 --id-prefix kerala --source-note kerala-coast 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label
+{
+ "dataset_root": "/Users/kuldeepraj/Major-Project-EconnectAI/data/ecoconnect_tiles",
+ "source_image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif",
+ "source_label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/kerala-coast/gmw_2020.tif",
+ "tile_size": 256,
+ "stride": 128,
+ "n_tiles_written": 256,
+ "n_tiles_skipped_invalid": 0,
+ "n_tiles_skipped_unlabelled": 0,
+ "n_positive_tiles": 81,
+ "n_negative_tiles_dropped": 0,
+ "split_counts": {
+  "train": 176,
+  "val": 32,
+  "test": 48
+ },
+ "positive_fraction_train": 0.001877130964360121,
+ "crs": "EPSG:32643",
+ "pixel_size": [
+  10.0,
+  10.0
+ ],
+ "bands": [
+  "s1_vv_db",
+  "s1_vh_db",
+  "s2_blue",
+  "s2_green",
+  "s2_red",
+  "s2_nir",
+  "s2_swir16",
+  "s2_swir22",
+  "s2_ndvi",
+  "s2_ndwi"
+ ]
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/build_tiles.py --image /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/sundarbans/sundarbans_2020_s12_10m.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/sundarbans/gmw_2020.tif --name ecoconnect_tiles --tile 256 --stride 128 --bands s1_vv_db,s1_vh_db,s2_blue,s2_green,s2_red,s2_nir,s2_swir16,s2_swir22,s2_ndvi,s2_ndwi --max-negative-ratio 3.0 --min-positive-pixels 20 --id-prefix sundarbans --source-note sundarbans 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label --append
+{
+ "dataset_root": "/Users/kuldeepraj/Major-Project-EconnectAI/data/ecoconnect_tiles",
+ "source_image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/sundarbans/sundarbans_2020_s12_10m.tif",
+ "source_label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/sundarbans/gmw_2020.tif",
+ "tile_size": 256,
+ "stride": 128,
+ "n_tiles_written": 575,
+ "n_tiles_skipped_invalid": 0,
+ "n_tiles_skipped_unlabelled": 0,
+ "n_positive_tiles": 543,
+ "n_negative_tiles_dropped": 0,
+ "split_counts": {
+  "train": 387,
+  "val": 92,
+  "test": 96
+ },
+ "positive_fraction_train": 0.6451088379084032,
+ "crs": "EPSG:32645",
+ "pixel_size": [
+  10.0,
+  10.0
+ ],
+ "bands": [
+  "s1_vv_db",
+  "s1_vh_db",
+  "s2_blue",
+  "s2_green",
+  "s2_red",
+  "s2_nir",
+  "s2_swir16",
+  "s2_swir22",
+  "s2_ndvi",
+  "s2_ndwi"
+ ]
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/build_tiles.py --image /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/gulf-of-mannar/gmw_2020.tif --name ecoconnect_tiles --tile 256 --stride 128 --bands s1_vv_db,s1_vh_db,s2_blue,s2_green,s2_red,s2_nir,s2_swir16,s2_swir22,s2_ndvi,s2_ndwi --max-negative-ratio 3.0 --min-positive-pixels 20 --id-prefix gulf --source-note gulf-of-mannar 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label --append
+{
+ "dataset_root": "/Users/kuldeepraj/Major-Project-EconnectAI/data/ecoconnect_tiles",
+ "source_image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif",
+ "source_label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/gulf-of-mannar/gmw_2020.tif",
+ "tile_size": 256,
+ "stride": 128,
+ "n_tiles_written": 200,
+ "n_tiles_skipped_invalid": 0,
+ "n_tiles_skipped_unlabelled": 0,
+ "n_positive_tiles": 50,
+ "n_negative_tiles_dropped": 625,
+ "split_counts": {
+  "train": 139,
+  "val": 25,
+  "test": 36
+ },
+ "positive_fraction_train": 0.0011927978889449736,
+ "crs": "EPSG:32644",
+ "pixel_size": [
+  10.0,
+  10.0
+ ],
+ "bands": [
+  "s1_vv_db",
+  "s1_vh_db",
+  "s2_blue",
+  "s2_green",
+  "s2_red",
+  "s2_nir",
+  "s2_swir16",
+  "s2_swir22",
+  "s2_ndvi",
+  "s2_ndwi"
+ ]
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/build_tiles.py --image /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/odisha-coast/gmw_2020.tif --name ecoconnect_tiles --tile 256 --stride 128 --bands s1_vv_db,s1_vh_db,s2_blue,s2_green,s2_red,s2_nir,s2_swir16,s2_swir22,s2_ndvi,s2_ndwi --max-negative-ratio 3.0 --min-positive-pixels 20 --id-prefix odisha --source-note odisha-coast 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label --append
+{
+ "dataset_root": "/Users/kuldeepraj/Major-Project-EconnectAI/data/ecoconnect_tiles",
+ "source_image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif",
+ "source_label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/odisha-coast/gmw_2020.tif",
+ "tile_size": 256,
+ "stride": 128,
+ "n_tiles_written": 342,
+ "n_tiles_skipped_invalid": 0,
+ "n_tiles_skipped_unlabelled": 0,
+ "n_positive_tiles": 225,
+ "n_negative_tiles_dropped": 0,
+ "split_counts": {
+  "train": 252,
+  "val": 46,
+  "test": 44
+ },
+ "positive_fraction_train": 0.2059797462687986,
+ "crs": "EPSG:32645",
+ "pixel_size": [
+  10.0,
+  10.0
+ ],
+ "bands": [
+  "s1_vv_db",
+  "s1_vh_db",
+  "s2_blue",
+  "s2_green",
+  "s2_red",
+  "s2_nir",
+  "s2_swir16",
+  "s2_swir22",
+  "s2_ndvi",
+  "s2_ndwi"
+ ]
+}
+split sizes: {'train': 954, 'val': 195, 'test': 224}
+negative subsampling (last area): {'max_negative_ratio': 3.0, 'positive_tiles': 225, 'negative_tiles_dropped': 0}
+[phase2] training multi_E1_s1_b0_dev (E1, S1-only, B0, dev)
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/train.py --config configs/train_dev.yaml --experiment-id multi_E1_s1_b0_dev
+[train] multi_E1_s1_b0_dev  mode=development  DEVELOPMENT-SUBSET RESULT - NOT FINAL
+[train] model=U-Net/efficientnet-b0 (dev or alt config)  params=6.3M  device=mps  amp=False
+[train] train=800 val=195 test=200 tiles
+[epoch   1/40] train_loss=1.8049 val_loss=1.5226 IoU=0.4731 Dice=0.6423 P=0.4754 R=0.9897 lr=3.00e-04 (39s)
+[epoch   2/40] train_loss=1.0482 val_loss=1.4087 IoU=0.5585 Dice=0.7167 P=0.5632 R=0.9851 lr=2.98e-04 (34s)
+[epoch   3/40] train_loss=0.7549 val_loss=1.2771 IoU=0.6099 Dice=0.7577 P=0.6188 R=0.9772 lr=2.96e-04 (34s)
+[epoch   4/40] train_loss=0.6389 val_loss=1.2255 IoU=0.6533 Dice=0.7903 P=0.6625 R=0.9794 lr=2.93e-04 (34s)
+[epoch   5/40] train_loss=0.6537 val_loss=1.1195 IoU=0.6732 Dice=0.8047 P=0.6836 R=0.9778 lr=2.89e-04 (34s)
+[epoch   6/40] train_loss=0.6044 val_loss=1.2529 IoU=0.6151 Dice=0.7617 P=0.6236 R=0.9784 lr=2.84e-04 (42s)
+[epoch   7/40] train_loss=0.5762 val_loss=1.1734 IoU=0.6757 Dice=0.8065 P=0.6883 R=0.9735 lr=2.78e-04 (44s)
+[epoch   8/40] train_loss=0.5591 val_loss=1.1412 IoU=0.6974 Dice=0.8218 P=0.7090 R=0.9771 lr=2.72e-04 (42s)
+[epoch   9/40] train_loss=0.5176 val_loss=1.2274 IoU=0.7106 Dice=0.8308 P=0.7271 R=0.9691 lr=2.64e-04 (43s)
+[epoch  10/40] train_loss=0.5042 val_loss=1.2413 IoU=0.6960 Dice=0.8208 P=0.7115 R=0.9696 lr=2.57e-04 (43s)
+[epoch  11/40] train_loss=0.4677 val_loss=1.2654 IoU=0.6794 Dice=0.8091 P=0.6925 R=0.9730 lr=2.48e-04 (43s)
+[epoch  12/40] train_loss=0.5418 val_loss=1.2406 IoU=0.6455 Dice=0.7845 P=0.6545 R=0.9791 lr=2.39e-04 (43s)
+[epoch  13/40] train_loss=0.4686 val_loss=1.1986 IoU=0.6580 Dice=0.7938 P=0.6674 R=0.9792 lr=2.29e-04 (44s)
+[epoch  14/40] train_loss=0.4885 val_loss=1.2391 IoU=0.7312 Dice=0.8447 P=0.7466 R=0.9725 lr=2.19e-04 (44s)
+[epoch  15/40] train_loss=0.4484 val_loss=1.1076 IoU=0.7169 Dice=0.8351 P=0.7304 R=0.9749 lr=2.08e-04 (44s)
+[epoch  16/40] train_loss=0.4685 val_loss=1.1716 IoU=0.6795 Dice=0.8092 P=0.6932 R=0.9718 lr=1.97e-04 (45s)
+[epoch  17/40] train_loss=0.4550 val_loss=1.5320 IoU=0.6549 Dice=0.7915 P=0.6728 R=0.9609 lr=1.86e-04 (45s)
+[epoch  18/40] train_loss=0.4504 val_loss=1.1253 IoU=0.7056 Dice=0.8274 P=0.7177 R=0.9766 lr=1.75e-04 (45s)
+[epoch  19/40] train_loss=0.4316 val_loss=1.2645 IoU=0.6479 Dice=0.7863 P=0.6580 R=0.9768 lr=1.63e-04 (45s)
+[epoch  20/40] train_loss=0.4309 val_loss=1.0747 IoU=0.6877 Dice=0.8149 P=0.6975 R=0.9799 lr=1.51e-04 (45s)
+[epoch  21/40] train_loss=0.4070 val_loss=1.1626 IoU=0.7073 Dice=0.8285 P=0.7193 R=0.9770 lr=1.40e-04 (45s)
+[epoch  22/40] train_loss=0.4230 val_loss=1.2304 IoU=0.7412 Dice=0.8513 P=0.7565 R=0.9734 lr=1.28e-04 (46s)
+[epoch  23/40] train_loss=0.3970 val_loss=1.2328 IoU=0.7490 Dice=0.8565 P=0.7635 R=0.9752 lr=1.17e-04 (46s)
+[epoch  24/40] train_loss=0.3888 val_loss=1.2090 IoU=0.7614 Dice=0.8645 P=0.7796 R=0.9703 lr=1.06e-04 (46s)
+[epoch  25/40] train_loss=0.4111 val_loss=1.2286 IoU=0.7307 Dice=0.8444 P=0.7459 R=0.9729 lr=9.47e-05 (46s)
+[epoch  26/40] train_loss=0.4467 val_loss=1.2586 IoU=0.7283 Dice=0.8428 P=0.7435 R=0.9727 lr=8.41e-05 (46s)
+[epoch  27/40] train_loss=0.3730 val_loss=1.2542 IoU=0.7567 Dice=0.8615 P=0.7753 R=0.9693 lr=7.39e-05 (46s)
+[epoch  28/40] train_loss=0.3641 val_loss=1.1814 IoU=0.7272 Dice=0.8420 P=0.7419 R=0.9734 lr=6.42e-05 (46s)
+[epoch  29/40] train_loss=0.4047 val_loss=1.2554 IoU=0.7532 Dice=0.8592 P=0.7697 R=0.9722 lr=5.51e-05 (46s)
+[epoch  30/40] train_loss=0.3599 val_loss=1.2242 IoU=0.7598 Dice=0.8635 P=0.7771 R=0.9715 lr=4.65e-05 (47s)
+[epoch  31/40] train_loss=0.4002 val_loss=1.2206 IoU=0.7459 Dice=0.8545 P=0.7609 R=0.9742 lr=3.86e-05 (47s)
+[epoch  32/40] train_loss=0.3577 val_loss=1.2548 IoU=0.7627 Dice=0.8654 P=0.7814 R=0.9696 lr=3.14e-05 (46s)
+[epoch  33/40] train_loss=0.3577 val_loss=1.2110 IoU=0.7391 Dice=0.8500 P=0.7541 R=0.9738 lr=2.49e-05 (47s)
+[epoch  34/40] train_loss=0.3457 val_loss=1.2959 IoU=0.7560 Dice=0.8610 P=0.7733 R=0.9713 lr=1.92e-05 (47s)
+[epoch  35/40] train_loss=0.3514 val_loss=1.2157 IoU=0.7352 Dice=0.8474 P=0.7503 R=0.9734 lr=1.43e-05 (47s)
+[epoch  36/40] train_loss=0.3637 val_loss=1.2419 IoU=0.7385 Dice=0.8496 P=0.7539 R=0.9731 lr=1.03e-05 (47s)
+[epoch  37/40] train_loss=0.8740 val_loss=1.2346 IoU=0.7337 Dice=0.8464 P=0.7481 R=0.9743 lr=7.10e-06 (47s)
+[epoch  38/40] train_loss=0.3722 val_loss=1.2449 IoU=0.7396 Dice=0.8503 P=0.7550 R=0.9731 lr=4.83e-06 (46s)
+[epoch  39/40] train_loss=0.3501 val_loss=1.2440 IoU=0.7294 Dice=0.8435 P=0.7434 R=0.9748 lr=3.46e-06 (47s)
+[epoch  40/40] train_loss=0.3440 val_loss=1.2492 IoU=0.7445 Dice=0.8536 P=0.7601 R=0.9732 lr=3.00e-06 (47s)
+[train] done. best iou=0.7627 at epoch 32. outputs: /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/evaluate.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --n-panels 12 --rgb-bands 4,3,2
+[DEVELOPMENT-SUBSET RESULT - NOT FINAL] test tiles=200  IoU=0.8423 Dice=0.9144 P=0.8783 R=0.9535 F1=0.9144 OA=0.9664 kappa=0.8935
+outputs: /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/metrics.json, test_results.csv, confusion_matrix.png, sample_predictions/
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/kerala-coast_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth",
+ "experiment_id": "multi_E1_s1_b0_dev",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 1.0,
+ "habitat_fraction_at_threshold": 0.009088339485491419,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/kerala-coast_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/kerala-coast_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/kerala-coast_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/sundarbans/sundarbans_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/sundarbans_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth",
+ "experiment_id": "multi_E1_s1_b0_dev",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/sundarbans/sundarbans_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 0.9999694324478933,
+ "habitat_fraction_at_threshold": 0.6152141351955365,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/sundarbans_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/sundarbans_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/sundarbans_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/gulf-of-mannar_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth",
+ "experiment_id": "multi_E1_s1_b0_dev",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 1.0,
+ "habitat_fraction_at_threshold": 0.0017132874121446446,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/gulf-of-mannar_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/gulf-of-mannar_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/gulf-of-mannar_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/odisha-coast_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth",
+ "experiment_id": "multi_E1_s1_b0_dev",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 1.0,
+ "habitat_fraction_at_threshold": 0.24212341296575376,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/odisha-coast_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/odisha-coast_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/odisha-coast_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/threshold_sweep.py --experiment /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/kerala-coast_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/kerala-coast/gmw_2020.tif --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/sundarbans_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/sundarbans/gmw_2020.tif --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/gulf-of-mannar_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/gulf-of-mannar/gmw_2020.tif --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/odisha-coast_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/odisha-coast/gmw_2020.tif
+scope: test-split tiles only (224 tiles pooled over 4 raster(s))
+  thr    IoU     F1      P      R  #patches>=MMU  habitat ha
+ 0.30  0.838  0.912  0.862  0.969            108       83967
+ 0.35  0.844  0.916  0.869  0.968            110       83333
+ 0.40  0.850  0.919  0.875  0.967            113       82738
+ 0.45  0.855  0.922  0.881  0.966            110       82167
+ 0.50  0.859  0.924  0.887  0.965            109       81613
+ 0.55  0.863  0.927  0.892  0.964            110       81063
+ 0.60  0.867  0.929  0.897  0.963            110       80482
+ 0.65  0.871  0.931  0.902  0.962            110       79850
+ 0.70  0.875  0.933  0.907  0.961            103       79165 <- selected
+written: /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/threshold_calibration.{json,csv,png}
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+threshold: 0.7 (calibrated)
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/run_graph_analysis.py --study-area kerala-coast --probability /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/kerala-coast_prob.tif --threshold 0.7 --mmu-ha 2.0 --result-kind development --model-checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --run-id kerala-coast_multi_E1_s1_b0_dev_t0.70
+
+[DEVELOPMENT-SUBSET RESULT - NOT FINAL]
+run dir : /Users/kuldeepraj/Major-Project-EconnectAI/outputs/runs/kerala-coast/kerala-coast_multi_E1_s1_b0_dev_t0.70
+patches : 12  edges: 18  components: 3  habitat: 204.6 ha of 48929 ha
+IIC     : 0.000008   PC: 0.000011   ECA: 165 ha (80.7% of habitat)
+interface score (Eq.7, not a research metric): 61.0/100
+top criticality:
+  #1 P01                  A=    76.2 ha (37.2%, area rank  1) deg=4 S=0.6385 comp 3->3
+  #2 P02                  A=    31.1 ha (15.2%, area rank  2) deg=4 S=0.4438 comp 3->4  CUT-VERTEX
+  #3 P07                  A=     5.5 ha ( 2.7%, area rank  7) deg=3 S=0.2557 comp 3->4  CUT-VERTEX
+  #4 P03                  A=    24.5 ha (12.0%, area rank  3) deg=4 S=0.1721 comp 3->3
+  #5 P04                  A=    24.1 ha (11.8%, area rank  4) deg=4 S=0.1695 comp 3->3
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/run_graph_analysis.py --study-area sundarbans --probability /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/sundarbans_prob.tif --threshold 0.7 --mmu-ha 2.0 --result-kind development --model-checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --run-id sundarbans_multi_E1_s1_b0_dev_t0.70
+
+[DEVELOPMENT-SUBSET RESULT - NOT FINAL]
+run dir : /Users/kuldeepraj/Major-Project-EconnectAI/outputs/runs/sundarbans/sundarbans_multi_E1_s1_b0_dev_t0.70
+patches : 54  edges: 73  components: 13  habitat: 63829.7 ha of 105337 ha
+IIC     : 0.042929   PC: 0.087329   ECA: 31129 ha (48.8% of habitat)
+interface score (Eq.7, not a research metric): 42.8/100
+top criticality:
+  #1 P01                  A= 13750.9 ha (21.5%, area rank  1) deg=0 S=0.3970 comp 13->12
+  #2 P02                  A=  9395.1 ha (14.7%, area rank  2) deg=0 S=0.1853 comp 13->12
+  #3 P03                  A=  8016.7 ha (12.6%, area rank  3) deg=1 S=0.1350 comp 13->13
+  #4 P04                  A=  6831.7 ha (10.7%, area rank  4) deg=0 S=0.0980 comp 13->12
+  #5 P05                  A=  4791.1 ha ( 7.5%, area rank  5) deg=3 S=0.0601 comp 13->13
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/run_graph_analysis.py --study-area gulf-of-mannar --probability /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/gulf-of-mannar_prob.tif --threshold 0.7 --mmu-ha 2.0 --result-kind development --model-checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --run-id gulf-of-mannar_multi_E1_s1_b0_dev_t0.70
+
+[DEVELOPMENT-SUBSET RESULT - NOT FINAL]
+run dir : /Users/kuldeepraj/Major-Project-EconnectAI/outputs/runs/gulf-of-mannar/gulf-of-mannar_multi_E1_s1_b0_dev_t0.70
+patches : 16  edges: 17  components: 6  habitat: 117.6 ha of 147593 ha
+IIC     : 0.000000   PC: 0.000000   ECA: 64 ha (54.4% of habitat)
+interface score (Eq.7, not a research metric): 43.4/100
+top criticality:
+  #1 P02                  A=    16.1 ha (13.7%, area rank  2) deg=3 S=0.2914 comp 6->6
+  #2 P03                  A=    12.1 ha (10.3%, area rank  3) deg=3 S=0.2191 comp 6->6
+  #3 P01                  A=    17.4 ha (14.8%, area rank  1) deg=3 S=0.2160 comp 6->6
+  #4 P04                  A=    12.0 ha (10.2%, area rank  4) deg=2 S=0.1230 comp 6->6
+  #5 P07                  A=     6.1 ha ( 5.2%, area rank  7) deg=3 S=0.1114 comp 6->6
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/run_graph_analysis.py --study-area odisha-coast --probability /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/predictions/odisha-coast_prob.tif --threshold 0.7 --mmu-ha 2.0 --result-kind development --model-checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth --run-id odisha-coast_multi_E1_s1_b0_dev_t0.70
+
+[DEVELOPMENT-SUBSET RESULT - NOT FINAL]
+run dir : /Users/kuldeepraj/Major-Project-EconnectAI/outputs/runs/odisha-coast/odisha-coast_multi_E1_s1_b0_dev_t0.70
+patches : 21  edges: 28  components: 4  habitat: 14943.8 ha of 66528 ha
+IIC     : 0.019132   PC: 0.025243   ECA: 10570 ha (70.7% of habitat)
+interface score (Eq.7, not a research metric): 56.1/100
+top criticality:
+  #1 P01                  A=  7132.6 ha (47.7%, area rank  1) deg=3 S=0.6045 comp 4->4
+  #2 P02                  A=  4870.7 ha (32.6%, area rank  2) deg=1 S=0.3496 comp 4->4
+  #3 P09                  A=    55.6 ha ( 0.4%, area rank  9) deg=6 S=0.0706 comp 4->5  CUT-VERTEX
+  #4 P08                  A=    62.6 ha ( 0.4%, area rank  8) deg=3 S=0.0583 comp 4->6  CUT-VERTEX
+  #5 P10                  A=    38.0 ha ( 0.3%, area rank 10) deg=3 S=0.0503 comp 4->5  CUT-VERTEX
+[phase2] DONE

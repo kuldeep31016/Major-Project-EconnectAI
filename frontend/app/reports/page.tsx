@@ -130,40 +130,41 @@ function ReportsView() {
     >
       <div className="mx-auto grid max-w-[1500px] gap-5 lg:grid-cols-[268px_1fr]">
         {/* ------------------------------------------------- report list */}
-        <aside className="space-y-2 print:hidden">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-            Assessments
+        <aside className="space-y-2 lg:sticky lg:top-6 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto scroll-slim print:hidden pr-1">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-2 flex items-center gap-1.5">
+            <FileText className="h-3.5 w-3.5 text-[#15803d]" />
+            <span>Available Assessments ({reports.length})</span>
           </div>
           {reports.map((r, i) => (
             <motion.button
               key={r.id}
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: i * 0.06, ease: EASE }}
+              transition={{ duration: 0.3, delay: i * 0.04, ease: EASE }}
               onClick={() => setActiveId(r.id)}
               className={cn(
-                "w-full rounded-2xl border p-3.5 text-left transition-all",
-                r.id === activeId
-                  ? "border-[#15803d]/35 bg-[#15803d]/10"
-                  : "border-foreground/[0.08] bg-card/70 hover:border-foreground/15 hover:bg-foreground/[0.06]",
+                "w-full rounded-2xl border p-3.5 text-left transition-all duration-200",
+                r.id === (activeId || reports[0]?.id)
+                  ? "border-[#15803d] bg-[#15803d]/10 shadow-sm"
+                  : "border-black/[0.08] bg-white hover:border-[#15803d]/40 hover:bg-[#15803d]/[0.02]",
               )}
             >
               <div className="flex items-start gap-2.5">
                 <div
                   className={cn(
-                    "grid h-8 w-8 shrink-0 place-items-center rounded-lg",
-                    r.id === activeId
-                      ? "bg-[#15803d]/18 text-[#15803d]"
-                      : "bg-foreground/[0.06] text-muted-foreground",
+                    "grid h-8 w-8 shrink-0 place-items-center rounded-xl",
+                    r.id === (activeId || reports[0]?.id)
+                      ? "bg-[#15803d] text-white shadow-sm"
+                      : "bg-[#f4f7f5] text-muted-foreground",
                   )}
                 >
                   <FileText className="h-4 w-4" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="line-clamp-2 text-[12px] font-medium leading-snug">
+                  <div className="line-clamp-2 text-xs font-bold text-foreground leading-snug">
                     {r.title}
                   </div>
-                  <div className="mt-1.5 flex items-center gap-1.5">
+                  <div className="mt-2 flex items-center gap-2">
                     <Badge
                       variant={
                         r.status === "final"
@@ -172,10 +173,11 @@ function ReportsView() {
                             ? "secondary"
                             : "warning"
                       }
+                      className="text-[9.5px]"
                     >
                       {r.status}
                     </Badge>
-                    <span className="text-[10px] text-muted-foreground">{r.pages} pp</span>
+                    <span className="text-[10.5px] text-muted-foreground">{r.pages} pages</span>
                   </div>
                 </div>
               </div>

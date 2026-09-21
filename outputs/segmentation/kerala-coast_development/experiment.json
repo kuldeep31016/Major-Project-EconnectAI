@@ -1,0 +1,115 @@
+{
+ "experiment_id": "kerala-coast_development",
+ "timestamp_utc": "2026-09-20T18:15:56.632891+00:00",
+ "mode": "development",
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+ "ecoconnect_version": "0.1.0",
+ "dataset": {
+  "name": "ecoconnect_tiles",
+  "root": "data/ecoconnect_tiles",
+  "mode": "development",
+  "in_channels": 2,
+  "image_size": 256,
+  "bands": [
+   0,
+   1
+  ],
+  "num_classes": 1,
+  "ignore_index": 255,
+  "nodata": -9999.0,
+  "n_train": 176,
+  "n_val": 32,
+  "n_test": 48,
+  "normalizer": {
+   "method": "zscore",
+   "mean": [
+    -11.33192024400166,
+    -17.603554268314543
+   ],
+   "std": [
+    5.029619585331218,
+    5.157415608449127
+   ],
+   "vmin": [
+    -20.78146713256836,
+    -26.41321746826172
+   ],
+   "vmax": [
+    -3.5460513019561892,
+    -10.026311416626012
+   ],
+   "clip_percentiles": [
+    1,
+    99
+   ],
+   "n_tiles": 400
+  },
+  "metadata": {
+   "bands": [
+    "s1_vv_db",
+    "s1_vh_db",
+    "s2_blue",
+    "s2_green",
+    "s2_red",
+    "s2_nir",
+    "s2_swir16",
+    "s2_swir22",
+    "s2_ndvi",
+    "s2_ndwi"
+   ],
+   "nodata": -9999.0,
+   "ignore_index": 255,
+   "classes": {
+    "0": "non-habitat",
+    "1": "habitat"
+   },
+   "tile_size": 256,
+   "stride": 128,
+   "crs": "EPSG:32643",
+   "pixel_size": [
+    10.0,
+    10.0
+   ],
+   "split_strategy": "spatial blocks of 4x4 tiles, fractions (0.7, 0.15, 0.15), seed 42",
+   "negative_subsampling": {
+    "max_negative_ratio": null,
+    "positive_tiles": 88,
+    "negative_tiles_dropped": 0
+   },
+   "sources": [
+    {
+     "image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2025_s1_10m.tif",
+     "label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/kerala-coast/gmw_2020.tif"
+    }
+   ]
+  }
+ },
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "parameters": 6251181,
+ "batch_size": 8,
+ "learning_rate": 0.0003,
+ "epochs_planned": 40,
+ "seed": 42,
+ "loss": "bce_dice",
+ "scheduler": "cosine",
+ "mixed_precision": false,
+ "hardware": {
+  "device": "mps",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "torch": "2.13.0",
+  "python": "3.14.3"
+ },
+ "status": "completed",
+ "training_time_s": 339.7,
+ "best_epoch": 22,
+ "best_val_iou": 0.06740514844380661,
+ "epochs_run": 34
+}

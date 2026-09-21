@@ -1,0 +1,7191 @@
+{
+ "provenance": {
+  "runId": "kerala-coast_multi_E1_s1_b0_dev_t0.70",
+  "studyAreaId": "kerala-coast",
+  "resultKind": "development",
+  "resultLabel": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+  "dataSource": {
+   "type": "probability_raster",
+   "path": "outputs/segmentation/multi_E1_s1_b0_dev/predictions/kerala-coast_prob.tif",
+   "scene_year": 2020,
+   "crs": "EPSG:32643",
+   "width": 2203,
+   "height": 2221,
+   "pixel_size": [
+    10.0,
+    10.0
+   ],
+   "threshold": 0.7,
+   "mmu_ha": 2.0,
+   "connectivity": 8,
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "extraction_report": {
+    "threshold": 0.7,
+    "mmu_ha": 2.0,
+    "connectivity": 8,
+    "n_components_total": 56,
+    "n_patches_kept": 12,
+    "n_dropped_below_mmu": 44,
+    "habitat_pixels": 22407,
+    "valid_pixels": 4892863,
+    "habitat_coverage_pct": 0.45795273646533735,
+    "habitat_area_ha": 204.58000000000544,
+    "landscape_area_ha": 48928.63,
+    "mean_confidence_habitat": 0.8425247073173523,
+    "crs": "EPSG:32643"
+   },
+   "model": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth",
+   "model_info": {
+    "checkpoint": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth"
+   }
+  },
+  "timestamp": "2026-09-18T21:17:06.763441+00:00",
+  "landscapeAreaHa": 48928.63,
+  "parameters": {
+   "k": 3,
+   "tauKm": 5.0,
+   "metric": "iic",
+   "threshold": 0.7,
+   "mmuHa": 2.0
+  }
+ },
+ "habitatMask": {
+  "sceneId": "kerala-coast",
+  "generatedAt": "2026-09-18T21:17:06.763441+00:00",
+  "modelVersion": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth",
+  "classes": [
+   {
+    "habitatClass": "mangrove",
+    "label": "Mangrove",
+    "color": "#00c896",
+    "areaHa": 204.58,
+    "coveragePct": 0.42,
+    "meanConfidence": 0.8525
+   }
+  ],
+  "patches": [
+   {
+    "id": "P01",
+    "name": "P01",
+    "habitatClass": "mangrove",
+    "areaHa": 76.19,
+    "center": [
+     9.854351,
+     76.316149
+    ],
+    "polygon": [
+     [
+      9.869695,
+      76.31685
+     ],
+     [
+      9.868522,
+      76.316116
+     ],
+     [
+      9.865357,
+      76.316103
+     ],
+     [
+      9.865359,
+      76.315738
+     ],
+     [
+      9.864999,
+      76.315372
+     ],
+     [
+      9.864186,
+      76.315095
+     ],
+     [
+      9.863191,
+      76.315092
+     ],
+     [
+      9.86265,
+      76.314633
+     ],
+     [
+      9.862198,
+      76.314723
+     ],
+     [
+      9.860933,
+      76.314353
+     ],
+     [
+      9.85967,
+      76.31371
+     ],
+     [
+      9.859671,
+      76.313527
+     ],
+     [
+      9.859219,
+      76.313526
+     ],
+     [
+      9.859219,
+      76.313343
+     ],
+     [
+      9.858678,
+      76.313159
+     ],
+     [
+      9.858493,
+      76.31407
+     ],
+     [
+      9.858129,
+      76.314616
+     ],
+     [
+      9.857495,
+      76.315069
+     ],
+     [
+      9.857133,
+      76.314976
+     ],
+     [
+      9.856408,
+      76.315429
+     ],
+     [
+      9.855956,
+      76.315428
+     ],
+     [
+      9.855777,
+      76.315062
+     ],
+     [
+      9.855142,
+      76.315424
+     ],
+     [
+      9.854963,
+      76.315059
+     ],
+     [
+      9.854602,
+      76.314875
+     ],
+     [
+      9.853878,
+      76.314963
+     ],
+     [
+      9.853157,
+      76.314322
+     ],
+     [
+      9.852795,
+      76.314412
+     ],
+     [
+      9.852612,
+      76.314867
+     ],
+     [
+      9.852341,
+      76.314957
+     ],
+     [
+      9.851711,
+      76.314134
+     ],
+     [
+      9.851349,
+      76.314315
+     ],
+     [
+      9.850897,
+      76.314222
+     ],
+     [
+      9.85108,
+      76.313767
+     ],
+     [
+      9.851712,
+      76.313952
+     ],
+     [
+      9.851715,
+      76.313131
+     ],
+     [
+      9.851263,
+      76.313038
+     ],
+     [
+      9.850448,
+      76.313309
+     ],
+     [
+      9.850356,
+      76.313855
+     ],
+     [
+      9.850807,
+      76.314131
+     ],
+     [
+      9.850624,
+      76.314586
+     ],
+     [
+      9.850893,
+      76.315316
+     ],
+     [
+      9.8508,
+      76.315954
+     ],
+     [
+      9.850256,
+      76.316134
+     ],
+     [
+      9.850073,
+      76.316863
+     ],
+     [
+      9.84971,
+      76.317135
+     ],
+     [
+      9.849439,
+      76.317043
+     ],
+     [
+      9.849534,
+      76.315949
+     ],
+     [
+      9.848632,
+      76.315307
+     ],
+     [
+      9.848361,
+      76.315306
+     ],
+     [
+      9.847998,
+      76.31567
+     ],
+     [
+      9.847365,
+      76.315576
+     ],
+     [
+      9.847272,
+      76.316305
+     ],
+     [
+      9.846999,
+      76.316669
+     ],
+     [
+      9.845464,
+      76.316024
+     ],
+     [
+      9.844379,
+      76.316202
+     ],
+     [
+      9.843746,
+      76.316109
+     ],
+     [
+      9.843657,
+      76.315835
+     ],
+     [
+      9.843474,
+      76.31629
+     ],
+     [
+      9.842841,
+      76.316287
+     ],
+     [
+      9.843024,
+      76.31565
+     ],
+     [
+      9.843657,
+      76.315652
+     ],
+     [
+      9.843749,
+      76.31547
+     ],
+     [
+      9.843118,
+      76.31483
+     ],
+     [
+      9.842937,
+      76.315011
+     ],
+     [
+      9.843117,
+      76.315103
+     ],
+     [
+      9.843026,
+      76.315285
+     ],
+     [
+      9.842846,
+      76.315011
+     ],
+     [
+      9.842484,
+      76.315101
+     ],
+     [
+      9.842304,
+      76.314918
+     ],
+     [
+      9.841851,
+      76.315098
+     ],
+     [
+      9.840223,
+      76.315092
+     ],
+     [
+      9.839953,
+      76.314817
+     ],
+     [
+      9.839769,
+      76.315819
+     ],
+     [
+      9.839497,
+      76.316001
+     ],
+     [
+      9.839495,
+      76.316365
+     ],
+     [
+      9.839855,
+      76.316731
+     ],
+     [
+      9.83976,
+      76.317916
+     ],
+     [
+      9.840031,
+      76.318191
+     ],
+     [
+      9.84175,
+      76.317924
+     ],
+     [
+      9.842657,
+      76.317107
+     ],
+     [
+      9.844014,
+      76.31693
+     ],
+     [
+      9.846998,
+      76.317033
+     ],
+     [
+      9.84718,
+      76.31676
+     ],
+     [
+      9.847632,
+      76.316671
+     ],
+     [
+      9.848264,
+      76.317038
+     ],
+     [
+      9.849078,
+      76.31695
+     ],
+     [
+      9.848894,
+      76.317679
+     ],
+     [
+      9.849615,
+      76.31832
+     ],
+     [
+      9.85052,
+      76.318233
+     ],
+     [
+      9.852059,
+      76.317692
+     ],
+     [
+      9.855858,
+      76.317433
+     ],
+     [
+      9.856944,
+      76.317073
+     ],
+     [
+      9.858662,
+      76.31708
+     ],
+     [
+      9.860921,
+      76.317453
+     ],
+     [
+      9.863272,
+      76.317463
+     ],
+     [
+      9.86662,
+      76.316929
+     ],
+     [
+      9.869151,
+      76.317212
+     ],
+     [
+      9.869695,
+      76.31685
+     ]
+    ],
+    "confidence": 0.8581,
+    "quality": 0.8581,
+    "connectivityContribution": 0.6385,
+    "bridgeScore": 0.0,
+    "sensitivity": "critical",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P01 ranks #1 of 12 by criticality (S = 0.638): removing it lowers IIC by 63.8%. It holds 76.2 ha, 37.2% of mapped habitat (#1 by area). It maintains 4 links to P02 (0.5 km), P08 (0.9 km), P05 (1.4 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 86%.",
+    "criticalityRank": 1,
+    "criticalityScore": 0.638493,
+    "deltaConnectivity": 5.196077200241922e-06,
+    "deltaPct": 63.849,
+    "degree": 4,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 1,
+    "perimeterKm": 9.361148463802209,
+    "neighbourIds": [
+     "P02",
+     "P08",
+     "P05",
+     "P11"
+    ],
+    "neighbourDistancesKm": [
+     0.539,
+     0.924,
+     1.411,
+     1.921
+    ]
+   },
+   {
+    "id": "P02",
+    "name": "P02",
+    "habitatClass": "mangrove",
+    "areaHa": 31.07,
+    "center": [
+     9.856309,
+     76.32065
+    ],
+    "polygon": [
+     [
+      9.867423,
+      76.319759
+     ],
+     [
+      9.865887,
+      76.319297
+     ],
+     [
+      9.862269,
+      76.319647
+     ],
+     [
+      9.860097,
+      76.320277
+     ],
+     [
+      9.859642,
+      76.321004
+     ],
+     [
+      9.858015,
+      76.320724
+     ],
+     [
+      9.854493,
+      76.319616
+     ],
+     [
+      9.853317,
+      76.319611
+     ],
+     [
+      9.851598,
+      76.32006
+     ],
+     [
+      9.846444,
+      76.319949
+     ],
+     [
+      9.845992,
+      76.319765
+     ],
+     [
+      9.845991,
+      76.320129
+     ],
+     [
+      9.846624,
+      76.320132
+     ],
+     [
+      9.847615,
+      76.320956
+     ],
+     [
+      9.848158,
+      76.320959
+     ],
+     [
+      9.849332,
+      76.321419
+     ],
+     [
+      9.851411,
+      76.321519
+     ],
+     [
+      9.851593,
+      76.321337
+     ],
+     [
+      9.852225,
+      76.32134
+     ],
+     [
+      9.852405,
+      76.321614
+     ],
+     [
+      9.853129,
+      76.321617
+     ],
+     [
+      9.853401,
+      76.321344
+     ],
+     [
+      9.854124,
+      76.321347
+     ],
+     [
+      9.854216,
+      76.320983
+     ],
+     [
+      9.85476,
+      76.320711
+     ],
+     [
+      9.855392,
+      76.320987
+     ],
+     [
+      9.855299,
+      76.321443
+     ],
+     [
+      9.856022,
+      76.321537
+     ],
+     [
+      9.85611,
+      76.322176
+     ],
+     [
+      9.857106,
+      76.321997
+     ],
+     [
+      9.859185,
+      76.322188
+     ],
+     [
+      9.861087,
+      76.321466
+     ],
+     [
+      9.861723,
+      76.320648
+     ],
+     [
+      9.862808,
+      76.320652
+     ],
+     [
+      9.863894,
+      76.320292
+     ],
+     [
+      9.865793,
+      76.320391
+     ],
+     [
+      9.866517,
+      76.32012
+     ],
+     [
+      9.867421,
+      76.320123
+     ],
+     [
+      9.867423,
+      76.319759
+     ]
+    ],
+    "confidence": 0.8623,
+    "quality": 0.8623,
+    "connectivityContribution": 0.4438,
+    "bridgeScore": 0.3636,
+    "sensitivity": "critical",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P02 ranks #2 of 12 by criticality (S = 0.444): removing it lowers IIC by 44.4%. It holds 31.1 ha, 15.2% of mapped habitat (#2 by area). It maintains 4 links to P01 (0.5 km), P08 (1.3 km), P05 (1.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 86%.",
+    "criticalityRank": 2,
+    "criticalityScore": 0.44377,
+    "deltaConnectivity": 3.6114158960266e-06,
+    "deltaPct": 44.377,
+    "degree": 4,
+    "isCutVertex": true,
+    "componentCountAfter": 4,
+    "rankByArea": 2,
+    "perimeterKm": 5.315636260871509,
+    "neighbourIds": [
+     "P01",
+     "P08",
+     "P05",
+     "P07"
+    ],
+    "neighbourDistancesKm": [
+     0.539,
+     1.308,
+     1.558,
+     3.747
+    ]
+   },
+   {
+    "id": "P03",
+    "name": "P03",
+    "habitatClass": "mangrove",
+    "areaHa": 24.49,
+    "center": [
+     9.917391,
+     76.335355
+    ],
+    "polygon": [
+     [
+      9.921163,
+      76.335477
+     ],
+     [
+      9.920351,
+      76.334927
+     ],
+     [
+      9.920174,
+      76.333923
+     ],
+     [
+      9.919635,
+      76.333191
+     ],
+     [
+      9.919003,
+      76.332915
+     ],
+     [
+      9.918915,
+      76.332185
+     ],
+     [
+      9.918463,
+      76.332092
+     ],
+     [
+      9.91837,
+      76.33273
+     ],
+     [
+      9.917554,
+      76.333365
+     ],
+     [
+      9.917553,
+      76.333547
+     ],
+     [
+      9.918276,
+      76.333733
+     ],
+     [
+      9.918184,
+      76.334097
+     ],
+     [
+      9.917098,
+      76.334275
+     ],
+     [
+      9.916104,
+      76.334089
+     ],
+     [
+      9.915287,
+      76.334906
+     ],
+     [
+      9.913477,
+      76.335355
+     ],
+     [
+      9.913384,
+      76.336084
+     ],
+     [
+      9.913833,
+      76.336815
+     ],
+     [
+      9.914735,
+      76.337275
+     ],
+     [
+      9.915911,
+      76.337371
+     ],
+     [
+      9.916816,
+      76.337192
+     ],
+     [
+      9.918265,
+      76.336469
+     ],
+     [
+      9.920345,
+      76.336568
+     ],
+     [
+      9.920798,
+      76.336297
+     ],
+     [
+      9.921163,
+      76.335477
+     ]
+    ],
+    "confidence": 0.8901,
+    "quality": 0.8901,
+    "connectivityContribution": 0.1721,
+    "bridgeScore": 0.0,
+    "sensitivity": "high",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P03 ranks #4 of 12 by criticality (S = 0.172): removing it lowers IIC by 17.2%. It holds 24.5 ha, 12.0% of mapped habitat (#3 by area). It maintains 4 links to P10 (1.0 km), P06 (1.3 km), P04 (3.1 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 89%.",
+    "criticalityRank": 4,
+    "criticalityScore": 0.172109,
+    "deltaConnectivity": 1.4006327524356197e-06,
+    "deltaPct": 17.211,
+    "degree": 4,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 3,
+    "perimeterKm": 2.5501583057922983,
+    "neighbourIds": [
+     "P10",
+     "P06",
+     "P04",
+     "P07"
+    ],
+    "neighbourDistancesKm": [
+     1.011,
+     1.27,
+     3.069,
+     3.497
+    ]
+   },
+   {
+    "id": "P04",
+    "name": "P04",
+    "habitatClass": "mangrove",
+    "areaHa": 24.12,
+    "center": [
+     9.894822,
+     76.319224
+    ],
+    "polygon": [
+     [
+      9.897903,
+      76.317965
+     ],
+     [
+      9.897633,
+      76.317599
+     ],
+     [
+      9.897546,
+      76.316778
+     ],
+     [
+      9.896914,
+      76.31632
+     ],
+     [
+      9.895105,
+      76.316677
+     ],
+     [
+      9.89438,
+      76.317039
+     ],
+     [
+      9.894288,
+      76.317312
+     ],
+     [
+      9.89293,
+      76.317763
+     ],
+     [
+      9.893012,
+      76.319861
+     ],
+     [
+      9.891828,
+      76.322045
+     ],
+     [
+      9.892009,
+      76.322045
+     ],
+     [
+      9.892188,
+      76.322502
+     ],
+     [
+      9.892549,
+      76.322595
+     ],
+     [
+      9.893636,
+      76.322325
+     ],
+     [
+      9.894,
+      76.321689
+     ],
+     [
+      9.894904,
+      76.321692
+     ],
+     [
+      9.895176,
+      76.321511
+     ],
+     [
+      9.895359,
+      76.320964
+     ],
+     [
+      9.896084,
+      76.320511
+     ],
+     [
+      9.896087,
+      76.319782
+     ],
+     [
+      9.89654,
+      76.319692
+     ],
+     [
+      9.896542,
+      76.318963
+     ],
+     [
+      9.89772,
+      76.318512
+     ],
+     [
+      9.897903,
+      76.317965
+     ]
+    ],
+    "confidence": 0.8738,
+    "quality": 0.8738,
+    "connectivityContribution": 0.1695,
+    "bridgeScore": 0.2182,
+    "sensitivity": "high",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P04 ranks #5 of 12 by criticality (S = 0.170): removing it lowers IIC by 17.0%. It holds 24.1 ha, 11.8% of mapped habitat (#4 by area). It maintains 4 links to P07 (0.5 km), P03 (3.1 km), P06 (3.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 87%.",
+    "criticalityRank": 5,
+    "criticalityScore": 0.169509,
+    "deltaConnectivity": 1.3794717022763218e-06,
+    "deltaPct": 16.951,
+    "degree": 4,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 4,
+    "perimeterKm": 2.290114672712167,
+    "neighbourIds": [
+     "P07",
+     "P03",
+     "P06",
+     "P10"
+    ],
+    "neighbourDistancesKm": [
+     0.539,
+     3.069,
+     3.657,
+     3.782
+    ]
+   },
+   {
+    "id": "P05",
+    "name": "P05",
+    "habitatClass": "mangrove",
+    "areaHa": 14.3,
+    "center": [
+     9.842302,
+     76.320175
+    ],
+    "polygon": [
+     [
+      9.845722,
+      76.319581
+     ],
+     [
+      9.844729,
+      76.319121
+     ],
+     [
+      9.84464,
+      76.318756
+     ],
+     [
+      9.844009,
+      76.318298
+     ],
+     [
+      9.842743,
+      76.318202
+     ],
+     [
+      9.841837,
+      76.318654
+     ],
+     [
+      9.840929,
+      76.319562
+     ],
+     [
+      9.840837,
+      76.320109
+     ],
+     [
+      9.840018,
+      76.321473
+     ],
+     [
+      9.839113,
+      76.321652
+     ],
+     [
+      9.838839,
+      76.322198
+     ],
+     [
+      9.83929,
+      76.322656
+     ],
+     [
+      9.840013,
+      76.322659
+     ],
+     [
+      9.840648,
+      76.322205
+     ],
+     [
+      9.84074,
+      76.321841
+     ],
+     [
+      9.841373,
+      76.321752
+     ],
+     [
+      9.84219,
+      76.320935
+     ],
+     [
+      9.842192,
+      76.320388
+     ],
+     [
+      9.842825,
+      76.320299
+     ],
+     [
+      9.843728,
+      76.320759
+     ],
+     [
+      9.844903,
+      76.320763
+     ],
+     [
+      9.845357,
+      76.3204
+     ],
+     [
+      9.844815,
+      76.320125
+     ],
+     [
+      9.844546,
+      76.319577
+     ],
+     [
+      9.844818,
+      76.319395
+     ],
+     [
+      9.845359,
+      76.319762
+     ],
+     [
+      9.845721,
+      76.319764
+     ],
+     [
+      9.845722,
+      76.319581
+     ]
+    ],
+    "confidence": 0.8335,
+    "quality": 0.8335,
+    "connectivityContribution": 0.1198,
+    "bridgeScore": 0.1091,
+    "sensitivity": "high",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P05 ranks #6 of 12 by criticality (S = 0.120): removing it lowers IIC by 12.0%. It holds 14.3 ha, 7.0% of mapped habitat (#5 by area). It maintains 4 links to P11 (0.5 km), P08 (0.8 km), P01 (1.4 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 83%.",
+    "criticalityRank": 6,
+    "criticalityScore": 0.119838,
+    "deltaConnectivity": 9.75244834800575e-07,
+    "deltaPct": 11.984,
+    "degree": 4,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 5,
+    "perimeterKm": 2.3091446761678123,
+    "neighbourIds": [
+     "P11",
+     "P08",
+     "P01",
+     "P02"
+    ],
+    "neighbourDistancesKm": [
+     0.547,
+     0.753,
+     1.411,
+     1.558
+    ]
+   },
+   {
+    "id": "P06",
+    "name": "P06",
+    "habitatClass": "mangrove",
+    "areaHa": 8.84,
+    "center": [
+     9.91392,
+     76.346402
+    ],
+    "polygon": [
+     [
+      9.91551,
+      76.347036
+     ],
+     [
+      9.915329,
+      76.347036
+     ],
+     [
+      9.915422,
+      76.346489
+     ],
+     [
+      9.914881,
+      76.346122
+     ],
+     [
+      9.914887,
+      76.344663
+     ],
+     [
+      9.913621,
+      76.344658
+     ],
+     [
+      9.913258,
+      76.345021
+     ],
+     [
+      9.912896,
+      76.344928
+     ],
+     [
+      9.912714,
+      76.345292
+     ],
+     [
+      9.91208,
+      76.345654
+     ],
+     [
+      9.91244,
+      76.346021
+     ],
+     [
+      9.912438,
+      76.346385
+     ],
+     [
+      9.913162,
+      76.346297
+     ],
+     [
+      9.914154,
+      76.34694
+     ],
+     [
+      9.9137,
+      76.347576
+     ],
+     [
+      9.912977,
+      76.3473
+     ],
+     [
+      9.912525,
+      76.347389
+     ],
+     [
+      9.912341,
+      76.348118
+     ],
+     [
+      9.913245,
+      76.348122
+     ],
+     [
+      9.913427,
+      76.34794
+     ],
+     [
+      9.914873,
+      76.348128
+     ],
+     [
+      9.915145,
+      76.347947
+     ],
+     [
+      9.915147,
+      76.347491
+     ],
+     [
+      9.915509,
+      76.34731
+     ],
+     [
+      9.91551,
+      76.347036
+     ]
+    ],
+    "confidence": 0.8029,
+    "quality": 0.8029,
+    "connectivityContribution": 0.0545,
+    "bridgeScore": 0.0,
+    "sensitivity": "medium",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P06 ranks #7 of 12 by criticality (S = 0.055): removing it lowers IIC by 5.5%. It holds 8.8 ha, 4.3% of mapped habitat (#6 by area). It maintains 3 links to P10 (0.5 km), P03 (1.3 km), P04 (3.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 80%.",
+    "criticalityRank": 7,
+    "criticalityScore": 0.054502,
+    "deltaConnectivity": 4.4353533063834956e-07,
+    "deltaPct": 5.45,
+    "degree": 3,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 6,
+    "perimeterKm": 1.764550174657458,
+    "neighbourIds": [
+     "P10",
+     "P03",
+     "P04"
+    ],
+    "neighbourDistancesKm": [
+     0.489,
+     1.27,
+     3.657
+    ]
+   },
+   {
+    "id": "P07",
+    "name": "P07",
+    "habitatClass": "mangrove",
+    "areaHa": 5.49,
+    "center": [
+     9.889992,
+     76.319676
+    ],
+    "polygon": [
+     [
+      9.890933,
+      76.319761
+     ],
+     [
+      9.890667,
+      76.318301
+     ],
+     [
+      9.890216,
+      76.318026
+     ],
+     [
+      9.889402,
+      76.318114
+     ],
+     [
+      9.88913,
+      76.318477
+     ],
+     [
+      9.889487,
+      76.319482
+     ],
+     [
+      9.889486,
+      76.319847
+     ],
+     [
+      9.889214,
+      76.320119
+     ],
+     [
+      9.889208,
+      76.321487
+     ],
+     [
+      9.889751,
+      76.321489
+     ],
+     [
+      9.889934,
+      76.320852
+     ],
+     [
+      9.890386,
+      76.320853
+     ],
+     [
+      9.890656,
+      76.321219
+     ],
+     [
+      9.890933,
+      76.319761
+     ]
+    ],
+    "confidence": 0.8296,
+    "quality": 0.8296,
+    "connectivityContribution": 0.2557,
+    "bridgeScore": 0.3636,
+    "sensitivity": "critical",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P07 ranks #3 of 12 by criticality (S = 0.256): removing it lowers IIC by 25.6%. It holds 5.5 ha, 2.7% of mapped habitat (#7 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P04 (0.5 km), P03 (3.5 km), P02 (3.7 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 83%.",
+    "criticalityRank": 3,
+    "criticalityScore": 0.255705,
+    "deltaConnectivity": 2.08093930762023e-06,
+    "deltaPct": 25.571,
+    "degree": 3,
+    "isCutVertex": true,
+    "componentCountAfter": 4,
+    "rankByArea": 7,
+    "perimeterKm": 1.127391644734845,
+    "neighbourIds": [
+     "P04",
+     "P03",
+     "P02"
+    ],
+    "neighbourDistancesKm": [
+     0.539,
+     3.497,
+     3.747
+    ]
+   },
+   {
+    "id": "P08",
+    "name": "P08",
+    "habitatClass": "mangrove",
+    "areaHa": 5.18,
+    "center": [
+     9.846196,
+     76.314552
+    ],
+    "polygon": [
+     [
+      9.848276,
+      76.313938
+     ],
+     [
+      9.847825,
+      76.313572
+     ],
+     [
+      9.847192,
+      76.313478
+     ],
+     [
+      9.845745,
+      76.313746
+     ],
+     [
+      9.845198,
+      76.314656
+     ],
+     [
+      9.844383,
+      76.315108
+     ],
+     [
+      9.844291,
+      76.315381
+     ],
+     [
+      9.845104,
+      76.315749
+     ],
+     [
+      9.846008,
+      76.315662
+     ],
+     [
+      9.846826,
+      76.314662
+     ],
+     [
+      9.848276,
+      76.313938
+     ]
+    ],
+    "confidence": 0.7962,
+    "quality": 0.7962,
+    "connectivityContribution": 0.0434,
+    "bridgeScore": 0.0,
+    "sensitivity": "medium",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P08 ranks #8 of 12 by criticality (S = 0.043): removing it lowers IIC by 4.3%. It holds 5.2 ha, 2.5% of mapped habitat (#8 by area). It maintains 4 links to P05 (0.8 km), P01 (0.9 km), P11 (1.1 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 80%.",
+    "criticalityRank": 8,
+    "criticalityScore": 0.04341,
+    "deltaConnectivity": 3.5327050659210316e-07,
+    "deltaPct": 4.341,
+    "degree": 4,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 8,
+    "perimeterKm": 1.0951155369076135,
+    "neighbourIds": [
+     "P05",
+     "P01",
+     "P11",
+     "P02"
+    ],
+    "neighbourDistancesKm": [
+     0.753,
+     0.924,
+     1.123,
+     1.308
+    ]
+   },
+   {
+    "id": "P09",
+    "name": "P09",
+    "habitatClass": "mangrove",
+    "areaHa": 4.96,
+    "center": [
+     9.938754,
+     76.471712
+    ],
+    "polygon": [
+     [
+      9.941024,
+      76.47227
+     ],
+     [
+      9.940575,
+      76.47163
+     ],
+     [
+      9.939492,
+      76.471169
+     ],
+     [
+      9.939404,
+      76.470712
+     ],
+     [
+      9.938408,
+      76.470981
+     ],
+     [
+      9.938407,
+      76.471164
+     ],
+     [
+      9.937503,
+      76.471069
+     ],
+     [
+      9.935512,
+      76.471516
+     ],
+     [
+      9.935692,
+      76.47179
+     ],
+     [
+      9.937319,
+      76.47198
+     ],
+     [
+      9.938677,
+      76.471439
+     ],
+     [
+      9.939848,
+      76.472447
+     ],
+     [
+      9.939847,
+      76.472721
+     ],
+     [
+      9.941022,
+      76.472726
+     ],
+     [
+      9.941024,
+      76.47227
+     ]
+    ],
+    "confidence": 0.8243,
+    "quality": 0.8243,
+    "connectivityContribution": 0.0013,
+    "bridgeScore": 0.0,
+    "sensitivity": "low",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P09 ranks #11 of 12 by criticality (S = 0.001): removing it lowers IIC by 0.1%. It holds 5.0 ha, 2.4% of mapped habitat (#9 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 82%.",
+    "criticalityRank": 11,
+    "criticalityScore": 0.001263,
+    "deltaConnectivity": 1.0276311056710413e-08,
+    "deltaPct": 0.126,
+    "degree": 0,
+    "isCutVertex": false,
+    "componentCountAfter": 2,
+    "rankByArea": 9,
+    "perimeterKm": 1.5172970185274406,
+    "neighbourIds": [],
+    "neighbourDistancesKm": []
+   },
+   {
+    "id": "P10",
+    "name": "P10",
+    "habitatClass": "mangrove",
+    "areaHa": 4.07,
+    "center": [
+     9.917928,
+     76.344566
+    ],
+    "polygon": [
+     [
+      9.91932,
+      76.344042
+     ],
+     [
+      9.919049,
+      76.343859
+     ],
+     [
+      9.918777,
+      76.344131
+     ],
+     [
+      9.917964,
+      76.344037
+     ],
+     [
+      9.916972,
+      76.343303
+     ],
+     [
+      9.916338,
+      76.343574
+     ],
+     [
+      9.916515,
+      76.344487
+     ],
+     [
+      9.91742,
+      76.344308
+     ],
+     [
+      9.917871,
+      76.344492
+     ],
+     [
+      9.917963,
+      76.34431
+     ],
+     [
+      9.918143,
+      76.344494
+     ],
+     [
+      9.918231,
+      76.34495
+     ],
+     [
+      9.917598,
+      76.34513
+     ],
+     [
+      9.917597,
+      76.345312
+     ],
+     [
+      9.91841,
+      76.345589
+     ],
+     [
+      9.918587,
+      76.346319
+     ],
+     [
+      9.919041,
+      76.346048
+     ],
+     [
+      9.918953,
+      76.345318
+     ],
+     [
+      9.919225,
+      76.345136
+     ],
+     [
+      9.918954,
+      76.345044
+     ],
+     [
+      9.918866,
+      76.344497
+     ],
+     [
+      9.91932,
+      76.344042
+     ]
+    ],
+    "confidence": 0.7432,
+    "quality": 0.7432,
+    "connectivityContribution": 0.0251,
+    "bridgeScore": 0.0,
+    "sensitivity": "low",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P10 ranks #10 of 12 by criticality (S = 0.025): removing it lowers IIC by 2.5%. It holds 4.1 ha, 2.0% of mapped habitat (#10 by area). It maintains 3 links to P06 (0.5 km), P03 (1.0 km), P04 (3.8 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 74%.",
+    "criticalityRank": 10,
+    "criticalityScore": 0.025093,
+    "deltaConnectivity": 2.0420687734141436e-07,
+    "deltaPct": 2.509,
+    "degree": 3,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 10,
+    "perimeterKm": 1.4215654731937888,
+    "neighbourIds": [
+     "P06",
+     "P03",
+     "P04"
+    ],
+    "neighbourDistancesKm": [
+     0.489,
+     1.011,
+     3.782
+    ]
+   },
+   {
+    "id": "P11",
+    "name": "P11",
+    "habitatClass": "mangrove",
+    "areaHa": 3.4,
+    "center": [
+     9.837416,
+     76.319616
+    ],
+    "polygon": [
+     [
+      9.839032,
+      76.31919
+     ],
+     [
+      9.838581,
+      76.318823
+     ],
+     [
+      9.837857,
+      76.319094
+     ],
+     [
+      9.837043,
+      76.319
+     ],
+     [
+      9.836952,
+      76.319182
+     ],
+     [
+      9.836319,
+      76.319179
+     ],
+     [
+      9.836228,
+      76.319452
+     ],
+     [
+      9.836498,
+      76.319818
+     ],
+     [
+      9.836135,
+      76.32009
+     ],
+     [
+      9.836043,
+      76.320546
+     ],
+     [
+      9.8374,
+      76.320278
+     ],
+     [
+      9.837582,
+      76.320005
+     ],
+     [
+      9.83894,
+      76.319554
+     ],
+     [
+      9.839032,
+      76.31919
+     ]
+    ],
+    "confidence": 0.7808,
+    "quality": 0.7808,
+    "connectivityContribution": 0.0255,
+    "bridgeScore": 0.0,
+    "sensitivity": "low",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P11 ranks #9 of 12 by criticality (S = 0.026): removing it lowers IIC by 2.6%. It holds 3.4 ha, 1.7% of mapped habitat (#11 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P05 (0.5 km), P08 (1.1 km), P01 (1.9 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 78%.",
+    "criticalityRank": 9,
+    "criticalityScore": 0.025527,
+    "deltaConnectivity": 2.0774227905344554e-07,
+    "deltaPct": 2.553,
+    "degree": 3,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 11,
+    "perimeterKm": 0.9094253329031463,
+    "neighbourIds": [
+     "P05",
+     "P08",
+     "P01"
+    ],
+    "neighbourDistancesKm": [
+     0.547,
+     1.123,
+     1.921
+    ]
+   },
+   {
+    "id": "P12",
+    "name": "P12",
+    "habitatClass": "mangrove",
+    "areaHa": 2.47,
+    "center": [
+     9.832353,
+     76.385864
+    ],
+    "polygon": [
+     [
+      9.833339,
+      76.386089
+     ],
+     [
+      9.832891,
+      76.385085
+     ],
+     [
+      9.831896,
+      76.385172
+     ],
+     [
+      9.831443,
+      76.385443
+     ],
+     [
+      9.831619,
+      76.386538
+     ],
+     [
+      9.832523,
+      76.386542
+     ],
+     [
+      9.832706,
+      76.386087
+     ],
+     [
+      9.832978,
+      76.385997
+     ],
+     [
+      9.833156,
+      76.386727
+     ],
+     [
+      9.833339,
+      76.386089
+     ]
+    ],
+    "confidence": 0.7686,
+    "quality": 0.7686,
+    "connectivityContribution": 0.0003,
+    "bridgeScore": 0.0,
+    "sensitivity": "low",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P12 ranks #12 of 12 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 2.5 ha, 1.2% of mapped habitat (#12 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 77%.",
+    "criticalityRank": 12,
+    "criticalityScore": 0.000313,
+    "deltaConnectivity": 2.5484011660185664e-09,
+    "deltaPct": 0.031,
+    "degree": 0,
+    "isCutVertex": false,
+    "componentCountAfter": 2,
+    "rankByArea": 12,
+    "perimeterKm": 0.781675522730316,
+    "neighbourIds": [],
+    "neighbourDistancesKm": []
+   }
+  ],
+  "totals": {
+   "habitatAreaHa": 204.58,
+   "patchCount": 12,
+   "meanPatchSizeHa": 17.05,
+   "largestPatchIndex": 37.24,
+   "edgeDensity": 14.881,
+   "meanConfidence": 0.8525
+  }
+ },
+ "graph": {
+  "sceneId": "kerala-coast",
+  "nodes": [
+   {
+    "id": "P01",
+    "patchId": "P01",
+    "label": "P01",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 68,
+     "y": 472
+    },
+    "areaHa": 76.19,
+    "quality": 0.8581,
+    "connectivity": 1.0,
+    "sensitivity": "critical",
+    "bridgeScore": 0.0,
+    "importance": 0.6385,
+    "degree": 4,
+    "isHub": true,
+    "explanation": "P01 ranks #1 of 12 by criticality (S = 0.638): removing it lowers IIC by 63.8%. It holds 76.2 ha, 37.2% of mapped habitat (#1 by area). It maintains 4 links to P02 (0.5 km), P08 (0.9 km), P05 (1.4 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 86%.",
+    "criticalityRank": 1,
+    "isCutVertex": false
+   },
+   {
+    "id": "P02",
+    "patchId": "P02",
+    "label": "P02",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 90,
+     "y": 463
+    },
+    "areaHa": 31.07,
+    "quality": 0.8623,
+    "connectivity": 0.695,
+    "sensitivity": "critical",
+    "bridgeScore": 0.3636,
+    "importance": 0.4438,
+    "degree": 4,
+    "isHub": true,
+    "explanation": "P02 ranks #2 of 12 by criticality (S = 0.444): removing it lowers IIC by 44.4%. It holds 31.1 ha, 15.2% of mapped habitat (#2 by area). It maintains 4 links to P01 (0.5 km), P08 (1.3 km), P05 (1.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 86%.",
+    "criticalityRank": 2,
+    "isCutVertex": true
+   },
+   {
+    "id": "P03",
+    "patchId": "P03",
+    "label": "P03",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 162,
+     "y": 164
+    },
+    "areaHa": 24.49,
+    "quality": 0.8901,
+    "connectivity": 0.2696,
+    "sensitivity": "high",
+    "bridgeScore": 0.0,
+    "importance": 0.1721,
+    "degree": 4,
+    "isHub": false,
+    "explanation": "P03 ranks #4 of 12 by criticality (S = 0.172): removing it lowers IIC by 17.2%. It holds 24.5 ha, 12.0% of mapped habitat (#3 by area). It maintains 4 links to P10 (1.0 km), P06 (1.3 km), P04 (3.1 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 89%.",
+    "criticalityRank": 4,
+    "isCutVertex": false
+   },
+   {
+    "id": "P04",
+    "patchId": "P04",
+    "label": "P04",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 83,
+     "y": 275
+    },
+    "areaHa": 24.12,
+    "quality": 0.8738,
+    "connectivity": 0.2655,
+    "sensitivity": "high",
+    "bridgeScore": 0.2182,
+    "importance": 0.1695,
+    "degree": 4,
+    "isHub": false,
+    "explanation": "P04 ranks #5 of 12 by criticality (S = 0.170): removing it lowers IIC by 17.0%. It holds 24.1 ha, 11.8% of mapped habitat (#4 by area). It maintains 4 links to P07 (0.5 km), P03 (3.1 km), P06 (3.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 87%.",
+    "criticalityRank": 5,
+    "isCutVertex": false
+   },
+   {
+    "id": "P05",
+    "patchId": "P05",
+    "label": "P05",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 87,
+     "y": 531
+    },
+    "areaHa": 14.3,
+    "quality": 0.8335,
+    "connectivity": 0.1877,
+    "sensitivity": "high",
+    "bridgeScore": 0.1091,
+    "importance": 0.1198,
+    "degree": 4,
+    "isHub": false,
+    "explanation": "P05 ranks #6 of 12 by criticality (S = 0.120): removing it lowers IIC by 12.0%. It holds 14.3 ha, 7.0% of mapped habitat (#5 by area). It maintains 4 links to P11 (0.5 km), P08 (0.8 km), P01 (1.4 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 83%.",
+    "criticalityRank": 6,
+    "isCutVertex": false
+   },
+   {
+    "id": "P06",
+    "patchId": "P06",
+    "label": "P06",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 216,
+     "y": 181
+    },
+    "areaHa": 8.84,
+    "quality": 0.8029,
+    "connectivity": 0.0854,
+    "sensitivity": "medium",
+    "bridgeScore": 0.0,
+    "importance": 0.0545,
+    "degree": 3,
+    "isHub": false,
+    "explanation": "P06 ranks #7 of 12 by criticality (S = 0.055): removing it lowers IIC by 5.5%. It holds 8.8 ha, 4.3% of mapped habitat (#6 by area). It maintains 3 links to P10 (0.5 km), P03 (1.3 km), P04 (3.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 80%.",
+    "criticalityRank": 7,
+    "isCutVertex": false
+   },
+   {
+    "id": "P07",
+    "patchId": "P07",
+    "label": "P07",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 85,
+     "y": 298
+    },
+    "areaHa": 5.49,
+    "quality": 0.8296,
+    "connectivity": 0.4005,
+    "sensitivity": "critical",
+    "bridgeScore": 0.3636,
+    "importance": 0.2557,
+    "degree": 3,
+    "isHub": false,
+    "explanation": "P07 ranks #3 of 12 by criticality (S = 0.256): removing it lowers IIC by 25.6%. It holds 5.5 ha, 2.7% of mapped habitat (#7 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P04 (0.5 km), P03 (3.5 km), P02 (3.7 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 83%.",
+    "criticalityRank": 3,
+    "isCutVertex": true
+   },
+   {
+    "id": "P08",
+    "patchId": "P08",
+    "label": "P08",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 60,
+     "y": 512
+    },
+    "areaHa": 5.18,
+    "quality": 0.7962,
+    "connectivity": 0.068,
+    "sensitivity": "medium",
+    "bridgeScore": 0.0,
+    "importance": 0.0434,
+    "degree": 4,
+    "isHub": false,
+    "explanation": "P08 ranks #8 of 12 by criticality (S = 0.043): removing it lowers IIC by 4.3%. It holds 5.2 ha, 2.5% of mapped habitat (#8 by area). It maintains 4 links to P05 (0.8 km), P01 (0.9 km), P11 (1.1 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 80%.",
+    "criticalityRank": 8,
+    "isCutVertex": false
+   },
+   {
+    "id": "P09",
+    "patchId": "P09",
+    "label": "P09",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 828,
+     "y": 60
+    },
+    "areaHa": 4.96,
+    "quality": 0.8243,
+    "connectivity": 0.002,
+    "sensitivity": "low",
+    "bridgeScore": 0.0,
+    "importance": 0.0013,
+    "degree": 0,
+    "isHub": false,
+    "explanation": "P09 ranks #11 of 12 by criticality (S = 0.001): removing it lowers IIC by 0.1%. It holds 5.0 ha, 2.4% of mapped habitat (#9 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 82%.",
+    "criticalityRank": 11,
+    "isCutVertex": false
+   },
+   {
+    "id": "P10",
+    "patchId": "P10",
+    "label": "P10",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 207,
+     "y": 162
+    },
+    "areaHa": 4.07,
+    "quality": 0.7432,
+    "connectivity": 0.0393,
+    "sensitivity": "low",
+    "bridgeScore": 0.0,
+    "importance": 0.0251,
+    "degree": 3,
+    "isHub": false,
+    "explanation": "P10 ranks #10 of 12 by criticality (S = 0.025): removing it lowers IIC by 2.5%. It holds 4.1 ha, 2.0% of mapped habitat (#10 by area). It maintains 3 links to P06 (0.5 km), P03 (1.0 km), P04 (3.8 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 74%.",
+    "criticalityRank": 10,
+    "isCutVertex": false
+   },
+   {
+    "id": "P11",
+    "patchId": "P11",
+    "label": "P11",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 85,
+     "y": 555
+    },
+    "areaHa": 3.4,
+    "quality": 0.7808,
+    "connectivity": 0.04,
+    "sensitivity": "low",
+    "bridgeScore": 0.0,
+    "importance": 0.0255,
+    "degree": 3,
+    "isHub": false,
+    "explanation": "P11 ranks #9 of 12 by criticality (S = 0.026): removing it lowers IIC by 2.6%. It holds 3.4 ha, 1.7% of mapped habitat (#11 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P05 (0.5 km), P08 (1.1 km), P01 (1.9 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 78%.",
+    "criticalityRank": 9,
+    "isCutVertex": false
+   },
+   {
+    "id": "P12",
+    "patchId": "P12",
+    "label": "P12",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 409,
+     "y": 580
+    },
+    "areaHa": 2.47,
+    "quality": 0.7686,
+    "connectivity": 0.0005,
+    "sensitivity": "low",
+    "bridgeScore": 0.0,
+    "importance": 0.0003,
+    "degree": 0,
+    "isHub": false,
+    "explanation": "P12 ranks #12 of 12 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 2.5 ha, 1.2% of mapped habitat (#12 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 77%.",
+    "criticalityRank": 12,
+    "isCutVertex": false
+   }
+  ],
+  "edges": [
+   {
+    "id": "kerala-coast-e1",
+    "source": "P01",
+    "target": "P02",
+    "strength": 0.7723,
+    "distanceKm": 0.539,
+    "resistance": 0.2277,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e2",
+    "source": "P01",
+    "target": "P08",
+    "strength": 0.6872,
+    "distanceKm": 0.924,
+    "resistance": 0.3128,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e3",
+    "source": "P01",
+    "target": "P05",
+    "strength": 0.6378,
+    "distanceKm": 1.411,
+    "resistance": 0.3622,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e4",
+    "source": "P02",
+    "target": "P08",
+    "strength": 0.6379,
+    "distanceKm": 1.308,
+    "resistance": 0.3621,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e5",
+    "source": "P02",
+    "target": "P05",
+    "strength": 0.6207,
+    "distanceKm": 1.558,
+    "resistance": 0.3793,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e6",
+    "source": "P03",
+    "target": "P10",
+    "strength": 0.6645,
+    "distanceKm": 1.011,
+    "resistance": 0.3355,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e7",
+    "source": "P03",
+    "target": "P06",
+    "strength": 0.6558,
+    "distanceKm": 1.27,
+    "resistance": 0.3442,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e8",
+    "source": "P03",
+    "target": "P04",
+    "strength": 0.4774,
+    "distanceKm": 3.069,
+    "resistance": 0.5226,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e9",
+    "source": "P04",
+    "target": "P07",
+    "strength": 0.7644,
+    "distanceKm": 0.539,
+    "resistance": 0.2356,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e10",
+    "source": "P04",
+    "target": "P06",
+    "strength": 0.4031,
+    "distanceKm": 3.657,
+    "resistance": 0.5969,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e11",
+    "source": "P05",
+    "target": "P11",
+    "strength": 0.7231,
+    "distanceKm": 0.547,
+    "resistance": 0.2769,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e12",
+    "source": "P05",
+    "target": "P08",
+    "strength": 0.7007,
+    "distanceKm": 0.753,
+    "resistance": 0.2993,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e13",
+    "source": "P06",
+    "target": "P10",
+    "strength": 0.7005,
+    "distanceKm": 0.489,
+    "resistance": 0.2995,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e14",
+    "source": "P03",
+    "target": "P07",
+    "strength": 0.4269,
+    "distanceKm": 3.497,
+    "resistance": 0.5731,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e15",
+    "source": "P02",
+    "target": "P07",
+    "strength": 0.3998,
+    "distanceKm": 3.747,
+    "resistance": 0.6002,
+    "critical": true,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e16",
+    "source": "P08",
+    "target": "P11",
+    "strength": 0.6299,
+    "distanceKm": 1.123,
+    "resistance": 0.3701,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e17",
+    "source": "P04",
+    "target": "P10",
+    "strength": 0.3782,
+    "distanceKm": 3.782,
+    "resistance": 0.6218,
+    "critical": false,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e18",
+    "source": "P01",
+    "target": "P11",
+    "strength": 0.5574,
+    "distanceKm": 1.921,
+    "resistance": 0.4426,
+    "critical": false,
+    "speciesFlow": []
+   }
+  ],
+  "clusters": [
+   {
+    "id": "c1",
+    "label": "Component 1",
+    "nodeIds": [
+     "P01",
+     "P02",
+     "P03",
+     "P04",
+     "P05",
+     "P06",
+     "P07",
+     "P08",
+     "P10",
+     "P11"
+    ],
+    "color": "#00c896"
+   },
+   {
+    "id": "c2",
+    "label": "Component 2",
+    "nodeIds": [
+     "P09"
+    ],
+    "color": "#38bdf8"
+   },
+   {
+    "id": "c3",
+    "label": "Component 3",
+    "nodeIds": [
+     "P12"
+    ],
+    "color": "#a78bfa"
+   }
+  ]
+ },
+ "connectivity": {
+  "sceneId": "kerala-coast",
+  "score": 61.0,
+  "previousScore": null,
+  "pcIndex": 1.1389075668856723e-05,
+  "iicIndex": 8.13803346498579e-06,
+  "equivalentConnectedArea": 165.1,
+  "ecaPctOfHabitat": 80.7,
+  "meanPatchIsolationM": 599.0,
+  "linkDensity": 0.2727,
+  "networkDiameterKm": 10.17,
+  "fragmentationIndex": 0.25,
+  "resilienceIndex": 0.8333,
+  "confidence": 0.8525,
+  "grade": null,
+  "interpretation": null,
+  "components": [
+   {
+    "label": "Structural",
+    "value": 46.5,
+    "weight": 0.3,
+    "delta": null
+   },
+   {
+    "label": "Functional",
+    "value": 65.1,
+    "weight": 0.28,
+    "delta": null
+   },
+   {
+    "label": "Quality",
+    "value": 85.3,
+    "weight": 0.22,
+    "delta": null
+   },
+   {
+    "label": "Redundancy",
+    "value": 83.3,
+    "weight": 0.12,
+    "delta": null
+   },
+   {
+    "label": "Protection",
+    "value": 0.0,
+    "weight": 0.08,
+    "delta": null
+   }
+  ],
+  "composition": [
+   {
+    "name": "Mangrove",
+    "value": 204.58,
+    "color": "#00c896"
+   }
+  ],
+  "health": [],
+  "trend": [],
+  "research": {
+   "iic": 8.13803346498579e-06,
+   "pc": 1.1389075668856723e-05,
+   "ecaHa": 165.12289525322944,
+   "nPatches": 12,
+   "nEdges": 18,
+   "nComponents": 3,
+   "meanDegree": 3.0,
+   "tauKm": 5.0,
+   "k": 3,
+   "spearmanAreaVsCriticality": 0.9020979020979021,
+   "labels": {
+    "iic": "RESEARCH METRIC - Integral Index of Connectivity (Pascual-Hortal & Saura 2006)",
+    "pc": "RESEARCH METRIC - Probability of Connectivity (Saura & Pascual-Hortal 2007), p(tau)=0.5",
+    "eca_ha": "RESEARCH METRIC - Equivalent Connected Area = sqrt(PC)*A_L"
+   },
+   "interfaceScoreLabel": "INTERFACE SCORE (Eq. 7) - design choice, not a research metric"
+  }
+ },
+ "heatmap": {
+  "sceneId": "kerala-coast",
+  "resolutionM": 300,
+  "generatedAt": "2026-09-18T21:17:06.763441+00:00",
+  "cells": [
+   {
+    "id": "P01-0",
+    "bounds": [
+     [
+      9.839495,
+      76.315774
+     ],
+     [
+      9.842208,
+      76.318509
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-1",
+    "bounds": [
+     [
+      9.847634,
+      76.315774
+     ],
+     [
+      9.850348,
+      76.318509
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-2",
+    "bounds": [
+     [
+      9.850348,
+      76.313038
+     ],
+     [
+      9.853061,
+      76.315774
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-3",
+    "bounds": [
+     [
+      9.850348,
+      76.315774
+     ],
+     [
+      9.853061,
+      76.318509
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-4",
+    "bounds": [
+     [
+      9.853061,
+      76.315774
+     ],
+     [
+      9.855774,
+      76.318509
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-5",
+    "bounds": [
+     [
+      9.855774,
+      76.315774
+     ],
+     [
+      9.858487,
+      76.318509
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-6",
+    "bounds": [
+     [
+      9.858487,
+      76.313038
+     ],
+     [
+      9.8612,
+      76.315774
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-7",
+    "bounds": [
+     [
+      9.858487,
+      76.315774
+     ],
+     [
+      9.8612,
+      76.318509
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P01-8",
+    "bounds": [
+     [
+      9.8612,
+      76.315774
+     ],
+     [
+      9.863913,
+      76.318509
+     ]
+    ],
+    "sensitivity": 0.6385,
+    "band": "critical",
+    "habitatProbability": 0.8581,
+    "connectivityContribution": 0.6385,
+    "confidence": 0.8581,
+    "patchId": "P01"
+   },
+   {
+    "id": "P02-9",
+    "bounds": [
+     [
+      9.851417,
+      76.319293
+     ],
+     [
+      9.85413,
+      76.322029
+     ]
+    ],
+    "sensitivity": 0.4438,
+    "band": "critical",
+    "habitatProbability": 0.8623,
+    "connectivityContribution": 0.4438,
+    "confidence": 0.8623,
+    "patchId": "P02"
+   },
+   {
+    "id": "P02-10",
+    "bounds": [
+     [
+      9.85413,
+      76.319293
+     ],
+     [
+      9.856843,
+      76.322029
+     ]
+    ],
+    "sensitivity": 0.4438,
+    "band": "critical",
+    "habitatProbability": 0.8623,
+    "connectivityContribution": 0.4438,
+    "confidence": 0.8623,
+    "patchId": "P02"
+   },
+   {
+    "id": "P03-11",
+    "bounds": [
+     [
+      9.913384,
+      76.334828
+     ],
+     [
+      9.916097,
+      76.337564
+     ]
+    ],
+    "sensitivity": 0.1721,
+    "band": "high",
+    "habitatProbability": 0.8901,
+    "connectivityContribution": 0.1721,
+    "confidence": 0.8901,
+    "patchId": "P03"
+   },
+   {
+    "id": "P03-12",
+    "bounds": [
+     [
+      9.916097,
+      76.334828
+     ],
+     [
+      9.91881,
+      76.337564
+     ]
+    ],
+    "sensitivity": 0.1721,
+    "band": "high",
+    "habitatProbability": 0.8901,
+    "connectivityContribution": 0.1721,
+    "confidence": 0.8901,
+    "patchId": "P03"
+   },
+   {
+    "id": "P04-13",
+    "bounds": [
+     [
+      9.891828,
+      76.319053
+     ],
+     [
+      9.894541,
+      76.321789
+     ]
+    ],
+    "sensitivity": 0.1695,
+    "band": "high",
+    "habitatProbability": 0.8738,
+    "connectivityContribution": 0.1695,
+    "confidence": 0.8738,
+    "patchId": "P04"
+   },
+   {
+    "id": "P04-14",
+    "bounds": [
+     [
+      9.894541,
+      76.316317
+     ],
+     [
+      9.897254,
+      76.319053
+     ]
+    ],
+    "sensitivity": 0.1695,
+    "band": "high",
+    "habitatProbability": 0.8738,
+    "connectivityContribution": 0.1695,
+    "confidence": 0.8738,
+    "patchId": "P04"
+   },
+   {
+    "id": "P05-15",
+    "bounds": [
+     [
+      9.841553,
+      76.318202
+     ],
+     [
+      9.844266,
+      76.320937
+     ]
+    ],
+    "sensitivity": 0.1198,
+    "band": "high",
+    "habitatProbability": 0.8335,
+    "connectivityContribution": 0.1198,
+    "confidence": 0.8335,
+    "patchId": "P05"
+   },
+   {
+    "id": "P06-16",
+    "bounds": [
+     [
+      9.91208,
+      76.344658
+     ],
+     [
+      9.914793,
+      76.347393
+     ]
+    ],
+    "sensitivity": 0.0545,
+    "band": "medium",
+    "habitatProbability": 0.8029,
+    "connectivityContribution": 0.0545,
+    "confidence": 0.8029,
+    "patchId": "P06"
+   },
+   {
+    "id": "P07-17",
+    "bounds": [
+     [
+      9.88913,
+      76.318026
+     ],
+     [
+      9.891843,
+      76.320761
+     ]
+    ],
+    "sensitivity": 0.2557,
+    "band": "critical",
+    "habitatProbability": 0.8296,
+    "connectivityContribution": 0.2557,
+    "confidence": 0.8296,
+    "patchId": "P07"
+   }
+  ],
+  "legend": [
+   {
+    "band": "critical",
+    "label": "Critical",
+    "color": "#ef4444",
+    "range": [
+     0.25,
+     1.0
+    ],
+    "description": "S_i >= 0.25"
+   },
+   {
+    "band": "high",
+    "label": "High",
+    "color": "#f97316",
+    "range": [
+     0.1,
+     0.25
+    ],
+    "description": "S_i >= 0.1"
+   },
+   {
+    "band": "medium",
+    "label": "Medium",
+    "color": "#f59e0b",
+    "range": [
+     0.03,
+     0.1
+    ],
+    "description": "S_i >= 0.03"
+   },
+   {
+    "band": "low",
+    "label": "Low",
+    "color": "#22c55e",
+    "range": [
+     0.0,
+     0.03
+    ],
+    "description": "S_i < 0.03"
+   }
+  ]
+ },
+ "restoration": {
+  "sceneId": "kerala-coast",
+  "currency": null,
+  "baselineScore": 61.0,
+  "budgetBands": [],
+  "actions": [
+   {
+    "id": "C01",
+    "rank": 1,
+    "name": "C01",
+    "patchId": "P03",
+    "location": "C01",
+    "center": [
+     9.922526426838042,
+     76.34610231851853
+    ],
+    "polygon": [
+     [
+      9.935247,
+      76.341006
+     ],
+     [
+      9.934797,
+      76.340457
+     ],
+     [
+      9.933982,
+      76.340545
+     ],
+     [
+      9.93335,
+      76.34036
+     ],
+     [
+      9.933351,
+      76.340087
+     ],
+     [
+      9.933713,
+      76.340179
+     ],
+     [
+      9.933986,
+      76.339633
+     ],
+     [
+      9.934438,
+      76.339635
+     ],
+     [
+      9.933988,
+      76.339177
+     ],
+     [
+      9.933989,
+      76.338904
+     ],
+     [
+      9.934532,
+      76.338906
+     ],
+     [
+      9.934623,
+      76.338724
+     ],
+     [
+      9.934262,
+      76.338358
+     ],
+     [
+      9.933991,
+      76.338448
+     ],
+     [
+      9.933811,
+      76.338265
+     ],
+     [
+      9.933812,
+      76.3379
+     ],
+     [
+      9.934175,
+      76.337628
+     ],
+     [
+      9.934898,
+      76.337631
+     ],
+     [
+      9.934993,
+      76.336628
+     ],
+     [
+      9.934089,
+      76.336533
+     ],
+     [
+      9.933728,
+      76.336258
+     ],
+     [
+      9.933643,
+      76.334981
+     ],
+     [
+      9.933465,
+      76.334341
+     ],
+     [
+      9.933193,
+      76.33434
+     ],
+     [
+      9.932741,
+      76.334521
+     ],
+     [
+      9.932558,
+      76.334885
+     ],
+     [
+      9.931925,
+      76.335065
+     ],
+     [
+      9.931922,
+      76.335794
+     ],
+     [
+      9.93165,
+      76.335976
+     ],
+     [
+      9.931557,
+      76.336431
+     ],
+     [
+      9.931554,
+      76.337343
+     ],
+     [
+      9.931734,
+      76.337527
+     ],
+     [
+      9.932005,
+      76.337528
+     ],
+     [
+      9.932365,
+      76.337894
+     ],
+     [
+      9.932548,
+      76.337439
+     ],
+     [
+      9.93291,
+      76.337349
+     ],
+     [
+      9.93354,
+      76.338081
+     ],
+     [
+      9.933446,
+      76.338901
+     ],
+     [
+      9.933717,
+      76.338994
+     ],
+     [
+      9.933716,
+      76.339359
+     ],
+     [
+      9.933353,
+      76.339631
+     ],
+     [
+      9.932901,
+      76.339629
+     ],
+     [
+      9.933079,
+      76.340359
+     ],
+     [
+      9.932537,
+      76.340266
+     ],
+     [
+      9.932178,
+      76.339626
+     ],
+     [
+      9.931727,
+      76.339351
+     ],
+     [
+      9.931092,
+      76.339804
+     ],
+     [
+      9.930816,
+      76.340897
+     ],
+     [
+      9.930544,
+      76.341079
+     ],
+     [
+      9.930363,
+      76.341078
+     ],
+     [
+      9.930185,
+      76.340347
+     ],
+     [
+      9.930005,
+      76.340347
+     ],
+     [
+      9.929642,
+      76.34071
+     ],
+     [
+      9.928647,
+      76.340615
+     ],
+     [
+      9.928014,
+      76.340795
+     ],
+     [
+      9.927653,
+      76.340611
+     ],
+     [
+      9.927469,
+      76.341248
+     ],
+     [
+      9.92774,
+      76.341341
+     ],
+     [
+      9.927738,
+      76.341797
+     ],
+     [
+      9.927198,
+      76.341339
+     ],
+     [
+      9.927194,
+      76.342159
+     ],
+     [
+      9.927375,
+      76.342251
+     ],
+     [
+      9.927646,
+      76.342252
+     ],
+     [
+      9.927647,
+      76.341888
+     ],
+     [
+      9.929003,
+      76.341984
+     ],
+     [
+      9.929728,
+      76.341714
+     ],
+     [
+      9.929997,
+      76.342353
+     ],
+     [
+      9.93063,
+      76.342356
+     ],
+     [
+      9.93117,
+      76.342814
+     ],
+     [
+      9.931347,
+      76.343909
+     ],
+     [
+      9.930801,
+      76.344728
+     ],
+     [
+      9.930259,
+      76.344543
+     ],
+     [
+      9.929991,
+      76.343812
+     ],
+     [
+      9.929539,
+      76.34381
+     ],
+     [
+      9.928178,
+      76.344808
+     ],
+     [
+      9.927184,
+      76.344804
+     ],
+     [
+      9.926639,
+      76.34544
+     ],
+     [
+      9.925733,
+      76.34571
+     ],
+     [
+      9.924739,
+      76.345524
+     ],
+     [
+      9.92429,
+      76.344792
+     ],
+     [
+      9.923748,
+      76.344699
+     ],
+     [
+      9.923022,
+      76.345243
+     ],
+     [
+      9.92257,
+      76.345241
+     ],
+     [
+      9.921761,
+      76.344052
+     ],
+     [
+      9.920677,
+      76.343957
+     ],
+     [
+      9.920409,
+      76.343044
+     ],
+     [
+      9.919145,
+      76.342491
+     ],
+     [
+      9.919056,
+      76.342126
+     ],
+     [
+      9.918876,
+      76.342125
+     ],
+     [
+      9.918967,
+      76.341761
+     ],
+     [
+      9.918516,
+      76.341486
+     ],
+     [
+      9.916433,
+      76.34248
+     ],
+     [
+      9.916431,
+      76.342936
+     ],
+     [
+      9.916068,
+      76.3433
+     ],
+     [
+      9.91435,
+      76.343201
+     ],
+     [
+      9.913443,
+      76.343836
+     ],
+     [
+      9.911905,
+      76.344103
+     ],
+     [
+      9.911722,
+      76.344559
+     ],
+     [
+      9.911993,
+      76.344833
+     ],
+     [
+      9.911991,
+      76.345289
+     ],
+     [
+      9.911718,
+      76.345562
+     ],
+     [
+      9.911717,
+      76.345927
+     ],
+     [
+      9.911987,
+      76.346201
+     ],
+     [
+      9.912075,
+      76.346749
+     ],
+     [
+      9.911708,
+      76.348206
+     ],
+     [
+      9.912068,
+      76.348573
+     ],
+     [
+      9.911974,
+      76.349393
+     ],
+     [
+      9.912334,
+      76.349759
+     ],
+     [
+      9.913148,
+      76.349854
+     ],
+     [
+      9.912422,
+      76.35058
+     ],
+     [
+      9.912601,
+      76.350855
+     ],
+     [
+      9.913144,
+      76.350857
+     ],
+     [
+      9.913141,
+      76.351495
+     ],
+     [
+      9.912324,
+      76.352313
+     ],
+     [
+      9.912232,
+      76.352677
+     ],
+     [
+      9.911328,
+      76.352673
+     ],
+     [
+      9.910875,
+      76.353036
+     ],
+     [
+      9.910689,
+      76.35413
+     ],
+     [
+      9.91114,
+      76.354497
+     ],
+     [
+      9.911682,
+      76.354499
+     ],
+     [
+      9.913403,
+      76.353776
+     ],
+     [
+      9.913946,
+      76.353779
+     ],
+     [
+      9.914035,
+      76.354053
+     ],
+     [
+      9.914577,
+      76.354237
+     ],
+     [
+      9.9153,
+      76.35424
+     ],
+     [
+      9.916026,
+      76.353696
+     ],
+     [
+      9.916749,
+      76.353699
+     ],
+     [
+      9.916752,
+      76.353152
+     ],
+     [
+      9.917115,
+      76.352606
+     ],
+     [
+      9.91802,
+      76.35261
+     ],
+     [
+      9.91802,
+      76.352427
+     ],
+     [
+      9.918745,
+      76.352157
+     ],
+     [
+      9.918927,
+      76.351884
+     ],
+     [
+      9.919288,
+      76.351885
+     ],
+     [
+      9.919928,
+      76.350155
+     ],
+     [
+      9.921287,
+      76.349705
+     ],
+     [
+      9.921737,
+      76.350071
+     ],
+     [
+      9.921646,
+      76.350253
+     ],
+     [
+      9.921917,
+      76.350255
+     ],
+     [
+      9.922282,
+      76.349435
+     ],
+     [
+      9.922827,
+      76.34889
+     ],
+     [
+      9.92364,
+      76.349076
+     ],
+     [
+      9.923729,
+      76.349441
+     ],
+     [
+      9.925086,
+      76.349356
+     ],
+     [
+      9.92527,
+      76.348444
+     ],
+     [
+      9.92473,
+      76.347986
+     ],
+     [
+      9.924277,
+      76.348075
+     ],
+     [
+      9.924187,
+      76.347893
+     ],
+     [
+      9.924914,
+      76.347166
+     ],
+     [
+      9.925365,
+      76.34735
+     ],
+     [
+      9.925908,
+      76.347261
+     ],
+     [
+      9.925997,
+      76.347535
+     ],
+     [
+      9.926268,
+      76.347536
+     ],
+     [
+      9.926357,
+      76.348084
+     ],
+     [
+      9.925905,
+      76.348082
+     ],
+     [
+      9.925722,
+      76.348537
+     ],
+     [
+      9.925904,
+      76.348264
+     ],
+     [
+      9.926356,
+      76.348175
+     ],
+     [
+      9.926627,
+      76.348267
+     ],
+     [
+      9.926896,
+      76.348816
+     ],
+     [
+      9.92744,
+      76.348636
+     ],
+     [
+      9.927619,
+      76.34891
+     ],
+     [
+      9.928433,
+      76.348913
+     ],
+     [
+      9.928706,
+      76.348458
+     ],
+     [
+      9.928529,
+      76.347546
+     ],
+     [
+      9.928168,
+      76.347362
+     ],
+     [
+      9.927444,
+      76.347541
+     ],
+     [
+      9.927085,
+      76.346901
+     ],
+     [
+      9.927358,
+      76.346446
+     ],
+     [
+      9.927361,
+      76.345808
+     ],
+     [
+      9.927541,
+      76.345809
+     ],
+     [
+      9.92772,
+      76.346265
+     ],
+     [
+      9.928082,
+      76.346267
+     ],
+     [
+      9.927904,
+      76.345445
+     ],
+     [
+      9.928087,
+      76.345081
+     ],
+     [
+      9.928629,
+      76.345175
+     ],
+     [
+      9.928718,
+      76.345631
+     ],
+     [
+      9.929349,
+      76.34609
+     ],
+     [
+      9.929167,
+      76.346363
+     ],
+     [
+      9.929344,
+      76.347184
+     ],
+     [
+      9.928982,
+      76.347274
+     ],
+     [
+      9.929069,
+      76.348277
+     ],
+     [
+      9.929882,
+      76.348372
+     ],
+     [
+      9.930065,
+      76.347825
+     ],
+     [
+      9.929977,
+      76.347278
+     ],
+     [
+      9.93034,
+      76.347006
+     ],
+     [
+      9.930252,
+      76.346276
+     ],
+     [
+      9.930616,
+      76.345821
+     ],
+     [
+      9.93062,
+      76.344818
+     ],
+     [
+      9.930801,
+      76.344819
+     ],
+     [
+      9.930889,
+      76.345366
+     ],
+     [
+      9.93134,
+      76.345642
+     ],
+     [
+      9.931613,
+      76.345187
+     ],
+     [
+      9.931975,
+      76.345188
+     ],
+     [
+      9.932154,
+      76.345554
+     ],
+     [
+      9.932425,
+      76.345555
+     ],
+     [
+      9.932698,
+      76.345283
+     ],
+     [
+      9.9327,
+      76.344644
+     ],
+     [
+      9.933242,
+      76.34492
+     ],
+     [
+      9.933331,
+      76.345194
+     ],
+     [
+      9.933058,
+      76.345558
+     ],
+     [
+      9.932696,
+      76.345647
+     ],
+     [
+      9.932694,
+      76.346103
+     ],
+     [
+      9.932783,
+      76.34656
+     ],
+     [
+      9.933505,
+      76.346928
+     ],
+     [
+      9.933959,
+      76.346382
+     ],
+     [
+      9.933869,
+      76.346291
+     ],
+     [
+      9.93387,
+      76.346017
+     ],
+     [
+      9.934596,
+      76.345382
+     ],
+     [
+      9.934688,
+      76.344926
+     ],
+     [
+      9.934419,
+      76.344378
+     ],
+     [
+      9.935144,
+      76.344016
+     ],
+     [
+      9.934788,
+      76.342555
+     ],
+     [
+      9.935244,
+      76.341645
+     ],
+     [
+      9.935247,
+      76.341006
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 158.76,
+    "costLakh": null,
+    "connectivityGain": 220.7001,
+    "connectivityGainAbs": 1.796064398504048e-05,
+    "scoreAfter": null,
+    "confidence": 0.4864,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P03",
+     "P06",
+     "P10"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 3 link(s) to P03, P06, P10; recomputed IIC rises by 220.70%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C02",
+    "rank": 2,
+    "name": "C02",
+    "patchId": "P01",
+    "location": "C02",
+    "center": [
+     9.850156359962627,
+     76.3171204510489
+    ],
+    "polygon": [
+     [
+      9.870147,
+      76.316943
+     ],
+     [
+      9.869697,
+      76.316212
+     ],
+     [
+      9.868974,
+      76.316117
+     ],
+     [
+      9.868705,
+      76.31566
+     ],
+     [
+      9.867529,
+      76.315747
+     ],
+     [
+      9.866987,
+      76.315562
+     ],
+     [
+      9.866625,
+      76.315743
+     ],
+     [
+      9.866445,
+      76.315469
+     ],
+     [
+      9.865723,
+      76.315193
+     ],
+     [
+      9.864728,
+      76.315189
+     ],
+     [
+      9.863917,
+      76.314456
+     ],
+     [
+      9.863194,
+      76.314453
+     ],
+     [
+      9.862744,
+      76.313813
+     ],
+     [
+      9.862837,
+      76.313175
+     ],
+     [
+      9.862204,
+      76.313082
+     ],
+     [
+      9.862025,
+      76.312625
+     ],
+     [
+      9.861664,
+      76.312441
+     ],
+     [
+      9.859855,
+      76.312616
+     ],
+     [
+      9.859495,
+      76.31225
+     ],
+     [
+      9.859406,
+      76.311794
+     ],
+     [
+      9.859859,
+      76.311705
+     ],
+     [
+      9.859951,
+      76.31134
+     ],
+     [
+      9.859589,
+      76.311339
+     ],
+     [
+      9.859409,
+      76.311064
+     ],
+     [
+      9.858687,
+      76.310788
+     ],
+     [
+      9.85869,
+      76.309967
+     ],
+     [
+      9.858508,
+      76.31024
+     ],
+     [
+      9.857605,
+      76.309963
+     ],
+     [
+      9.856701,
+      76.30996
+     ],
+     [
+      9.855523,
+      76.310411
+     ],
+     [
+      9.855432,
+      76.310684
+     ],
+     [
+      9.855883,
+      76.310868
+     ],
+     [
+      9.855973,
+      76.311142
+     ],
+     [
+      9.855157,
+      76.311595
+     ],
+     [
+      9.855156,
+      76.311959
+     ],
+     [
+      9.855426,
+      76.312234
+     ],
+     [
+      9.855969,
+      76.312145
+     ],
+     [
+      9.85651,
+      76.312421
+     ],
+     [
+      9.857776,
+      76.312426
+     ],
+     [
+      9.857956,
+      76.312609
+     ],
+     [
+      9.858226,
+      76.313066
+     ],
+     [
+      9.858132,
+      76.313795
+     ],
+     [
+      9.857859,
+      76.314432
+     ],
+     [
+      9.857496,
+      76.314704
+     ],
+     [
+      9.857135,
+      76.31452
+     ],
+     [
+      9.856863,
+      76.314793
+     ],
+     [
+      9.856049,
+      76.31479
+     ],
+     [
+      9.85578,
+      76.314241
+     ],
+     [
+      9.855873,
+      76.313512
+     ],
+     [
+      9.855694,
+      76.313056
+     ],
+     [
+      9.855423,
+      76.313055
+     ],
+     [
+      9.855599,
+      76.314241
+     ],
+     [
+      9.855235,
+      76.314695
+     ],
+     [
+      9.854874,
+      76.314694
+     ],
+     [
+      9.854514,
+      76.314236
+     ],
+     [
+      9.8537,
+      76.314233
+     ],
+     [
+      9.853253,
+      76.312955
+     ],
+     [
+      9.852712,
+      76.312588
+     ],
+     [
+      9.850179,
+      76.31276
+     ],
+     [
+      9.849637,
+      76.312576
+     ],
+     [
+      9.849368,
+      76.312028
+     ],
+     [
+      9.848735,
+      76.312025
+     ],
+     [
+      9.848373,
+      76.312297
+     ],
+     [
+      9.848279,
+      76.313026
+     ],
+     [
+      9.847555,
+      76.313297
+     ],
+     [
+      9.846832,
+      76.313203
+     ],
+     [
+      9.845203,
+      76.313561
+     ],
+     [
+      9.844205,
+      76.314469
+     ],
+     [
+      9.843572,
+      76.314284
+     ],
+     [
+      9.843122,
+      76.313736
+     ],
+     [
+      9.842489,
+      76.313733
+     ],
+     [
+      9.842217,
+      76.314005
+     ],
+     [
+      9.841494,
+      76.314003
+     ],
+     [
+      9.841221,
+      76.314275
+     ],
+     [
+      9.840317,
+      76.31418
+     ],
+     [
+      9.83914,
+      76.314632
+     ],
+     [
+      9.838779,
+      76.314539
+     ],
+     [
+      9.838596,
+      76.315085
+     ],
+     [
+      9.839047,
+      76.315452
+     ],
+     [
+      9.838955,
+      76.315725
+     ],
+     [
+      9.838593,
+      76.315906
+     ],
+     [
+      9.838232,
+      76.315631
+     ],
+     [
+      9.837779,
+      76.315994
+     ],
+     [
+      9.836688,
+      76.317448
+     ],
+     [
+      9.83623,
+      76.318814
+     ],
+     [
+      9.835234,
+      76.319175
+     ],
+     [
+      9.835232,
+      76.319631
+     ],
+     [
+      9.835684,
+      76.319815
+     ],
+     [
+      9.835502,
+      76.320088
+     ],
+     [
+      9.83568,
+      76.320727
+     ],
+     [
+      9.836222,
+      76.320911
+     ],
+     [
+      9.839211,
+      76.319738
+     ],
+     [
+      9.839485,
+      76.319009
+     ],
+     [
+      9.840392,
+      76.318375
+     ],
+     [
+      9.841748,
+      76.318289
+     ],
+     [
+      9.838933,
+      76.321287
+     ],
+     [
+      9.838572,
+      76.321285
+     ],
+     [
+      9.837483,
+      76.322101
+     ],
+     [
+      9.836216,
+      76.322552
+     ],
+     [
+      9.835943,
+      76.323007
+     ],
+     [
+      9.836213,
+      76.323191
+     ],
+     [
+      9.838746,
+      76.322927
+     ],
+     [
+      9.839559,
+      76.323204
+     ],
+     [
+      9.8401,
+      76.323662
+     ],
+     [
+      9.840462,
+      76.323572
+     ],
+     [
+      9.840462,
+      76.32339
+     ],
+     [
+      9.841275,
+      76.323575
+     ],
+     [
+      9.84182,
+      76.323122
+     ],
+     [
+      9.841642,
+      76.322392
+     ],
+     [
+      9.842094,
+      76.322393
+     ],
+     [
+      9.842367,
+      76.321847
+     ],
+     [
+      9.842729,
+      76.321849
+     ],
+     [
+      9.842912,
+      76.321394
+     ],
+     [
+      9.844087,
+      76.321307
+     ],
+     [
+      9.844719,
+      76.321674
+     ],
+     [
+      9.845804,
+      76.321679
+     ],
+     [
+      9.845988,
+      76.320859
+     ],
+     [
+      9.846622,
+      76.320679
+     ],
+     [
+      9.847614,
+      76.321321
+     ],
+     [
+      9.848427,
+      76.321507
+     ],
+     [
+      9.849057,
+      76.322239
+     ],
+     [
+      9.849601,
+      76.321876
+     ],
+     [
+      9.851229,
+      76.321883
+     ],
+     [
+      9.851498,
+      76.32234
+     ],
+     [
+      9.852042,
+      76.322068
+     ],
+     [
+      9.853307,
+      76.322347
+     ],
+     [
+      9.853306,
+      76.32262
+     ],
+     [
+      9.853758,
+      76.32244
+     ],
+     [
+      9.854119,
+      76.322806
+     ],
+     [
+      9.854391,
+      76.322625
+     ],
+     [
+      9.854661,
+      76.322808
+     ],
+     [
+      9.855565,
+      76.322812
+     ],
+     [
+      9.855837,
+      76.32263
+     ],
+     [
+      9.85656,
+      76.322907
+     ],
+     [
+      9.857013,
+      76.322726
+     ],
+     [
+      9.857195,
+      76.322362
+     ],
+     [
+      9.857646,
+      76.322546
+     ],
+     [
+      9.85846,
+      76.322459
+     ],
+     [
+      9.85855,
+      76.322641
+     ],
+     [
+      9.859907,
+      76.322464
+     ],
+     [
+      9.86027,
+      76.322101
+     ],
+     [
+      9.861538,
+      76.32165
+     ],
+     [
+      9.862445,
+      76.320833
+     ],
+     [
+      9.863892,
+      76.32093
+     ],
+     [
+      9.864074,
+      76.320566
+     ],
+     [
+      9.864797,
+      76.320569
+     ],
+     [
+      9.865701,
+      76.320846
+     ],
+     [
+      9.865973,
+      76.320482
+     ],
+     [
+      9.867963,
+      76.320308
+     ],
+     [
+      9.868507,
+      76.320037
+     ],
+     [
+      9.868598,
+      76.319763
+     ],
+     [
+      9.86625,
+      76.319207
+     ],
+     [
+      9.864622,
+      76.3192
+     ],
+     [
+      9.861546,
+      76.319553
+     ],
+     [
+      9.860007,
+      76.320094
+     ],
+     [
+      9.859281,
+      76.320638
+     ],
+     [
+      9.858648,
+      76.320636
+     ],
+     [
+      9.854494,
+      76.319434
+     ],
+     [
+      9.853408,
+      76.319429
+     ],
+     [
+      9.851689,
+      76.319878
+     ],
+     [
+      9.846987,
+      76.319677
+     ],
+     [
+      9.845723,
+      76.319217
+     ],
+     [
+      9.845363,
+      76.31885
+     ],
+     [
+      9.843648,
+      76.318023
+     ],
+     [
+      9.842654,
+      76.318019
+     ],
+     [
+      9.842382,
+      76.3182
+     ],
+     [
+      9.842021,
+      76.318017
+     ],
+     [
+      9.842475,
+      76.317471
+     ],
+     [
+      9.843561,
+      76.317111
+     ],
+     [
+      9.84763,
+      76.317309
+     ],
+     [
+      9.847991,
+      76.317402
+     ],
+     [
+      9.849163,
+      76.31841
+     ],
+     [
+      9.850428,
+      76.318415
+     ],
+     [
+      9.85242,
+      76.317784
+     ],
+     [
+      9.855767,
+      76.317615
+     ],
+     [
+      9.856853,
+      76.317255
+     ],
+     [
+      9.858391,
+      76.31717
+     ],
+     [
+      9.858752,
+      76.317353
+     ],
+     [
+      9.862096,
+      76.31764
+     ],
+     [
+      9.865624,
+      76.317381
+     ],
+     [
+      9.866801,
+      76.317021
+     ],
+     [
+      9.867434,
+      76.317023
+     ],
+     [
+      9.868427,
+      76.317392
+     ],
+     [
+      9.869964,
+      76.317398
+     ],
+     [
+      9.870147,
+      76.316943
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 118.41,
+    "costLakh": null,
+    "connectivityGain": 167.6116,
+    "connectivityGainAbs": 1.3640285553702339e-05,
+    "scoreAfter": null,
+    "confidence": 0.5188,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P01",
+     "P02",
+     "P08"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 3 link(s) to P01, P02, P08; recomputed IIC rises by 167.61%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C03",
+    "rank": 3,
+    "name": "C03",
+    "patchId": "P03",
+    "location": "C03",
+    "center": [
+     9.920002733896577,
+     76.32985556521335
+    ],
+    "polygon": [
+     [
+      9.924614,
+      76.33157
+     ],
+     [
+      9.924253,
+      76.331568
+     ],
+     [
+      9.923984,
+      76.330837
+     ],
+     [
+      9.92444,
+      76.330018
+     ],
+     [
+      9.923716,
+      76.330016
+     ],
+     [
+      9.923536,
+      76.329832
+     ],
+     [
+      9.923629,
+      76.329194
+     ],
+     [
+      9.923449,
+      76.329102
+     ],
+     [
+      9.923725,
+      76.327736
+     ],
+     [
+      9.923908,
+      76.32728
+     ],
+     [
+      9.924452,
+      76.327009
+     ],
+     [
+      9.924362,
+      76.326735
+     ],
+     [
+      9.923639,
+      76.326732
+     ],
+     [
+      9.923365,
+      76.327278
+     ],
+     [
+      9.922277,
+      76.328003
+     ],
+     [
+      9.922548,
+      76.328096
+     ],
+     [
+      9.922637,
+      76.328552
+     ],
+     [
+      9.922095,
+      76.328459
+     ],
+     [
+      9.921825,
+      76.328002
+     ],
+     [
+      9.921102,
+      76.327907
+     ],
+     [
+      9.9211,
+      76.328363
+     ],
+     [
+      9.921371,
+      76.328638
+     ],
+     [
+      9.920465,
+      76.32909
+     ],
+     [
+      9.920462,
+      76.329638
+     ],
+     [
+      9.920099,
+      76.330001
+     ],
+     [
+      9.919647,
+      76.33009
+     ],
+     [
+      9.919287,
+      76.329542
+     ],
+     [
+      9.919561,
+      76.328904
+     ],
+     [
+      9.919383,
+      76.328174
+     ],
+     [
+      9.919928,
+      76.327629
+     ],
+     [
+      9.920471,
+      76.32754
+     ],
+     [
+      9.920473,
+      76.326902
+     ],
+     [
+      9.920834,
+      76.327268
+     ],
+     [
+      9.921739,
+      76.326998
+     ],
+     [
+      9.922285,
+      76.326179
+     ],
+     [
+      9.922287,
+      76.325541
+     ],
+     [
+      9.92265,
+      76.32536
+     ],
+     [
+      9.922829,
+      76.325634
+     ],
+     [
+      9.923101,
+      76.325635
+     ],
+     [
+      9.923192,
+      76.325453
+     ],
+     [
+      9.923103,
+      76.324906
+     ],
+     [
+      9.922653,
+      76.324539
+     ],
+     [
+      9.922297,
+      76.323079
+     ],
+     [
+      9.921937,
+      76.322712
+     ],
+     [
+      9.921124,
+      76.322527
+     ],
+     [
+      9.920941,
+      76.322982
+     ],
+     [
+      9.920127,
+      76.32307
+     ],
+     [
+      9.919491,
+      76.323706
+     ],
+     [
+      9.918314,
+      76.324248
+     ],
+     [
+      9.918041,
+      76.324521
+     ],
+     [
+      9.918128,
+      76.325342
+     ],
+     [
+      9.917585,
+      76.325704
+     ],
+     [
+      9.917042,
+      76.325702
+     ],
+     [
+      9.91695,
+      76.326067
+     ],
+     [
+      9.91731,
+      76.326524
+     ],
+     [
+      9.917846,
+      76.328077
+     ],
+     [
+      9.917754,
+      76.328532
+     ],
+     [
+      9.915853,
+      76.329163
+     ],
+     [
+      9.915036,
+      76.329798
+     ],
+     [
+      9.915572,
+      76.331442
+     ],
+     [
+      9.916203,
+      76.331992
+     ],
+     [
+      9.916287,
+      76.333634
+     ],
+     [
+      9.915198,
+      76.334723
+     ],
+     [
+      9.913569,
+      76.335082
+     ],
+     [
+      9.913296,
+      76.335354
+     ],
+     [
+      9.913382,
+      76.33654
+     ],
+     [
+      9.914013,
+      76.33709
+     ],
+     [
+      9.915277,
+      76.337551
+     ],
+     [
+      9.916453,
+      76.337464
+     ],
+     [
+      9.918174,
+      76.336651
+     ],
+     [
+      9.919801,
+      76.336748
+     ],
+     [
+      9.920341,
+      76.33748
+     ],
+     [
+      9.920703,
+      76.337299
+     ],
+     [
+      9.920795,
+      76.336935
+     ],
+     [
+      9.921337,
+      76.337028
+     ],
+     [
+      9.921153,
+      76.33794
+     ],
+     [
+      9.92061,
+      76.337937
+     ],
+     [
+      9.920519,
+      76.338211
+     ],
+     [
+      9.92106,
+      76.338486
+     ],
+     [
+      9.921059,
+      76.338851
+     ],
+     [
+      9.921329,
+      76.339035
+     ],
+     [
+      9.920965,
+      76.339763
+     ],
+     [
+      9.921235,
+      76.340037
+     ],
+     [
+      9.921597,
+      76.339948
+     ],
+     [
+      9.921601,
+      76.338853
+     ],
+     [
+      9.921331,
+      76.338579
+     ],
+     [
+      9.921783,
+      76.338763
+     ],
+     [
+      9.921964,
+      76.33849
+     ],
+     [
+      9.921877,
+      76.33776
+     ],
+     [
+      9.92233,
+      76.337488
+     ],
+     [
+      9.922152,
+      76.336758
+     ],
+     [
+      9.922427,
+      76.335756
+     ],
+     [
+      9.923425,
+      76.335122
+     ],
+     [
+      9.922613,
+      76.334662
+     ],
+     [
+      9.922074,
+      76.333657
+     ],
+     [
+      9.921169,
+      76.333927
+     ],
+     [
+      9.920628,
+      76.33356
+     ],
+     [
+      9.920449,
+      76.333012
+     ],
+     [
+      9.919818,
+      76.332553
+     ],
+     [
+      9.919643,
+      76.331002
+     ],
+     [
+      9.920277,
+      76.330822
+     ],
+     [
+      9.920457,
+      76.331097
+     ],
+     [
+      9.92118,
+      76.331191
+     ],
+     [
+      9.921361,
+      76.331009
+     ],
+     [
+      9.921722,
+      76.331284
+     ],
+     [
+      9.92181,
+      76.331832
+     ],
+     [
+      9.922081,
+      76.331833
+     ],
+     [
+      9.922355,
+      76.331287
+     ],
+     [
+      9.922626,
+      76.331288
+     ],
+     [
+      9.923077,
+      76.331655
+     ],
+     [
+      9.923255,
+      76.332202
+     ],
+     [
+      9.923617,
+      76.332295
+     ],
+     [
+      9.923705,
+      76.332752
+     ],
+     [
+      9.924067,
+      76.332662
+     ],
+     [
+      9.923978,
+      76.332388
+     ],
+     [
+      9.923617,
+      76.332295
+     ],
+     [
+      9.923708,
+      76.332022
+     ],
+     [
+      9.924071,
+      76.33175
+     ],
+     [
+      9.924614,
+      76.331752
+     ],
+     [
+      9.924614,
+      76.33157
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 69.94,
+    "costLakh": null,
+    "connectivityGain": 65.3417,
+    "connectivityGainAbs": 5.317529133225034e-06,
+    "scoreAfter": null,
+    "confidence": 0.4978,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P03",
+     "P06",
+     "P10"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 3 link(s) to P03, P06, P10; recomputed IIC rises by 65.34%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C04",
+    "rank": 4,
+    "name": "C04",
+    "patchId": "P03",
+    "location": "C04",
+    "center": [
+     9.893957483282874,
+     76.32004526392882
+    ],
+    "polygon": [
+     [
+      9.901972,
+      76.317981
+     ],
+     [
+      9.901701,
+      76.317798
+     ],
+     [
+      9.900344,
+      76.317975
+     ],
+     [
+      9.898355,
+      76.317876
+     ],
+     [
+      9.897814,
+      76.317509
+     ],
+     [
+      9.897637,
+      76.316596
+     ],
+     [
+      9.897006,
+      76.316138
+     ],
+     [
+      9.894653,
+      76.316493
+     ],
+     [
+      9.893837,
+      76.317128
+     ],
+     [
+      9.89275,
+      76.31758
+     ],
+     [
+      9.892387,
+      76.318034
+     ],
+     [
+      9.892836,
+      76.318675
+     ],
+     [
+      9.892832,
+      76.319678
+     ],
+     [
+      9.892378,
+      76.320132
+     ],
+     [
+      9.892194,
+      76.320952
+     ],
+     [
+      9.891741,
+      76.321224
+     ],
+     [
+      9.891112,
+      76.320309
+     ],
+     [
+      9.891027,
+      76.31885
+     ],
+     [
+      9.89121,
+      76.318394
+     ],
+     [
+      9.890308,
+      76.317844
+     ],
+     [
+      9.889404,
+      76.317749
+     ],
+     [
+      9.888859,
+      76.318385
+     ],
+     [
+      9.889217,
+      76.319298
+     ],
+     [
+      9.888848,
+      76.321121
+     ],
+     [
+      9.888933,
+      76.322398
+     ],
+     [
+      9.889294,
+      76.322764
+     ],
+     [
+      9.889746,
+      76.322675
+     ],
+     [
+      9.889927,
+      76.322584
+     ],
+     [
+      9.889929,
+      76.322219
+     ],
+     [
+      9.889838,
+      76.322219
+     ],
+     [
+      9.889839,
+      76.322128
+     ],
+     [
+      9.890201,
+      76.321947
+     ],
+     [
+      9.8902,
+      76.32222
+     ],
+     [
+      9.891373,
+      76.322955
+     ],
+     [
+      9.892367,
+      76.32305
+     ],
+     [
+      9.893452,
+      76.322963
+     ],
+     [
+      9.893634,
+      76.32269
+     ],
+     [
+      9.893996,
+      76.322783
+     ],
+     [
+      9.894541,
+      76.322147
+     ],
+     [
+      9.895355,
+      76.321968
+     ],
+     [
+      9.895538,
+      76.321421
+     ],
+     [
+      9.896353,
+      76.321151
+     ],
+     [
+      9.896627,
+      76.320422
+     ],
+     [
+      9.897716,
+      76.319424
+     ],
+     [
+      9.89799,
+      76.318695
+     ],
+     [
+      9.898804,
+      76.318607
+     ],
+     [
+      9.899075,
+      76.318882
+     ],
+     [
+      9.90016,
+      76.318795
+     ],
+     [
+      9.901066,
+      76.318343
+     ],
+     [
+      9.90188,
+      76.318255
+     ],
+     [
+      9.901972,
+      76.317981
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 20.93,
+    "costLakh": null,
+    "connectivityGain": 16.4953,
+    "connectivityGainAbs": 1.3423902702496686e-06,
+    "scoreAfter": null,
+    "confidence": 0.5034,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P03",
+     "P04",
+     "P07"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 3 link(s) to P03, P04, P07; recomputed IIC rises by 16.50%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C05",
+    "rank": 5,
+    "name": "C05",
+    "patchId": "P01",
+    "location": "C05",
+    "center": [
+     9.863408068764718,
+     76.35100149056963
+    ],
+    "polygon": [
+     [
+      9.865497,
+      76.349477
+     ],
+     [
+      9.8655,
+      76.348748
+     ],
+     [
+      9.864958,
+      76.348472
+     ],
+     [
+      9.863602,
+      76.348466
+     ],
+     [
+      9.86342,
+      76.348648
+     ],
+     [
+      9.863509,
+      76.349104
+     ],
+     [
+      9.863056,
+      76.349285
+     ],
+     [
+      9.862967,
+      76.349011
+     ],
+     [
+      9.86333,
+      76.348739
+     ],
+     [
+      9.86324,
+      76.348465
+     ],
+     [
+      9.861796,
+      76.347729
+     ],
+     [
+      9.860891,
+      76.347908
+     ],
+     [
+      9.860798,
+      76.348546
+     ],
+     [
+      9.861249,
+      76.348913
+     ],
+     [
+      9.861791,
+      76.349006
+     ],
+     [
+      9.86197,
+      76.349554
+     ],
+     [
+      9.862061,
+      76.349281
+     ],
+     [
+      9.862333,
+      76.349282
+     ],
+     [
+      9.86251,
+      76.350194
+     ],
+     [
+      9.86269,
+      76.350286
+     ],
+     [
+      9.862506,
+      76.351197
+     ],
+     [
+      9.861783,
+      76.351012
+     ],
+     [
+      9.861601,
+      76.351467
+     ],
+     [
+      9.861961,
+      76.351742
+     ],
+     [
+      9.862595,
+      76.351471
+     ],
+     [
+      9.863948,
+      76.352389
+     ],
+     [
+      9.863856,
+      76.352844
+     ],
+     [
+      9.863402,
+      76.353298
+     ],
+     [
+      9.862769,
+      76.353296
+     ],
+     [
+      9.862764,
+      76.354481
+     ],
+     [
+      9.862401,
+      76.354753
+     ],
+     [
+      9.862399,
+      76.355209
+     ],
+     [
+      9.863484,
+      76.355213
+     ],
+     [
+      9.86421,
+      76.35476
+     ],
+     [
+      9.864575,
+      76.353759
+     ],
+     [
+      9.86458,
+      76.352574
+     ],
+     [
+      9.864762,
+      76.352301
+     ],
+     [
+      9.864767,
+      76.351024
+     ],
+     [
+      9.864409,
+      76.350111
+     ],
+     [
+      9.865135,
+      76.349476
+     ],
+     [
+      9.865497,
+      76.349477
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 17.97,
+    "costLakh": null,
+    "connectivityGain": 16.453,
+    "connectivityGainAbs": 1.3389541036775064e-06,
+    "scoreAfter": null,
+    "confidence": 0.4555,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P01",
+     "P02",
+     "P05"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 3 link(s) to P01, P02, P05; recomputed IIC rises by 16.45%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C09",
+    "rank": 6,
+    "name": "C09",
+    "patchId": "P05",
+    "location": "C09",
+    "center": [
+     9.836167527463612,
+     76.35322221549704
+    ],
+    "polygon": [
+     [
+      9.838183,
+      76.350916
+     ],
+     [
+      9.837098,
+      76.350912
+     ],
+     [
+      9.836644,
+      76.351548
+     ],
+     [
+      9.836191,
+      76.351637
+     ],
+     [
+      9.835374,
+      76.352455
+     ],
+     [
+      9.835008,
+      76.353638
+     ],
+     [
+      9.834371,
+      76.354639
+     ],
+     [
+      9.834458,
+      76.355368
+     ],
+     [
+      9.834005,
+      76.35564
+     ],
+     [
+      9.834094,
+      76.355914
+     ],
+     [
+      9.834638,
+      76.355734
+     ],
+     [
+      9.835092,
+      76.355097
+     ],
+     [
+      9.835635,
+      76.355009
+     ],
+     [
+      9.835999,
+      76.354554
+     ],
+     [
+      9.837266,
+      76.354195
+     ],
+     [
+      9.837267,
+      76.35383
+     ],
+     [
+      9.836364,
+      76.353644
+     ],
+     [
+      9.836365,
+      76.353462
+     ],
+     [
+      9.836908,
+      76.353281
+     ],
+     [
+      9.837182,
+      76.352644
+     ],
+     [
+      9.837725,
+      76.352373
+     ],
+     [
+      9.838183,
+      76.350916
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 8.38,
+    "costLakh": null,
+    "connectivityGain": 6.7342,
+    "connectivityGainAbs": 5.480284632130103e-07,
+    "scoreAfter": null,
+    "confidence": 0.5005,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P05",
+     "P11",
+     "P12"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 2,
+    "rationale": "Adds 3 link(s) to P05, P11, P12; recomputed IIC rises by 6.73%, components 3 -> 2.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C06",
+    "rank": 7,
+    "name": "C06",
+    "patchId": "P03",
+    "location": "C06",
+    "center": [
+     9.91138687502389,
+     76.33217136390118
+    ],
+    "polygon": [
+     [
+      9.913764,
+      76.331526
+     ],
+     [
+      9.912685,
+      76.329971
+     ],
+     [
+      9.91169,
+      76.330058
+     ],
+     [
+      9.911418,
+      76.33024
+     ],
+     [
+      9.911417,
+      76.330513
+     ],
+     [
+      9.911777,
+      76.330971
+     ],
+     [
+      9.910871,
+      76.331423
+     ],
+     [
+      9.910958,
+      76.332153
+     ],
+     [
+      9.910051,
+      76.332788
+     ],
+     [
+      9.908874,
+      76.333148
+     ],
+     [
+      9.907967,
+      76.333965
+     ],
+     [
+      9.907966,
+      76.334238
+     ],
+     [
+      9.90905,
+      76.334516
+     ],
+     [
+      9.909321,
+      76.334426
+     ],
+     [
+      9.909959,
+      76.333334
+     ],
+     [
+      9.910953,
+      76.333521
+     ],
+     [
+      9.912038,
+      76.333343
+     ],
+     [
+      9.913762,
+      76.331982
+     ],
+     [
+      9.913764,
+      76.331526
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 10.33,
+    "costLakh": null,
+    "connectivityGain": 6.4902,
+    "connectivityGainAbs": 5.281753138064516e-07,
+    "scoreAfter": null,
+    "confidence": 0.5107,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P03",
+     "P06",
+     "P10"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 3 link(s) to P03, P06, P10; recomputed IIC rises by 6.49%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C12",
+    "rank": 8,
+    "name": "C12",
+    "patchId": "P04",
+    "location": "C12",
+    "center": [
+     9.888587642493452,
+     76.27855687021331
+    ],
+    "polygon": [
+     [
+      9.890642,
+      76.278085
+     ],
+     [
+      9.890372,
+      76.277811
+     ],
+     [
+      9.889648,
+      76.277808
+     ],
+     [
+      9.889559,
+      76.277534
+     ],
+     [
+      9.888836,
+      76.27744
+     ],
+     [
+      9.888653,
+      76.277895
+     ],
+     [
+      9.887477,
+      76.277982
+     ],
+     [
+      9.886931,
+      76.278983
+     ],
+     [
+      9.88729,
+      76.279623
+     ],
+     [
+      9.888555,
+      76.279992
+     ],
+     [
+      9.888556,
+      76.279628
+     ],
+     [
+      9.888196,
+      76.27917
+     ],
+     [
+      9.888378,
+      76.278897
+     ],
+     [
+      9.889374,
+      76.278536
+     ],
+     [
+      9.89055,
+      76.278541
+     ],
+     [
+      9.890642,
+      76.278085
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 4.92,
+    "costLakh": null,
+    "connectivityGain": 3.2671,
+    "connectivityGainAbs": 2.6587540500909534e-07,
+    "scoreAfter": null,
+    "confidence": 0.4529,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 2,
+    "linkedPatchIds": [
+     "P04",
+     "P07"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 2 link(s) to P04, P07; recomputed IIC rises by 3.27%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C07",
+    "rank": 9,
+    "name": "C07",
+    "patchId": "P12",
+    "location": "C07",
+    "center": [
+     9.817763692253546,
+     76.36504117132671
+    ],
+    "polygon": [
+     [
+      9.819868,
+      76.363332
+     ],
+     [
+      9.819599,
+      76.362693
+     ],
+     [
+      9.819419,
+      76.362692
+     ],
+     [
+      9.819235,
+      76.363329
+     ],
+     [
+      9.818422,
+      76.363235
+     ],
+     [
+      9.818331,
+      76.363417
+     ],
+     [
+      9.817879,
+      76.363415
+     ],
+     [
+      9.817605,
+      76.363961
+     ],
+     [
+      9.817061,
+      76.364232
+     ],
+     [
+      9.817059,
+      76.36487
+     ],
+     [
+      9.816788,
+      76.364869
+     ],
+     [
+      9.816965,
+      76.365599
+     ],
+     [
+      9.816424,
+      76.365415
+     ],
+     [
+      9.815699,
+      76.365777
+     ],
+     [
+      9.815603,
+      76.367144
+     ],
+     [
+      9.816144,
+      76.367419
+     ],
+     [
+      9.8166,
+      76.36651
+     ],
+     [
+      9.817867,
+      76.366332
+     ],
+     [
+      9.818775,
+      76.365242
+     ],
+     [
+      9.819137,
+      76.365244
+     ],
+     [
+      9.819319,
+      76.364971
+     ],
+     [
+      9.81977,
+      76.365155
+     ],
+     [
+      9.819771,
+      76.364882
+     ],
+     [
+      9.81914,
+      76.364605
+     ],
+     [
+      9.81896,
+      76.36424
+     ],
+     [
+      9.819685,
+      76.363969
+     ],
+     [
+      9.819868,
+      76.363332
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 9.52,
+    "costLakh": null,
+    "connectivityGain": 0.5859,
+    "connectivityGainAbs": 4.767931639836671e-08,
+    "scoreAfter": null,
+    "confidence": 0.3963,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P12"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P12; recomputed IIC rises by 0.59%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C08",
+    "rank": 10,
+    "name": "C08",
+    "patchId": "P12",
+    "location": "C08",
+    "center": [
+     9.832996575365291,
+     76.38624717592425
+    ],
+    "polygon": [
+     [
+      9.835957,
+      76.387194
+     ],
+     [
+      9.834058,
+      76.387187
+     ],
+     [
+      9.833787,
+      76.387003
+     ],
+     [
+      9.833881,
+      76.386274
+     ],
+     [
+      9.833523,
+      76.385361
+     ],
+     [
+      9.833706,
+      76.384723
+     ],
+     [
+      9.833619,
+      76.383902
+     ],
+     [
+      9.833076,
+      76.383991
+     ],
+     [
+      9.832713,
+      76.384355
+     ],
+     [
+      9.831718,
+      76.384533
+     ],
+     [
+      9.831717,
+      76.384806
+     ],
+     [
+      9.831355,
+      76.384805
+     ],
+     [
+      9.831082,
+      76.385168
+     ],
+     [
+      9.830804,
+      76.386899
+     ],
+     [
+      9.83234,
+      76.387088
+     ],
+     [
+      9.832882,
+      76.387364
+     ],
+     [
+      9.832971,
+      76.387729
+     ],
+     [
+      9.833331,
+      76.388004
+     ],
+     [
+      9.83523,
+      76.387921
+     ],
+     [
+      9.835957,
+      76.387194
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 9.11,
+    "costLakh": null,
+    "connectivityGain": 0.5415,
+    "connectivityGainAbs": 4.4065715374382174e-08,
+    "scoreAfter": null,
+    "confidence": 0.4857,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P12"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P12; recomputed IIC rises by 0.54%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C10",
+    "rank": 11,
+    "name": "C10",
+    "patchId": "P09",
+    "location": "C10",
+    "center": [
+     9.938160629205782,
+     76.47137295841347
+    ],
+    "polygon": [
+     [
+      9.941384,
+      76.472636
+     ],
+     [
+      9.941297,
+      76.471998
+     ],
+     [
+      9.940847,
+      76.471448
+     ],
+     [
+      9.940035,
+      76.471171
+     ],
+     [
+      9.939405,
+      76.470348
+     ],
+     [
+      9.938684,
+      76.469979
+     ],
+     [
+      9.938141,
+      76.469977
+     ],
+     [
+      9.937777,
+      76.470523
+     ],
+     [
+      9.937053,
+      76.470702
+     ],
+     [
+      9.936418,
+      76.471155
+     ],
+     [
+      9.935423,
+      76.471242
+     ],
+     [
+      9.934969,
+      76.471604
+     ],
+     [
+      9.935329,
+      76.471971
+     ],
+     [
+      9.936053,
+      76.471974
+     ],
+     [
+      9.936684,
+      76.472251
+     ],
+     [
+      9.937044,
+      76.472708
+     ],
+     [
+      9.937587,
+      76.472711
+     ],
+     [
+      9.937499,
+      76.472163
+     ],
+     [
+      9.93768,
+      76.471981
+     ],
+     [
+      9.938766,
+      76.471804
+     ],
+     [
+      9.939485,
+      76.472719
+     ],
+     [
+      9.939847,
+      76.472721
+     ],
+     [
+      9.939848,
+      76.472447
+     ],
+     [
+      9.938677,
+      76.471439
+     ],
+     [
+      9.937319,
+      76.47198
+     ],
+     [
+      9.936414,
+      76.471976
+     ],
+     [
+      9.935511,
+      76.471698
+     ],
+     [
+      9.935512,
+      76.471516
+     ],
+     [
+      9.937503,
+      76.471069
+     ],
+     [
+      9.938407,
+      76.471164
+     ],
+     [
+      9.938408,
+      76.470981
+     ],
+     [
+      9.939404,
+      76.470712
+     ],
+     [
+      9.939492,
+      76.471169
+     ],
+     [
+      9.940845,
+      76.471904
+     ],
+     [
+      9.941022,
+      76.472726
+     ],
+     [
+      9.941384,
+      76.472636
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 6.05,
+    "costLakh": null,
+    "connectivityGain": 0.3419,
+    "connectivityGainAbs": 2.7823808924746463e-08,
+    "scoreAfter": null,
+    "confidence": 0.497,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P09"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P09; recomputed IIC rises by 0.34%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C11",
+    "rank": 12,
+    "name": "C11",
+    "patchId": "P12",
+    "location": "C11",
+    "center": [
+     9.818567465924163,
+     76.36823167317051
+    ],
+    "polygon": [
+     [
+      9.81976,
+      76.367708
+     ],
+     [
+      9.819402,
+      76.366886
+     ],
+     [
+      9.818678,
+      76.367065
+     ],
+     [
+      9.817861,
+      76.3677
+     ],
+     [
+      9.817587,
+      76.368428
+     ],
+     [
+      9.817135,
+      76.368517
+     ],
+     [
+      9.816952,
+      76.369064
+     ],
+     [
+      9.817493,
+      76.369339
+     ],
+     [
+      9.818216,
+      76.369342
+     ],
+     [
+      9.818579,
+      76.368979
+     ],
+     [
+      9.819665,
+      76.368893
+     ],
+     [
+      9.81976,
+      76.367708
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 5.06,
+    "costLakh": null,
+    "connectivityGain": 0.1956,
+    "connectivityGainAbs": 1.5915466824133534e-08,
+    "scoreAfter": null,
+    "confidence": 0.4548,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P12"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P12; recomputed IIC rises by 0.20%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   }
+  ],
+  "rankingBasis": "raw_gain"
+ },
+ "criticality": [
+  {
+   "rank": 1,
+   "patch_id": "P01",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 76.19000000000207,
+   "area_pct": 37.242154658324395,
+   "degree": 4,
+   "confidence": 0.8581368685597932,
+   "quality": 0.8581368685597932,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 2.9419562647438674e-06,
+   "delta_connectivity": 5.196077200241922e-06,
+   "criticality_score": 0.6384929753113266,
+   "delta_pct": 63.84929753113267,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 1,
+   "neighbour_ids": [
+    "P02",
+    "P08",
+    "P05",
+    "P11"
+   ],
+   "neighbour_distances_km": [
+    0.539,
+    0.924,
+    1.411,
+    1.921
+   ]
+  },
+  {
+   "rank": 2,
+   "patch_id": "P02",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 31.070000000002057,
+   "area_pct": 15.187212826278829,
+   "degree": 4,
+   "confidence": 0.8623033295423608,
+   "quality": 0.8623033295423608,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 4.52661756895919e-06,
+   "delta_connectivity": 3.6114158960266e-06,
+   "criticality_score": 0.44377009649381016,
+   "delta_pct": 44.377009649381016,
+   "component_count_before": 3,
+   "component_count_after": 4,
+   "is_cut_vertex": true,
+   "rank_by_area": 2,
+   "neighbour_ids": [
+    "P01",
+    "P08",
+    "P05",
+    "P07"
+   ],
+   "neighbour_distances_km": [
+    0.539,
+    1.308,
+    1.558,
+    3.747
+   ]
+  },
+  {
+   "rank": 3,
+   "patch_id": "P07",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 5.489999999999927,
+   "area_pct": 2.683546778766146,
+   "degree": 3,
+   "confidence": 0.8295956953192887,
+   "quality": 0.8295956953192887,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 6.05709415736556e-06,
+   "delta_connectivity": 2.08093930762023e-06,
+   "criticality_score": 0.25570542522017803,
+   "delta_pct": 25.5705425220178,
+   "component_count_before": 3,
+   "component_count_after": 4,
+   "is_cut_vertex": true,
+   "rank_by_area": 7,
+   "neighbour_ids": [
+    "P04",
+    "P03",
+    "P02"
+   ],
+   "neighbour_distances_km": [
+    0.539,
+    3.497,
+    3.747
+   ]
+  },
+  {
+   "rank": 4,
+   "patch_id": "P03",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 24.49000000000103,
+   "area_pct": 11.97086714243835,
+   "degree": 4,
+   "confidence": 0.8900797790826803,
+   "quality": 0.8900797790826803,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 6.73740071255017e-06,
+   "delta_connectivity": 1.4006327524356197e-06,
+   "criticality_score": 0.172109485474826,
+   "delta_pct": 17.2109485474826,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 3,
+   "neighbour_ids": [
+    "P10",
+    "P06",
+    "P04",
+    "P07"
+   ],
+   "neighbour_distances_km": [
+    1.011,
+    1.27,
+    3.069,
+    3.497
+   ]
+  },
+  {
+   "rank": 5,
+   "patch_id": "P04",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 24.12000000000097,
+   "area_pct": 11.79000879851419,
+   "degree": 4,
+   "confidence": 0.8738312842586938,
+   "quality": 0.8738312842586938,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 6.758561762709468e-06,
+   "delta_connectivity": 1.3794717022763218e-06,
+   "criticality_score": 0.16950921966732543,
+   "delta_pct": 16.950921966732544,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 4,
+   "neighbour_ids": [
+    "P07",
+    "P03",
+    "P06",
+    "P10"
+   ],
+   "neighbour_distances_km": [
+    0.539,
+    3.069,
+    3.657,
+    3.782
+   ]
+  },
+  {
+   "rank": 6,
+   "patch_id": "P05",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 14.29999999999974,
+   "area_pct": 6.989930589500126,
+   "degree": 4,
+   "confidence": 0.8334653599278911,
+   "quality": 0.8334653599278911,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 7.162788630185215e-06,
+   "delta_connectivity": 9.75244834800575e-07,
+   "criticality_score": 0.11983789929060927,
+   "delta_pct": 11.983789929060928,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 5,
+   "neighbour_ids": [
+    "P11",
+    "P08",
+    "P01",
+    "P02"
+   ],
+   "neighbour_distances_km": [
+    0.547,
+    0.753,
+    1.411,
+    1.558
+   ]
+  },
+  {
+   "rank": 7,
+   "patch_id": "P06",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 8.839999999999856,
+   "area_pct": 4.3210480007819045,
+   "degree": 3,
+   "confidence": 0.8029472008684642,
+   "quality": 0.8029472008684642,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 7.69449813434744e-06,
+   "delta_connectivity": 4.4353533063834956e-07,
+   "criticality_score": 0.05450153683278372,
+   "delta_pct": 5.450153683278372,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 6,
+   "neighbour_ids": [
+    "P10",
+    "P03",
+    "P04"
+   ],
+   "neighbour_distances_km": [
+    0.489,
+    1.27,
+    3.657
+   ]
+  },
+  {
+   "rank": 8,
+   "patch_id": "P08",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 5.179999999999934,
+   "area_pct": 2.532016814937822,
+   "degree": 4,
+   "confidence": 0.7961848467933625,
+   "quality": 0.7961848467933625,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 7.784762958393687e-06,
+   "delta_connectivity": 3.5327050659210316e-07,
+   "criticality_score": 0.043409812470305446,
+   "delta_pct": 4.340981247030545,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 8,
+   "neighbour_ids": [
+    "P05",
+    "P01",
+    "P11",
+    "P02"
+   ],
+   "neighbour_distances_km": [
+    0.753,
+    0.924,
+    1.123,
+    1.308
+   ]
+  },
+  {
+   "rank": 9,
+   "patch_id": "P11",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 3.3999999999999715,
+   "area_pct": 1.6619415387622842,
+   "degree": 3,
+   "confidence": 0.7808139034930397,
+   "quality": 0.7808139034930397,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 7.930291185932344e-06,
+   "delta_connectivity": 2.0774227905344554e-07,
+   "criticality_score": 0.02552733162713878,
+   "delta_pct": 2.552733162713878,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 11,
+   "neighbour_ids": [
+    "P05",
+    "P08",
+    "P01"
+   ],
+   "neighbour_distances_km": [
+    0.547,
+    1.123,
+    1.921
+   ]
+  },
+  {
+   "rank": 10,
+   "patch_id": "P10",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 4.069999999999958,
+   "area_pct": 1.9894417831654363,
+   "degree": 3,
+   "confidence": 0.743201694998167,
+   "quality": 0.743201694998167,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 7.933826587644375e-06,
+   "delta_connectivity": 2.0420687734141436e-07,
+   "criticality_score": 0.025092902139076046,
+   "delta_pct": 2.5092902139076045,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 10,
+   "neighbour_ids": [
+    "P06",
+    "P03",
+    "P04"
+   ],
+   "neighbour_distances_km": [
+    0.489,
+    1.011,
+    3.782
+   ]
+  },
+  {
+   "rank": 11,
+   "patch_id": "P09",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 4.959999999999939,
+   "area_pct": 2.424479421253205,
+   "degree": 0,
+   "confidence": 0.824311651649975,
+   "quality": 0.824311651649975,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 8.12775715392908e-06,
+   "delta_connectivity": 1.0276311056710413e-08,
+   "criticality_score": 0.001262751142634722,
+   "delta_pct": 0.1262751142634722,
+   "component_count_before": 3,
+   "component_count_after": 2,
+   "is_cut_vertex": false,
+   "rank_by_area": 9,
+   "neighbour_ids": [],
+   "neighbour_distances_km": []
+  },
+  {
+   "rank": 12,
+   "patch_id": "P12",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 2.4699999999999913,
+   "area_pct": 1.2073516472773123,
+   "degree": 0,
+   "confidence": 0.7685552883727348,
+   "quality": 0.7685552883727348,
+   "c_before": 8.13803346498579e-06,
+   "c_after": 8.135485063819771e-06,
+   "delta_connectivity": 2.5484011660185664e-09,
+   "criticality_score": 0.0003131470492205719,
+   "delta_pct": 0.031314704922057186,
+   "component_count_before": 3,
+   "component_count_after": 2,
+   "is_cut_vertex": false,
+   "rank_by_area": 12,
+   "neighbour_ids": [],
+   "neighbour_distances_km": []
+  }
+ ],
+ "explanations": {
+  "P01": {
+   "patch_id": "P01",
+   "text": "P01 ranks #1 of 12 by criticality (S = 0.638): removing it lowers IIC by 63.8%. It holds 76.2 ha, 37.2% of mapped habitat (#1 by area). It maintains 4 links to P02 (0.5 km), P08 (0.9 km), P05 (1.4 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 86%.",
+   "evidence": {
+    "area_ha": 76.19000000000207,
+    "area_pct": 37.242154658324395,
+    "rank_by_area": 1,
+    "degree": 4,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P02",
+      "distance_km": 0.5389672313522736,
+      "weight": 0.7723145435984632
+     },
+     {
+      "id": "P08",
+      "distance_km": 0.9235639570326059,
+      "weight": 0.6871720526782529
+     },
+     {
+      "id": "P05",
+      "distance_km": 1.4105366602703497,
+      "weight": 0.6378292041033444
+     },
+     {
+      "id": "P11",
+      "distance_km": 1.921051230885683,
+      "weight": 0.5574316964627956
+     }
+    ],
+    "confidence": 0.8581368685597932,
+    "quality": 0.8581368685597932,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 2.9419562647438674e-06,
+    "delta_connectivity": 5.196077200241922e-06,
+    "criticality_score": 0.6384929753113266,
+    "delta_pct": 63.84929753113267,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "critical"
+  },
+  "P02": {
+   "patch_id": "P02",
+   "text": "P02 ranks #2 of 12 by criticality (S = 0.444): removing it lowers IIC by 44.4%. It holds 31.1 ha, 15.2% of mapped habitat (#2 by area). It maintains 4 links to P01 (0.5 km), P08 (1.3 km), P05 (1.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 86%.",
+   "evidence": {
+    "area_ha": 31.070000000002057,
+    "area_pct": 15.187212826278829,
+    "rank_by_area": 2,
+    "degree": 4,
+    "is_cut_vertex": true,
+    "neighbours": [
+     {
+      "id": "P01",
+      "distance_km": 0.5389672313522736,
+      "weight": 0.7723145435984632
+     },
+     {
+      "id": "P08",
+      "distance_km": 1.3080398621029266,
+      "weight": 0.6378551796343152
+     },
+     {
+      "id": "P05",
+      "distance_km": 1.558416507198315,
+      "weight": 0.6207424855817824
+     },
+     {
+      "id": "P07",
+      "distance_km": 3.7468754714034445,
+      "weight": 0.39977332114274755
+     }
+    ],
+    "confidence": 0.8623033295423608,
+    "quality": 0.8623033295423608,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 4.52661756895919e-06,
+    "delta_connectivity": 3.6114158960266e-06,
+    "criticality_score": 0.44377009649381016,
+    "delta_pct": 44.377009649381016,
+    "components_before": 3,
+    "components_after": 4,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "critical"
+  },
+  "P07": {
+   "patch_id": "P07",
+   "text": "P07 ranks #3 of 12 by criticality (S = 0.256): removing it lowers IIC by 25.6%. It holds 5.5 ha, 2.7% of mapped habitat (#7 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P04 (0.5 km), P03 (3.5 km), P02 (3.7 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 83%.",
+   "evidence": {
+    "area_ha": 5.489999999999927,
+    "area_pct": 2.683546778766146,
+    "rank_by_area": 7,
+    "degree": 3,
+    "is_cut_vertex": true,
+    "neighbours": [
+     {
+      "id": "P04",
+      "distance_km": 0.5393619874168017,
+      "weight": 0.7643612331970254
+     },
+     {
+      "id": "P03",
+      "distance_km": 3.497304590215192,
+      "weight": 0.42694869980541156
+     },
+     {
+      "id": "P02",
+      "distance_km": 3.7468754714034445,
+      "weight": 0.39977332114274755
+     }
+    ],
+    "confidence": 0.8295956953192887,
+    "quality": 0.8295956953192887,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 6.05709415736556e-06,
+    "delta_connectivity": 2.08093930762023e-06,
+    "criticality_score": 0.25570542522017803,
+    "delta_pct": 25.5705425220178,
+    "components_before": 3,
+    "components_after": 4,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "critical"
+  },
+  "P03": {
+   "patch_id": "P03",
+   "text": "P03 ranks #4 of 12 by criticality (S = 0.172): removing it lowers IIC by 17.2%. It holds 24.5 ha, 12.0% of mapped habitat (#3 by area). It maintains 4 links to P10 (1.0 km), P06 (1.3 km), P04 (3.1 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 89%.",
+   "evidence": {
+    "area_ha": 24.49000000000103,
+    "area_pct": 11.97086714243835,
+    "rank_by_area": 3,
+    "degree": 4,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P10",
+      "distance_km": 1.0107200803387897,
+      "weight": 0.6644736789646758
+     },
+     {
+      "id": "P06",
+      "distance_km": 1.2700739282527436,
+      "weight": 0.6557536882022585
+     },
+     {
+      "id": "P04",
+      "distance_km": 3.069124826236715,
+      "weight": 0.4773615847473203
+     },
+     {
+      "id": "P07",
+      "distance_km": 3.497304590215192,
+      "weight": 0.42694869980541156
+     }
+    ],
+    "confidence": 0.8900797790826803,
+    "quality": 0.8900797790826803,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 6.73740071255017e-06,
+    "delta_connectivity": 1.4006327524356197e-06,
+    "criticality_score": 0.172109485474826,
+    "delta_pct": 17.2109485474826,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "high"
+  },
+  "P04": {
+   "patch_id": "P04",
+   "text": "P04 ranks #5 of 12 by criticality (S = 0.170): removing it lowers IIC by 17.0%. It holds 24.1 ha, 11.8% of mapped habitat (#4 by area). It maintains 4 links to P07 (0.5 km), P03 (3.1 km), P06 (3.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 87%.",
+   "evidence": {
+    "area_ha": 24.12000000000097,
+    "area_pct": 11.79000879851419,
+    "rank_by_area": 4,
+    "degree": 4,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P07",
+      "distance_km": 0.5393619874168017,
+      "weight": 0.7643612331970254
+     },
+     {
+      "id": "P03",
+      "distance_km": 3.069124826236715,
+      "weight": 0.4773615847473203
+     },
+     {
+      "id": "P06",
+      "distance_km": 3.656837027969452,
+      "weight": 0.4031145373427663
+     },
+     {
+      "id": "P10",
+      "distance_km": 3.782446020575243,
+      "weight": 0.3782056855062158
+     }
+    ],
+    "confidence": 0.8738312842586938,
+    "quality": 0.8738312842586938,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 6.758561762709468e-06,
+    "delta_connectivity": 1.3794717022763218e-06,
+    "criticality_score": 0.16950921966732543,
+    "delta_pct": 16.950921966732544,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "high"
+  },
+  "P05": {
+   "patch_id": "P05",
+   "text": "P05 ranks #6 of 12 by criticality (S = 0.120): removing it lowers IIC by 12.0%. It holds 14.3 ha, 7.0% of mapped habitat (#5 by area). It maintains 4 links to P11 (0.5 km), P08 (0.8 km), P01 (1.4 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 83%.",
+   "evidence": {
+    "area_ha": 14.29999999999974,
+    "area_pct": 6.989930589500126,
+    "rank_by_area": 5,
+    "degree": 4,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P11",
+      "distance_km": 0.5467715869579467,
+      "weight": 0.7231453029383694
+     },
+     {
+      "id": "P08",
+      "distance_km": 0.7530312095130817,
+      "weight": 0.7007179961233932
+     },
+     {
+      "id": "P01",
+      "distance_km": 1.4105366602703497,
+      "weight": 0.6378292041033444
+     },
+     {
+      "id": "P02",
+      "distance_km": 1.558416507198315,
+      "weight": 0.6207424855817824
+     }
+    ],
+    "confidence": 0.8334653599278911,
+    "quality": 0.8334653599278911,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 7.162788630185215e-06,
+    "delta_connectivity": 9.75244834800575e-07,
+    "criticality_score": 0.11983789929060927,
+    "delta_pct": 11.983789929060928,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "high"
+  },
+  "P06": {
+   "patch_id": "P06",
+   "text": "P06 ranks #7 of 12 by criticality (S = 0.055): removing it lowers IIC by 5.5%. It holds 8.8 ha, 4.3% of mapped habitat (#6 by area). It maintains 3 links to P10 (0.5 km), P03 (1.3 km), P04 (3.7 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 80%.",
+   "evidence": {
+    "area_ha": 8.839999999999856,
+    "area_pct": 4.3210480007819045,
+    "rank_by_area": 6,
+    "degree": 3,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P10",
+      "distance_km": 0.4889229479984953,
+      "weight": 0.7005345063804364
+     },
+     {
+      "id": "P03",
+      "distance_km": 1.2700739282527436,
+      "weight": 0.6557536882022585
+     },
+     {
+      "id": "P04",
+      "distance_km": 3.656837027969452,
+      "weight": 0.4031145373427663
+     }
+    ],
+    "confidence": 0.8029472008684642,
+    "quality": 0.8029472008684642,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 7.69449813434744e-06,
+    "delta_connectivity": 4.4353533063834956e-07,
+    "criticality_score": 0.05450153683278372,
+    "delta_pct": 5.450153683278372,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "medium"
+  },
+  "P08": {
+   "patch_id": "P08",
+   "text": "P08 ranks #8 of 12 by criticality (S = 0.043): removing it lowers IIC by 4.3%. It holds 5.2 ha, 2.5% of mapped habitat (#8 by area). It maintains 4 links to P05 (0.8 km), P01 (0.9 km), P11 (1.1 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 80%.",
+   "evidence": {
+    "area_ha": 5.179999999999934,
+    "area_pct": 2.532016814937822,
+    "rank_by_area": 8,
+    "degree": 4,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P05",
+      "distance_km": 0.7530312095130817,
+      "weight": 0.7007179961233932
+     },
+     {
+      "id": "P01",
+      "distance_km": 0.9235639570326059,
+      "weight": 0.6871720526782529
+     },
+     {
+      "id": "P11",
+      "distance_km": 1.1229537732281125,
+      "weight": 0.6298573438593456
+     },
+     {
+      "id": "P02",
+      "distance_km": 1.3080398621029266,
+      "weight": 0.6378551796343152
+     }
+    ],
+    "confidence": 0.7961848467933625,
+    "quality": 0.7961848467933625,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 7.784762958393687e-06,
+    "delta_connectivity": 3.5327050659210316e-07,
+    "criticality_score": 0.043409812470305446,
+    "delta_pct": 4.340981247030545,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "medium"
+  },
+  "P11": {
+   "patch_id": "P11",
+   "text": "P11 ranks #9 of 12 by criticality (S = 0.026): removing it lowers IIC by 2.6%. It holds 3.4 ha, 1.7% of mapped habitat (#11 by area). Its structural importance exceeds what its size alone would suggest. It maintains 3 links to P05 (0.5 km), P08 (1.1 km), P01 (1.9 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 78%.",
+   "evidence": {
+    "area_ha": 3.3999999999999715,
+    "area_pct": 1.6619415387622842,
+    "rank_by_area": 11,
+    "degree": 3,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P05",
+      "distance_km": 0.5467715869579467,
+      "weight": 0.7231453029383694
+     },
+     {
+      "id": "P08",
+      "distance_km": 1.1229537732281125,
+      "weight": 0.6298573438593456
+     },
+     {
+      "id": "P01",
+      "distance_km": 1.921051230885683,
+      "weight": 0.5574316964627956
+     }
+    ],
+    "confidence": 0.7808139034930397,
+    "quality": 0.7808139034930397,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 7.930291185932344e-06,
+    "delta_connectivity": 2.0774227905344554e-07,
+    "criticality_score": 0.02552733162713878,
+    "delta_pct": 2.552733162713878,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "low"
+  },
+  "P10": {
+   "patch_id": "P10",
+   "text": "P10 ranks #10 of 12 by criticality (S = 0.025): removing it lowers IIC by 2.5%. It holds 4.1 ha, 2.0% of mapped habitat (#10 by area). It maintains 3 links to P06 (0.5 km), P03 (1.0 km), P04 (3.8 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 74%.",
+   "evidence": {
+    "area_ha": 4.069999999999958,
+    "area_pct": 1.9894417831654363,
+    "rank_by_area": 10,
+    "degree": 3,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P06",
+      "distance_km": 0.4889229479984953,
+      "weight": 0.7005345063804364
+     },
+     {
+      "id": "P03",
+      "distance_km": 1.0107200803387897,
+      "weight": 0.6644736789646758
+     },
+     {
+      "id": "P04",
+      "distance_km": 3.782446020575243,
+      "weight": 0.3782056855062158
+     }
+    ],
+    "confidence": 0.743201694998167,
+    "quality": 0.743201694998167,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 7.933826587644375e-06,
+    "delta_connectivity": 2.0420687734141436e-07,
+    "criticality_score": 0.025092902139076046,
+    "delta_pct": 2.5092902139076045,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "low"
+  },
+  "P09": {
+   "patch_id": "P09",
+   "text": "P09 ranks #11 of 12 by criticality (S = 0.001): removing it lowers IIC by 0.1%. It holds 5.0 ha, 2.4% of mapped habitat (#9 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 82%.",
+   "evidence": {
+    "area_ha": 4.959999999999939,
+    "area_pct": 2.424479421253205,
+    "rank_by_area": 9,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "neighbours": [],
+    "confidence": 0.824311651649975,
+    "quality": 0.824311651649975,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 8.12775715392908e-06,
+    "delta_connectivity": 1.0276311056710413e-08,
+    "criticality_score": 0.001262751142634722,
+    "delta_pct": 0.1262751142634722,
+    "components_before": 3,
+    "components_after": 2,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "low"
+  },
+  "P12": {
+   "patch_id": "P12",
+   "text": "P12 ranks #12 of 12 by criticality (S = 0.000): removing it lowers IIC by 0.0%. It holds 2.5 ha, 1.2% of mapped habitat (#12 by area). It is isolated (degree 0), so its loss removes only its own area. Segmentation confidence for this patch is 77%.",
+   "evidence": {
+    "area_ha": 2.4699999999999913,
+    "area_pct": 1.2073516472773123,
+    "rank_by_area": 12,
+    "degree": 0,
+    "is_cut_vertex": false,
+    "neighbours": [],
+    "confidence": 0.7685552883727348,
+    "quality": 0.7685552883727348,
+    "c_before": 8.13803346498579e-06,
+    "c_after": 8.135485063819771e-06,
+    "delta_connectivity": 2.5484011660185664e-09,
+    "criticality_score": 0.0003131470492205719,
+    "delta_pct": 0.031314704922057186,
+    "components_before": 3,
+    "components_after": 2,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "low"
+  }
+ },
+ "whatIfExample": {
+  "removed_patch_ids": [
+   "P01"
+  ],
+  "metric": "iic",
+  "c_before": 8.13803346498579e-06,
+  "c_after": 2.9419562647438674e-06,
+  "delta_connectivity": 5.196077200241922e-06,
+  "loss_fraction": 0.6384929753113266,
+  "loss_pct": 63.84929753113267,
+  "habitat_area_before_ha": 204.58000000000544,
+  "habitat_area_removed_ha": 76.19000000000207,
+  "habitat_area_removed_pct": 37.242154658324395,
+  "components_before": 3,
+  "components_after": 3,
+  "edges_before": 18,
+  "edges_after": 14,
+  "severed_edges": [
+   {
+    "source": "P01",
+    "target": "P02",
+    "distance_km": 0.5389672313522736,
+    "weight": 0.7723145435984632
+   },
+   {
+    "source": "P01",
+    "target": "P08",
+    "distance_km": 0.9235639570326059,
+    "weight": 0.6871720526782529
+   },
+   {
+    "source": "P01",
+    "target": "P05",
+    "distance_km": 1.4105366602703497,
+    "weight": 0.6378292041033444
+   },
+   {
+    "source": "P01",
+    "target": "P11",
+    "distance_km": 1.921051230885683,
+    "weight": 0.5574316964627956
+   }
+  ],
+  "newly_isolated_patch_ids": [],
+  "affected_patch_ids": [
+   "P02",
+   "P05",
+   "P08",
+   "P11"
+  ],
+  "interface_score_before": 60.961473950550904,
+  "interface_score_after": 57.47757043715966,
+  "notes": []
+ }
+}

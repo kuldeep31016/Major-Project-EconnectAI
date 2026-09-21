@@ -1,0 +1,44 @@
+{
+ "research_metrics": {
+  "n_patches": 54,
+  "n_edges": 73,
+  "n_components": 13,
+  "habitat_area_ha": 63829.65000080319,
+  "landscape_area_ha": 105337.24,
+  "iic": 0.0429287033105422,
+  "pc": 0.08732868214524159,
+  "eca_ha": 31128.65729219151,
+  "eca_pct_of_habitat": 48.76833460907245,
+  "mean_degree": 2.7037037037037037,
+  "largest_component_area_ha": 13750.88000025373,
+  "tau_km": 5.0,
+  "k": 3,
+  "metric_labels": {
+   "iic": "RESEARCH METRIC - Integral Index of Connectivity (Pascual-Hortal & Saura 2006)",
+   "pc": "RESEARCH METRIC - Probability of Connectivity (Saura & Pascual-Hortal 2007), p(tau)=0.5",
+   "eca_ha": "RESEARCH METRIC - Equivalent Connected Area = sqrt(PC)*A_L"
+  }
+ },
+ "criticality_metric": "iic",
+ "baseline_connectivity": 0.0429287033105422,
+ "spearman_area_vs_criticality": 0.8339622641509434,
+ "interface_score": {
+  "score": 42.84616293614647,
+  "components": {
+   "structural": 0.11691405249802186,
+   "functional": 0.23783504605424535,
+   "quality": 0.9904759628544572,
+   "redundancy": 0.9074074074074074,
+   "protection": 0.0
+  },
+  "weights": {
+   "structural": 0.3,
+   "functional": 0.28,
+   "quality": 0.22,
+   "redundancy": 0.12,
+   "protection": 0.08
+  },
+  "label": "INTERFACE SCORE (Eq. 7) - design choice, not a research metric"
+ },
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL"
+}
