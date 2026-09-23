@@ -1,23 +1,16 @@
-# EcoConnectAI - Backend Dockerfile
+# EcoConnectAI - Backend Dockerfile (API only)
+# The deployed API serves precomputed pipeline runs from outputs/; training and inference
+# happen off-box, so the image uses requirements-api.txt (no torch) and fits small hosts.
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install system geospatial dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libgdal-dev \
-    gdal-bin \
-    libspatialindex-dev \
-    curl \
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install python dependencies
-COPY requirements.txt .
-# Use cpu torch for portable container deployment
+COPY requirements-api.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements-api.txt
 
 # Copy application source and outputs
 COPY ecoconnect/ ./ecoconnect/
@@ -28,8 +21,9 @@ COPY outputs/ ./outputs/
 COPY pyproject.toml .
 
 ENV PYTHONUNBUFFERED=1
-ENV ECO_CORS_ORIGINS="*"
+ENV PORT=8000
 
 EXPOSE 8000
 
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Hosts such as Render inject $PORT
+CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT}"]

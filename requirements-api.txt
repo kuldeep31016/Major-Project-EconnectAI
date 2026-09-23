@@ -1,0 +1,23 @@
+# EcoConnectAI — runtime dependencies for the FastAPI backend only (backend/ + ecoconnect.graph/pipeline).
+# The deployed API serves precomputed runs from outputs/; it never trains or runs the model,
+# so torch / timm / segmentation-models-pytorch / geopandas are deliberately left out.
+# Full research stack: requirements.txt.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2
+python-multipart>=0.0.9
+sqlalchemy>=2.0
+pyjwt>=2.8
+bcrypt>=4.0
+numpy>=2.0
+scipy>=1.13
+networkx>=3.3
+shapely>=2.0
+pyproj>=3.6
+rasterio>=1.4
+pillow>=10
+pyyaml>=6.0
+httpx>=0.27
+certifi>=2024
+# PostgreSQL driver, used only when ECO_DATABASE_URL points at Postgres
+psycopg[binary]>=3.1
