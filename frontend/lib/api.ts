@@ -75,8 +75,8 @@ export const fetchBundle = (studyArea: string, runId = "latest") =>
   getJson<FrontendBundle>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/bundle`, undefined, 20000);
 
 /** Real timeline: one entry per scene year with a pipeline run; empty when none exist. */
-export const fetchTimeline = (studyArea: string) =>
-  getJson<TimelineData>(`/api/runs/${encodeURIComponent(studyArea)}/timeline`);
+export const fetchTimeline = (studyArea: string, runId = "latest") =>
+  getJson<TimelineData>(`/api/runs/${encodeURIComponent(studyArea)}/timeline?run_id=${encodeURIComponent(runId)}`);
 
 /** Report composed only from a run's computed artefacts (backend ecoconnect/pipeline/report.py). */
 export const fetchReport = (studyArea: string, runId = "latest") =>

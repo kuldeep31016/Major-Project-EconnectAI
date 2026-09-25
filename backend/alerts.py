@@ -58,9 +58,11 @@ def generate_alerts(db: Session, study_area_id: str, run: AnalysisVersion, repla
                          evidence={"confidence": r["confidence"], "run_id": run.id}))
             n += 1
 
-    # change versus the previous run of the same study area (different scene year)
+    # change versus the previous run of the same study area (earlier scene year), SAME model and threshold only:
+    # comparing different models would report model differences as habitat change
     prev = (db.query(AnalysisVersion)
             .filter(AnalysisVersion.study_area_id == study_area_id, AnalysisVersion.result_kind != "synthetic",
+                    AnalysisVersion.model_id == run.model_id, AnalysisVersion.threshold == run.threshold,
                     AnalysisVersion.scene_year != None, AnalysisVersion.scene_year < (run.scene_year or 0))  # noqa: E711
             .order_by(AnalysisVersion.scene_year.desc()).first())
     if prev and prev.habitat_area_ha and prev.iic:

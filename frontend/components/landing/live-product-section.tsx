@@ -30,7 +30,10 @@ export function LiveProductSection() {
           </h2>
 
           <p className="text-xs sm:text-sm text-slate-300">
-            Query individual patches, inspect connectivity metrics, and simulate real-time landscape severance.
+            Query individual patches, inspect connectivity metrics, and test what happens when a patch is lost.
+          </p>
+          <p className="text-[11px] text-slate-400">
+            Figures: Kerala 2025 analysis run (development model — not final). The map here is a schematic; the Command Center shows the real geometry.
           </p>
         </div>
 
@@ -42,11 +45,11 @@ export function LiveProductSection() {
               <div className="flex items-center justify-between pb-1.5 border-b border-white/10 text-[11px]">
                 <div className="flex items-center gap-1.5 font-bold text-white">
                   <span className="h-2 w-2 rounded-full bg-[#00c896] animate-pulse" />
-                  <span>Vembanad–Kol Wetland (Kerala) · Multi-Spectral GIS View</span>
+                  <span>Vembanad–Kol Wetland (Kerala) · schematic view</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-400">
                   <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10 text-[10px]">
-                    18 Patches
+                    24 patches
                   </span>
                   <span className="bg-[#00c896]/10 text-[#00c896] px-2 py-0.5 rounded border border-[#00c896]/20 text-[10px] font-bold">
                     Sentinel-2 10m
@@ -173,7 +176,7 @@ export function LiveProductSection() {
                         : "bg-white/5 text-slate-300 hover:bg-white/10"
                     }`}
                   >
-                    P-016 (Cut-Vertex)
+                    P17 (cut vertex)
                   </button>
                   <button
                     onClick={() => {
@@ -186,7 +189,7 @@ export function LiveProductSection() {
                         : "bg-white/5 text-slate-300 hover:bg-white/10"
                     }`}
                   >
-                    P-014 (Canopy Core)
+                    P01 (largest patch)
                   </button>
                 </div>
               </div>
@@ -200,7 +203,7 @@ export function LiveProductSection() {
                   <div>
                     <div className="text-[9px] uppercase font-bold text-slate-400">Patch ID</div>
                     <div className="text-base font-mono font-bold text-white">
-                      {selectedPatch === "p16" ? "P-016" : "P-014"}
+                      {selectedPatch === "p16" ? "P17" : "P01"}
                     </div>
                   </div>
                   <span
@@ -210,7 +213,7 @@ export function LiveProductSection() {
                         : "bg-[#38bdf8]/20 text-[#38bdf8] border-[#38bdf8]/30"
                     }`}
                   >
-                    {selectedPatch === "p16" ? "Critical Cut-Vertex" : "Primary Stand"}
+                    {selectedPatch === "p16" ? "Critical · cut vertex" : "Critical · largest patch"}
                   </span>
                 </div>
 
@@ -219,10 +222,10 @@ export function LiveProductSection() {
                   <div className="bg-white/5 p-1.5 rounded-lg border border-white/5">
                     <div className="text-slate-400 text-[8.5px]">Habitat Area</div>
                     <div className="text-[12px] font-bold text-white mt-0.5">
-                      {selectedPatch === "p16" ? "263 ha" : "820.6 ha"}
+                      {selectedPatch === "p16" ? "3.13 ha" : "35.1 ha"}
                     </div>
                     <div className="text-[8.5px] text-slate-400">
-                      {selectedPatch === "p16" ? "3.8% of area" : "11.8% of area"}
+                      {selectedPatch === "p16" ? "1.4% of habitat" : "16.0% of habitat"}
                     </div>
                   </div>
 
@@ -233,24 +236,24 @@ export function LiveProductSection() {
                         selectedPatch === "p16" ? "text-[#ef4444]" : "text-slate-200"
                       }`}
                     >
-                      {selectedPatch === "p16" ? "-40.8%" : "-24.5%"}
+                      {selectedPatch === "p16" ? "-27.0% IIC" : "-30.7% IIC"}
                     </div>
                     <div className="text-[8.5px] text-slate-400">
-                      {selectedPatch === "p16" ? "Rank #1" : "Rank #6"}
+                      {selectedPatch === "p16" ? "Rank #3 of 24" : "Rank #1 of 24"}
                     </div>
                   </div>
 
                   <div className="bg-white/5 p-1.5 rounded-lg border border-white/5">
                     <div className="text-slate-400 text-[8.5px]">Confidence</div>
                     <div className="text-[12px] font-bold text-[#00c896] mt-0.5">
-                      {selectedPatch === "p16" ? "0.87 (High)" : "0.94 (Very High)"}
+                      {selectedPatch === "p16" ? "0.84" : "0.88"}
                     </div>
                   </div>
 
                   <div className="bg-white/5 p-1.5 rounded-lg border border-white/5">
                     <div className="text-slate-400 text-[8.5px]">Corridors</div>
                     <div className="text-[12px] font-bold text-white mt-0.5">
-                      {selectedPatch === "p16" ? "3 Links" : "3 Links"}
+                      {selectedPatch === "p16" ? "4 links" : "5 links"}
                     </div>
                   </div>
                 </div>
@@ -281,7 +284,7 @@ export function LiveProductSection() {
                 <div className="grid grid-cols-3 gap-1 text-center text-[10px] bg-black/40 p-1.5 rounded-lg border border-white/5">
                   <div>
                     <div className="text-[8px] text-slate-400">Before</div>
-                    <div className="font-bold text-[#00c896] mt-0.5">3 clusters</div>
+                    <div className="font-bold text-[#00c896] mt-0.5">2 components</div>
                   </div>
                   <div className="flex items-center justify-center text-slate-500 font-bold text-[10px]">
                     →
@@ -293,15 +296,15 @@ export function LiveProductSection() {
                         selectedPatch === "p16" ? "text-[#ef4444]" : "text-[#00c896]"
                       }`}
                     >
-                      {selectedPatch === "p16" ? "5 clusters" : "3 clusters"}
+                      {selectedPatch === "p16" ? "3 components" : "2 components"}
                     </div>
                   </div>
                 </div>
 
                 <p className="text-[10.5px] text-slate-300 leading-snug">
                   {selectedPatch === "p16"
-                    ? "Removing P-016 fractures the landscape into 5 disconnected sub-networks."
-                    : "Removing P-014 reduces canopy area but maintains continuity through adjacent corridors."}
+                    ? "Removing P17 (1.4% of habitat) cuts IIC by 27.0% and splits the network into 3 components."
+                    : "Removing P01 cuts IIC by 30.7% but costs 16% of habitat; alternative routes keep 2 components."}
                 </p>
               </div>
             </div>

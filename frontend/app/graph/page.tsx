@@ -61,7 +61,8 @@ export default function GraphPage() {
   );
 
   const hubs = graph.nodes.filter((n) => n.isHub);
-  const criticalNodes = graph.nodes.filter((n) => n.sensitivity === "critical");
+  // cut vertices (articulation points): removing one increases the number of components
+  const criticalNodes = graph.nodes.filter((n) => n.isCutVertex);
   const criticalEdges = graph.edges.filter((e) => e.critical);
   const visibleEdges = graph.edges.filter(
     (e) => e.strength >= minStrength && (!criticalOnly || e.critical),
@@ -237,13 +238,13 @@ export default function GraphPage() {
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 shrink-0 text-[#ef4444]" />
                   <span className="text-[12px] font-semibold text-[#ef4444]">
-                    {criticalNodes.length} critical bridge
-                    {criticalNodes.length === 1 ? "" : "s"}
+                    {criticalNodes.length} bridge patch
+                    {criticalNodes.length === 1 ? "" : "es"} (cut vertices)
                   </span>
                 </div>
                 <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
-                  These patches have no redundant route. Removing any one splits the network into
-                  disconnected sub-graphs.
+                  Removing any one of these patches splits the network into more components. Other
+                  critical patches (see ranking) matter through area and links but have alternative routes.
                 </p>
                 <div className="mt-3 space-y-1.5">
                   {criticalNodes.map((n) => (

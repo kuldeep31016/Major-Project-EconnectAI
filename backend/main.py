@@ -254,12 +254,25 @@ def _mask_diff_ha(prob_a: str, prob_b: str, thr_a: float, thr_b: float) -> Optio
         return None
 
 
+def _model_key(m: dict) -> tuple[str, float]:
+    """(experiment id of the checkpoint, threshold) - runs are only comparable across years when both match."""
+    ds = m.get("data_source") or {}
+    ck = ds.get("model") or (ds.get("model_info") or {}).get("checkpoint") or ds.get("path") or ""
+    return Path(ck).parent.name, round(float(ds.get("threshold", 0.5)), 4)
+
+
 @app.get("/api/runs/{study_area}/timeline")
-def timeline(study_area: str, critical_threshold: float = 0.10):
-    """REAL timeline: one entry per scene year that has a pipeline run (latest run per year).
+def timeline(study_area: str, run_id: str = "latest", critical_threshold: float = 0.10):
+    """REAL timeline: one entry per scene year that has a pipeline run of the SAME model and threshold as
+    ``run_id`` (latest such run per year). Mixing models would turn model differences into fake "change".
     Habitat change between consecutive years is computed from the binary masks of the two runs.
-    Years without a real run are simply absent - nothing is interpolated or invented."""
+    Years without a comparable run are simply absent - nothing is interpolated or invented."""
     base = RUNS_DIR / study_area
+    ref_key = None
+    try:
+        ref_key = _model_key(json.loads((_resolve_run(study_area, run_id) / "manifest.json").read_text()))
+    except HTTPException:
+        pass
     by_year: dict[int, tuple[str, dict, dict]] = {}
     for run_dir in sorted(base.glob("*")) if base.exists() else []:
         mp = run_dir / "manifest.json"
@@ -268,6 +281,8 @@ def timeline(study_area: str, critical_threshold: float = 0.10):
         m = json.loads(mp.read_text())
         y = (m.get("data_source") or {}).get("scene_year")
         if y is None or m.get("result_kind") == "synthetic":
+            continue
+        if ref_key is not None and _model_key(m) != ref_key:
             continue
         if y not in by_year or m["timestamp_utc"] > by_year[y][1]["timestamp_utc"]:
             by_year[int(y)] = (run_dir.name, m, json.loads((run_dir / "metrics.json").read_text()))
@@ -301,7 +316,8 @@ def timeline(study_area: str, critical_threshold: float = 0.10):
         })
         prev = y
     return {"sceneId": study_area, "years": years,
-            "note": ("Real timeline: each year is an actual pipeline run; change = binary-mask difference between consecutive "
+            "model": ref_key[0] if ref_key else None, "threshold": ref_key[1] if ref_key else None,
+            "note": ("Real timeline: each year is an actual pipeline run of the same model and threshold; change = binary-mask difference between consecutive "
                      "runs at their thresholds. No interpolation. For development-mode models, prediction noise can dominate "
                      "the year-to-year difference - treat lost/gained as model output, not as measured habitat change.")}
 

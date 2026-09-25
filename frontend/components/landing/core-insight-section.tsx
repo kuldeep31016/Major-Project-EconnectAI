@@ -461,7 +461,7 @@ export function CoreInsightSection() {
                       <polygon points="315,205 350,195 368,228 338,242 310,225" fill="#22c55e" fillOpacity="0.4" stroke="#4ade80" strokeWidth="1.2" />
                       <polygon points="380,210 415,198 435,230 402,245 375,228" fill="#22c55e" fillOpacity="0.4" stroke="#4ade80" strokeWidth="1.2" />
 
-                      {/* Critical Patch P-016 (Glowing Red) */}
+                      {/* Critical patch P17 (Glowing Red) */}
                       <polygon points="245,135 285,128 300,162 268,178 240,158" fill="#ef4444" fillOpacity="0.75" stroke="#f87171" strokeWidth="1.8" />
 
                       {/* Links */}
@@ -499,12 +499,12 @@ export function CoreInsightSection() {
                         <circle cx="400" cy="222" r="3.5" />
                       </g>
 
-                      {/* P-016 Callout Pill */}
+                      {/* P17 callout pill */}
                       <g>
                         <circle cx="270" cy="148" r="10" fill="#ef4444" fillOpacity="0.3" className="animate-ping" />
                         <circle cx="270" cy="148" r="5.5" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
                         <rect x="284" y="140" width="38" height="16" rx="3" fill="#040b14" stroke="#ef4444" strokeWidth="1.2" />
-                        <text x="303" y="151" fill="#ffffff" fontSize="8.5" fontWeight="bold" textAnchor="middle">P-016</text>
+                        <text x="303" y="151" fill="#ffffff" fontSize="8.5" fontWeight="bold" textAnchor="middle">P17</text>
                       </g>
                     </svg>
                   </motion.div>
@@ -524,7 +524,7 @@ export function CoreInsightSection() {
                     <div className="flex-1 h-full rounded-xl border border-white/15 bg-[#050c18]/90 p-2.5 flex flex-col justify-between backdrop-blur">
                       <div className="flex items-center justify-between pb-1 border-b border-white/10 text-[10px]">
                         <span className="font-bold text-white">Before (Current)</span>
-                        <span className="text-[#00c896] font-mono">P-016 Active</span>
+                        <span className="text-[#00c896] font-mono">P17 selected</span>
                       </div>
 
                       <div className="relative h-24 w-full">
@@ -536,7 +536,7 @@ export function CoreInsightSection() {
                             <polygon points="45,85 70,80 80,105 60,115 35,100" />
                             <polygon points="135,85 160,80 170,105 150,115 125,100" />
                           </g>
-                          {/* Bridge P16 */}
+                          {/* Bridge P17 */}
                           <polygon points="85,55 115,50 125,75 105,85 80,70" fill="#ef4444" fillOpacity="0.65" stroke="#f87171" strokeWidth="1.2" />
                           <line x1="40" y1="40" x2="100" y2="65" stroke="#ef4444" strokeWidth="1.2" />
                           <line x1="100" y1="65" x2="155" y2="40" stroke="#ef4444" strokeWidth="1.2" />
@@ -545,8 +545,8 @@ export function CoreInsightSection() {
                       </div>
 
                       <div className="flex items-center justify-between text-[9.5px] pt-1 border-t border-white/10">
-                        <span className="text-slate-300">3 components</span>
-                        <span className="text-[#00c896] font-bold">Connectivity: 40.8%</span>
+                        <span className="text-slate-300">2 components</span>
+                        <span className="text-[#00c896] font-bold">IIC baseline</span>
                       </div>
                     </div>
 
@@ -558,7 +558,7 @@ export function CoreInsightSection() {
                     {/* After Card */}
                     <div className="flex-1 h-full rounded-xl border border-[#ef4444]/40 bg-[#160608]/90 p-2.5 flex flex-col justify-between backdrop-blur">
                       <div className="flex items-center justify-between pb-1 border-b border-white/10 text-[10.5px]">
-                        <span className="font-bold text-[#ef4444]">After (Remove P-016)</span>
+                        <span className="font-bold text-[#ef4444]">After (remove P17, 3.1 ha)</span>
                         <span className="text-slate-400 font-mono">Fragmented</span>
                       </div>
 
@@ -571,7 +571,7 @@ export function CoreInsightSection() {
                             <polygon points="45,85 70,80 80,105 60,115 35,100" />
                             <polygon points="135,85 160,80 170,105 150,115 125,100" />
                           </g>
-                          {/* Severed Disconnected P16 Outline */}
+                          {/* Severed Disconnected P17 outline */}
                           <polygon points="85,55 115,50 125,75 105,85 80,70" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
                           <circle cx="100" cy="65" r="2.5" fill="#64748b" />
                           <text x="100" y="68" fill="#ef4444" fontSize="7" fontWeight="bold" textAnchor="middle">✕</text>
@@ -579,8 +579,8 @@ export function CoreInsightSection() {
                       </div>
 
                       <div className="flex items-center justify-between text-[9.5px] pt-1 border-t border-white/10">
-                        <span className="text-[#ef4444] font-bold">5 components</span>
-                        <span className="text-[#ef4444] font-bold">Connectivity: 18.2%</span>
+                        <span className="text-[#ef4444] font-bold">3 components</span>
+                        <span className="text-[#ef4444] font-bold">IIC −27.0%</span>
                       </div>
                     </div>
                   </motion.div>
@@ -606,22 +606,22 @@ export function CoreInsightSection() {
                       </div>
 
                       <div>
-                        <div className="text-[12px] font-bold text-white font-mono">R-003</div>
-                        <div className="text-[9px] text-slate-400">Restoration Corridor</div>
+                        <div className="text-[12px] font-bold text-white font-mono">C1</div>
+                        <div className="text-[9px] text-slate-400">Restoration candidate</div>
                       </div>
 
                       <div className="space-y-0.5 bg-white/5 p-1 rounded text-[9.5px]">
                         <div className="flex justify-between">
                           <span className="text-slate-400">Area:</span>
-                          <span className="font-bold text-white">48.6 ha</span>
+                          <span className="font-bold text-white">1.6 ha</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-400">Expected Gain:</span>
-                          <span className="font-bold text-[#00c896]">+12.4%</span>
+                          <span className="font-bold text-[#00c896]">+1.29% IIC</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-400">Connects:</span>
-                          <span className="font-bold text-white">2 components</span>
+                          <span className="text-slate-400">New links:</span>
+                          <span className="font-bold text-white">P01 · P06 · P13</span>
                         </div>
                       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { API_URL } from "@/lib/api";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -16,8 +17,6 @@ interface LandscapeDetail {
   protection: string;
   sensor: string;
   footprint: string;
-  patches: number;
-  ecaPct: string;
   description: string;
   satelliteUrl: string;
 }
@@ -29,11 +28,9 @@ const LANDSCAPES: LandscapeDetail[] = [
     region: "Kochi & Alappuzha Backwaters",
     state: "Kerala",
     protection: "Ramsar Site",
-    sensor: "Sentinel-2 MSI (10m)",
+    sensor: "Sentinel-1 RTC (10 m)",
     footprint: "486 km²",
-    patches: 18,
-    ecaPct: "59.6%",
-    description: "Backwater system where mangrove fringes meet the Arabian Sea. Bridge patch P16 holds 40.8% of connectivity.",
+    description: "Backwater system where mangrove fringes meet the Arabian Sea. Thin 1–3 pixel mangrove fringes make it the hardest of the four cases.",
     satelliteUrl:
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=76.272,9.778,76.472,9.978&bboxSR=4326&imageSR=3857&size=640,420&format=jpg&f=image",
   },
@@ -43,11 +40,9 @@ const LANDSCAPES: LandscapeDetail[] = [
     region: "Sundarban Biosphere Reserve",
     state: "West Bengal",
     protection: "UNESCO World Heritage",
-    sensor: "Sentinel-2 MSI (10m)",
+    sensor: "Sentinel-1 RTC (10 m)",
     footprint: "1,284 km²",
-    patches: 20,
-    ecaPct: "53.7%",
-    description: "World's largest contiguous tidal mangrove forest, fragmented into 12 island components across wide tidal rivers.",
+    description: "World's largest contiguous tidal mangrove forest, cut by wide tidal rivers.",
     satelliteUrl:
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=88.6,21.8,88.9,22.1&bboxSR=4326&imageSR=3857&size=640,420&format=jpg&f=image",
   },
@@ -57,32 +52,39 @@ const LANDSCAPES: LandscapeDetail[] = [
     region: "Mannar Biosphere Reserve",
     state: "Tamil Nadu",
     protection: "Marine National Park",
-    sensor: "Landsat-9 OLI-2 (30m)",
+    sensor: "Sentinel-1 RTC (10 m)",
     footprint: "826 km²",
-    patches: 17,
-    ecaPct: "55.1%",
     description: "Chain of 21 islands with coral reefs, seagrass beds, and island mangroves anchored by a dominant coastal shelf.",
     satelliteUrl:
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=79.1,9.1,79.4,9.35&bboxSR=4326&imageSR=3857&size=640,420&format=jpg&f=image",
   },
   {
-    id: "bhitarkanika",
+    id: "odisha-coast",
     name: "Bhitarkanika Mangroves",
     region: "Brahmani–Baitarani Estuary",
     state: "Odisha",
     protection: "Ramsar Site & NP",
-    sensor: "Sentinel-2 MSI (10m)",
+    sensor: "Sentinel-1 RTC (10 m)",
     footprint: "672 km²",
-    patches: 16,
-    ecaPct: "54.7%",
     description: "India's second largest mangrove ecosystem, acting as a crucial cyclonic storm surge attenuation buffer.",
     satelliteUrl:
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=86.8,20.6,87.1,20.85&bboxSR=4326&imageSR=3857&size=640,420&format=jpg&f=image",
   },
 ];
 
+interface RunStats { nPatches: number; ecaPctOfHabitat: number; sceneYear: number | null }
+
 export function StudyAreasSection() {
   const [selectedId, setSelectedId] = useState<string>("kerala-coast");
+  // live figures from each landscape's latest analysis run (same source as the Command Center)
+  const [stats, setStats] = useState<Record<string, RunStats | null>>({});
+  useEffect(() => {
+    fetch(`${API_URL}/api/study-areas`, { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((areas: { id: string; latestRun?: RunStats | null }[]) =>
+        setStats(Object.fromEntries(areas.map((a) => [a.id, a.latestRun ?? null]))))
+      .catch(() => setStats({}));
+  }, []);
 
   return (
     <section id="study-areas" className="relative bg-[#050c18] py-16 lg:py-20 text-white border-t border-white/10">
@@ -165,12 +167,19 @@ export function StudyAreasSection() {
                   <div className="grid grid-cols-2 gap-1 text-center bg-black/30 p-1.5 rounded-lg border border-white/5 text-[11px]">
                     <div>
                       <div className="text-[8.5px] uppercase text-slate-400">Patches</div>
-                      <div className="font-bold text-white text-[12px]">{site.patches}</div>
+                      <div className="font-bold text-white text-[12px]">{stats[site.id]?.nPatches ?? "—"}</div>
                     </div>
                     <div>
                       <div className="text-[8.5px] uppercase text-slate-400">ECA / Hab</div>
-                      <div className="font-bold text-[#00c896] text-[12px]">{site.ecaPct}</div>
+                      <div className="font-bold text-[#00c896] text-[12px]">
+                        {stats[site.id] ? `${stats[site.id]!.ecaPctOfHabitat.toFixed(1)}%` : "—"}
+                      </div>
                     </div>
+                  </div>
+                  <div className="text-[9.5px] text-slate-500">
+                    {stats[site.id]
+                      ? `Latest run${stats[site.id]!.sceneYear ? ` · ${stats[site.id]!.sceneYear}` : ""} · development model, not final`
+                      : "No analysis loaded (backend offline)"}
                   </div>
 
                   <p className="text-[11px] text-slate-300 line-clamp-2 leading-relaxed">

@@ -160,8 +160,7 @@ export function HeroSection() {
                   <div className="text-[9.5px] text-slate-400 mt-0.5">Kerala, India</div>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-full bg-[#00e599]/15 px-2 py-0.5 border border-[#00e599]/30 text-[9.5px] font-bold text-[#00e599]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#00e599] animate-pulse" />
-                  <span>Live</span>
+                  <span>Schematic</span>
                 </div>
               </div>
 

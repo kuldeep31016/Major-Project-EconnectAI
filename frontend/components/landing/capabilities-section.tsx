@@ -44,8 +44,8 @@ const CAPABILITIES: Capability[] = [
           <span className="text-white/80 font-mono text-[9px]">9.87°N, 76.37°E</span>
         </div>
         <div className="relative z-10 flex items-center justify-between text-[10px]">
-          <span className="text-slate-300">18 Patches</span>
-          <span className="text-[#00c896] font-bold">95.6% Confidence</span>
+          <span className="text-slate-300">24 patches · 2025 run</span>
+          <span className="text-[#00c896] font-bold">84% mean P(mangrove)</span>
         </div>
       </div>
     ),
@@ -53,20 +53,20 @@ const CAPABILITIES: Capability[] = [
   {
     number: "02",
     title: "Change Detection",
-    tagline: "Multi-year canopy regrowth differencing and baseline fragmentation tracking.",
+    tagline: "Compare pipeline runs from different years, patch by patch — model output, not measured change.",
     href: "/command",
     badge: "Multi-Temporal",
     icon: TrendingUp,
     renderVisual: () => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
-          <span className="text-slate-400">Baseline Multi-Year</span>
-          <span className="text-[#38bdf8] font-mono font-bold">2020 → 2024</span>
+          <span className="text-slate-400">Same model, two years</span>
+          <span className="text-[#38bdf8] font-mono font-bold">2020 → 2025</span>
         </div>
         <div className="space-y-1.5">
           <div className="flex justify-between text-[10px]">
-            <span className="text-slate-300">Canopy Extent</span>
-            <span className="text-[#00c896] font-bold">+2.1% Regrowth</span>
+            <span className="text-slate-300">Patches matched</span>
+            <span className="text-[#38bdf8] font-bold">centroid &lt; 300 m</span>
           </div>
           <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-[#00c896] to-[#38bdf8] w-3/4 rounded-full" />
@@ -87,15 +87,15 @@ const CAPABILITIES: Capability[] = [
         <div className="flex justify-between items-center">
           <span className="font-bold text-[#ef4444] flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#ef4444] animate-pulse" />
-            P-016 Cut-Vertex
+            P17 · cut vertex
           </span>
           <span className="bg-[#ef4444]/20 text-[#ef4444] px-1.5 py-0.5 rounded text-[9px] font-bold">
-            Rank #1
+            Rank #3 of 24
           </span>
         </div>
         <div className="flex justify-between items-center bg-[#ef4444]/10 p-2 rounded border border-[#ef4444]/20">
-          <span className="text-slate-300">Disruption Impact</span>
-          <span className="text-[#ef4444] font-mono font-bold text-[12px]">-40.8% Connectivity</span>
+          <span className="text-slate-300">IIC loss if removed (3.1 ha)</span>
+          <span className="text-[#ef4444] font-mono font-bold text-[12px]">-27.0% IIC</span>
         </div>
       </div>
     ),
@@ -103,19 +103,19 @@ const CAPABILITIES: Capability[] = [
   {
     number: "04",
     title: "Scenario Lab",
-    tagline: "Stress-test hypothetical cyclone landfall and infrastructure severance in advance.",
+    tagline: "Remove patches or a drawn area, restore sites, or change τ and threshold — recomputed exactly.",
     href: "/simulation",
-    badge: "Disaster Simulation",
+    badge: "What-if",
     icon: GitBranch,
     renderVisual: () => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
-          <span className="text-slate-400">Disturbance Simulation</span>
-          <span className="text-amber-400 font-semibold text-[9px]">Live Recompute</span>
+          <span className="text-slate-400">Remove P17</span>
+          <span className="text-amber-400 font-semibold text-[9px]">Exact recompute</span>
         </div>
         <div className="flex items-center justify-between bg-white/5 p-2 rounded">
-          <span className="text-slate-300">Cluster Separation</span>
-          <span className="text-white font-mono font-bold">3 → 5 Clusters</span>
+          <span className="text-slate-300">Components</span>
+          <span className="text-white font-mono font-bold">2 → 3</span>
         </div>
       </div>
     ),
@@ -123,21 +123,21 @@ const CAPABILITIES: Capability[] = [
   {
     number: "05",
     title: "Restoration Planner",
-    tagline: "Prioritized candidate corridors ranked by network connectivity returned.",
+    tagline: "Candidate sites ranked by connectivity gain; cost-aware only with validated cost data.",
     href: "/restoration",
     badge: "Corridor Design",
     icon: Sprout,
     renderVisual: () => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
-          <span className="font-bold text-white">Top Candidate R-003</span>
+          <span className="font-bold text-white">Top candidate C1 · 1.6 ha</span>
           <span className="bg-[#00c896]/20 text-[#00c896] px-1.5 py-0.5 rounded text-[9px] font-bold">
             Priority #1
           </span>
         </div>
         <div className="flex justify-between items-center bg-[#00c896]/10 p-2 rounded border border-[#00c896]/20">
           <span className="text-slate-300">Network Gain</span>
-          <span className="text-[#00c896] font-mono font-bold text-[12px]">+12.4% Recovery</span>
+          <span className="text-[#00c896] font-mono font-bold text-[12px]">+1.29% IIC</span>
         </div>
       </div>
     ),
@@ -145,21 +145,21 @@ const CAPABILITIES: Capability[] = [
   {
     number: "06",
     title: "Field Verification",
-    tagline: "Synchronized ground survey tasks dispatched directly to frontline forest rangers.",
+    tagline: "Send a patch to verification, assign a field task, and require photo + GPS evidence before confirmation.",
     href: "/field",
-    badge: "Ground Truth",
+    badge: "Human review",
     icon: ShieldCheck,
     renderVisual: () => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
-          <span className="font-bold text-white">Patrol Task #084</span>
+          <span className="font-bold text-white">Verify critical patch P17</span>
           <span className="text-[#00c896] font-semibold text-[9px] bg-[#00c896]/15 px-1.5 py-0.5 rounded">
-            Synced
+            Pending
           </span>
         </div>
         <div className="flex justify-between items-center bg-white/5 p-2 rounded">
-          <span className="text-slate-300">Target Stand</span>
-          <span className="text-white font-mono font-bold">P-016 (Vembanad)</span>
+          <span className="text-slate-300">Status chain</span>
+          <span className="text-white font-mono font-bold">AI detected → confirmed</span>
         </div>
       </div>
     ),
