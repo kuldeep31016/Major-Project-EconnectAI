@@ -1,0 +1,1143 @@
+1
+00:00:00,000 --> 00:00:05,318
+This is a technical walkthrough of EcoConnectAI as it exists in the repository today.
+
+2
+00:00:05,318 --> 00:00:07,070
+It is not a marketing video.
+
+3
+00:00:07,070 --> 00:00:12,012
+Every number comes from the project's own output files, configuration and code.
+
+4
+00:00:12,012 --> 00:00:16,705
+Where something exists only in the paper, or only as a plan, I will say so.
+
+5
+00:00:17,605 --> 00:00:18,746
+First, one rule.
+
+6
+00:00:18,746 --> 00:00:23,670
+Every result carries one of four labels, and you must never mix them.
+
+7
+00:00:23,670 --> 00:00:25,025
+Published baseline:
+
+8
+00:00:25,025 --> 00:00:33,588
+the ninety five point five six percent accuracy belongs to the foundation study by Ghorbanian and colleagues, not to us.
+
+9
+00:00:33,588 --> 00:00:35,229
+Prototype or synthetic:
+
+10
+00:00:35,229 --> 00:00:41,651
+the paper's Tables six to eight, including patch P16, were computed on synthetic geometry.
+
+11
+00:00:41,651 --> 00:00:43,791
+Development subset, not final:
+
+12
+00:00:43,791 --> 00:00:46,717
+real data, a small EfficientNet B0 model.
+
+13
+00:00:46,717 --> 00:00:50,142
+Everything the app shows today is in this class.
+
+14
+00:00:50,142 --> 00:00:51,284
+And not yet run:
+
+15
+00:00:51,284 --> 00:00:52,711
+the full UNB7 model.
+
+16
+00:00:53,611 --> 00:00:54,390
+The problem.
+
+17
+00:00:54,390 --> 00:01:00,297
+Mangrove maps tell you where habitat is, but not which patches hold the landscape together.
+
+18
+00:01:00,297 --> 00:01:04,516
+A small patch can be the only stepping stone between two regions.
+
+19
+00:01:04,516 --> 00:01:16,590
+EcoConnectAI segments mangrove from Sentinel-1 radar, turns the mask into patches, builds a connectivity graph, and ranks patches by the exact connectivity loss when each one is removed.
+
+20
+00:01:16,590 --> 00:01:21,719
+It then runs what-if scenarios, explains rankings, and ranks restoration sites.
+
+21
+00:01:22,619 --> 00:01:25,859
+Here is the architecture, mapped to real files.
+
+22
+00:01:25,859 --> 00:01:29,168
+Sentinel data comes from public STAC catalogues.
+
+23
+00:01:29,168 --> 00:01:31,374
+Scenes are composited and tiled.
+
+24
+00:01:31,374 --> 00:01:35,785
+A U-Net with an EfficientNet encoder produces a probability map.
+
+25
+00:01:35,785 --> 00:01:41,094
+Thresholding and connected components give patches, which become graph nodes.
+
+26
+00:01:41,094 --> 00:01:46,677
+The graph gives connectivity, criticality, what-if, explanations and restoration.
+
+27
+00:01:46,677 --> 00:01:50,882
+A Fast A P I backend with SQLite serves a Next J S interface.
+
+28
+00:01:51,782 --> 00:01:54,280
+The stack, verified from code.
+
+29
+00:01:54,280 --> 00:01:55,029
+Frontend:
+
+30
+00:01:55,029 --> 00:02:01,522
+Next J S, React, TypeScript, Leaflet maps, React Flow for the graph, Recharts.
+
+31
+00:02:01,522 --> 00:02:02,188
+Backend:
+
+32
+00:02:02,188 --> 00:02:06,933
+Fast A P I, SQLAlchemy over SQLite, J W T authentication.
+
+33
+00:02:06,933 --> 00:02:08,348
+Machine learning:
+
+34
+00:02:08,348 --> 00:02:12,094
+PyTorch with the segmentation models library.
+
+35
+00:02:12,094 --> 00:02:13,093
+Raster work:
+
+36
+00:02:13,093 --> 00:02:15,258
+rasterio, pyproj, shapely.
+
+37
+00:02:15,258 --> 00:02:20,919
+The graph mathematics is our own pure Python code, with no NetworkX.
+
+38
+00:02:20,919 --> 00:02:23,582
+Forty four automated tests pass.
+
+39
+00:02:24,482 --> 00:02:26,259
+Where the data comes from.
+
+40
+00:02:26,259 --> 00:02:33,912
+Sentinel-1 radiometrically terrain corrected backscatter, from Microsoft Planetary Computer, is the model input.
+
+41
+00:02:33,912 --> 00:02:37,602
+Sentinel-2 level 2 A, from Earth Search, is ancillary.
+
+42
+00:02:37,602 --> 00:02:41,839
+Labels are Global Mangrove Watch version three, twenty twenty.
+
+43
+00:02:41,839 --> 00:02:48,262
+There is no Kaggle dataset, no Landsat, no field survey, and Google Earth Engine was not used.
+
+44
+00:02:49,162 --> 00:02:50,407
+Sentinel-1 details.
+
+45
+00:02:50,407 --> 00:02:55,191
+The product is R T C gamma nought from interferometric wide swath scenes.
+
+46
+00:02:55,191 --> 00:02:58,533
+We use V V and V H in decibels, with no ratio band.
+
+47
+00:02:58,533 --> 00:03:01,351
+Terrain correction is done by the provider.
+
+48
+00:03:01,351 --> 00:03:08,625
+There is no spatial speckle filter; instead a per-pixel temporal median over the year's scenes reduces speckle.
+
+49
+00:03:08,625 --> 00:03:14,457
+Everything is on a ten metre UTM grid, z-score normalised using training statistics only.
+
+50
+00:03:14,457 --> 00:03:16,554
+The proof it is Sentinel-1 only:
+
+51
+00:03:16,554 --> 00:03:22,648
+the dataset config selects bands zero and one, and the experiment records two input channels.
+
+52
+00:03:22,648 --> 00:03:26,187
+Radar is chosen because it sees through monsoon cloud.
+
+53
+00:03:27,087 --> 00:03:28,710
+Sentinel-2 is ancillary.
+
+54
+00:03:28,710 --> 00:03:35,745
+Six bands plus N D V I and N D W I, cloud masked with the scene classification layer, median composited.
+
+55
+00:03:35,745 --> 00:03:40,954
+It is used in two ablation experiments, the basemaps, and a restoration rule.
+
+56
+00:03:40,954 --> 00:03:43,795
+It is not the input of the reported model.
+
+57
+00:03:44,695 --> 00:03:45,163
+Labels.
+
+58
+00:03:45,163 --> 00:03:49,578
+We train against Global Mangrove Watch, which is weak supervision.
+
+59
+00:03:49,578 --> 00:03:50,581
+Say it exactly:
+
+60
+00:03:50,581 --> 00:03:58,743
+these are reference labels from a published map, not field ground truth, so every accuracy figure is agreement with G M W.
+
+61
+00:03:58,743 --> 00:04:00,348
+The areas differ hugely:
+
+62
+00:04:00,348 --> 00:04:06,302
+Kerala has about one hundred hectares of mangrove, Sundarbans nearly fifty nine thousand.
+
+63
+00:04:06,302 --> 00:04:11,319
+Note the paper mentions Forest Survey of India labels; the code uses G M W.
+
+64
+00:04:12,219 --> 00:04:12,954
+The dataset.
+
+65
+00:04:12,954 --> 00:04:16,509
+Scenes are cut into two hundred and fifty six pixel tiles.
+
+66
+00:04:16,509 --> 00:04:21,535
+One thousand three hundred and seventy three tiles were written across four areas.
+
+67
+00:04:21,535 --> 00:04:27,235
+The split is by spatial blocks, so overlapping neighbours cannot leak between train and test.
+
+68
+00:04:27,235 --> 00:04:34,099
+Development mode used eight hundred training, one hundred and ninety five validation and two hundred test tiles.
+
+69
+00:04:34,099 --> 00:04:36,612
+Augmentation is flips and rotations only.
+
+70
+00:04:37,512 --> 00:04:41,170
+The model is a U-Net decoder on an EfficientNet encoder.
+
+71
+00:04:41,170 --> 00:04:47,768
+The encoder, pretrained on ImageNet, downsamples the two channel radar tile to learn what is present.
+
+72
+00:04:47,768 --> 00:04:55,150
+The decoder upsamples back, and skip connections restore where things are, which preserves thin mangrove fringes.
+
+73
+00:04:55,150 --> 00:04:57,633
+A sigmoid gives per-pixel probability.
+
+74
+00:04:57,633 --> 00:05:01,095
+UNB7 means the B7 encoder, from the foundation study.
+
+75
+00:05:01,095 --> 00:05:09,588
+What we actually trained is the same U-Net with a B0 encoder, six point two five million parameters, fully fine tuned on a laptop.
+
+76
+00:05:10,488 --> 00:05:12,840
+This is where the model is built.
+
+77
+00:05:12,840 --> 00:05:17,617
+The alias U N B 7 maps to efficientnet b7, used by the full config.
+
+78
+00:05:17,617 --> 00:05:19,827
+The development config uses b0.
+
+79
+00:05:19,827 --> 00:05:26,528
+Every checkpoint stores its encoder name, and all our trained checkpoints say efficientnet b0.
+
+80
+00:05:26,528 --> 00:05:30,164
+So the code itself stops us calling our model UNB7.
+
+81
+00:05:31,064 --> 00:05:32,866
+Training of the main model.
+
+82
+00:05:32,866 --> 00:05:39,471
+AdamW, learning rate three times ten to the minus four, cosine schedule, batch eight, forty epochs.
+
+83
+00:05:39,471 --> 00:05:44,342
+The loss is binary cross entropy plus Dice, which handles rare positives.
+
+84
+00:05:44,342 --> 00:05:50,814
+The positive weight of twenty five was set for Kerala and makes the four area model over predict:
+
+85
+00:05:50,814 --> 00:05:55,752
+validation recall zero point nine seven, precision zero point seven eight.
+
+86
+00:05:55,752 --> 00:06:00,222
+The best checkpoint, by validation I O U, came at epoch thirty two.
+
+87
+00:06:00,222 --> 00:06:03,559
+Training took about thirty minutes on an Apple M3.
+
+88
+00:06:04,459 --> 00:06:06,216
+Evaluation, the key table.
+
+89
+00:06:06,216 --> 00:06:14,800
+The four area model scores test I O U zero point eight four two and F 1 zero point nine one four on two hundred held-out tiles.
+
+90
+00:06:14,800 --> 00:06:16,896
+That is our development result.
+
+91
+00:06:16,896 --> 00:06:23,452
+The Kerala-only models are weak, with I O U between zero point zero two and zero point zero five.
+
+92
+00:06:23,452 --> 00:06:29,198
+The ninety five point five six percent is shown separately as the published baseline.
+
+93
+00:06:29,198 --> 00:06:31,090
+Our UNB7 run is not yet run.
+
+94
+00:06:31,090 --> 00:06:33,591
+All metrics are agreement with G M W.
+
+95
+00:06:34,491 --> 00:06:36,003
+A caveat you must know.
+
+96
+00:06:36,003 --> 00:06:42,049
+The zero point eight four is pooled over pixels, and most mangrove pixels are in Sundarbans.
+
+97
+00:06:42,049 --> 00:06:50,395
+By area, Sundarbans has correct mangrove in seventy six of eighty six test tiles, but Kerala has it in only one of forty three.
+
+98
+00:06:50,395 --> 00:06:53,681
+So for thin fringes the model is not reliable yet.
+
+99
+00:06:53,681 --> 00:06:55,258
+If asked for your I O U:
+
+100
+00:06:55,258 --> 00:07:03,868
+zero point eight four on our pooled development split against G M W, driven by Sundarbans, and not the paper's ninety five percent.
+
+101
+00:07:04,768 --> 00:07:07,597
+These are the real curves and confusion matrix.
+
+102
+00:07:07,597 --> 00:07:14,459
+Training loss falls from one point eight to zero point three four, and validation I O U peaks at epoch thirty two.
+
+103
+00:07:14,459 --> 00:07:19,215
+The confusion matrix shows few missed mangrove pixels but more false positives:
+
+104
+00:07:19,215 --> 00:07:20,659
+the model over predicts.
+
+105
+00:07:21,559 --> 00:07:27,194
+In the app, the Data and Models page shows these metrics, read from the evaluation files.
+
+106
+00:07:27,194 --> 00:07:27,954
+One warning:
+
+107
+00:07:27,954 --> 00:07:30,866
+the green validated model badge is hard-coded.
+
+108
+00:07:30,866 --> 00:07:32,638
+Call it a development model.
+
+109
+00:07:33,538 --> 00:07:35,088
+From probability to mask.
+
+110
+00:07:35,088 --> 00:07:41,162
+Inference uses an overlapping sliding window with smooth blending to produce a probability raster.
+
+111
+00:07:41,162 --> 00:07:42,897
+A threshold makes it binary.
+
+112
+00:07:42,897 --> 00:07:45,500
+We calibrated the threshold on test tiles:
+
+113
+00:07:45,500 --> 00:07:54,302
+F 1 rises from zero point nine one two at zero point three to zero point nine three three at zero point seven, so zero point seven was chosen.
+
+114
+00:07:54,302 --> 00:07:56,719
+But it is the edge of the tested range.
+
+115
+00:07:56,719 --> 00:08:01,615
+The threshold matters because it changes patch shapes, and therefore the graph.
+
+116
+00:08:02,515 --> 00:08:03,657
+Patch extraction.
+
+117
+00:08:03,657 --> 00:08:10,174
+The mask is split into eight-connected components, and components under two hectares are dropped.
+
+118
+00:08:10,174 --> 00:08:17,027
+Each patch stores an id, area, centroid, confidence, which is the mean probability, class and polygon.
+
+119
+00:08:17,027 --> 00:08:21,662
+In the current Kerala run, sixty components gave twenty four patches.
+
+120
+00:08:21,662 --> 00:08:22,267
+Remember:
+
+121
+00:08:22,267 --> 00:08:23,678
+size is an attribute.
+
+122
+00:08:23,678 --> 00:08:26,768
+Importance comes from position in the network.
+
+123
+00:08:27,668 --> 00:08:28,305
+The graph.
+
+124
+00:08:28,305 --> 00:08:29,641
+Each patch is a node.
+
+125
+00:08:29,641 --> 00:08:37,912
+For every patch we take its three nearest patches by centroid distance, and keep a link only if it is within tau, five kilometres.
+
+126
+00:08:37,912 --> 00:08:41,793
+Each edge is weighted by confidence and decays with distance.
+
+127
+00:08:41,793 --> 00:08:44,147
+Tau stands in for dispersal distance.
+
+128
+00:08:44,147 --> 00:08:51,782
+It is an assumption, not calibrated for a species, so every run also repeats the analysis at three and eight kilometres.
+
+129
+00:08:52,682 --> 00:08:53,251
+In code:
+
+130
+00:08:53,251 --> 00:08:58,942
+sort by distance, take the first k, keep those within tau, store each pair once.
+
+131
+00:08:58,942 --> 00:09:02,357
+The weight is exactly equation six of the paper.
+
+132
+00:09:03,257 --> 00:09:03,960
+The metric.
+
+133
+00:09:03,960 --> 00:09:07,286
+We want one number for how connected the network is.
+
+134
+00:09:07,286 --> 00:09:10,996
+The headline is I I C, the integral index of connectivity.
+
+135
+00:09:10,996 --> 00:09:19,632
+For every pair of patches, multiply their areas and divide by one plus the number of links between them; unreachable pairs add nothing.
+
+136
+00:09:19,632 --> 00:09:23,853
+So I I C rewards large patches that reach each other in few steps.
+
+137
+00:09:23,853 --> 00:09:25,708
+We also report P C and E C A.
+
+138
+00:09:25,708 --> 00:09:33,768
+The paper's equation seven score is only an interface score; it can even rise when a patch is removed, so decisions use I I C.
+
+139
+00:09:34,668 --> 00:09:37,064
+Criticality, the core contribution.
+
+140
+00:09:37,064 --> 00:09:39,118
+Compute baseline connectivity.
+
+141
+00:09:39,118 --> 00:09:41,240
+Remove one patch and its edges.
+
+142
+00:09:41,240 --> 00:09:41,925
+Recompute.
+
+143
+00:09:41,925 --> 00:09:44,526
+The loss divided by the baseline is S.
+
+144
+00:09:44,526 --> 00:09:46,717
+Repeat for every patch and rank.
+
+145
+00:09:46,717 --> 00:09:47,675
+This is exact:
+
+146
+00:09:47,675 --> 00:09:51,852
+the graph is really rebuilt each time, with no approximation.
+
+147
+00:09:51,852 --> 00:09:56,849
+We also record degree, neighbours, and whether the patch is a cut vertex.
+
+148
+00:09:57,749 --> 00:09:58,509
+Graph terms.
+
+149
+00:09:58,509 --> 00:10:05,411
+A node is a patch, an edge a link, degree the number of links, a component a group that can reach each other.
+
+150
+00:10:05,411 --> 00:10:12,440
+A cut vertex is a node whose removal increases the number of components; the interface calls it a bridge patch.
+
+151
+00:10:12,440 --> 00:10:15,352
+Strictly, a bridge in graph theory is an edge.
+
+152
+00:10:15,352 --> 00:10:18,961
+In the picture, removing small patch B separates A and C.
+
+153
+00:10:18,961 --> 00:10:22,887
+Ecologically, they can no longer exchange propagules or fauna.
+
+154
+00:10:23,787 --> 00:10:26,988
+A real example from the current Kerala run.
+
+155
+00:10:26,988 --> 00:10:35,695
+The largest patch, P01, thirty five hectares, ranks first with a thirty one percent loss, but it is not a cut vertex.
+
+156
+00:10:35,695 --> 00:10:36,290
+Now P17:
+
+157
+00:10:36,290 --> 00:10:49,836
+only three point one hectares, seventeenth by size, yet removing it cuts I I C by twenty seven percent, ranking third, because it is a cut vertex splitting two components into three.
+
+158
+00:10:49,836 --> 00:10:56,459
+In Odisha, patch P09, fifty five hectares, outranks P04 at nine hundred and ten hectares.
+
+159
+00:10:56,459 --> 00:10:57,427
+And remember:
+
+160
+00:10:57,427 --> 00:11:00,478
+P16 exists only in the synthetic results.
+
+161
+00:11:01,378 --> 00:11:05,382
+Here is P17 in the app, with the evidence drawer open:
+
+162
+00:11:05,382 --> 00:11:11,831
+the decision, then C of G, C of G minus v, delta C and S, then geometry and neighbours.
+
+163
+00:11:11,831 --> 00:11:15,983
+Everything is read from stored run files, not generated.
+
+164
+00:11:16,883 --> 00:11:19,670
+The graph view, drawn with React Flow.
+
+165
+00:11:19,670 --> 00:11:20,770
+One inaccuracy:
+
+166
+00:11:20,770 --> 00:11:29,424
+the critical bridges box lists every patch with S above zero point two five, including P01, which is not a cut vertex.
+
+167
+00:11:29,424 --> 00:11:30,964
+Only P07 and P17 are.
+
+168
+00:11:30,964 --> 00:11:33,091
+Correct it yourself if asked.
+
+169
+00:11:33,991 --> 00:11:35,276
+The what-if engine:
+
+170
+00:11:35,276 --> 00:11:38,997
+baseline, action, exact rebuild, recompute, difference.
+
+171
+00:11:38,997 --> 00:11:44,882
+Removing P17 costs twenty seven percent of I I C for one point four percent of habitat.
+
+172
+00:11:44,882 --> 00:11:49,618
+Removing P01 costs thirty one percent, but sixteen percent of habitat.
+
+173
+00:11:49,618 --> 00:11:52,459
+Restoring C1 adds one point three percent.
+
+174
+00:11:52,459 --> 00:11:57,127
+Changing tau from three to eight kilometres keeps the ranking stable.
+
+175
+00:11:57,127 --> 00:12:01,591
+Raising the threshold drops patches from twenty six to twenty one.
+
+176
+00:12:01,591 --> 00:12:03,147
+This is not a forecast.
+
+177
+00:12:03,147 --> 00:12:07,950
+It is a what-if under stated assumptions, and it is labelled simulated.
+
+178
+00:12:08,850 --> 00:12:11,937
+On the dashboard I selected P17 and pressed remove.
+
+179
+00:12:11,937 --> 00:12:18,171
+The server rebuilt the graph and returned minus twenty seven percent I I C and two to three components.
+
+180
+00:12:18,171 --> 00:12:22,832
+The paper's prototype did this heuristically in the browser; now it is exact.
+
+181
+00:12:23,732 --> 00:12:25,834
+The Scenario Lab has seven types.
+
+182
+00:12:25,834 --> 00:12:33,858
+Here, tau sensitivity and threshold sensitivity, both labelled simulated, each with an explanation built from computed values.
+
+183
+00:12:33,858 --> 00:12:39,208
+These are your evidence-based answers to why five kilometres and why this threshold.
+
+184
+00:12:40,108 --> 00:12:41,243
+Explainability.
+
+185
+00:12:41,243 --> 00:12:44,192
+The system does not just print a score.
+
+186
+00:12:44,192 --> 00:12:46,537
+Here is P17's real explanation:
+
+187
+00:12:46,537 --> 00:12:52,059
+rank, loss, area, links with distances, cut vertex status and confidence.
+
+188
+00:12:52,059 --> 00:12:55,840
+Each sentence appears only if its evidence exists.
+
+189
+00:12:55,840 --> 00:12:58,488
+There is no SHAP, LIME or Grad-CAM.
+
+190
+00:12:58,488 --> 00:13:02,042
+This is graph-level, rule-based explainability.
+
+191
+00:13:02,942 --> 00:13:09,712
+The assistant answers by matching an intent and filling templates from stored files, with sources and the result label.
+
+192
+00:13:09,712 --> 00:13:13,296
+It is not a large language model, and it never invents figures.
+
+193
+00:13:14,196 --> 00:13:16,571
+Restoration asks the reverse question:
+
+194
+00:13:16,571 --> 00:13:18,008
+what if we add a patch?
+
+195
+00:13:18,008 --> 00:13:26,132
+Each candidate is inserted as a node linked to its nearest patches, connectivity is recomputed, and candidates are ranked by gain.
+
+196
+00:13:26,132 --> 00:13:30,569
+Candidates are areas of marginal model probability, not surveyed sites.
+
+197
+00:13:30,569 --> 00:13:32,319
+There are no invented costs:
+
+198
+00:13:32,319 --> 00:13:37,818
+candidates are ranked by connectivity gain because validated cost data is not available.
+
+199
+00:13:37,818 --> 00:13:41,192
+Uploading a real cost table switches to gain per cost.
+
+200
+00:13:42,092 --> 00:13:43,666
+The planner for Kerala:
+
+201
+00:13:43,666 --> 00:13:47,704
+C1 adds one point three percent I I C with three new links.
+
+202
+00:13:47,704 --> 00:13:54,890
+The panel separates why recommended, why not, and not assessed, such as legal status, ownership and cost.
+
+203
+00:13:54,890 --> 00:13:58,312
+Recommended is a rule output, not a field verdict.
+
+204
+00:13:59,212 --> 00:14:01,690
+Change detection is partly implemented.
+
+205
+00:14:01,690 --> 00:14:05,758
+Kerala has a second Sentinel-1 composite for twenty twenty five.
+
+206
+00:14:05,758 --> 00:14:13,068
+Running the same model on both years gives three hundred and eighty two versus three hundred and nineteen hectares.
+
+207
+00:14:13,068 --> 00:14:15,483
+It is labelled observed, model output.
+
+208
+00:14:15,483 --> 00:14:21,458
+But this model's Kerala I O U is zero point zero two, so this may be noise, not measured loss.
+
+209
+00:14:21,458 --> 00:14:27,751
+Also, the dashboard change chart currently compares runs of different models, so ignore its deltas.
+
+210
+00:14:28,651 --> 00:14:30,067
+The four study areas.
+
+211
+00:14:30,067 --> 00:14:35,734
+Kerala, a Ramsar backwater with thin fringes, is the hardest and most complete case.
+
+212
+00:14:35,734 --> 00:14:40,997
+Sundarbans is the largest mangrove system, with fifty four patches in our run.
+
+213
+00:14:40,997 --> 00:14:45,247
+Gulf of Mannar has very sparse mangrove, and Odisha is a delta.
+
+214
+00:14:45,247 --> 00:14:50,307
+Predicted habitat exceeds G M W everywhere, which confirms over prediction.
+
+215
+00:14:50,307 --> 00:14:57,255
+And note the paper lists Landsat 9 for Gulf of Mannar; the implementation uses Sentinel-1 for all four.
+
+216
+00:14:58,155 --> 00:14:59,279
+A short U I tour.
+
+217
+00:14:59,279 --> 00:15:07,805
+The dashboard shows patches, candidates, critical patches and links on real imagery, with basemaps from our own Sentinel rasters.
+
+218
+00:15:07,805 --> 00:15:10,118
+The cards come from the run bundle.
+
+219
+00:15:10,118 --> 00:15:14,018
+The map strip says real data, development model, not final.
+
+220
+00:15:14,918 --> 00:15:24,747
+The interactive map overlays the raw model probability raster under the patches, and the sensitivity explorer re-runs the analysis with another tau, k or metric.
+
+221
+00:15:24,747 --> 00:15:29,753
+The small importance timeline in the inspector is synthetic, so do not present it.
+
+222
+00:15:30,653 --> 00:15:31,843
+Workflow screens:
+
+223
+00:15:31,843 --> 00:15:41,292
+rule-based alerts, field tasks with photo evidence and verification, JSON reports, and a New Analysis page that runs the full pipeline.
+
+224
+00:15:41,292 --> 00:15:43,182
+These work with demo users.
+
+225
+00:15:43,182 --> 00:15:48,221
+There is no real field data, and no deployment with a forest department.
+
+226
+00:15:49,121 --> 00:15:50,618
+The backend is real.
+
+227
+00:15:50,618 --> 00:15:53,761
+Fast A P I with SQLite and fifteen tables:
+
+228
+00:15:53,761 --> 00:16:05,585
+users and roles, a registry of scenes and models, analysis versions, detections, alerts, field tasks, evidence, projects, scenarios, reports and an audit log.
+
+229
+00:16:05,585 --> 00:16:07,157
+Rasters stay on disk.
+
+230
+00:16:07,157 --> 00:16:07,830
+The gaps:
+
+231
+00:16:07,830 --> 00:16:15,987
+many analysis endpoints need no login, there are no migrations, and the paper still says there is no backend.
+
+232
+00:16:16,887 --> 00:16:19,485
+This slide maps every stage to its folder.
+
+233
+00:16:19,485 --> 00:16:24,433
+Data acquisition lives in the gee folder and the acquisition and tiling scripts.
+
+234
+00:16:24,433 --> 00:16:27,526
+The machine learning lives in ecoconnect slash ml.
+
+235
+00:16:27,526 --> 00:16:31,917
+The graph analysis lives in ecoconnect slash graph, one file per stage.
+
+236
+00:16:31,917 --> 00:16:38,288
+The backend is in the backend folder, the interface in frontend slash app, and every result in outputs.
+
+237
+00:16:38,288 --> 00:16:39,896
+Pause here if you need to.
+
+238
+00:16:40,796 --> 00:16:41,995
+Paper alignment.
+
+239
+00:16:41,995 --> 00:16:42,670
+Matching:
+
+240
+00:16:42,670 --> 00:16:51,814
+the equations for patches, edges, I I C, criticality, what-if and restoration, and the synthetic tables reproduce exactly.
+
+241
+00:16:51,814 --> 00:16:52,938
+Paper outdated:
+
+242
+00:16:52,938 --> 00:17:04,031
+it says no model, no backend and synthetic data, but now there are trained models, a backend and real runs; labels, sensors and classes also differ.
+
+243
+00:17:04,031 --> 00:17:05,231
+Not implemented:
+
+244
+00:17:05,231 --> 00:17:10,552
+UNB7 training, field validation, species-calibrated tau and real costs.
+
+245
+00:17:11,452 --> 00:17:14,476
+Limitations, which you should state first.
+
+246
+00:17:14,476 --> 00:17:16,132
+A development B0 model.
+
+247
+00:17:16,132 --> 00:17:16,996
+Weak labels.
+
+248
+00:17:16,996 --> 00:17:19,156
+Accuracy driven by Sundarbans.
+
+249
+00:17:19,156 --> 00:17:20,308
+Over prediction.
+
+250
+00:17:20,308 --> 00:17:22,972
+A threshold at the edge of the sweep.
+
+251
+00:17:22,972 --> 00:17:24,772
+Tau and k as assumptions.
+
+252
+00:17:24,772 --> 00:17:26,428
+Noisy change detection.
+
+253
+00:17:26,428 --> 00:17:29,452
+Restoration without costs or field checks.
+
+254
+00:17:29,452 --> 00:17:31,900
+No field validation or deployment.
+
+255
+00:17:32,800 --> 00:17:34,050
+In simple words.
+
+256
+00:17:34,050 --> 00:17:34,675
+Observe:
+
+257
+00:17:34,675 --> 00:17:35,925
+satellite radar.
+
+258
+00:17:35,925 --> 00:17:36,784
+Understand:
+
+259
+00:17:36,784 --> 00:17:40,299
+a U-Net gives mangrove probability per pixel.
+
+260
+00:17:40,299 --> 00:17:40,924
+Connect:
+
+261
+00:17:40,924 --> 00:17:44,595
+patches become nodes, nearby patches get edges.
+
+262
+00:17:44,595 --> 00:17:45,298
+Identify:
+
+263
+00:17:45,298 --> 00:17:48,970
+delete each node and measure connectivity loss.
+
+264
+00:17:48,970 --> 00:17:49,673
+Simulate:
+
+265
+00:17:49,673 --> 00:17:52,172
+try interventions and recompute.
+
+266
+00:17:52,172 --> 00:17:53,032
+Prioritise:
+
+267
+00:17:53,032 --> 00:17:55,453
+rank restoration sites by gain.
+
+268
+00:17:55,453 --> 00:17:55,766
+Act:
+
+269
+00:17:55,766 --> 00:18:00,296
+evidence, alerts and field tasks, so that officers decide.
+
+270
+00:18:01,196 --> 00:18:03,165
+Things you must not claim.
+
+271
+00:18:03,165 --> 00:18:05,664
+Not ninety five percent accuracy.
+
+272
+00:18:05,664 --> 00:18:06,346
+Not UNB7.
+
+273
+00:18:06,346 --> 00:18:08,163
+Not ground truth labels.
+
+274
+00:18:08,163 --> 00:18:09,375
+Not P16 as real.
+
+275
+00:18:09,375 --> 00:18:11,041
+Not Landsat or Kaggle.
+
+276
+00:18:11,041 --> 00:18:12,252
+Not rupee costs.
+
+277
+00:18:12,252 --> 00:18:15,887
+Not a measured sixteen percent mangrove decline.
+
+278
+00:18:15,887 --> 00:18:20,431
+Not real-time monitoring, deployment, or field verification.
+
+279
+00:18:20,431 --> 00:18:22,021
+Not an L L M or SHAP.
+
+280
+00:18:22,021 --> 00:18:27,474
+And not the landing page numbers, which are hard-coded synthetic values.
+
+281
+00:18:28,374 --> 00:18:29,934
+The sixty second answer.
+
+282
+00:18:29,934 --> 00:18:34,808
+EcoConnectAI is a satellite-driven conservation decision support framework.
+
+283
+00:18:34,808 --> 00:18:50,992
+It maps mangrove from Sentinel-1 radar with a U-Net trained on Global Mangrove Watch weak labels, converts the map into patches and a connectivity graph, and finds the patches whose removal most reduces connectivity, which are often not the largest.
+
+284
+00:18:50,992 --> 00:18:57,102
+It runs what-if scenarios, explains every ranking, and ranks restoration by connectivity gain.
+
+285
+00:18:57,102 --> 00:19:05,031
+Today it runs on real data for four Indian landscapes with a development model; UNB7, field validation and costs are next.
+
+286
+00:19:05,031 --> 00:19:06,266
+Good luck tomorrow.

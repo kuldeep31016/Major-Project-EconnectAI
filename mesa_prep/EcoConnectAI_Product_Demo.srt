@@ -1,0 +1,739 @@
+1
+00:00:00,000 --> 00:00:00,985
+Good afternoon.
+
+2
+00:00:00,985 --> 00:00:08,533
+This is EcoConnectAI, a satellite-driven coastal ecosystem intelligence and conservation decision-support platform.
+
+3
+00:00:08,533 --> 00:00:11,683
+Its purpose is not simply to show a habitat map.
+
+4
+00:00:11,683 --> 00:00:21,922
+It converts satellite-derived habitat information into patch-level connectivity analysis, criticality assessment, scenario analysis and restoration support.
+
+5
+00:00:22,622 --> 00:00:24,362
+This is the public overview.
+
+6
+00:00:24,362 --> 00:00:33,185
+The navigation covers the insight behind the project, how it works, its capabilities, the four study areas, restoration, and an about section.
+
+7
+00:00:33,185 --> 00:00:40,020
+The visual on the right is an illustration, and the figures on this public page come from our early prototype.
+
+8
+00:00:40,020 --> 00:00:44,307
+Every operational number I show today comes from inside the platform.
+
+9
+00:00:45,008 --> 00:00:47,153
+Now I click Launch Command Center.
+
+10
+00:00:47,153 --> 00:00:50,182
+This opens the operational side of the platform.
+
+11
+00:00:50,182 --> 00:00:56,807
+Before working with it, I will sign in, because actions like creating field tasks are controlled by role.
+
+12
+00:00:57,507 --> 00:00:58,520
+I click Sign in.
+
+13
+00:00:58,520 --> 00:01:06,882
+The platform has six roles, from state administrator to field officer, and each role sees only the actions it is allowed to perform.
+
+14
+00:01:06,882 --> 00:01:11,442
+These are demonstration accounts, and clicking a card signs in directly.
+
+15
+00:01:11,442 --> 00:01:15,370
+I click State Administrator, which has access to every module.
+
+16
+00:01:16,070 --> 00:01:17,736
+This is the Command Center.
+
+17
+00:01:17,736 --> 00:01:20,636
+On the left is the navigation for every module.
+
+18
+00:01:20,636 --> 00:01:29,273
+At the top are the study area selector, currently Kerala, and the analysis period, which is the latest run, from twenty twenty five imagery.
+
+19
+00:01:29,273 --> 00:01:30,939
+The bell shows open alerts.
+
+20
+00:01:30,939 --> 00:01:37,047
+In the centre is the map, and on the right the selected patch, landscape metrics and what-if tools.
+
+21
+00:01:37,747 --> 00:01:42,145
+Notice the label on the map: real data, development model, not final.
+
+22
+00:01:42,145 --> 00:01:45,650
+Every result in the platform carries a label like this.
+
+23
+00:01:45,650 --> 00:01:56,996
+Below the map, the cards show twenty four detected patches, forty three connectivity links, about two hundred and twenty hectares of mangrove, and four restoration opportunities.
+
+24
+00:01:56,996 --> 00:02:01,457
+All of these come from the latest analysis run, served by the backend.
+
+25
+00:02:02,157 --> 00:02:04,366
+The map is the spatial foundation.
+
+26
+00:02:04,366 --> 00:02:07,354
+Every later analysis links back to a location.
+
+27
+00:02:07,354 --> 00:02:08,979
+Here is the layers panel.
+
+28
+00:02:08,979 --> 00:02:13,072
+Green polygons are mangrove patches, split by model confidence.
+
+29
+00:02:13,072 --> 00:02:15,735
+Orange points are restoration candidates.
+
+30
+00:02:15,735 --> 00:02:18,399
+Red marks the five most critical patches.
+
+31
+00:02:18,399 --> 00:02:20,608
+Blue lines are connectivity links.
+
+32
+00:02:20,608 --> 00:02:27,885
+I will switch off the links, and the candidates, so you can see the patches alone, and then switch them back on.
+
+33
+00:02:28,586 --> 00:02:38,512
+The platform contains four study areas: Vembanad Kol in Kerala, the Sundarbans in West Bengal, the Gulf of Mannar in Tamil Nadu, and Bhitarkanika in Odisha.
+
+34
+00:02:38,512 --> 00:02:44,176
+If I switch to the Sundarbans, the whole dashboard reloads from that landscape's own run.
+
+35
+00:02:44,176 --> 00:02:48,948
+Here the model found fifty four patches over a much larger mangrove system.
+
+36
+00:02:48,948 --> 00:02:52,384
+Kerala is our primary demonstration, so I switch back.
+
+37
+00:02:53,085 --> 00:02:56,971
+To see the data behind a landscape, I open New Analysis.
+
+38
+00:02:56,971 --> 00:03:00,025
+For Kerala there are four downloaded scenes.
+
+39
+00:03:00,025 --> 00:03:05,021
+Each one shows its date range, pixel size, projection, bands and sensor.
+
+40
+00:03:05,021 --> 00:03:11,406
+The model uses Sentinel-1 radar: six scenes, combined into a temporal median, at ten metres.
+
+41
+00:03:11,406 --> 00:03:18,554
+Sentinel-2 optical data is also downloaded, but it is complementary; the current model does not use it.
+
+42
+00:03:18,554 --> 00:03:29,519
+This panel on the right states what is real: real satellite scenes, and Global Mangrove Watch labels, which are weak reference labels, not field ground truth.
+
+43
+00:03:30,219 --> 00:03:35,688
+The run panel shows what would execute: this scene, a trained model, and a threshold.
+
+44
+00:03:35,688 --> 00:03:43,345
+Pressing Run pipeline performs the whole chain on the backend: prediction, patch extraction, the graph and criticality.
+
+45
+00:03:43,345 --> 00:03:47,978
+I will not re-run it live, because it would replace the current results.
+
+46
+00:03:47,978 --> 00:03:50,873
+Instead, I will use the latest completed run.
+
+47
+00:03:51,574 --> 00:03:55,689
+Back on the dashboard, I can look at the satellite data directly.
+
+48
+00:03:55,689 --> 00:03:57,969
+I select the Sentinel-1 radar layer.
+
+49
+00:03:57,969 --> 00:04:02,844
+This is the actual input the model sees, rendered from our downloaded raster.
+
+50
+00:04:02,844 --> 00:04:08,416
+Now Sentinel-2 N D V I, the complementary optical view, where vegetation appears bright.
+
+51
+00:04:08,416 --> 00:04:11,011
+And back to the normal satellite basemap.
+
+52
+00:04:21,237 --> 00:04:22,882
+Now the habitat detection.
+
+53
+00:04:22,882 --> 00:04:24,591
+I open the interactive map.
+
+54
+00:04:24,591 --> 00:04:32,184
+The bright green here is the model's probability raster: for every ten metre pixel, the probability that it is mangrove.
+
+55
+00:04:32,184 --> 00:04:35,411
+If I switch it off, you see the imagery underneath.
+
+56
+00:04:35,411 --> 00:04:36,740
+Switching it back on.
+
+57
+00:04:36,740 --> 00:04:43,763
+The system thresholds this probability to get a habitat mask, and then groups the mask into individual patches.
+
+58
+00:04:48,355 --> 00:04:50,111
+Which model produced this?
+
+59
+00:04:50,111 --> 00:04:51,664
+I open Data and Models.
+
+60
+00:04:51,664 --> 00:04:57,067
+The research foundation is a U-Net with an EfficientNet B7 encoder, called UNB7.
+
+61
+00:04:57,067 --> 00:04:59,430
+That full model is not trained yet.
+
+62
+00:04:59,430 --> 00:05:05,779
+What runs today is the same U-Net with a smaller EfficientNet B0 encoder, on Sentinel-1 input.
+
+63
+00:05:05,779 --> 00:05:11,789
+This model, used for the Kerala run, is weak on Kerala: test I O U zero point zero three.
+
+64
+00:05:11,789 --> 00:05:17,327
+Our four-area model reaches zero point eight four, but mostly from the Sundarbans.
+
+65
+00:05:17,327 --> 00:05:22,932
+These are measured against weak labels, and the badge here is only a display label.
+
+66
+00:05:22,932 --> 00:05:28,470
+The ninety five percent card is the foundation study's published result, not ours.
+
+67
+00:05:29,170 --> 00:05:30,188
+Now the patches.
+
+68
+00:05:30,188 --> 00:05:33,751
+Back on the dashboard, I zoom into the northern cluster.
+
+69
+00:05:33,751 --> 00:05:39,478
+Instead of treating the habitat as one image, the system has extracted individual patches.
+
+70
+00:05:39,478 --> 00:05:40,560
+Let me click one.
+
+71
+00:05:40,560 --> 00:05:48,832
+The selected patch card shows its area, the connectivity loss if it were removed, its importance rank, and the model's confidence.
+
+72
+00:05:48,832 --> 00:05:51,441
+Each patch is an analysable spatial unit.
+
+73
+00:05:53,748 --> 00:05:55,810
+I can also search by patch I D.
+
+74
+00:05:55,810 --> 00:06:02,527
+P01 is the largest patch, thirty five hectares, with a connectivity loss of about thirty one percent.
+
+75
+00:06:02,527 --> 00:06:03,059
+Now P17.
+
+76
+00:06:03,059 --> 00:06:10,840
+It is only three point one three hectares, yet its connectivity loss is twenty seven percent, and it is ranked third.
+
+77
+00:06:10,840 --> 00:06:17,490
+The card explains why: it is a cut vertex, and removing it splits the network into three components.
+
+78
+00:06:17,490 --> 00:06:22,279
+Patches of very different size can have almost the same structural role.
+
+79
+00:06:23,600 --> 00:06:28,072
+Now we move from where habitat exists, to how patches are connected.
+
+80
+00:06:28,072 --> 00:06:29,914
+I open the Connectivity tab.
+
+81
+00:06:29,914 --> 00:06:32,413
+Each circle is a patch, sized by area.
+
+82
+00:06:32,413 --> 00:06:39,844
+Each line is a link to one of its nearest neighbours within five kilometres, weighted by distance and confidence.
+
+83
+00:06:39,844 --> 00:06:47,670
+Twenty four nodes, forty three links, and two clusters: a main network of twenty three patches, and one isolated patch.
+
+84
+00:06:48,372 --> 00:06:50,647
+I click patch P17 in the graph.
+
+85
+00:06:50,647 --> 00:06:57,544
+Its panel shows four functional links, to P14, P04, P15 and P07, and marks it as a cut vertex.
+
+86
+00:06:57,544 --> 00:07:00,185
+Now I switch on critical links only.
+
+87
+00:07:00,185 --> 00:07:05,101
+One bridging corridor remains, the dashed link through P17 and P07.
+
+88
+00:07:05,101 --> 00:07:11,632
+That corridor is the only connection between the northern and southern groups of patches.
+
+89
+00:07:13,807 --> 00:07:17,522
+This is criticality analysis, the main differentiator.
+
+90
+00:07:17,522 --> 00:07:23,646
+The question is not which patch is largest, but which patch matters most to connectivity.
+
+91
+00:07:23,646 --> 00:07:31,696
+For every patch, the system recomputes landscape connectivity with that patch removed, and ranks patches by the loss.
+
+92
+00:07:31,696 --> 00:07:33,072
+Here is the ranking.
+
+93
+00:07:33,072 --> 00:07:35,480
+P01, P07 and P17 are the top three.
+
+94
+00:07:35,480 --> 00:07:39,058
+P01 is the largest patch, but P07 and P17 are small.
+
+95
+00:07:39,058 --> 00:07:42,911
+They rank high because of their position in the network.
+
+96
+00:07:43,611 --> 00:07:44,955
+Why is P17 critical?
+
+97
+00:07:44,955 --> 00:07:46,299
+I open its evidence.
+
+98
+00:07:46,299 --> 00:07:53,488
+The system identifies it as critical based on the implemented connectivity analysis, and shows the numbers.
+
+99
+00:07:53,488 --> 00:08:01,349
+Connectivity before removal, connectivity after removal, the difference, and the relative loss, zero point two seven.
+
+100
+00:08:01,349 --> 00:08:03,432
+By area it is only seventeenth.
+
+101
+00:08:03,432 --> 00:08:10,353
+Its degree is four, it is a cut vertex, and removing it takes the network from two components to three.
+
+102
+00:08:10,353 --> 00:08:14,586
+Below are its geometry, confidence and the analysis parameters.
+
+103
+00:08:14,586 --> 00:08:19,558
+Nothing here is generated at display time; it is read from the stored run.
+
+104
+00:08:20,258 --> 00:08:23,255
+Now I move from the analysis back to geography.
+
+105
+00:08:23,255 --> 00:08:27,080
+On the dashboard, I search for P17, and the map flies to it.
+
+106
+00:08:27,080 --> 00:08:33,647
+The red polygon outlined here is P17, one of the top five critical patches, and it is already selected.
+
+107
+00:08:33,647 --> 00:08:44,932
+An officer does not have to interpret an abstract table; the critical patch is right here, between the northern and southern mangrove groups, with its area, loss and confidence.
+
+108
+00:08:45,633 --> 00:08:47,319
+Now a management question.
+
+109
+00:08:47,319 --> 00:08:50,238
+What happens to the landscape if P17 is lost?
+
+110
+00:08:50,238 --> 00:08:51,600
+I click Remove Patch.
+
+111
+00:08:51,600 --> 00:08:56,205
+The backend rebuilds the graph without P17 and recomputes connectivity.
+
+112
+00:08:56,205 --> 00:09:07,881
+Here is the result: connectivity falls by twenty seven percent, while only one point four percent of the habitat was removed, and the network breaks from two components into three.
+
+113
+00:09:08,580 --> 00:09:11,861
+For a fuller comparison I open the Scenario Lab.
+
+114
+00:09:11,861 --> 00:09:15,346
+Scenario A, remove patch, already has P17 selected.
+
+115
+00:09:15,346 --> 00:09:16,781
+I click Run scenario.
+
+116
+00:09:16,781 --> 00:09:30,382
+Here is the before state, the baseline, and the simulated after state, side by side: connectivity indices, habitat area, links going from forty three to thirty nine, and components from two to three.
+
+117
+00:09:30,382 --> 00:09:36,738
+Below is an explanation built only from these numbers, and the affected neighbouring patches.
+
+118
+00:09:39,929 --> 00:09:42,290
+This is not a prediction of the future.
+
+119
+00:09:42,290 --> 00:09:46,528
+It is a what-if based on the current model output and our assumptions.
+
+120
+00:09:46,528 --> 00:09:51,130
+One assumption is the five kilometre connection distance, so let me test it.
+
+121
+00:09:51,130 --> 00:09:53,007
+I choose scenario E and run it.
+
+122
+00:09:53,007 --> 00:10:01,786
+At three, five and eight kilometres, the links change from forty one to forty seven, but the ranking correlation stays above zero point nine six.
+
+123
+00:10:01,786 --> 00:10:05,237
+The critical patches do not depend on that single choice.
+
+124
+00:10:08,278 --> 00:10:15,213
+After finding where connectivity is vulnerable, the next question is where restoration would help most.
+
+125
+00:10:15,213 --> 00:10:17,301
+I open the Restoration planner.
+
+126
+00:10:17,301 --> 00:10:21,206
+Candidates are areas where the model saw marginal habitat.
+
+127
+00:10:21,206 --> 00:10:25,785
+For each one, the system adds it to the graph and measures the gain.
+
+128
+00:10:25,785 --> 00:10:27,805
+I click the top candidate, C1.
+
+129
+00:10:27,805 --> 00:10:36,962
+It is one point six hectares, and it would add three new links, to P01, P06 and P13, raising connectivity by one point two nine percent.
+
+130
+00:10:37,661 --> 00:10:44,233
+The panel is honest about what it has not assessed: water status, legal status, land ownership and cost.
+
+131
+00:10:44,233 --> 00:10:48,214
+The current prototype ranks candidates by connectivity benefit.
+
+132
+00:10:48,214 --> 00:10:52,890
+Cost-aware ranking is used only when validated cost data is uploaded here.
+
+133
+00:10:52,890 --> 00:10:57,060
+So recommended means no rule was violated in the available layers.
+
+134
+00:10:57,060 --> 00:11:01,357
+It is a starting point for a field assessment, not a final decision.
+
+135
+00:11:02,057 --> 00:11:03,486
+Next, change over time.
+
+136
+00:11:03,486 --> 00:11:11,874
+For Kerala we have Sentinel-1 imagery for twenty twenty and twenty twenty five, both processed by the same model at the same threshold.
+
+137
+00:11:11,874 --> 00:11:21,753
+I select the twenty twenty five run in the period selector, go to the Scenario Lab, open scenario G, compare periods, choose the twenty twenty run, and run it.
+
+138
+00:11:21,753 --> 00:11:30,513
+Between twenty twenty and twenty twenty five the model output drops from three hundred and eighty two to three hundred and nineteen hectares.
+
+139
+00:11:30,513 --> 00:11:33,247
+Nine patches have no match, and ten are new.
+
+140
+00:11:33,247 --> 00:11:35,732
+This is labelled observed, model output.
+
+141
+00:11:43,616 --> 00:11:48,716
+The explanation says it clearly: both are model outputs, and no cause is attributed.
+
+142
+00:11:48,716 --> 00:11:54,787
+This development model is weak on Kerala, so I would not report this as a measured loss of mangrove.
+
+143
+00:11:54,787 --> 00:12:02,558
+What the module demonstrates is the workflow: when a stronger model is available, the same comparison becomes a monitoring tool.
+
+144
+00:12:02,558 --> 00:12:04,500
+I switch back to the latest run.
+
+145
+00:12:05,201 --> 00:12:09,573
+Satellite analysis alone should not be treated as the final truth.
+
+146
+00:12:09,573 --> 00:12:13,416
+A real workflow needs human review and field verification.
+
+147
+00:12:13,416 --> 00:12:18,384
+On the interactive map with P17 selected, I click Send P17 to verification.
+
+148
+00:12:18,384 --> 00:12:22,160
+It is registered as a detection with status A I detected.
+
+149
+00:12:22,160 --> 00:12:26,599
+It cannot be marked confirmed until accepted field evidence exists.
+
+150
+00:12:27,300 --> 00:12:29,054
+Now I open Field Reports.
+
+151
+00:12:29,054 --> 00:12:31,369
+The verification queue shows P17.
+
+152
+00:12:31,369 --> 00:12:42,524
+I click New task and create an assignment: verify critical patch P17, with the reason from the analysis, the patch location, and the field officer as assignee.
+
+153
+00:12:42,524 --> 00:12:43,927
+I click Create task.
+
+154
+00:12:43,927 --> 00:12:46,172
+The task now appears as pending.
+
+155
+00:12:46,172 --> 00:12:49,048
+This is the link from analysis to action.
+
+156
+00:13:05,353 --> 00:13:10,216
+To show the complete loop, here is an earlier task from our workflow testing.
+
+157
+00:13:10,216 --> 00:13:17,480
+A field officer submitted an observation with location, a senior officer accepted it, and the task became verified.
+
+158
+00:13:17,480 --> 00:13:22,027
+This record is demonstration data from testing, not a real field survey.
+
+159
+00:13:22,027 --> 00:13:25,185
+No real field validation has been carried out yet.
+
+160
+00:13:25,886 --> 00:13:30,491
+Reports turn the analysis into something that can be reviewed and shared.
+
+161
+00:13:30,491 --> 00:13:33,519
+I open Reports and select the Kerala assessment.
+
+162
+00:13:33,519 --> 00:13:50,676
+It is generated from the run files: an abstract carrying the result label, then the habitat map, the graph and baseline connectivity, the critical patches, the what-if result, the sensitivity test, restoration candidates, and the data provenance with model and timestamps.
+
+163
+00:13:53,947 --> 00:13:55,981
+I click Generate official report.
+
+164
+00:13:55,981 --> 00:14:01,958
+This version adds a field verification section and is stored in the database with an audit entry.
+
+165
+00:14:01,958 --> 00:14:09,045
+The Download PDF button uses the browser's print to PDF; the backend itself produces the report as structured data.
+
+166
+00:14:10,625 --> 00:14:15,610
+EcoConnectAI is designed as decision support, not autonomous decision making.
+
+167
+00:14:15,610 --> 00:14:18,005
+Even the assistant follows this rule.
+
+168
+00:14:18,005 --> 00:14:19,753
+I ask: why is P17 critical?
+
+169
+00:14:19,753 --> 00:14:25,450
+The answer is assembled from the stored run, with the source files and the result label.
+
+170
+00:14:25,450 --> 00:14:29,593
+It is not a large language model, and it never invents a number.
+
+171
+00:14:32,241 --> 00:14:33,813
+Every action is recorded.
+
+172
+00:14:33,813 --> 00:14:35,259
+I open the audit trail.
+
+173
+00:14:35,259 --> 00:14:46,138
+At the top are the actions from this demonstration: signing in, registering the detection, creating the field task, and generating the report, each with user, role and time.
+
+174
+00:14:46,138 --> 00:14:49,471
+The platform provides evidence to support an officer.
+
+175
+00:14:49,471 --> 00:14:54,187
+The final management decision remains with the responsible human authority.
+
+176
+00:14:54,888 --> 00:14:57,572
+Behind the screens, the flow is simple.
+
+177
+00:14:57,572 --> 00:15:00,945
+The Next J S frontend calls a Fast A P I backend.
+
+178
+00:15:00,945 --> 00:15:09,686
+Workflow data, like users, detections, tasks, reports and this audit log, is stored in a S Q Lite database with fifteen tables.
+
+179
+00:15:09,686 --> 00:15:16,775
+Rasters, model checkpoints and analysis results stay as files, and the database records where they are.
+
+180
+00:15:16,775 --> 00:15:22,557
+The model and graph analysis run in Python, and the results come back to the screen.
+
+181
+00:15:23,257 --> 00:15:25,061
+Back to the Command Center.
+
+182
+00:15:25,061 --> 00:15:39,626
+So the complete workflow is: satellite observation, habitat detection, patch extraction, connectivity analysis, criticality assessment, what-if simulation, restoration prioritisation, field verification, and reporting.
+
+183
+00:15:39,626 --> 00:15:44,971
+The key idea is that EcoConnectAI does not stop at showing where habitat exists.
+
+184
+00:15:44,971 --> 00:16:00,672
+It shows how patches relate to one another, identifies structurally important patches, estimates the consequences of losing them, and supports restoration planning, while being clear about what is real and what is still in development.
+
+185
+00:16:00,672 --> 00:16:01,340
+Thank you.
