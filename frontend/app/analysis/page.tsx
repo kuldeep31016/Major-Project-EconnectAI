@@ -391,7 +391,7 @@ function AnalysisView() {
                 <div>
                   <div className="text-xs font-bold text-foreground flex items-center gap-1.5">
                     <span>{conn.grade ?? "Ecosystem Connectivity Score"}</span>
-                    <Badge variant="success" className="text-[9px]">Live</Badge>
+                    <Badge variant="secondary" className="text-[9px]">Latest run</Badge>
                   </div>
                   <div className="mt-1 text-[11px] text-muted-foreground font-mono">
                     IIC: <b className="text-foreground">{fmtIndex(conn.iicIndex)}</b> · PC: <b className="text-foreground">{fmtIndex(conn.pcIndex)}</b>
@@ -399,7 +399,7 @@ function AnalysisView() {
                   <div className="mt-1.5 text-[10.5px] text-emerald-700 font-semibold">
                     {conn.previousScore != null
                       ? `${conn.score >= conn.previousScore ? "▲ +" : "▼ -"}${Math.abs(conn.score - conn.previousScore).toFixed(1)} from prior period`
-                      : "Optimal landscape connectivity"}
+                      : "No earlier run with the same model to compare"}
                   </div>
                 </div>
               </div>

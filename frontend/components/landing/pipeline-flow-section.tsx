@@ -92,7 +92,7 @@ const PIPELINE_STEPS: PipelineStep[] = [
     description:
       "Leave-one-out network perturbation discovers vulnerable cut-vertices whose loss severs the entire landscape.",
     activeRadioIdx: 3,
-    badgeLabel: "P-016 Cut-Vertex (40.8% Loss)",
+    badgeLabel: "P17 cut vertex (−27.0% IIC)",
     icon: Zap,
   },
   {
@@ -112,7 +112,7 @@ const PIPELINE_STEPS: PipelineStep[] = [
     description:
       "Rank restoration sites by global connectivity returned and dispatch verified patrol tasks to frontline forest rangers.",
     activeRadioIdx: 5,
-    badgeLabel: "R-003 Priority Corridor (+12.4%)",
+    badgeLabel: "C1 restoration candidate (+1.29% IIC)",
     icon: Sprout,
   },
 ];
@@ -337,7 +337,7 @@ export function PipelineFlowSection() {
                 </g>
               )}
 
-              {/* Stage 06: SENSITIVITY - Highlight Critical Cut-Vertex P-016 */}
+              {/* Stage 06: SENSITIVITY - Highlight critical cut vertex P17 */}
               {activeIdx === 5 && (
                 <g>
                   {/* Glowing Red Patch */}
@@ -353,7 +353,7 @@ export function PipelineFlowSection() {
                   <circle cx="250" cy="145" r="10" fill="#ef4444" fillOpacity="0.3" className="animate-ping" />
                   <circle cx="250" cy="145" r="5" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
                   <rect x="262" y="137" width="38" height="15" rx="3" fill="#040b14" stroke="#ef4444" strokeWidth="1" />
-                  <text x="281" y="148" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">P-016</text>
+                  <text x="281" y="148" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">P17</text>
                 </g>
               )}
 

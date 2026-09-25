@@ -12,10 +12,8 @@ import {
   Route,
   ShieldCheck,
   Sparkles,
-  TrendingUp,
   X,
 } from "lucide-react";
-import { Area, AreaChart, ResponsiveContainer } from "recharts";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,16 +45,6 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
     ? graph.edges.filter((e) => e.source === patch.id || e.target === patch.id)
     : [];
 
-  // Importance is modelled as rising as the network around a patch thins out.
-  const importanceSeries = patch
-    ? [2020, 2021, 2022, 2023, 2024, 2025].map((year, i) => ({
-        year,
-        v: Math.max(
-          0.05,
-          Math.min(1, patch.bridgeScore * (0.62 + i * 0.08) + (i % 2 === 0 ? 0.02 : -0.01)),
-        ),
-      }))
-    : [];
 
   return (
     <AnimatePresence>
@@ -209,42 +197,6 @@ export function PixelInspector({ patch, cell, graph, onClose, onOpenInGraph }: P
                   <p className="mt-3 text-[11.5px] leading-relaxed text-muted-foreground">
                     {node.explanation}
                   </p>
-
-                  {/* importance timeline */}
-                  <div className="mt-4">
-                    <div className="mb-1.5 flex items-center justify-between">
-                      <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                        <TrendingUp className="h-3 w-3" />
-                        Importance timeline
-                      </span>
-                      <span className="text-[10px] text-muted-foreground">2020 – 2025</span>
-                    </div>
-                    <div className="h-[54px] rounded-lg border border-foreground/[0.08] bg-[#04101f]/60 px-1">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <AreaChart data={importanceSeries} margin={{ top: 6, bottom: 2, left: 0, right: 0 }}>
-                          <defs>
-                            <linearGradient id="impGrad" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stopColor="#6d5bd0" stopOpacity={0.5} />
-                              <stop offset="100%" stopColor="#6d5bd0" stopOpacity={0} />
-                            </linearGradient>
-                          </defs>
-                          <Area
-                            type="monotone"
-                            dataKey="v"
-                            stroke="#6d5bd0"
-                            strokeWidth={1.8}
-                            fill="url(#impGrad)"
-                            dot={false}
-                            animationDuration={800}
-                          />
-                        </AreaChart>
-                      </ResponsiveContainer>
-                    </div>
-                    <p className="mt-1.5 text-[10px] leading-snug text-muted-foreground">
-                      Importance has risen as neighbouring patches degraded — the same patch now
-                      carries more of the network than it did in 2020.
-                    </p>
-                  </div>
                 </div>
 
                 {/* attributes */}

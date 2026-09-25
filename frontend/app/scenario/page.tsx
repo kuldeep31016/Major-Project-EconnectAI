@@ -100,84 +100,16 @@ function ScenarioLabView() {
         const resData = await postScenario(sceneId, runId, body);
         setResult(resData);
       } else {
-        // Instant high-fidelity client simulation fallback
-        let targetRemoved = [...removedPatchIds];
-        if (kind === "remove_polygon" && polygon.length >= 3) {
-          const isInside = (pt: [number, number], vs: LatLng[]) => {
-            const x = pt[0], y = pt[1];
-            let inside = false;
-            for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-              const xi = vs[i][0], yi = vs[i][1];
-              const xj = vs[j][0], yj = vs[j][1];
-              const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-              if (intersect) inside = !inside;
-            }
-            return inside;
-          };
-          const matched = mask.patches.filter((p) => isInside(p.center, polygon) || isInside([p.center[1], p.center[0]], polygon)).map((p) => p.id);
-          targetRemoved = matched.length > 0 ? matched : [mask.patches[0]?.id || "p1"];
-        }
-
-        const baseHabHa = mask.totals.habitatAreaHa;
-        const basePatches = mask.patches.length;
-        const baseEdges = graph.edges.length;
-
-        let sHabHa = baseHabHa;
-        let sPatches = basePatches;
-        let sEdges = baseEdges;
-        let severed: { source: string; target: string }[] = [];
-        let affected: string[] = [];
-
-        if (kind === "remove_patches" || kind === "remove_polygon") {
-          const remSet = new Set(targetRemoved);
-          const remArea = mask.patches.filter((p) => remSet.has(p.id)).reduce((acc, p) => acc + p.areaHa, 0);
-          sHabHa = Math.max(0, baseHabHa - remArea);
-          sPatches = Math.max(0, basePatches - targetRemoved.length);
-          severed = graph.edges.filter((e) => remSet.has(e.source) || remSet.has(e.target)).map((e) => ({ source: e.source, target: e.target }));
-          sEdges = Math.max(0, baseEdges - severed.length);
-          affected = targetRemoved;
-        } else if (kind === "restore" || kind === "restore_multi") {
-          const chosen = restoration.actions.filter((a) => cands.includes(a.id));
-          const addArea = chosen.reduce((acc, c) => acc + c.areaHa, 0);
-          sHabHa = baseHabHa + addArea;
-          sPatches = basePatches + chosen.length;
-          sEdges = baseEdges + chosen.length * 2;
-          affected = chosen.map((c) => c.id);
-        }
-
-        const lossPct = baseHabHa ? (100 * (baseHabHa - sHabHa)) / baseHabHa : 0;
-        const bIic = 0.0428;
-        const sIic = kind.startsWith("restore") ? bIic * 1.15 : bIic * Math.max(0.1, 1 - lossPct / 70);
-        const bPc = 0.0612;
-        const sPc = kind.startsWith("restore") ? bPc * 1.18 : bPc * Math.max(0.1, 1 - lossPct / 65);
-        const bEca = baseHabHa * 0.45;
-        const sEca = sHabHa * (kind.startsWith("restore") ? 0.48 : 0.42);
-
-        const explanation = kind.startsWith("restore")
-          ? `Restoring ${cands.length} candidate(s) adds +${(sHabHa - baseHabHa).toFixed(1)} ha of functional habitat and increases network connectivity by +${((sIic - bIic) / bIic * 100).toFixed(1)}%.`
-          : `Removing ${targetRemoved.length} patch(es) (${(baseHabHa - sHabHa).toFixed(1)} ha) severs ${severed.length} connectivity links and lowers IIC index by ${lossPct.toFixed(1)}%.`;
-
-        setResult({
-          type: kind,
-          label: "SIMULATED",
-          parameters: { patch_ids: targetRemoved, type: kind },
-          baseline: { n_patches: basePatches, n_edges: baseEdges, n_components: 2, habitat_area_ha: baseHabHa, iic: bIic, pc: bPc, eca_ha: bEca, eca_pct_of_habitat: 45, metric: "iic", c: bIic },
-          scenario: { n_patches: sPatches, n_edges: sEdges, n_components: kind.startsWith("restore") ? 1 : 3, habitat_area_ha: sHabHa, iic: sIic, pc: sPc, eca_ha: sEca, eca_pct_of_habitat: 42, metric: "iic", c: sIic },
-          difference: { n_patches: sPatches - basePatches, n_edges: sEdges - baseEdges, n_components: 1, habitat_area_ha: sHabHa - baseHabHa, iic: sIic - bIic, pc: sPc - bPc, eca_ha: sEca - bEca },
-          affected_patch_ids: affected,
-          removed_patch_ids: targetRemoved,
-          newly_isolated_patch_ids: targetRemoved.slice(0, 2),
-          severed_edges: severed,
-          edges_after: graph.edges.filter((e) => !targetRemoved.includes(e.source) && !targetRemoved.includes(e.target)).map((e) => ({ source: e.source, target: e.target, distance_km: e.distanceKm, weight: e.strength })),
-          explanation,
-        });
+        // No backend run loaded: never fabricate numbers — scenarios are exact server-side recomputations only.
+        setResult(null);
+        setError("Backend offline or no analysis run loaded — scenarios need the live API (start the backend and reload).");
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     } finally {
       setBusy(false);
     }
-  }, [live, kind, removedPatchIds, polygon, cands, otherRun, sceneId, runId, mask, graph, restoration]);
+  }, [live, kind, removedPatchIds, polygon, cands, otherRun, sceneId, runId]);
 
   const variants = (result as { variants?: Record<string, unknown>[] } | null)?.variants;
   const scenarioGraph = useMemo(() => {

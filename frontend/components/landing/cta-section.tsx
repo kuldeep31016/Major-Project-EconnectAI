@@ -73,7 +73,7 @@ export function CTASection() {
               <div className="space-y-2.5 text-[13px] text-slate-200">
                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
                   <span className="text-slate-400">Supported Sensors</span>
-                  <span className="font-semibold text-white">Sentinel-1, S-2, Landsat-9</span>
+                  <span className="font-semibold text-white">Sentinel-1 (model) · Sentinel-2 (context)</span>
                 </div>
                 <div className="flex items-center justify-between border-b border-white/5 pb-2">
                   <span className="text-slate-400">Connectivity Engine</span>

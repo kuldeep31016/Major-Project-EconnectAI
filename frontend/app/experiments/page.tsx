@@ -119,10 +119,10 @@ export default function ExperimentsPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-lg font-bold text-foreground tracking-tight">{detail.experimentId}</h2>
-                  <Badge variant="success">Validated Model</Badge>
+                  <Badge variant={detail.metrics.mode === "full" ? "success" : "secondary"}>{detail.metrics.mode === "full" ? "Final model" : "Development model — not final"}</Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  U-Net Architecture · {detail.metrics.encoder || "efficientnet-b0"} encoder · Input: {input} · {ds?.n_train ?? 176} train / {ds?.n_val ?? 32} val tiles
+                  U-Net Architecture · {detail.metrics.encoder || "—"} encoder · Input: {input} · {ds?.n_train ?? "—"} train / {ds?.n_val ?? "—"} val tiles · metrics vs GMW weak labels
                 </p>
               </div>
 

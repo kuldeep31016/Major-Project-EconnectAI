@@ -105,7 +105,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       registerLiveBundle(id, bundle);
       setRuns(runList);
       try {
-        registerLiveTimeline(id, await fetchTimeline(id));
+        registerLiveTimeline(id, await fetchTimeline(id, run));
       } catch {
         registerLiveTimeline(id, null);
       }

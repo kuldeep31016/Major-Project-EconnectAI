@@ -19,35 +19,36 @@ interface RestorationCandidate {
 }
 
 const CANDIDATES: RestorationCandidate[] = [
+  // Real candidates from the Kerala 2025 analysis run (kerala-coast_20260920T182222Z) — development model, not final.
   {
     id: "C1",
-    name: "Perumpalam Strait Corridor",
-    areaHa: 101.7,
-    gainPct: "+2.73%",
-    affectedPatches: "Re-links 4 isolated patches (P02, P03, P15, P16)",
-    confidence: "0.92 (Sentinel-1/2 Verified)",
+    name: "Candidate C1 — marginal-habitat site",
+    areaHa: 1.6,
+    gainPct: "+1.29% IIC",
+    affectedPatches: "3 new links: P01, P06, P13",
+    confidence: "model probability 0.3–0.5 (marginal)",
     priorityLevel: "High",
-    rationale: "Creates an optimal dual-corridor stepping stone restoring northern water exchange.",
+    rationale: "Largest connectivity gain of the four candidates; nearest existing habitat 0.58 km away.",
   },
   {
     id: "C2",
-    name: "Vaikom South Mangrove Belt",
-    areaHa: 69.0,
-    gainPct: "+1.83%",
-    affectedPatches: "Connects 3 backwater patches",
-    confidence: "0.89",
+    name: "Candidate C2 — marginal-habitat site",
+    areaHa: 1.3,
+    gainPct: "+1.04% IIC",
+    affectedPatches: "3 new links: P02, P06, P12",
+    confidence: "model probability 0.3–0.5 (marginal)",
     priorityLevel: "High",
-    rationale: "Re-establishes ecological dispersal along the southern lake basin.",
+    rationale: "Second-ranked by gain; links the central group of patches.",
   },
   {
-    id: "C4",
-    name: "Muhamma Shallows Expansion",
-    areaHa: 53.4,
-    gainPct: "+1.36%",
-    affectedPatches: "Bridges central subnets",
-    confidence: "0.86",
+    id: "C3",
+    name: "Candidate C3 — marginal-habitat site",
+    areaHa: 1.1,
+    gainPct: "+0.83% IIC",
+    affectedPatches: "3 new links: P01, P11, P13",
+    confidence: "model probability 0.3–0.5 (marginal)",
     priorityLevel: "Medium",
-    rationale: "Reinforces perimeter stability against storm surge erosion.",
+    rationale: "Adjacent to existing habitat (0.09 km); smaller gain.",
   },
 ];
 
@@ -71,18 +72,18 @@ export function RestorationSection() {
 
           <p className="mt-2 text-[13.5px] text-slate-300 leading-relaxed">
             Prioritize conservation interventions based on connectivity gained rather than simple
-            land size. Connect fragmented corridors where nature returns the highest resilience.
+            land size. Candidates are ranked by connectivity gain; cost-aware ranking only when validated cost data is supplied.
           </p>
         </div>
 
         {/* 5-Step Strategic Restoration Workflow Bar */}
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-5 gap-2 text-center">
           {[
-            { step: "01", name: "Candidate Area", desc: "Identify intertidal zones" },
+            { step: "01", name: "Candidate Area", desc: "Marginal model probability" },
             { step: "02", name: "Connectivity Gain", desc: "Simulate graph addition" },
-            { step: "03", name: "Feasibility", desc: "Substrate verification" },
-            { step: "04", name: "Priority Ranking", desc: "Evidence-weighted order" },
-            { step: "05", name: "Field Verification", desc: "Ground ranger dispatch" },
+            { step: "03", name: "Feasibility", desc: "Rules over available layers" },
+            { step: "04", name: "Priority Ranking", desc: "Ranked by connectivity gain" },
+            { step: "05", name: "Field Verification", desc: "Field assessment task" },
           ].map((s) => (
             <div
               key={s.step}
@@ -111,7 +112,7 @@ export function RestorationSection() {
                 Kerala Backwaters · Candidate Layer
               </span>
               <span className="bg-[#00c896]/20 text-[#00c896] px-2 py-0.5 rounded backdrop-blur font-bold border border-[#00c896]/30">
-                3 Priority Opportunities
+                Top 3 of 4 candidates · schematic
               </span>
             </div>
 
@@ -159,7 +160,7 @@ export function RestorationSection() {
             {/* Bottom Status */}
             <div className="relative z-10 bg-black/80 p-2 rounded-lg backdrop-blur border border-white/10 text-[10px] text-slate-300 flex justify-between items-center">
               <span>Click polygon to inspect opportunity</span>
-              <span className="font-mono text-[#00c896] font-bold">Gain: +2.73% Global Connectivity</span>
+              <span className="font-mono text-[#00c896] font-bold">Gain: {active.gainPct} · no cost data</span>
             </div>
           </div>
 
@@ -203,7 +204,7 @@ export function RestorationSection() {
                 </div>
 
                 <div className="bg-white/5 p-2 rounded-lg border border-white/5">
-                  <div className="text-[9px] text-slate-400">Evidence Confidence</div>
+                  <div className="text-[9px] text-slate-400">Candidate source</div>
                   <div className="font-semibold text-[#38bdf8] mt-0.2">{active.confidence}</div>
                 </div>
               </div>
