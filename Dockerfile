@@ -5,7 +5,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
+# libexpat1: required by the rasterio (GDAL) wheels, missing from recent python:slim images
+RUN apt-get update && apt-get install -y --no-install-recommends curl libexpat1 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements-api.txt .

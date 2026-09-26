@@ -46,9 +46,9 @@ async function getJson<T>(path: string, init?: RequestInit, timeoutMs = 8000): P
   }
 }
 
-export async function apiHealth(): Promise<boolean> {
+export async function apiHealth(timeoutMs = 2500): Promise<boolean> {
   try {
-    const r = await getJson<{ status: string }>("/api/health", undefined, 2500);
+    const r = await getJson<{ status: string }>("/api/health", undefined, timeoutMs);
     return r.status === "ok";
   } catch {
     return false;

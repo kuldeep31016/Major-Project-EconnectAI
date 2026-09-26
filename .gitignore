@@ -36,6 +36,5 @@ service-account*.json
 
 # runtime database (seeded at startup)
 outputs/ecoconnect.db*
-outputs/quicklooks/
 outputs/.jwt_secret
 logs/

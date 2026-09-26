@@ -509,16 +509,25 @@ def reanalyse(study_area: str, run_id: str, req: ReanalyseRequest):
 def probability_png(study_area: str, run_id: str, alpha: float = 0.85):
     """The run's habitat-probability raster rendered as a WGS84-bounded PNG for a Leaflet ImageOverlay.
     Bounds are returned in the X-Bounds header as min_lat,min_lon,max_lat,max_lon."""
+    run_dir = _resolve_run(study_area, run_id)
+    m = _read_json(run_dir / "manifest.json")
+    src = m["data_source"]
+    if src.get("type") != "probability_raster":
+        raise HTTPException(404, "this run has no probability raster (synthetic geometry)")
+    # pre-rendered overlay (shipped with the run, so deployments without the multi-GB rasters still show it)
+    pre, pre_meta = run_dir / "probability_overlay.png", run_dir / "probability_overlay.json"
+    if alpha == 0.85 and pre.exists() and pre_meta.exists() and not Path(_abs(src["path"])).exists():
+        return Response(pre.read_bytes(), media_type="image/png",
+                        headers={"X-Bounds": json.loads(pre_meta.read_text())["bounds"], "Access-Control-Expose-Headers": "X-Bounds",
+                                 "Cache-Control": "public, max-age=3600"})
+    if not Path(_abs(src["path"])).exists():
+        raise HTTPException(404, "probability raster not available on this server")
     import io
     import numpy as np
     from PIL import Image
     from rasterio.warp import transform_bounds, reproject, Resampling
     from rasterio.crs import CRS
     from ecoconnect.geospatial.raster_processing.io import read_raster
-    m = _read_json(_resolve_run(study_area, run_id) / "manifest.json")
-    src = m["data_source"]
-    if src.get("type") != "probability_raster":
-        raise HTTPException(404, "this run has no probability raster (synthetic geometry)")
     prob, meta = read_raster(_abs(src["path"]), bands=[1])
     prob = prob[0]
     # reproject to EPSG:4326 (Leaflet ImageOverlay is equirectangular) at ~1000 px width
@@ -540,8 +549,14 @@ def probability_png(study_area: str, run_id: str, alpha: float = 0.85):
     rgba[..., 3] = np.where(valid, a, 0).astype(np.uint8)
     buf = io.BytesIO()
     Image.fromarray(rgba, "RGBA").save(buf, "PNG", optimize=True)
+    bounds = f"{b[1]},{b[0]},{b[3]},{b[2]}"
+    if alpha == 0.85:   # keep a copy next to the run so it can be deployed without the raster
+        try:
+            pre.write_bytes(buf.getvalue()); pre_meta.write_text(json.dumps({"bounds": bounds}))
+        except OSError:
+            pass
     return Response(buf.getvalue(), media_type="image/png",
-                    headers={"X-Bounds": f"{b[1]},{b[0]},{b[3]},{b[2]}", "Access-Control-Expose-Headers": "X-Bounds",
+                    headers={"X-Bounds": bounds, "Access-Control-Expose-Headers": "X-Bounds",
                              "Cache-Control": "public, max-age=3600"})
 
 
@@ -586,9 +601,26 @@ def scene_quicklook(study_area: str, kind: str = "s1", year: Optional[int] = Non
 
     if kind not in {"s1", "ndvi", "rgb"}:
         raise HTTPException(400, "kind must be s1, ndvi or rgb")
+    cache_dir = OUTPUTS_DIR / "quicklooks"
+    scenes_dir = Path(os.environ.get("DATA_ROOT", REPO_ROOT / "data")) / "scenes" / study_area
+    if not (scenes_dir.exists() and any(scenes_dir.glob("*.tif"))):
+        # deployment without the multi-GB scene rasters: serve the pre-rendered quicklook (same year first)
+        pngs = sorted(cache_dir.glob(f"{study_area}_*_{kind}.png"))
+        def _yr(pth: Path) -> int:
+            try:
+                return int(pth.name[len(study_area) + 1:].split("_")[0])
+            except ValueError:
+                return 0
+        pngs.sort(key=lambda pth: (abs(_yr(pth) - year) if year else 0, 0 if "_s12_" in pth.name else 1))
+        for pth in pngs:
+            mf = pth.with_suffix(".json")
+            if mf.exists():
+                return Response(pth.read_bytes(), media_type="image/png",
+                                headers={"X-Bounds": json.loads(mf.read_text())["bounds"], "X-Scene": pth.stem,
+                                         "Access-Control-Expose-Headers": "X-Bounds, X-Scene", "Cache-Control": "public, max-age=3600"})
+        raise HTTPException(404, f"no {kind} quicklook available for {study_area} on this server")
     needs = {"s1": ("s1_vv_db",), "ndvi": ("s2_red", "s2_nir"), "rgb": ("s2_red", "s2_green", "s2_blue")}[kind]
     src = _scene_raster(study_area, year, needs)
-    cache_dir = OUTPUTS_DIR / "quicklooks"
     cache_dir.mkdir(parents=True, exist_ok=True)
     cached = cache_dir / f"{src.stem}_{kind}.png"
     meta_f = cached.with_suffix(".json")

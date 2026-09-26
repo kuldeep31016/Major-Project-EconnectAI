@@ -94,7 +94,13 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   const loadBundle = useCallback(async (id: string, run = "latest") => {
     setBundleLoading(true);
     try {
-      const ok = await apiHealth();
+      // Free hosting tiers sleep when idle and take up to ~60 s to wake: keep trying for ~90 s
+      // instead of declaring the backend offline after the first short timeout.
+      let ok = await apiHealth();
+      for (let attempt = 0; !ok && attempt < 8; attempt++) {
+        await new Promise((r) => setTimeout(r, 2000));
+        ok = await apiHealth(10000);
+      }
       setApiOnline(ok);
       if (!ok) {
         registerLiveBundle(id, null);

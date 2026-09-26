@@ -6,7 +6,6 @@ logs
 notebooks
 frontend
 outputs/ecoconnect.db*
-outputs/quicklooks
 outputs/.jwt_secret
 **/__pycache__
 .pytest_cache
