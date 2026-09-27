@@ -51,6 +51,8 @@ PERMISSIONS: dict[str, set[str]] = {
     "manage_users": {"state_admin"},
     "view_audit": {"state_admin", "senior_officer"},
     "view_models": set(ROLES),          # model cards are transparency, visible to everyone
+    "manage_models": {"state_admin", "analyst", "gis_officer"},   # DEVELOPMENT/EXPERIMENTAL/CANDIDATE
+    "validate_models": {"state_admin"},                            # the only route to VALIDATED
 }
 
 

@@ -25,6 +25,7 @@ import torch
 import yaml
 from torch.utils.data import DataLoader
 
+from ecoconnect.pipeline.provenance import code_version
 from ecoconnect import __version__
 from ecoconnect.ml.evaluation.metrics import ConfusionAccumulator, build_loss
 from ecoconnect.ml.models.unet import build_model, count_parameters, pick_device
@@ -113,7 +114,7 @@ def train(cfg: dict, loaders: dict[str, DataLoader], dataset_info: dict, *, mode
         "dataset": dataset_info, "model": model.eco_meta, "parameters": count_parameters(model),
         "batch_size": loaders["train"].batch_size, "learning_rate": tcfg["learning_rate"], "epochs_planned": tcfg["epochs"],
         "seed": tcfg["seed"], "loss": tcfg.get("loss", "bce_dice"), "scheduler": sched_name,
-        "mixed_precision": use_amp, "hardware": _hardware(device), "status": "running",
+        "mixed_precision": use_amp, "hardware": _hardware(device), "code": code_version(), "status": "running",
     }
     (out / "experiment.json").write_text(json.dumps(exp, indent=1))
     print(f"[train] {exp_id}  mode={mode}  {RESULT_LABEL[mode]}")

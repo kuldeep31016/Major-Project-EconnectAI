@@ -338,3 +338,35 @@ export const askAssistant = (question: string, studyArea: string, runId = "lates
 export const generateOfficialReport = (studyArea: string, runId = "latest", projectId?: number) =>
   getJson<ScientificReport>("/api/reports/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ study_area: studyArea, run_id: runId, project_id: projectId }) }, 60000);
 export const fetchOfficialReports = (studyArea?: string) => getJson<ScientificReport[]>(`/api/reports${studyArea ? `?study_area=${encodeURIComponent(studyArea)}` : ""}`);
+
+/* ------------------------------------------------------------------ provenance, reproducibility, model registry */
+export interface LineageStep {
+  step: string; title: string; status: "recorded" | "partial" | "not_recorded" | "not_applicable";
+  detail: Record<string, unknown>; artifacts: { kind: string; key: string; sha256: string | null }[]; caveat: string | null;
+}
+export interface Lineage { run_id: string; study_area_id: string; result_label: string; steps: LineageStep[]; limitations: string[] }
+export interface ReproduceCheck { name: string; stored: unknown; recomputed: unknown; match: boolean; mismatches?: string[] }
+export interface ReproduceResult { run_id: string; reproduced: boolean; level: string; checks: ReproduceCheck[]; note: string | null }
+
+export async function reproduceRun(studyArea: string, runId: string, onProgress?: (j: JobRecord<ReproduceResult>) => void) {
+  const job = await getJson<JobRecord<ReproduceResult>>(
+    `/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/reproduce`, { method: "POST" });
+  return waitForJob<ReproduceResult>(job.id, onProgress, 1000);
+}
+
+export type ModelStatus = "DEVELOPMENT" | "EXPERIMENTAL" | "CANDIDATE" | "VALIDATED";
+export interface RegistryModel {
+  id: string; display_name: string | null; version: string | null; status: ModelStatus; encoder: string | null;
+  mode: string | null; split: (number | null)[]; test: Record<string, number | null>; validation: Record<string, unknown> | null;
+}
+export const fetchRegistryModels = () => getJson<RegistryModel[]>("/api/registry-models");
+export const setModelStatus = (id: string, status: ModelStatus, reason: string) =>
+  getJson<RegistryModel>(`/api/models/${encodeURIComponent(id)}/status`, {
+    method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status, reason }),
+  });
+export interface ExperimentRow {
+  id: string; display_name: string | null; status: ModelStatus; mode: string | null; config: Record<string, unknown>;
+  calibrated_threshold: number | null; val: Record<string, number | null>; test: Record<string, number | null>;
+}
+export const compareExperiments = (ids: string[]) =>
+  getJson<{ experiments: ExperimentRow[]; note: string }>(`/api/experiments/compare?ids=${ids.map(encodeURIComponent).join(",")}`);
