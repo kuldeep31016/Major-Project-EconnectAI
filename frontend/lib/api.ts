@@ -319,7 +319,11 @@ export interface ScenarioResult {
   severed_edges?: { source: string; target: string }[]; edges_after?: { source: string; target: string; distance_km: number; weight: number }[];
   variants?: Record<string, unknown>[]; lost_patch_ids?: string[]; gained_patch_ids?: string[];
   matched?: { patch_a: string; patch_b: string; area_a: number; area_b: number; S_a: number; S_b: number; rank_a: number; rank_b: number }[];
+  // sensitivity
+  reference?: { tau_km: number; k: number }; verdict?: string; min_spearman?: number | null; robust_top?: string[];
+  stability?: { patch_id: string; reference_rank: number; min_rank: number; max_rank: number; in_top_n: number; of: number }[];
 }
+export interface SensitivityVariant { tau_km: number; k: number; n_edges: number; n_components: number; density: number; c: number; top: string[]; spearman: number; kendall: number; top_overlap: number }
 export const postScenario = (studyArea: string, runId: string, body: Record<string, unknown>) =>
   getJson<ScenarioResult>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/scenario`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }, 120000);
 export const saveScenario = (body: { study_area_id: string; run_id: string; type: string; params: unknown; result: unknown }) =>

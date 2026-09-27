@@ -26,7 +26,9 @@ import { PixelInspector } from "@/components/maps/pixel-inspector";
 import { GraphLegend } from "@/components/graph/connectivity-graph";
 import { EASE } from "@/components/shared/motion";
 import { useAnalysis } from "@/hooks/use-analysis";
-import { getConnectivity, getGraph, getHabitatMask } from "@/lib/data";
+import { postScenario, type ScenarioResult } from "@/lib/api";
+import { BeforeAfter } from "@/components/simulation/before-after";
+import { getConnectivity, getGraph, getHabitatMask, getRestoration } from "@/lib/data";
 import { SENSITIVITY_META } from "@/lib/constants";
 import { fmtRatio } from "@/utils/format";
 
@@ -46,7 +48,25 @@ const ConnectivityGraph = dynamic(
 );
 
 export default function GraphPage() {
-  const { sceneId, scene, selectedPatchId, setSelectedPatchId, removedPatchIds } = useAnalysis();
+  const { sceneId, scene, runId, dataSource, selectedPatchId, setSelectedPatchId, removedPatchIds } = useAnalysis();
+  const restoration = getRestoration(sceneId);
+  // digital twin: one exact what-if at a time, scoped to (landscape, run)
+  const twinScope = `${sceneId}|${runId}`;
+  const [twin, setTwin] = useState<{ scope: string; busy: boolean; res: ScenarioResult | null; err: string | null; graph?: typeof graph }>({ scope: twinScope, busy: false, res: null, err: null });
+  const twinRes = twin.scope === twinScope ? twin.res : null;
+  const [cand, setCand] = useState("");
+  const runTwin = async (body: Record<string, unknown>) => {
+    setTwin({ scope: twinScope, busy: true, res: null, err: null });
+    try {
+      const res = await postScenario(sceneId, runId, body);
+      const ids = new Set(graph.nodes.map((n) => n.id));
+      // links of the scenario network between existing patches (added candidates are described in the text)
+      const g2 = res.edges_after ? { ...graph, edges: res.edges_after.filter((e) => ids.has(e.source) && ids.has(e.target))
+        .map((e, i) => ({ id: `t${i}`, source: e.source, target: e.target, strength: e.weight, distanceKm: e.distance_km, resistance: 1 - e.weight, critical: false, speciesFlow: [] })) } : undefined;
+      setTwin({ scope: twinScope, busy: false, res, err: null, graph: g2 });
+    }
+    catch (e) { setTwin({ scope: twinScope, busy: false, res: null, err: e instanceof Error ? e.message : String(e) }); }
+  };
 
   const graph = getGraph(sceneId);
   const mask = getHabitatMask(sceneId);
@@ -69,6 +89,8 @@ export default function GraphPage() {
   );
 
   const ranked = [...graph.nodes].sort((a, b) => b.importance - a.importance);
+  const twinGraph = (twin.scope === twinScope && twin.graph) || graph;
+  const twinRemoved = twinRes?.removed_patch_ids ?? removedPatchIds;
 
   return (
     <AppShell
@@ -99,10 +121,10 @@ export default function GraphPage() {
 
           <ConnectivityGraph
             key={sceneId}
-            graph={graph}
+            graph={twinGraph}
             selectedPatchId={selectedPatchId}
             onSelectPatch={setSelectedPatchId}
-            removedPatchIds={removedPatchIds}
+            removedPatchIds={twinRemoved}
             minStrength={minStrength}
             showCriticalOnly={criticalOnly}
             className="relative h-full w-full"
@@ -170,6 +192,35 @@ export default function GraphPage() {
         {/* ---------------------------------------------- side summary */}
         <aside className="scroll-slim w-full shrink-0 overflow-y-auto bg-sidebar/60 p-4 lg:w-[350px]">
           <div className="space-y-4">
+            {/* digital twin what-if */}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center justify-between">Digital twin · what-if {twinRes && <Badge variant="warning">{twinRes.label}</Badge>}</CardTitle>
+                <CardDescription>Exact recomputation on this run&apos;s network. A simulation, not a forecast.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2 text-[12px]">
+                {dataSource.mode !== "live" ? <div className="text-muted-foreground">Needs a live analysis run.</div> : (
+                  <>
+                    <div className="flex flex-wrap gap-1.5">
+                      <Button size="sm" variant="outline" disabled={!selectedPatchId || twin.busy} onClick={() => selectedPatchId && runTwin({ type: "remove_patches", patch_ids: [selectedPatchId] })}>
+                        {selectedPatchId ? `Remove ${selectedPatchId}` : "Select a patch to remove"}
+                      </Button>
+                      <select value={cand} onChange={(e) => setCand(e.target.value)} className="rounded-md border border-foreground/15 bg-background px-1.5 text-[11.5px]">
+                        <option value="">restore…</option>
+                        {restoration.actions.map((a) => <option key={a.id} value={a.id}>{a.id} · {a.areaHa} ha</option>)}
+                      </select>
+                      <Button size="sm" variant="outline" disabled={!cand || twin.busy} onClick={() => runTwin({ type: "restore", candidate_ids: [cand] })}>Restore</Button>
+                      {twinRes && <Button size="sm" variant="ghost" onClick={() => setTwin({ scope: twinScope, busy: false, res: null, err: null })}>Reset</Button>}
+                    </div>
+                    {twin.busy && <div className="text-muted-foreground">Recomputing…</div>}
+                    {twin.err && <div className="text-[#b91c1c]">{twin.err}</div>}
+                    {twinRes?.scenario && <BeforeAfter b={twinRes.baseline} s={twinRes.scenario} />}
+                    {twinRes && <p className="leading-relaxed text-muted-foreground">{twinRes.explanation}</p>}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+
             {/* topology */}
             <Card>
               <CardHeader className="pb-3">

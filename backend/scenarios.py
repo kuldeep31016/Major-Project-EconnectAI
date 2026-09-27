@@ -21,6 +21,7 @@ from shapely.geometry import Polygon, shape
 from ecoconnect.graph import (build_graph, connectivity, compute_criticality, evaluate_candidates,
                               simulate_removal, summarise)
 from ecoconnect.graph.construction import haversine_km
+from ecoconnect.graph.sensitivity import hypothetical_patch, scale_areas, sensitivity
 from ecoconnect.pipeline.config import REPO_ROOT
 
 from .paths import abs_path, patch_from_dict
@@ -139,6 +140,69 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
                 "baseline": baseline, "variants": out,
                 "explanation": ("τ is a configurable analysis parameter, not a biological constant. "
                                 + "; ".join(f"τ = {v['tau_km']} km: {v['n_edges']} links, {v['n_components']} components, rank correlation with reference {v['spearman_vs_reference']:.2f}" for v in out) + ".")}
+
+    if t == "reduce_area":
+        ids = [i for i in dict.fromkeys(body.get("patch_ids") or []) if i in base_graph.patches]
+        f = float(body.get("retain_fraction", 0.5))
+        if not ids or not 0.0 < f < 1.0:
+            raise ValueError("reduce_area needs known patch_ids and 0 < retain_fraction < 1")
+        sg = build_graph(scale_areas(patches, ids, f), k=k, tau_km=tau, distance_mode=dm)
+        scen = _summary(sg, a_l, metric)
+        d = _diff(baseline, scen)
+        expl = (f"Shrinking {len(ids)} patch(es) to {100 * f:.0f} % of their area (−{baseline['habitat_area_ha'] - scen['habitat_area_ha']:.1f} ha) "
+                f"changes {metric.upper()} by {d['c_pct']:+.1f} %. Links are unchanged because patch locations stay the same; "
+                "this is a hypothetical degradation, not a forecast.")
+        return {"type": t, "label": label, "parameters": {"patch_ids": ids, "retain_fraction": f, "tau_km": tau, "k": k, "metric": metric},
+                "baseline": baseline, "scenario": scen, "difference": d, "affected_patch_ids": ids,
+                "edges_after": [e.to_dict() for e in sg.edges.values()], "explanation": expl}
+
+    if t == "add_patch":
+        lat, lon, area = float(body["lat"]), float(body["lon"]), float(body["area_ha"])
+        bb = (m.get("study_area") or {}).get("bbox")
+        if not 0.1 <= area <= 10000:
+            raise ValueError("area_ha must be between 0.1 and 10000")
+        if bb and not (bb[0] - 0.25 <= lat <= bb[2] + 0.25 and bb[1] - 0.25 <= lon <= bb[3] + 0.25):
+            raise ValueError("hypothetical patch must lie within the study area")
+        hp = hypothetical_patch(lat, lon, area)
+        sg = build_graph(patches + [hp], k=k, tau_km=tau, distance_mode=dm)
+        scen = _summary(sg, a_l, metric)
+        d = _diff(baseline, scen)
+        links = [e.to_dict() for e in sg.edges.values() if hp.id in (e.source, e.target)]
+        expl = (f"A hypothetical {area:.1f} ha patch at ({lat:.4f}, {lon:.4f}) would link to {len(links)} patch(es) and change "
+                f"{metric.upper()} by {d['c_pct']:+.2f} % ({baseline['n_components']} → {scen['n_components']} components). "
+                "It is user-defined - not a detected habitat or a restoration recommendation.")
+        return {"type": t, "label": label, "parameters": {"lat": lat, "lon": lon, "area_ha": area, "tau_km": tau, "k": k, "metric": metric},
+                "baseline": baseline, "scenario": scen, "difference": d, "added": [hp.to_dict()], "new_links": links,
+                "affected_patch_ids": sorted({x for e in links for x in (e["source"], e["target"])} - {hp.id}),
+                "edges_after": [e.to_dict() for e in sg.edges.values()], "explanation": expl}
+
+    if t == "radius":
+        tv = float(body["tau_km"])
+        if not 0.5 <= tv <= 50:
+            raise ValueError("tau_km must be between 0.5 and 50")
+        sg = build_graph(patches, k=k, tau_km=tv, distance_mode=dm)
+        scen = _summary(sg, a_l, metric)
+        d = _diff(baseline, scen)
+        base_e = {(e.source, e.target) for e in base_graph.edges.values()}
+        new_e = {(e.source, e.target) for e in sg.edges.values()}
+        expl = (f"Changing the connection radius τ from {tau} to {tv} km changes links {baseline['n_edges']} → {scen['n_edges']}, "
+                f"components {baseline['n_components']} → {scen['n_components']} and {metric.upper()} by {d['c_pct']:+.1f} %. "
+                "τ is a modelling assumption, not a measured dispersal distance.")
+        return {"type": t, "label": label, "parameters": {"tau_km": tv, "reference_tau_km": tau, "k": k, "metric": metric},
+                "baseline": baseline, "scenario": scen, "difference": d,
+                "links_added": sorted(map(list, new_e - base_e)), "links_removed": sorted(map(list, base_e - new_e)),
+                "edges_after": [e.to_dict() for e in sg.edges.values()], "explanation": expl}
+
+    if t == "sensitivity":
+        taus = [float(x) for x in (body.get("taus_km") or g.get("tau_sensitivity_km") or [3.0, 5.0, 8.0])][:6]
+        ks = [int(x) for x in (body.get("ks") or [2, 3, 4])][:4]
+        if any(not 0.5 <= x <= 50 for x in taus) or any(not 1 <= x <= 10 for x in ks):
+            raise ValueError("taus_km must be in [0.5, 50] and ks in [1, 10]")
+        kw = {"p_at_tau": m["config"]["connectivity"]["pc_probability_at_tau"]} if metric == "pc" else {}
+        res = sensitivity(patches, a_l, taus_km=taus, ks=ks, reference=(tau, k), metric=metric, distance_mode=dm, **kw)
+        return {"type": t, "label": label, "parameters": {"taus_km": taus, "ks": ks, "reference_tau_km": tau, "reference_k": k, "metric": metric},
+                "baseline": baseline, **res,
+                "explanation": res["verdict"] + " τ and k are modelling assumptions; stability here is structural, not ecological validation."}
 
     if t == "threshold":
         src = m["data_source"]

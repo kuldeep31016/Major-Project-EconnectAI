@@ -14,6 +14,18 @@ Next step:
 
 ---
 
+## 2026-09-28 — Phase 4 (P1): sensitivity, scenario types, digital twin
+
+Changed: ecoconnect/graph/sensitivity.py (new); backend/scenarios.py types reduce_area, add_patch (bbox-validated,
+labelled hypothetical), radius, sensitivity; main.ScenarioBody new fields; routers save mapping keys.
+Frontend: components/simulation/before-after.tsx (shared); /scenario kinds E–H + inputs + sensitivity tables;
+/graph "Digital twin · what-if" card (remove selected / restore candidate; scenario graph stored in state, not memo).
+Tests: tests/test_sensitivity.py → 80 passed/1 skipped. Browser-verified: P17 removal −27.0 %, 2→3 components;
+sensitivity grid table + verdict.
+Deferred (P2): temporal fragmentation indicators, multi-criteria criticality, retire /simulation (graph "Simulate" links there).
+Next: Phase 5 — restoration intelligence ("Not assessed" fields, model recommendation vs human decision states),
+field observation checklist, model-disagreement flag, HITL dataset export.
+
 ## 2026-09-28 — Phase 3: registry, experiments, provenance, reproducibility
 
 Changed: ecoconnect/pipeline/provenance.py (code_version, config_sha256, file_sha256) → run manifests + trainer
