@@ -31,7 +31,7 @@ export default function NewAnalysisPage() {
   const [sceneFile, setSceneFile] = useState<string>("");
   const [modelId, setModelId] = useState<string>("");
   const [threshold, setThreshold] = useState<string>("");
-  const [resultKind, setResultKind] = useState<"development" | "experiment">("development");
+  const [stage, setStage] = useState<string | null>(null);
   const [running, setRunning] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +64,8 @@ export default function NewAnalysisPage() {
     if (!scene || !model) return;
     setRunning(true); setError(null); setDone(null); setElapsed(0);
     try {
-      const r = await postSegment({ study_area: sceneId, scene_tif: `data/scenes/${sceneId}/${scene.scene_id}.tif`, checkpoint: model.checkpoint ?? undefined, threshold: thr, result_kind: resultKind });
+      const r = await postSegment({ study_area: sceneId, scene_tif: `data/scenes/${sceneId}/${scene.scene_id}.tif`, checkpoint: model.checkpoint ?? undefined, threshold: thr, result_kind: "development" },
+        (j) => setStage(`${j.status.toLowerCase()} · ${j.stage ?? ""} · ${Math.round(j.progress * 100)} %`));
       setDone(r);
       markRun();
       await refreshBundle();
@@ -145,12 +146,7 @@ export default function NewAnalysisPage() {
               })}
               <div className="flex flex-wrap items-center gap-3 pt-2 text-[12px]">
                 <label className="flex items-center gap-2">Threshold <input value={threshold} placeholder={model?.calibratedThreshold != null ? String(model.calibratedThreshold) : "0.5"} onChange={(e) => setThreshold(e.target.value)} className="w-20 rounded-lg border border-black/[0.12] px-2 py-1" /></label>
-                <label className="flex items-center gap-2">Result label
-                  <select value={resultKind} onChange={(e) => setResultKind(e.target.value as typeof resultKind)} className="rounded-lg border border-black/[0.12] px-2 py-1">
-                    <option value="development">DEVELOPMENT — not final</option>
-                    <option value="experiment" disabled={model?.mode !== "full"}>OUR EXPERIMENTAL RESULT (full model only)</option>
-                  </select>
-                </label>
+                <span>Result label: <b>DEVELOPMENT — not final</b> (runs from the UI are never labelled final)</span>
                 <span className="text-muted-foreground">MMU 2 ha · k = 3 · τ = 5 km (configs/graph.yaml)</span>
               </div>
             </CardContent>
@@ -170,7 +166,7 @@ export default function NewAnalysisPage() {
               </div>
               {!user && <div className="text-[#b45309]">Sign in to run analyses (GIS officer, analyst or admin).</div>}
               <Button onClick={run} disabled={!scene || !model || running || !user || !canRun} className="w-full bg-[#0f5132] text-white hover:bg-[#0b3d26]">
-                {running ? <><Loader2 className="h-4 w-4 animate-spin" /> Running… {elapsed}s</> : <><Play className="h-4 w-4" /> Run pipeline</>}
+                {running ? <><Loader2 className="h-4 w-4 animate-spin" /> Running… {elapsed}s{stage ? ` · ${stage}` : ""}</> : <><Play className="h-4 w-4" /> Run pipeline</>}
               </Button>
               {running && (
                 <ol className="space-y-1 text-[11.5px] text-muted-foreground">

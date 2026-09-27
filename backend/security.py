@@ -11,7 +11,7 @@ from fastapi import HTTPException, Request
 
 # Study-area ids, run ids and experiment ids are plain slugs (e.g. kerala-coast_20260920T182222Z).
 _SLUG = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
-_PATH_PARAMS = ("study_area", "run_id", "experiment_id", "object_type", "object_id")
+_PATH_PARAMS = ("study_area", "run_id", "experiment_id", "object_type", "object_id", "job_id")
 
 
 def is_slug(value: str) -> bool:

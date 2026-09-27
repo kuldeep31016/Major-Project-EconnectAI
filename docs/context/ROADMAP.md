@@ -18,13 +18,13 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [ ] P1 Split `main.py` into domain routers (deferred to Phase 2 with jobs)
 - [x] P1 Refresh stale docs (README, MODEL_CARD, RESULTS_PROVENANCE, EXPERIMENTS) with real numbers
 - [x] P1 docker-compose: browser-reachable API URL, env-based secrets, frontend .dockerignore
-- [ ] P1 compose profiles for postgis/redis/worker (Phase 2)
+- [x] P1 compose profiles `postgres` (PostGIS) + `worker`
 - [ ] P2 Retire `/simulation` duplication (deferred to Phase 4; its Timeline tab has no replacement yet) (merge into `/scenario` + `/restoration`), remove dead routes/components
 
-## Phase 2 — Data platform
-- [ ] P1 Alembic migrations; PostgreSQL + PostGIS option (SQLite stays dev default)
-- [ ] P1 Storage abstraction (LocalFS / S3-compatible) + `artifacts` table (sha256, type, run, model, version)
-- [ ] P1 Job system (jobs table, QUEUED/RUNNING/COMPLETED/FAILED, progress, logs) + worker; move segment/reanalyse/report/sensitivity to jobs
+## Phase 2 — Data platform (done 2026-09-28 except patches-as-rows)
+- [x] P1 Alembic migrations (0001 baseline, 0002 jobs+artifacts); Postgres tested (local PG18 + CI PostGIS job)
+- [x] P1 Storage abstraction (LocalFS / S3-compatible) + `artifacts` table (sha256, kind, run, model, version)
+- [x] P1 DB-backed job system + inline/standalone worker; `/api/segment` → job; `scenario` job type (reanalyse/report stay sync: ms)
 - [ ] P2 Patches / edges / criticality as DB rows with geometry
 
 ## Phase 3 — Model registry, experiments, provenance, reproducibility

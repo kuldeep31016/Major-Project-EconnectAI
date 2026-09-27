@@ -14,6 +14,20 @@ Next step:
 
 ---
 
+## 2026-09-28 — Phase 2: migrations, storage, artifacts, jobs
+
+Changed: backend/{migrate.py, migrations/, storage.py, artifacts.py, jobs.py, job_handlers.py, jobs_api.py, worker.py};
+db.py (Job, Artifact; init_db → Alembic; empty ECO_DATABASE_URL = unset); paths.py gained run_summary; main.py:
+segment split into `_prepare_segment` (sync 4xx) + job, `/api/ready`, inline worker in lifespan; registry syncs
+artifacts; frontend lib/api.ts (JobRecord, fetchJob, waitForJob, job-based postSegment), upload page shows stage;
+CI job on postgis/postgis:16-3.4; compose profiles postgres/worker; requirements add alembic; .env.example.
+Tests: 71 passed/1 skipped (SQLite); 70 passed on local PostgreSQL 18 (before the /api/ready test was added);
+next build OK. Inline worker verified on real Kerala τ-sweep job.
+Found: GitHub Actions blocked — account locked (billing). Not a code failure.
+Deferred: patches/edges as DB rows with geometry (needs PostGIS; with Phase 3/4).
+Next: Phase 3 — model registry (status ladder + validation workflow), experiment tracking/comparison, provenance chain
+API + "Why am I seeing this?" UI, git commit/config hash in manifests, "Reproduce this analysis".
+
 ## 2026-09-28 — Phase 1: security, honesty, regression tests, CI
 
 Changed: `backend/security.py` (new: slug validation as app-level dependency, `contained()`, login throttle),
