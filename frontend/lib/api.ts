@@ -336,7 +336,13 @@ export const fetchFeasibility = (studyArea: string, runId: string) => getJson<Fe
 /* ------------------------------------------------------------------ evidence, assistant, official reports */
 export const fetchEvidenceChain = (studyArea: string, runId: string, objectType: string, objectId: string) =>
   getJson<Record<string, unknown>>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/evidence/${objectType}/${encodeURIComponent(objectId)}`);
-export interface AssistantAnswer { intent: string; answer: string; sources: Record<string, unknown>[]; label: string | null; links?: string[]; objects?: string[] }
+export interface AssistantAnswer {
+  intent?: string; answer: string; sources?: Record<string, unknown>[]; label: string | null; links?: string[]; objects?: string[];
+  // grounded (LLM) mode — backend/assistant_llm.py
+  mode?: "llm" | "template"; model?: string; insufficient_evidence?: boolean;
+  citations?: { id: string; kind: string; source: string }[];
+  proposed_scenario?: Record<string, unknown> | null; scenario_rejected?: string | null; llm_error?: string;
+}
 export const askAssistant = (question: string, studyArea: string, runId = "latest") =>
   getJson<AssistantAnswer>("/api/assistant/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question, study_area: studyArea, run_id: runId }) });
 export const generateOfficialReport = (studyArea: string, runId = "latest", projectId?: number) =>
@@ -374,3 +380,41 @@ export interface ExperimentRow {
 }
 export const compareExperiments = (ids: string[]) =>
   getJson<{ experiments: ExperimentRow[]; note: string }>(`/api/experiments/compare?ids=${ids.map(encodeURIComponent).join(",")}`);
+
+/* ------------------------------------------------------------------ Phase 5: field checklist, restoration workflow, HITL */
+export const CHECKLIST_FIELDS: Record<string, string[]> = {
+  habitat_present: ["yes", "no", "unsure"], mangrove_present: ["yes", "no", "unsure"],
+  condition: ["good", "fair", "poor", "not_applicable"], water_condition: ["tidal", "permanently_flooded", "dry", "unknown"],
+  human_disturbance: ["none", "low", "high"],
+};
+export type FeasibilityEntry = { value: string; source: string; by: string; at: string } | null;
+export interface RestorationReview {
+  id: number; study_area_id: string; run_id: string | null; candidate_id: string;
+  stage: "GIS_REVIEW" | "FIELD_VERIFICATION" | "FEASIBILITY" | "DECIDED";
+  model_recommendation: { rank: number; gain_pct: number; area_ha: number; new_links: number; linked_patch_ids: string[]; label: string };
+  gis_review: { outcome: string; notes: string; by: string; at: string } | null;
+  field_task: { id: number; status: string } | null;
+  feasibility: Record<string, FeasibilityEntry>; not_assessed: string[];
+  decision: "APPROVED" | "REJECTED" | "DEFERRED" | null; decision_reason: string | null;
+}
+const jsonInit = (method: string, body: unknown) => ({ method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+export const fetchReviews = (studyArea: string) => getJson<RestorationReview[]>(`/api/restoration/reviews?study_area=${encodeURIComponent(studyArea)}`);
+export const createReview = (studyArea: string, runId: string, candidateId: string) =>
+  getJson<RestorationReview>("/api/restoration/reviews", jsonInit("POST", { study_area: studyArea, run_id: runId, candidate_id: candidateId }));
+export const gisReview = (id: number, outcome: "PROCEED" | "HOLD", notes: string) => getJson<RestorationReview>(`/api/restoration/reviews/${id}/gis`, jsonInit("PATCH", { outcome, notes }));
+export const reviewFieldTask = (id: number) => getJson<RestorationReview>(`/api/restoration/reviews/${id}/field-task`, jsonInit("POST", {}));
+export const setFeasibility = (id: number, factor: string, value: string | null, source: string | null) =>
+  getJson<RestorationReview>(`/api/restoration/reviews/${id}/feasibility`, jsonInit("PATCH", { factor, value, source }));
+export const decideReview = (id: number, decision: "APPROVED" | "REJECTED" | "DEFERRED", reason: string) =>
+  getJson<RestorationReview>(`/api/restoration/reviews/${id}/decision`, jsonInit("PATCH", { decision, reason }));
+
+export interface Disagreement {
+  id: number; evidence_id: number; study_area_id: string; run_id: string | null; model_id: string | null; object_type: string; object_id: string;
+  lat: number; lon: number; observed_at: string; kind: "false_positive" | "false_negative"; status: "OPEN" | "INCLUDED" | "EXCLUDED";
+  model_prediction: { class: string; mean_probability: number | null }; field_observation: { checklist: Record<string, string> | null; notes: string | null };
+  review_note: string | null;
+}
+export const fetchDisagreements = (studyArea: string) => getJson<Disagreement[]>(`/api/hitl/disagreements?study_area=${encodeURIComponent(studyArea)}`);
+export const reviewDisagreement = (id: number, status: "INCLUDED" | "EXCLUDED", note: string) =>
+  getJson<Disagreement>(`/api/hitl/disagreements/${id}`, jsonInit("PATCH", { status, note }));
+export const exportHitl = () => getJson<{ type: string; features: unknown[]; note: string }>("/api/hitl/export");

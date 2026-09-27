@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { useAuth } from "@/hooks/use-auth";
+import { ReviewPanel } from "@/components/restoration/review-panel";
 import { applyRestorationRanking, createTask, fetchFeasibility, postRestoration, type Feasibility, type FeasibilityCandidate } from "@/lib/api";
 import { applyRestorationActions, getGraph, getHabitatMask, getHeatmap, getRestoration } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -88,6 +89,7 @@ export default function RestorationPlanner() {
                   <div><div className="mb-1 text-[10px] uppercase tracking-wider text-muted-foreground">Not assessed (no data loaded)</div><ul className="list-disc space-y-0.5 pl-4 text-muted-foreground">{active.not_assessed.map((w) => <li key={w}>{w}</li>)}</ul></div>
                 </CardContent>
               </Card>
+              <ReviewPanel sceneId={sceneId} runId={dataSource.provenance?.runId ?? runId} candidateId={active.candidate_id} />
               {user && can("assign_tasks") && (
                 <Button size="sm" onClick={async () => { await createTask({ study_area_id: sceneId, title: `Site assessment: restoration candidate ${active.candidate_id}`, reason: `Model-ranked restoration site (+${active.gain_pct.toFixed(2)} % ${fe?.metric.toUpperCase()}). Verify land status, tidal regime and feasibility on the ground. ${active.why_not.join("; ")}`, lat: active.centroid[0], lon: active.centroid[1], object_type: "candidate", object_id: active.candidate_id, run_id: dataSource.provenance?.runId, evidence_required: "photo + observation + access notes" }); setNote(`Field assessment task created for ${active.candidate_id}.`); }}><ClipboardCheck className="h-3.5 w-3.5" /> Create field assessment task</Button>
               )}

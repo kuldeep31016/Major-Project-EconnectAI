@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { askAssistant } from "@/lib/api";
+import { askAssistant, postScenario, type AssistantAnswer, type ScenarioResult } from "@/lib/api";
+import { BeforeAfter } from "@/components/simulation/before-after";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { EASE } from "@/components/shared/motion";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,43 @@ interface Message {
   role: "user" | "assistant";
   text: string;
   reply?: AssistantReply;
+  grounded?: AssistantAnswer;
+}
+
+const SCEN_LABEL: Record<string, string> = {
+  remove_patches: "Remove patch(es)", restore: "Restore candidate", restore_multi: "Restore candidates",
+  reduce_area: "Reduce patch area", radius: "Change connection radius", sensitivity: "Sensitivity grid (τ × k)",
+};
+
+/** A scenario the assistant PROPOSED. Nothing runs until the user presses Run (LLM → command → validation → engine). */
+function ProposedScenario({ cmd, sceneId, runId }: { cmd: Record<string, unknown>; sceneId: string; runId: string }) {
+  const [state, setState] = useState<{ busy: boolean; res?: ScenarioResult; err?: string }>({ busy: false });
+  const params = Object.entries(cmd).filter(([k]) => k !== "type").map(([k, v]) => `${k.replace(/_/g, " ")}: ${Array.isArray(v) ? v.join(", ") : String(v)}`).join(" · ");
+  return (
+    <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.25, ease: EASE }}
+      className="mt-2 rounded-xl border border-[#c2410c]/25 bg-[#c2410c]/[0.05] p-2.5 text-left text-[12px]">
+      <div className="text-[10px] uppercase tracking-wider text-[#c2410c]">Proposed simulation · needs your confirmation</div>
+      <div className="mt-0.5 font-semibold">{SCEN_LABEL[String(cmd.type)] ?? String(cmd.type)}</div>
+      {params && <div className="text-muted-foreground">{params}</div>}
+      {!state.res && (
+        <button disabled={state.busy} onClick={async () => {
+          setState({ busy: true });
+          try { setState({ busy: false, res: await postScenario(sceneId, runId, cmd) }); }
+          catch (e) { setState({ busy: false, err: e instanceof Error ? e.message : String(e) }); }
+        }} className="mt-1.5 rounded-lg bg-[#0f5132] px-2.5 py-1 text-[11.5px] font-semibold text-white disabled:opacity-50">
+          {state.busy ? "Computing…" : "Run simulation"}
+        </button>
+      )}
+      {state.err && <div className="mt-1 text-[#b91c1c]">{state.err}</div>}
+      {state.res && (
+        <div className="mt-2 space-y-1.5">
+          <div className="text-[10px] font-semibold text-[#c2410c]">{state.res.label}</div>
+          {state.res.scenario && <BeforeAfter b={state.res.baseline} s={state.res.scenario} />}
+          <p className="text-muted-foreground">{state.res.explanation}</p>
+        </div>
+      )}
+    </motion.div>
+  );
 }
 
 const TONE: Record<string, string> = {
@@ -38,9 +76,10 @@ const TONE: Record<string, string> = {
 let seq = 0;
 const nextId = () => `m${++seq}`;
 const GREETING =
-  "I answer from the stored results of the selected landscape and run (patches, criticality, connectivity, alerts, field tasks). I never generate figures — if a value is not in the run, I say so.";
+  "I answer only from the stored results of the selected landscape and run — patches, criticality, connectivity, model record, alerts and field tasks — and cite the evidence behind every answer. If the data doesn't answer your question, I say so. Ask me to simulate a change and I'll propose it; you decide whether to run it.";
 const SUGGESTIONS = [
   "Which patch is most critical and why?",
+  "What happens if P17 is removed?",
   "How much habitat and how many patches does this run have?",
   "What restoration candidates rank highest?",
   "Are there open alerts for this landscape?",
@@ -100,8 +139,11 @@ export function AssistantLauncher() {
             {
               id: nextId(),
               role: "assistant",
-              text: a.answer + (a.label ? `\n\n[${a.label}]` : ""),
-              reply: { id: a.intent, match: [], question: text, answer: a.answer, citations: a.sources.map((s) => JSON.stringify(s)), followUps: a.links?.map((l) => `Open ${l}`) },
+              text: a.answer,
+              grounded: a,
+              reply: { id: a.intent ?? a.mode ?? "answer", match: [], question: text, answer: a.answer,
+                citations: a.citations?.length ? a.citations.map((c) => `${c.id} · ${c.source}`) : (a.sources ?? []).map((s) => JSON.stringify(s)),
+                followUps: a.links?.map((l) => `Open ${l}`) },
             },
           ]);
         })
@@ -220,6 +262,18 @@ export function AssistantLauncher() {
                       >
                         {m.text}
                       </div>
+
+                      {m.grounded && (
+                        <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[10px]">
+                          <span className={cn("rounded-full border px-2 py-0.5", m.grounded.mode === "llm" ? "border-[#6d5bd0]/30 bg-[#6d5bd0]/10 text-[#6d5bd0]" : "border-foreground/15 text-muted-foreground")}>
+                            {m.grounded.mode === "llm" ? "Claude · grounded in stored evidence" : "template answer (stored data)"}
+                          </span>
+                          {m.grounded.insufficient_evidence && <span className="rounded-full border border-[#b45309]/30 bg-[#b45309]/10 px-2 py-0.5 text-[#b45309]">not enough evidence</span>}
+                          {m.grounded.label && <span className="text-muted-foreground">{m.grounded.label}</span>}
+                        </div>
+                      )}
+                      {m.grounded?.proposed_scenario && <ProposedScenario cmd={m.grounded.proposed_scenario} sceneId={sceneId} runId={runId} />}
+                      {m.grounded?.scenario_rejected && <div className="mt-1 text-[10.5px] text-[#b45309]">Suggested simulation rejected by validation: {m.grounded.scenario_rejected}</div>}
 
                       {/* metric chips */}
                       {m.reply?.metrics && (

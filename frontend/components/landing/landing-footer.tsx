@@ -11,12 +11,12 @@ export function LandingFooter() {
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link href="#home" className="flex items-center gap-3">
-              <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#00c896] to-[#0f766e] text-[#04231b] shadow-md">
+              <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#15803d] to-[#0f5132] text-white shadow-md shadow-[#15803d]/25">
                 <Leaf className="h-5 w-5 fill-current" />
               </div>
               <div className="flex items-center gap-0.5 text-[20px] font-extrabold text-white tracking-tight">
                 <span>EcoConnect</span>
-                <span className="text-[#00c896]">AI</span>
+                <span className="text-[#4ade80]">AI</span>
               </div>
             </Link>
             <p className="text-[13.5px] text-slate-400 leading-relaxed max-w-sm">

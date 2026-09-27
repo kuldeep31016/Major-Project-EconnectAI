@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAnalysis } from "@/hooks/use-analysis";
 import { useAuth } from "@/hooks/use-auth";
 import {
-  createTask, fetchEvidencePhoto, fetchAlerts, fetchDetections, fetchEvidence, fetchTasks, fetchUsers, setDetectionStatus, setTaskStatus, submitEvidence, verifyEvidence,
+  createTask, fetchEvidencePhoto, fetchAlerts, CHECKLIST_FIELDS, fetchDisagreements, reviewDisagreement, exportHitl, type Disagreement, fetchDetections, fetchEvidence, fetchTasks, fetchUsers, setDetectionStatus, setTaskStatus, submitEvidence, verifyEvidence,
   type AlertItem, type DetectionItem, type EvidenceItem, type FieldTaskItem, type SessionUser,
 } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -190,7 +190,46 @@ function FieldView() {
           </Card>
         </div>
       )}
+      {can("review_detections") && <div className="px-4 pb-6 sm:px-6"><Disagreements sceneId={sceneId} /></div>}
     </AppShell>
+  );
+}
+
+/** Human-in-the-loop register: accepted field evidence that contradicts the model. Nothing retrains automatically. */
+function Disagreements({ sceneId }: { sceneId: string }) {
+  const [rows, setRows] = useState<Disagreement[] | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+  const load = () => fetchDisagreements(sceneId).then(setRows).catch(() => setRows([]));
+  useEffect(() => { load(); }, [sceneId]); // eslint-disable-line react-hooks/exhaustive-deps
+  const review = async (id: number, status: "INCLUDED" | "EXCLUDED") => {
+    const note = window.prompt(status === "INCLUDED" ? "Why include this point in the future training set?" : "Why exclude it?");
+    if (!note) return;
+    try { await reviewDisagreement(id, status, note); load(); } catch (e) { setMsg(e instanceof Error ? e.message : String(e)); }
+  };
+  const download = async () => {
+    const fc = await exportHitl();
+    const url = URL.createObjectURL(new Blob([JSON.stringify(fc, null, 2)], { type: "application/geo+json" }));
+    const a = document.createElement("a"); a.href = url; a.download = "ecoconnect_hitl_disagreements.geojson"; a.click(); URL.revokeObjectURL(url);
+  };
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <CardTitle className="flex items-center justify-between text-[13px]">Model disagreements (human-in-the-loop)
+          <Button size="sm" variant="outline" onClick={download}>Export included (GeoJSON)</Button></CardTitle>
+        <CardDescription>Accepted field evidence that contradicts the model. Included points form a dataset for a future experiment — review → approval → new experiment → evaluation. The model is never retrained automatically.</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-2 text-[12px]">
+        {rows === null ? <div className="text-muted-foreground">Loading…</div> : rows.length === 0 ? <div className="text-muted-foreground">No disagreements recorded for this landscape.</div> : rows.map((d) => (
+          <div key={d.id} className="rounded-lg border border-foreground/10 p-2">
+            <div className="flex flex-wrap items-center gap-2"><b>{d.object_type} {d.object_id}</b><Badge variant={d.kind === "false_positive" ? "danger" : "warning"}>{d.kind.replace("_", " ")}</Badge><Badge variant="secondary">{d.status}</Badge><span className="text-muted-foreground">{d.observed_at} · {d.lat.toFixed(5)}, {d.lon.toFixed(5)}</span></div>
+            <div className="mt-1 text-muted-foreground">Model: {d.model_prediction.class}{d.model_prediction.mean_probability != null ? ` (mean p ${d.model_prediction.mean_probability.toFixed(2)})` : ""} · Field: {Object.entries(d.field_observation.checklist ?? {}).map(([k, v]) => `${k.replace(/_/g, " ")} ${v}`).join(", ")}</div>
+            {d.review_note && <div className="mt-0.5 text-muted-foreground">Review: {d.review_note}</div>}
+            {d.status === "OPEN" && <div className="mt-1.5 flex gap-2"><Button size="sm" variant="outline" onClick={() => review(d.id, "INCLUDED")}>Include</Button><Button size="sm" variant="ghost" onClick={() => review(d.id, "EXCLUDED")}>Exclude</Button></div>}
+          </div>
+        ))}
+        {msg && <div className="text-[#b91c1c]">{msg}</div>}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -199,6 +238,7 @@ function EvidenceForm({ task, onDone }: { task: FieldTaskItem; onDone: (msg: str
   const [lon, setLon] = useState(String(task.lon));
   const [observation, setObservation] = useState("habitat_present");
   const [notes, setNotes] = useState("");
+  const [check, setCheck] = useState<Record<string, string>>({});
   const [photo, setPhoto] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -212,6 +252,7 @@ function EvidenceForm({ task, onDone }: { task: FieldTaskItem; onDone: (msg: str
           try {
             const fd = new FormData();
             fd.set("lat", lat); fd.set("lon", lon); fd.set("observed_at", new Date().toISOString()); fd.set("observation", observation); fd.set("notes", notes);
+            if (Object.keys(check).length) fd.set("checklist", JSON.stringify(check));
             if (photo) fd.set("photo", photo);
             await submitEvidence(task.id, fd);
             onDone("Evidence submitted — awaiting officer review.");
@@ -226,6 +267,17 @@ function EvidenceForm({ task, onDone }: { task: FieldTaskItem; onDone: (msg: str
               <option value="habitat_present">Habitat present (as detected)</option><option value="habitat_lost">Habitat lost / cleared</option><option value="degraded">Degraded</option><option value="unchanged">Unchanged since last visit</option><option value="not_habitat">Not habitat (false detection)</option><option value="other">Other (see notes)</option>
             </select>
           </label>
+          <fieldset className="grid gap-2 rounded-lg border border-foreground/10 p-2 sm:col-span-2 sm:grid-cols-3">
+            <legend className="px-1 text-[11px] text-muted-foreground">Observation checklist — answer only what you can see; use “unsure” rather than guessing</legend>
+            {Object.entries(CHECKLIST_FIELDS).map(([k, opts]) => (
+              <label key={k} className="text-[11.5px]">{k.replace(/_/g, " ")}
+                <select value={check[k] ?? ""} onChange={(e) => setCheck((c) => { const n = { ...c }; if (e.target.value) n[k] = e.target.value; else delete n[k]; return n; })}
+                  className="mt-0.5 w-full rounded-md border border-foreground/15 bg-background px-1.5 py-1">
+                  <option value="">—</option>{opts.map((o) => <option key={o} value={o}>{o.replace(/_/g, " ")}</option>)}
+                </select>
+              </label>
+            ))}
+          </fieldset>
           <label>Photo (JPEG/PNG, ≤ 8 MB)<input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => setPhoto(e.target.files?.[0] ?? null)} className="mt-1 w-full text-[11.5px]" /></label>
           <label className="sm:col-span-2">Notes<textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="mt-1 w-full rounded-lg border border-foreground/15 bg-background px-2 py-1.5" /></label>
           {err && <div className="text-[#b91c1c] sm:col-span-2">{err}</div>}

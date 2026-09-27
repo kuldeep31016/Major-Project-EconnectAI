@@ -2,6 +2,7 @@
 projects, scenarios, audit, model cards.  Every state change is written to the append-only audit log."""
 from __future__ import annotations
 
+import os
 import uuid
 from pathlib import Path
 from typing import Optional
@@ -11,7 +12,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ecoconnect.pipeline.config import OUTPUTS_DIR
-from .auth import ROLES, capabilities_for, create_token, current_user, require, verify_password, hash_password
+from .auth import ROLES, capabilities_for, create_token, current_user, optional_user, require, verify_password, hash_password
 from .db import (ALERT_STATUSES, DETECTION_STATUSES, ROLE_LABELS, TASK_STATUSES, Alert, AnalysisVersion, AuditLog,
                  Detection, Evidence, FieldTask, LabelSource, Model, Project, Report, Scene, Scenario, StudyArea,
                  User, audit, get_db, utcnow)
@@ -322,6 +323,7 @@ def task_evidence(task_id: int, user: User = Depends(current_user), db: Session 
 @router.post("/field-tasks/{task_id}/evidence")
 def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...), observed_at: str = Form(...),
                           observation: str = Form(...), notes: str = Form(""), photo: Optional[UploadFile] = File(None),
+                          checklist: str = Form(""),
                           user: User = Depends(require("submit_evidence")), db: Session = Depends(get_db)):
     t = db.get(FieldTask, task_id)
     if not t:
@@ -342,8 +344,9 @@ def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...)
         fname = f"task{task_id}_{uuid.uuid4().hex[:12]}{kind}"
         (EVIDENCE_DIR / fname).write_bytes(data)
         photo_path = fname
+    from .workflow_api import validate_checklist
     e = Evidence(task_id=task_id, user_id=user.id, lat=lat, lon=lon, observed_at=observed_at,
-                 observation=observation, notes=notes, photo_path=photo_path)
+                 observation=observation, notes=notes, photo_path=photo_path, checklist=validate_checklist(checklist))
     db.add(e); db.flush()
     if t.status in ("PENDING", "IN_PROGRESS"):
         t.status = "SUBMITTED"; t.updated_at = utcnow()
@@ -379,6 +382,9 @@ def verify_evidence(evidence_id: int, body: VerifyIn, user: User = Depends(requi
             cascade["alert"] = [a.status, "RESOLVED"]
             a.status = "RESOLVED"; a.updated_at = utcnow()
         audit(db, user, "verification_cascade", "field_task", t.id, new=cascade)
+        if accepted:          # accepted evidence that contradicts the model -> HITL register (no retraining)
+            from .workflow_api import record_disagreement
+            record_disagreement(db, e, t)
     audit(db, user, "verify_evidence", "evidence", e.id, old={"verification": old}, new={"verification": e.verification}, reason=body.reason); db.commit()
     return e.to_dict()
 
@@ -503,7 +509,7 @@ def audit_log(limit: int = 200, user: User = Depends(require("view_audit")), db:
 
 # --------------------------------------------------------------------------- evidence chain, assistant, official reports
 from fastapi import Query  # noqa: E402
-from .insight import answer as _answer, evidence_chain as _evidence_chain, official_report as _official_report  # noqa: E402
+from .insight import evidence_chain as _evidence_chain, official_report as _official_report  # noqa: E402
 
 
 def _run_dir_for(db: Session, study_area: str, run_id: str) -> Path:
@@ -532,19 +538,40 @@ def evidence_chain_ep(study_area: str, run_id: str, object_type: str, object_id:
 
 
 class AskIn(BaseModel):
-    question: str
-    study_area: str
-    run_id: str = "latest"
+    question: str = Field(min_length=2, max_length=1000)
+    study_area: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+    run_id: str = Field("latest", pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
+
+
+_ASK_LIMIT = int(os.environ.get("ECO_ASSISTANT_PER_HOUR", "30"))
+_ask_log: dict[int, list[float]] = {}
 
 
 @router.post("/assistant/ask")
-def assistant_ask(body: AskIn, db: Session = Depends(get_db)):
-    """GIS-aware decision assistant: intent → stored data → templated answer. Never generates numbers."""
+def assistant_ask(body: AskIn, user: Optional[User] = Depends(optional_user), db: Session = Depends(get_db)):
+    """Evidence-grounded assistant. Signed-in users get Claude answers built only from retrieved stored evidence,
+    with citations and an optional *proposed* (never executed) scenario; everyone else, or any API failure, gets
+    the template assistant. See backend/assistant_llm.py."""
+    import time
+    from .assistant_llm import grounded_answer, llm_available
     try:
         rd = _run_dir_for(db, body.study_area, body.run_id)
     except HTTPException:
         rd = None
-    return _answer(db, body.question, body.study_area, rd)
+    use_llm = user is not None and llm_available()
+    if use_llm:
+        now = time.time()
+        recent = [t for t in _ask_log.get(user.id, []) if now - t < 3600]
+        if len(recent) >= _ASK_LIMIT:
+            raise HTTPException(429, f"assistant limit of {_ASK_LIMIT} questions per hour reached")
+        _ask_log[user.id] = recent + [now]
+    out = grounded_answer(db, body.question, body.study_area, rd, use_llm=use_llm)
+    if use_llm:
+        audit(db, user, "assistant_question", "run", body.run_id,
+              new={"mode": out["mode"], "question": body.question[:300], "cited": [c["id"] for c in out.get("citations", [])],
+                   "proposed": out.get("proposed_scenario")})
+        db.commit()
+    return out
 
 
 class ReportIn(BaseModel):

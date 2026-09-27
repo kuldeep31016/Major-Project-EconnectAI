@@ -1,6 +1,6 @@
 # EcoConnectAI — Project Context (single source of truth)
 
-_Last updated: 2026-09-28 (Phase 4 P1 done)._
+_Last updated: 2026-09-28 (Phases 5–6 done)._
 
 ## 1. What this is
 
@@ -96,7 +96,14 @@ backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, pa
                 /api/provenance/{area}/{run}, POST /api/runs/{area}/{run}/reproduce → job) · provenance.py
                 (12-step lineage, also embedded as `lineage` in the evidence-chain response) · job_handlers:
                 segment, scenario, reproduce. Model status ladder DEVELOPMENT→EXPERIMENTAL→CANDIDATE→VALIDATED
-                (manage_models: admin/analyst/gis; validate_models: admin only; migration 0003) · routers.py (platform: auth, users,
+                (manage_models: admin/analyst/gis; validate_models: admin only; migration 0003)
+                workflow_api.py (Phase 5: /api/field/checklist, /api/restoration/reviews* stage machine GIS_REVIEW →
+                FIELD_VERIFICATION → FEASIBILITY → DECIDED, decide_restoration cap = senior/admin, 6 feasibility factors
+                None = "Not assessed"; /api/hitl/disagreements + /api/hitl/export GeoJSON; migration 0004;
+                record_disagreement hooked into verify_evidence on ACCEPTED) · assistant_llm.py (Phase 6: evidence pack
+                E1..En → Claude claude-opus-5, output_config json_schema, fallbacks="default"; citations filtered to pack;
+                proposed_scenario validated vs real ids, executed only by user click; signed-in + ANTHROPIC_API_KEY else
+                template insight.answer; 30 q/user/h; audited) · routers.py (platform: auth, users,
                 alerts, detections, field tasks, evidence, projects, scenarios, audit, assistant, reports)
                 db.py (15 tables) · auth.py (JWT + 6-role RBAC) · registry.py (sync runs→DB)
                 alerts.py (rule engine) · scenarios.py (Scenario Lab A–G) · insight.py (evidence chain,
@@ -131,7 +138,7 @@ bundle state `frontend/hooks/use-analysis.tsx`, getters `frontend/lib/data.ts`.
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-api.txt pytest pandas   # API + tests (no torch)
 # full research stack incl. torch: .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q          # 2026-09-28: 80 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
+.venv/bin/python -m pytest -q          # 2026-09-28: 90 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
 # tests set ECO_INLINE_WORKER=0 and drive jobs with backend.jobs.work_once()
 .venv/bin/ruff check backend ecoconnect scripts tests --select F   # CI lint scope
 .venv/bin/python -m uvicorn backend.main:app --port 8000
