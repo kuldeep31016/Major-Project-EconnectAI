@@ -1,5 +1,6 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -31,7 +32,7 @@ interface StageInfo {
   desc: string;
   tagTitle: string;
   tagSubtitle: string;
-  icon: any;
+  icon: LucideIcon;
 }
 
 const STAGES: StageInfo[] = [

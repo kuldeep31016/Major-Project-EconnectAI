@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   backend:
     build:
@@ -12,7 +10,8 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - ECO_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost
-      - ECO_DEMO_PASSWORD=demo1234
+      - ECO_DEMO_PASSWORD=${ECO_DEMO_PASSWORD:-demo1234}   # local only; override via .env
+      - ECO_JWT_SECRET=${ECO_JWT_SECRET:-}
     volumes:
       - ./outputs:/app/outputs
     healthcheck:
@@ -25,13 +24,16 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        # baked into the browser bundle: must be an address the *browser* can reach
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        BACKEND_URL: http://backend:8000
     container_name: ecoconnect-frontend
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://backend:8000
       - BACKEND_URL=http://backend:8000
     depends_on:
       backend:

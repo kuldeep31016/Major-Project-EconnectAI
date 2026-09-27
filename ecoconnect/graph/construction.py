@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import math
 from collections import deque
-from typing import Iterable, Literal, Optional
+from typing import Iterable, Literal
 
 from .types import Edge, Patch
 

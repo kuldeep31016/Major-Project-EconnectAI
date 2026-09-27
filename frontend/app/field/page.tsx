@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAnalysis } from "@/hooks/use-analysis";
 import { useAuth } from "@/hooks/use-auth";
 import {
-  createTask, evidencePhotoUrl, fetchAlerts, fetchDetections, fetchEvidence, fetchTasks, fetchUsers, setDetectionStatus, setTaskStatus, submitEvidence, verifyEvidence,
+  createTask, fetchEvidencePhoto, fetchAlerts, fetchDetections, fetchEvidence, fetchTasks, fetchUsers, setDetectionStatus, setTaskStatus, submitEvidence, verifyEvidence,
   type AlertItem, type DetectionItem, type EvidenceItem, type FieldTaskItem, type SessionUser,
 } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -135,8 +135,7 @@ function FieldView() {
                       </div>
                       {e.notes && <div className="mt-1 text-muted-foreground">{e.notes}</div>}
                       {e.photo_path && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={evidencePhotoUrl(e.photo_path)} alt="field photo" className="mt-2 max-h-56 rounded-lg" />
+                        <EvidencePhoto name={e.photo_path} />
                       )}
                       {can("verify_evidence") && e.verification === "SUBMITTED" && (
                         <div className="mt-2 flex gap-2">
@@ -286,4 +285,17 @@ function NewTask({ alerts, users, sceneId, initialAlertId, onCreated }: { alerts
       </CardContent>
     </Card>
   );
+}
+
+function EvidencePhoto({ name }: { name: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let url: string | null = null;
+    fetchEvidencePhoto(name).then((u) => { url = u; setSrc(u); }).catch(() => setFailed(true));
+    return () => { if (url) URL.revokeObjectURL(url); };
+  }, [name]);
+  if (failed) return <div className="mt-2 text-[11px] text-muted-foreground">Photo unavailable.</div>;
+  // eslint-disable-next-line @next/next/no-img-element
+  return src ? <img src={src} alt="field photo" className="mt-2 max-h-56 rounded-lg" /> : null;
 }

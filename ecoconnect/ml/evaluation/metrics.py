@@ -96,7 +96,6 @@ class ConfusionAccumulator:
         tp = m.diag()
         fp = m.sum(0) - tp
         fn = m.sum(1) - tp
-        tn = m.sum() - tp - fp - fn
         eps = 1e-12
         iou = tp / (tp + fp + fn + eps)
         dice = 2 * tp / (2 * tp + fp + fn + eps)

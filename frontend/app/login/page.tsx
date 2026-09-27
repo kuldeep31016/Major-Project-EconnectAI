@@ -7,6 +7,9 @@ import { ArrowRight, CheckCircle2, Eye, EyeOff, KeyRound, Leaf, Loader2, LogIn, 
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
+// Public demo accounts only; a real deployment sets its own password (backend ECO_DEMO_PASSWORD).
+const DEMO_PASSWORD = process.env.NEXT_PUBLIC_DEMO_PASSWORD ?? "demo1234";
+
 const DEMO_USERS = [
   { username: "admin", label: "State Administrator", role: "Full Platform Admin", avatar: "AD", color: "from-emerald-600 to-teal-700" },
   { username: "senior", label: "Senior Conservation Officer", role: "Decisions & Strategy", avatar: "SC", color: "from-blue-600 to-indigo-700" },
@@ -31,10 +34,14 @@ export default function LoginPage() {
       setError("Please enter a username or select a demo account.");
       return;
     }
+    if (!p) {
+      setError("Please enter your password.");
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
-      const user = await signIn(u, p || "demo1234");
+      const user = await signIn(u, p);
       router.push(user.role === "field_officer" ? "/field" : "/command");
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -46,8 +53,8 @@ export default function LoginPage() {
   const handleQuickLogin = (u: string) => {
     setActiveQuickUser(u);
     setUsername(u);
-    setPassword("demo1234");
-    void submit(u, "demo1234");
+    setPassword(DEMO_PASSWORD);
+    void submit(u, DEMO_PASSWORD);
   };
 
   return (
@@ -173,7 +180,7 @@ export default function LoginPage() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Default: demo1234"
+                    placeholder="Password"
                     autoComplete="current-password"
                     className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-2.5 pr-10 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-[#00e599] focus:ring-1 focus:ring-[#00e599]"
                   />
@@ -225,7 +232,7 @@ export default function LoginPage() {
       {/* Footer */}
       <footer className="px-6 py-4 sm:px-10 border-t border-white/[0.08] text-[11px] text-slate-400 flex flex-wrap items-center justify-between gap-3">
         <div>EcoConnectAI · Autonomous Ecological Intelligence Platform</div>
-        <div>Default demo password: <code className="text-[#00e599] font-mono">demo1234</code></div>
+        <div>Default demo password: <code className="text-[#00e599] font-mono">{DEMO_PASSWORD}</code></div>
       </footer>
     </div>
   );

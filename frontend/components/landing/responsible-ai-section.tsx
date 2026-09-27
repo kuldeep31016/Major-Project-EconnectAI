@@ -58,7 +58,7 @@ export function ResponsibleAISection() {
             </div>
             <div className="text-[12px] text-slate-400 max-w-md">
               Every metric, score, and ranking carries its full metadata provenance, timestamp, and
-              uncertainty confidence for total government audit readiness.
+              model confidence, so every result can be traced and audited.
             </div>
           </div>
 

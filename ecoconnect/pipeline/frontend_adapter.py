@@ -20,7 +20,7 @@ from shapely.geometry import shape, box
 from ecoconnect.graph import Patch, HabitatGraph
 from ecoconnect.graph.connectivity import ConnectivitySummary
 from ecoconnect.graph.criticality import CriticalityRow
-from ecoconnect.graph.explain import Explanation, criticality_level
+from ecoconnect.graph.explain import Explanation
 from ecoconnect.graph.restoration import RestorationRow
 from ecoconnect.graph.what_if import WhatIfResult
 
@@ -175,7 +175,6 @@ def build_frontend_bundle(*, manifest: dict, patches: list[Patch], graph: Habita
 
     # ---------------------------------------------------------------- HabitatGraph
     comps = graph.components()
-    comp_of = {pid: ci for ci, c in enumerate(comps) for pid in c}
     hubs = sorted(graph.node_ids, key=lambda i: -graph.degree(i))[: max(1, len(patches) // 6)]
     nodes = [{
         "id": p.id, "patchId": p.id, "label": p.name or p.id, "habitatClass": p.habitat_class,

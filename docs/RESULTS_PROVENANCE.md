@@ -16,8 +16,8 @@ These are reproduced in the paper's Table V and nowhere in this codebase's outpu
 
 | Result | Where | Provenance |
 |---|---|---|
-| IIC, PC, ECA, criticality ranking, restoration ranking, τ sensitivity for Kerala / Sundarbans / Gulf of Mannar / Odisha | `outputs/runs/<area>/prototype_synthetic/` | Computed exactly by `ecoconnect/graph` (k = 3, τ = 5 km, C(G) = IIC) over the prototype's **synthetic** patch geometry `frontend/mock-data/habitat-mask.json`. Regression-identical (max |Δ| 5e-16) to `docs/legacy_experiment/results_synthetic_prototype.json`, i.e. the paper's Tables VI–VIII. Measures no real ecosystem. |
-| Everything in `frontend/mock-data/*.json` | prototype | Deterministic generator output; site metadata only is real. |
+| IIC, PC, ECA, criticality ranking for Kerala / Sundarbans / Gulf of Mannar / Odisha | recomputed in `tests/test_regression.py` (the `prototype_synthetic` run folders were removed) | Computed exactly by `ecoconnect/graph` (k = 3, τ = 5 km, C(G) = IIC) over the **synthetic** patch geometry `tests/fixtures/synthetic_geometry/habitat-mask.json`. Regression-identical (max |Δ| 5e-16) to `docs/legacy_experiment/results_synthetic_prototype.json`, i.e. the paper's Tables VI–VIII. Measures no real ecosystem. |
+| Everything in `tests/fixtures/synthetic_geometry/*.json` | prototype | Deterministic generator output; site metadata only is real. |
 
 ## DEVELOPMENT-SUBSET RESULT — NOT FINAL
 
@@ -62,8 +62,21 @@ either dev model; the selected value is used for the corresponding graph run and
 
 | Run | Model / thr | Patches | Links | Comp. | Habitat (ha) | A_L (ha) | IIC | PC | ECA (ha) | ECA % habitat | ρ(area, S) | τ-sensitivity ρ vs 5 km (3 km / 8 km) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `kerala_E1_s1_b0_dev_t0.70` (LATEST) | E1 / 0.70 | 24 | 45 | 2 | 381.9 | 48 929 | 1.586e-5 | 3.471e-5 | 288 | 75.5 | 0.757 | 0.861 / 1.000 |
+| `kerala_E1_s1_b0_dev_t0.70` | E1 / 0.70 | 24 | 45 | 2 | 381.9 | 48 929 | 1.586e-5 | 3.471e-5 | 288 | 75.5 | 0.757 | 0.861 / 1.000 |
+| `kerala-coast_20260920T182222Z` (**LATEST**) | kerala-coast_development / 0.50 | 24 | 43 | 2 | 219.6 | 48 929 | 6.524e-6 | 1.137e-5 | 165 | 75.1 | — | — |
+| `kerala-coast_multi_E1_s1_b0_dev_t0.70` | multi_E1 / 0.70 | 12 | 18 | 3 | 204.6 | 48 929 | 8.138e-6 | 1.139e-5 | 165 | 80.7 | — | — |
+| `sundarbans_multi_E1_s1_b0_dev_t0.70` | multi_E1 / 0.70 | 54 | 73 | 13 | 63 829.7 | 105 337 | 4.293e-2 | 8.733e-2 | 31 129 | 48.8 | — | — |
+| `odisha-coast_multi_E1_s1_b0_dev_t0.70` | multi_E1 / 0.70 | 21 | 28 | 4 | 14 943.8 | 66 528 | 1.913e-2 | 2.524e-2 | 10 570 | 70.7 | — | — |
+| `gulf-of-mannar_multi_E1_s1_b0_dev_t0.70` | multi_E1 / 0.70 | 16 | 17 | 6 | 117.6 | 147 593 | 9.772e-8 | 1.879e-7 | 64 | 54.4 | — | — |
 | `kerala_E2_s2_b0_dev_t0.45` | E2 / 0.45 | 31 | 60 | 2 | 365.1 | 48 879 | 1.258e-5 | 2.757e-5 | 257 | 70.3 | 0.892 | 0.973 / 1.000 |
+
+Worked example (LATEST run, pinned by `tests/test_regression.py`): **P17 — 3.13 ha (1.4 % of habitat, 17th by
+area), degree 4, cut vertex (2 → 3 components), criticality rank #3, S = 0.270 (−27.0 % IIC)**; P01 (35.1 ha) is #1,
+S = 0.307, not a cut vertex. Restoration candidate C1 (1.61 ha) adds +1.29 % IIC (simulated). Patch ids are assigned
+by area per run, so "P17" only refers to this run.
+
+4-area dev model `multi_E1_s1_b0_dev` (S1, B0, 800/195/200 tiles): test IoU / F1 / P / R vs GMW = 0.842 / 0.914 /
+0.878 / 0.954 at 0.5 — dominated by Sundarbans; Kerala remains weak.
 
 Notable (E1 run): patch **P21 — 2.6 ha, rank 21/24 by area, degree 7 — is a cut vertex ranked #4 by criticality
 (S = 0.204)**; the largest patch P01 (87.2 ha) ranks #1 (S = 0.404) and its exact removal lowers IIC by 40.4 %.

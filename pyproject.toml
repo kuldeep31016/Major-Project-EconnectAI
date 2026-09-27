@@ -19,3 +19,9 @@ dependencies = {file = ["requirements.txt"]}
 testpaths = ["tests"]
 pythonpath = ["."]
 filterwarnings = ["ignore::PendingDeprecationWarning:rasterio.*"]
+
+[tool.ruff]
+line-length = 130
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]   # package re-exports

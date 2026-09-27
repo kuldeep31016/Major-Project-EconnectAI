@@ -66,6 +66,8 @@ function ReportsView() {
       const rep = await generateOfficialReport(sceneId, runId, projectId === "" ? undefined : projectId);
       setOfficial((o) => [rep, ...o]);
       setActiveId(rep.id);
+    } catch (e) {
+      window.alert(`Report generation failed: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setGenerating(false);
     }

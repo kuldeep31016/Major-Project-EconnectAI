@@ -18,22 +18,22 @@ from typing import Optional
 import numpy as np
 from shapely.geometry import Polygon, shape
 
-from ecoconnect.graph import (Patch, build_graph, connectivity, compute_criticality, evaluate_candidates,
+from ecoconnect.graph import (build_graph, connectivity, compute_criticality, evaluate_candidates,
                               simulate_removal, summarise)
 from ecoconnect.graph.construction import haversine_km
 from ecoconnect.pipeline.config import REPO_ROOT
 
+from .paths import abs_path, patch_from_dict
+
 
 def _abs(p) -> Path:
-    """Artefact paths are stored repo-relative (ecoconnect.pipeline.config.portable_path)."""
-    pp = Path(str(p or ""))
-    return pp if pp.is_absolute() else REPO_ROOT / pp
+    return abs_path(str(p or "")) or REPO_ROOT
 
 
 def _load(run_dir: Path):
     m = json.loads((run_dir / "manifest.json").read_text())
     inp = json.loads((run_dir / "patches_input.json").read_text())
-    mk = lambda p: Patch(**{**p, "centroid": tuple(p["centroid"]), "bbox": tuple(p["bbox"]) if p.get("bbox") else None})  # noqa: E731
+    mk = patch_from_dict
     patches = [mk(p) for p in inp["patches"]]
     cands = [mk(c) for c in inp["candidates"]]
     g = m["config"]["graph"]
@@ -162,7 +162,6 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
         m2, p2, _, a2, g2, metric2 = _load(other_run_dir)
         g_other = build_graph(p2, k=g2["k_neighbors"], tau_km=g2["tau_km"], distance_mode=g2["distance_mode"])
         other = _summary(g_other, a2, metric2)
-        ids_a, ids_b = {p.id for p in patches}, {p.id for p in p2}
         # patch identity is positional (ids are per-run); match by centroid proximity (< 300 m)
         matched, lost, gained = [], [], []
         for p in patches:

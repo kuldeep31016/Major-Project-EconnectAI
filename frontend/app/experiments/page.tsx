@@ -42,7 +42,7 @@ export default function ExperimentsPage() {
     let cancelled = false;
     fetchModelDetail(active).then((d) => {
       if (!cancelled) setDetail(d);
-    });
+    }).catch(() => { if (!cancelled) setDetail(null); });
     return () => {
       cancelled = true;
     };
@@ -89,7 +89,7 @@ export default function ExperimentsPage() {
                     </Badge>
                   </div>
                   <div className="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
-                    <span className="font-mono">{m.encoder || "efficientnet-b0"}</span>
+                    <span className="font-mono">{m.encoder || "—"}</span>
                     <span className="text-[10px] text-emerald-700 font-medium">U-Net</span>
                   </div>
                 </button>
@@ -105,9 +105,9 @@ export default function ExperimentsPage() {
 
           {/* Reference Paper Benchmark Card */}
           <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm space-y-1.5">
-            <div className="text-[10.5px] font-bold text-muted-foreground uppercase tracking-wider">Benchmark Baseline</div>
+            <div className="text-[10.5px] font-bold text-muted-foreground uppercase tracking-wider">Published baseline — not our result</div>
             <div className="text-xs font-semibold text-foreground">UNB7 (Ghorbanian et al.)</div>
-            <div className="text-[11px] text-muted-foreground">U-Net + EfficientNet-B7 · OA 95.56% · κ 0.94</div>
+            <div className="text-[11px] text-muted-foreground">U-Net + EfficientNet-B7 · OA 95.56% · κ 0.94 (their Sentinel-1 study, their data). UNB7 is not yet trained here.</div>
           </div>
         </div>
 
@@ -198,13 +198,13 @@ export default function ExperimentsPage() {
                   </div>
                   <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
                     <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Accuracy</div>
-                    <div className="mt-1 text-xl font-black text-foreground">{valMetrics?.accuracy ? `${(valMetrics.accuracy * 100).toFixed(1)}%` : "99.0%"}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">Pixel Agreement</div>
+                    <div className="mt-1 text-xl font-black text-foreground">{valMetrics?.accuracy != null ? `${(valMetrics.accuracy * 100).toFixed(1)}%` : "—"}</div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">Pixel agreement vs GMW labels</div>
                   </div>
                   <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
-                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Cohen's κ</div>
+                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Cohen&apos;s κ</div>
                     <div className="mt-1 text-xl font-black text-foreground">{f(valMetrics?.kappa)}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">Inter-rater Kappa</div>
+                    <div className="text-[10px] text-muted-foreground mt-0.5">Agreement vs GMW labels</div>
                   </div>
                 </div>
 
@@ -234,7 +234,7 @@ export default function ExperimentsPage() {
                         </thead>
                         <tbody className="divide-y divide-black/[0.06]">
                           <tr className="hover:bg-[#f4f7f5]/50">
-                            <td className="py-3 px-4 font-semibold text-foreground">Validation (Best Epoch {detail.metrics.best_epoch ?? 22})</td>
+                            <td className="py-3 px-4 font-semibold text-foreground">Validation (Best Epoch {detail.metrics.best_epoch ?? "—"})</td>
                             <td className="py-3 px-3 text-center font-bold text-emerald-700">{f(valMetrics?.iou)}</td>
                             <td className="py-3 px-3 text-center font-semibold">{f(valMetrics?.dice)}</td>
                             <td className="py-3 px-3 text-center text-muted-foreground">{f(valMetrics?.precision)}</td>
@@ -370,11 +370,11 @@ export default function ExperimentsPage() {
                   </div>
                   <div className="space-y-2 text-xs">
                     <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Model Architecture</span><span className="font-semibold">U-Net</span></div>
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Backbone Encoder</span><span className="font-semibold">{detail.metrics.encoder || "efficientnet-b0"}</span></div>
+                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Backbone Encoder</span><span className="font-semibold">{detail.metrics.encoder || "—"}</span></div>
                     <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Input Sensors</span><span className="font-semibold">{input}</span></div>
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Training Dataset</span><span className="font-semibold">{ds?.n_train ?? 176} train / {ds?.n_val ?? 32} val / {ds?.n_test ?? 48} test</span></div>
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Compute Device</span><span className="font-semibold">{String(detail.experiment?.hardware?.device ?? "MPS / GPU")}</span></div>
-                    <div className="flex justify-between py-1"><span className="text-muted-foreground">Training Duration</span><span className="font-semibold">{detail.experiment?.training_time_s ? `${Math.round(Number(detail.experiment.training_time_s))} s` : "340 s"}</span></div>
+                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Training Dataset</span><span className="font-semibold">{ds?.n_train ?? "—"} train / {ds?.n_val ?? "—"} val / {ds?.n_test ?? "—"} test</span></div>
+                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Compute Device</span><span className="font-semibold">{String(detail.experiment?.hardware?.device ?? "—")}</span></div>
+                    <div className="flex justify-between py-1"><span className="text-muted-foreground">Training Duration</span><span className="font-semibold">{detail.experiment?.training_time_s ? `${Math.round(Number(detail.experiment.training_time_s))} s` : "—"}</span></div>
                   </div>
                 </Card>
 

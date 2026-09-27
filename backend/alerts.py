@@ -5,9 +5,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .db import Alert, AnalysisVersion, Detection, utcnow
+from .db import Alert, AnalysisVersion, Detection, FieldTask
 
 ALERT_RULES = {
     "critical_patch_S": 0.25,          # S_i >= -> critical patch alert (same band as the UI 'critical')
@@ -33,7 +34,11 @@ def generate_alerts(db: Session, study_area_id: str, run: AnalysisVersion, repla
     rest = json.loads((rd / "restoration.json").read_text())
     patches = {p["id"]: p for p in json.loads((rd / "patches_input.json").read_text())["patches"]}
     if replace_open:
-        db.query(Alert).filter(Alert.study_area_id == study_area_id, Alert.status == "OPEN").delete()
+        # keep alerts that a field task points at (FK); they are superseded, not erased
+        referenced = select(FieldTask.alert_id).where(FieldTask.alert_id.is_not(None))
+        stale = db.query(Alert).filter(Alert.study_area_id == study_area_id, Alert.status == "OPEN")
+        stale.filter(Alert.id.in_(referenced)).update({"status": "DISMISSED"}, synchronize_session=False)
+        stale.filter(Alert.id.not_in(referenced)).delete(synchronize_session=False)
     n = 0
     metric = run.metric.upper() if run.metric else "IIC"
 

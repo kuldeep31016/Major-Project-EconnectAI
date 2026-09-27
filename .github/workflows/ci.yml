@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-api.txt
+      # API stack only (no torch): the ML smoke test skips itself without torch
+      - run: pip install -r requirements-api.txt pytest pandas ruff pip-audit
+      - name: Lint (pyflakes rules)
+        run: ruff check backend ecoconnect scripts tests --select F
+      - name: Tests (graph maths, P17 regression, API, security, workflow)
+        run: python -m pytest -q
+      - name: Dependency audit
+        run: pip-audit -r requirements-api.txt || echo "::warning::pip-audit reported issues"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npx tsc --noEmit -p .
+      - run: npx eslint .
+      - run: npm run build
+      - run: npm audit --omit=dev --audit-level=high || echo "::warning::npm audit reported issues"
+
+  docker:
+    needs: [backend, frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build backend image
+        run: docker build -t ecoconnect-api .
+      - name: Build frontend image
+        run: docker build -t ecoconnect-web --build-arg NEXT_PUBLIC_API_URL=http://localhost:8000 frontend

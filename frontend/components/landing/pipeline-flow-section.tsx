@@ -1,5 +1,6 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -31,7 +32,7 @@ interface PipelineStep {
   description: string;
   activeRadioIdx: number;
   badgeLabel: string;
-  icon: any;
+  icon: LucideIcon;
 }
 
 const PIPELINE_STEPS: PipelineStep[] = [
@@ -441,8 +442,8 @@ export function PipelineFlowSection() {
                   <Leaf className="h-3.5 w-3.5" />
                 </div>
                 <div>
-                  <div className="text-[11.5px] font-bold text-white leading-tight">382 ha</div>
-                  <div className="text-[9px] text-slate-400">Study Area</div>
+                  <div className="text-[11.5px] font-bold text-white leading-tight">220 ha</div>
+                  <div className="text-[9px] text-slate-400">Modelled habitat (Kerala dev run)</div>
                 </div>
               </div>
 

@@ -6,16 +6,15 @@ bbox columns (PostGIS-ready).  Large rasters are NEVER stored in the database - 
 """
 from __future__ import annotations
 
-import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 from sqlalchemy import (JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text,
                         create_engine, event)
-from sqlalchemy.orm import DeclarativeBase, Session, relationship, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
-from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT, load_dotenv
+from ecoconnect.pipeline.config import OUTPUTS_DIR, load_dotenv
 
 load_dotenv()
 DATABASE_URL = os.environ.get("ECO_DATABASE_URL", f"sqlite:///{(OUTPUTS_DIR / 'ecoconnect.db').as_posix()}")

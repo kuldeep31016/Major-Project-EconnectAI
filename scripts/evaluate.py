@@ -7,7 +7,7 @@ qualitative panels (image | ground truth | probability | overlay).
 import argparse, csv, json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-import numpy as np, torch
+import torch
 from ecoconnect.ml.common import resolve_training_config, prepare_data
 from ecoconnect.ml.inference import load_checkpoint, predict_proba
 from ecoconnect.ml.evaluation.metrics import ConfusionAccumulator

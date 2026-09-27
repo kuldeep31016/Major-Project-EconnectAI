@@ -24,7 +24,9 @@ pipeline outputs through a FastAPI backend. Every number shown carries a provena
 
 ---
 
-## Status (2026-09-18) — read this first
+## Status (updated 2026-09-27) — read this first
+
+Full current context: `docs/context/PROJECT_CONTEXT.md`.
 
 | Stage | State |
 |---|---|
@@ -35,10 +37,10 @@ pipeline outputs through a FastAPI backend. Every number shown carries a provena
 | Dataset, preprocessing, UNB7 model, train/validate/evaluate/predict, threshold sweep | **Implemented and executed** on Kerala (dev mode, B0 encoder). |
 | **E1/E2/E3 development runs (Kerala, B0)** | **Done — DEVELOPMENT-SUBSET RESULTS, NOT FINAL.** Test IoU vs GMW: E1 S1-only 0.023, E2 S2-only 0.054, E3 fusion 0.053 (48 tiles). Weak: 176 training tiles, 0.2 % positives, 1–3 px fringes. See `docs/RESULTS_PROVENANCE.md`. |
 | Graph analysis on real predictions | **Done** (`outputs/runs/kerala-coast/kerala_E1_s1_b0_dev_t0.70`, 24 patches, IIC 1.59e-5, ECA 75.5 % of habitat). |
-| Other three study areas; multi-area dataset | **NOT YET RUN.** |
+| Other three study areas; multi-area dataset | **Done (dev).** 4-area S1 B0 model `multi_E1_s1_b0_dev`: test IoU 0.842 / F1 0.914 vs GMW weak labels (Sundarbans-dominated; Kerala weak). Graph runs for all four areas. |
 | **UNB7 final run (GPU) → OUR EXPERIMENTAL RESULT** | **NOT YET RUN.** EcoConnectAI's final segmentation accuracy is therefore **NOT AVAILABLE**; 95.56 % OA is the foundation study's (PUBLISHED BASELINE — NOT OUR RESULT). |
 
-Runs under `outputs/runs/*/prototype_synthetic/` are PROTOTYPE / SYNTHETIC (exact maths over synthetic geometry).
+Synthetic prototype geometry (`tests/fixtures/synthetic_geometry/`) is used only in tests, which reproduce the paper tables exactly.
 Runs named `kerala_E*_dev_*` are real-data development runs. Every number in the UI carries its label.
 
 ---
@@ -55,7 +57,7 @@ cd frontend && npm install && cd ..
 # 3. Configure
 cp .env.example .env            # set DATA_ROOT (dataset location), SEGMENTATION_THRESHOLD, etc.
 
-# 4. Tests (graph maths, patch extraction, ML plumbing, API) — 35 tests
+# 4. Tests (graph maths, regression, patch extraction, ML plumbing, API, security) — 61 tests
 .venv/bin/python -m pytest -q
 
 # 5. Exercise the whole analysis + UI on the prototype geometry (labelled SYNTHETIC)

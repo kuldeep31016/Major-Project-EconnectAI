@@ -1,5 +1,6 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -19,7 +20,7 @@ interface Capability {
   tagline: string;
   href: string;
   badge: string;
-  icon: any;
+  icon: LucideIcon;
   renderVisual: () => React.ReactNode;
 }
 

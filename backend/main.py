@@ -1,6 +1,6 @@
 """EcoConnectAI backend - a thin FastAPI layer over pipeline run directories.
 
-No database: every run is a folder under outputs/runs/<study_area>/<run_id>/ (see
+Pipeline runs are immutable folders under outputs/runs/<study_area>/<run_id>/ (see
 ecoconnect/pipeline/analysis.py).  The API serves those files and performs the
 two computations that must be interactive: exact what-if removal (Eq. 10) and
 restoration re-ranking with user-supplied costs (Eq. 12).
@@ -15,7 +15,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 
 from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,10 +26,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from ecoconnect import __version__  # noqa: E402
 from ecoconnect.graph import Patch, build_graph, simulate_removal, evaluate_candidates  # noqa: E402
-from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT, load_study_areas, load_config  # noqa: E402
+from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT, load_study_areas  # noqa: E402
 
-RUNS_DIR = OUTPUTS_DIR / "runs"
-SEG_DIR = OUTPUTS_DIR / "segmentation"
+from backend import paths  # noqa: E402
+from backend.paths import SEG_DIR, abs_path, data_root, patch_from_dict, resolve_run as _resolve_run  # noqa: E402
 
 from contextlib import asynccontextmanager  # noqa: E402
 from backend.db import SessionLocal, init_db  # noqa: E402
@@ -37,6 +37,7 @@ from backend.auth import seed_demo_users, require, User  # noqa: E402
 from backend.db import audit as _audit  # noqa: E402
 from backend.registry import sync_all  # noqa: E402
 from backend.routers import router as workflow_router  # noqa: E402
+from backend.security import validate_path_params, contained  # noqa: E402
 
 
 @asynccontextmanager
@@ -51,6 +52,7 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(title="EcoConnectAI API", version=__version__, lifespan=lifespan,
+              dependencies=[Depends(validate_path_params)],
               description="Coastal Ecosystem Intelligence and Decision-Support Platform - API over pipeline runs and application state.")
 app.include_router(workflow_router)
 app.add_middleware(
@@ -63,32 +65,13 @@ app.add_middleware(
 
 # --------------------------------------------------------------------------- helpers
 def _abs(p: str | None) -> str | None:
-    """Artefact paths are stored repo-relative (see ecoconnect.pipeline.config.portable_path)."""
-    if not p:
-        return p
-    pp = Path(p)
-    return str(pp if pp.is_absolute() else REPO_ROOT / pp)
+    return str(abs_path(p)) if p else p
 
 
 def _read_json(p: Path):
     if not p.exists():
         raise HTTPException(404, f"{p.name} not found")
     return json.loads(p.read_text())
-
-
-def _resolve_run(study_area: str, run_id: str) -> Path:
-    base = RUNS_DIR / study_area
-    if not base.exists():
-        raise HTTPException(404, f"no runs for study area {study_area!r}")
-    if run_id == "latest":
-        ptr = base / "LATEST"
-        if not ptr.exists():
-            raise HTTPException(404, f"no LATEST pointer for {study_area!r}")
-        run_id = ptr.read_text().strip()
-    run_dir = base / run_id
-    if not run_dir.exists():
-        raise HTTPException(404, f"run {run_id!r} not found for {study_area!r}")
-    return run_dir
 
 
 def _run_summary(run_dir: Path) -> dict:
@@ -119,9 +102,9 @@ def _load_graph(run_dir: Path):
     m = _read_json(run_dir / "manifest.json")
     inp = _read_json(run_dir / "patches_input.json")
     g = m["config"]["graph"]
-    patches = [Patch(**{**p, "centroid": tuple(p["centroid"]), "bbox": tuple(p["bbox"]) if p.get("bbox") else None})
+    patches = [patch_from_dict(p)
                for p in inp["patches"]]
-    cands = [Patch(**{**p, "centroid": tuple(p["centroid"]), "bbox": tuple(p["bbox"]) if p.get("bbox") else None})
+    cands = [patch_from_dict(p)
              for p in inp["candidates"]]
     graph = build_graph(patches, k=g["k_neighbors"], tau_km=g["tau_km"], distance_mode=g["distance_mode"])
     metric = m["config"]["connectivity"]["research_metric"]
@@ -132,7 +115,7 @@ def _load_graph(run_dir: Path):
 # --------------------------------------------------------------------------- meta
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "version": __version__, "outputs_dir": str(OUTPUTS_DIR)}
+    return {"status": "ok", "version": __version__}
 
 
 @app.get("/api/study-areas")
@@ -141,9 +124,9 @@ def study_areas():
     out = []
     for sid, meta in areas.items():
         latest = None
-        ptr = RUNS_DIR / sid / "LATEST"
-        if ptr.exists() and (RUNS_DIR / sid / ptr.read_text().strip()).exists():
-            latest = _run_summary(RUNS_DIR / sid / ptr.read_text().strip())
+        ptr = paths.RUNS_DIR / sid / "LATEST"
+        if ptr.exists() and (paths.RUNS_DIR / sid / ptr.read_text().strip()).exists():
+            latest = _run_summary(paths.RUNS_DIR / sid / ptr.read_text().strip())
         out.append({"id": sid, **meta, "latestRun": latest})
     return out
 
@@ -151,7 +134,7 @@ def study_areas():
 @app.get("/api/runs")
 def list_runs(study_area: Optional[str] = None):
     out = []
-    for sa_dir in sorted(RUNS_DIR.glob("*")) if RUNS_DIR.exists() else []:
+    for sa_dir in sorted(paths.RUNS_DIR.glob("*")) if paths.RUNS_DIR.exists() else []:
         if not sa_dir.is_dir() or (study_area and sa_dir.name != study_area):
             continue
         for run_dir in sorted(sa_dir.glob("*")):
@@ -163,7 +146,7 @@ def list_runs(study_area: Optional[str] = None):
 @app.get("/api/scenes")
 def scenes():
     """Satellite scenes downloaded by the acquisition module (data/scenes/<study_area>/*.json)."""
-    scenes_dir = Path(os.environ.get("DATA_ROOT", REPO_ROOT / "data")) / "scenes"
+    scenes_dir = data_root() / "scenes"
     out = []
     for p in sorted(scenes_dir.glob("*/*.json")) if scenes_dir.exists() else []:
         try:
@@ -267,7 +250,7 @@ def timeline(study_area: str, run_id: str = "latest", critical_threshold: float 
     ``run_id`` (latest such run per year). Mixing models would turn model differences into fake "change".
     Habitat change between consecutive years is computed from the binary masks of the two runs.
     Years without a comparable run are simply absent - nothing is interpolated or invented."""
-    base = RUNS_DIR / study_area
+    base = paths.RUNS_DIR / study_area
     ref_key = None
     try:
         ref_key = _model_key(json.loads((_resolve_run(study_area, run_id) / "manifest.json").read_text()))
@@ -284,8 +267,9 @@ def timeline(study_area: str, run_id: str = "latest", critical_threshold: float 
             continue
         if ref_key is not None and _model_key(m) != ref_key:
             continue
+        y = int(y)
         if y not in by_year or m["timestamp_utc"] > by_year[y][1]["timestamp_utc"]:
-            by_year[int(y)] = (run_dir.name, m, json.loads((run_dir / "metrics.json").read_text()))
+            by_year[y] = (run_dir.name, m, json.loads((run_dir / "metrics.json").read_text()))
     years = []
     prev = None
     for y in sorted(by_year):
@@ -368,12 +352,13 @@ def restoration(study_area: str, run_id: str, req: RestorationRequest = Body(def
 
 
 class SegmentRequest(BaseModel):
-    study_area: str
+    study_area: str = Field(pattern=r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
     probability_tif: Optional[str] = None      # existing probability raster to analyse
     scene_tif: Optional[str] = None            # OR a preprocessed scene to run inference on
     checkpoint: Optional[str] = None
     threshold: Optional[float] = None
-    result_kind: str = "development"
+    # only development runs can be created from the UI; "experiment"/"external" are for offline scripts
+    result_kind: Literal["development"] = "development"
 
 
 import threading  # noqa: E402
@@ -397,7 +382,7 @@ def _segment(req: SegmentRequest, user: User):
     prob = req.probability_tif
     # Auto-discovery: newest scene of the study area + newest trained checkpoint (+ its calibrated threshold)
     if not prob and not req.scene_tif:
-        scenes_dir = Path(os.environ.get("DATA_ROOT", REPO_ROOT / "data")) / "scenes" / req.study_area
+        scenes_dir = data_root() / "scenes" / req.study_area
         scenes_ = sorted(scenes_dir.glob("*_s12_10m.tif"), key=lambda p: p.stat().st_mtime) or \
                   sorted(scenes_dir.glob("*.tif"), key=lambda p: p.stat().st_mtime)
         if not scenes_:
@@ -429,6 +414,16 @@ def _segment(req: SegmentRequest, user: User):
             return p
         pp = Path(p).resolve()
         return str(pp.relative_to(REPO_ROOT.resolve())) if pp.is_relative_to(REPO_ROOT.resolve()) else str(pp)
+    # Only files inside the data/ or outputs/ trees may be read; checkpoints only from outputs/segmentation/<exp>/best_model.pth
+    roots = (data_root(), OUTPUTS_DIR)
+    for f in (req.scene_tif, prob):
+        if f and (Path(f).suffix.lower() not in {".tif", ".tiff"} or not any(
+                Path(_abs(f)).resolve().is_relative_to(r.resolve()) for r in roots)):
+            raise HTTPException(400, "rasters must be .tif files under DATA_ROOT or outputs/")
+    if req.checkpoint:
+        ck = contained(Path(_abs(req.checkpoint)), SEG_DIR)
+        if ck.name != "best_model.pth" or ck.parent.parent != SEG_DIR.resolve():
+            raise HTTPException(400, "checkpoint must be outputs/segmentation/<experiment>/best_model.pth")
     req.scene_tif, req.checkpoint, prob = _rel(req.scene_tif), _rel(req.checkpoint), _rel(prob)
     if req.scene_tif:
         if not req.checkpoint:
@@ -482,7 +477,7 @@ def reanalyse(study_area: str, run_id: str, req: ReanalyseRequest):
     m = _read_json(run_dir / "manifest.json")
     inp = _read_json(run_dir / "patches_input.json")
     g = m["config"]["graph"]
-    patches = [Patch(**{**p, "centroid": tuple(p["centroid"]), "bbox": tuple(p["bbox"]) if p.get("bbox") else None})
+    patches = [patch_from_dict(p)
                for p in inp["patches"]]
     tau = req.tau_km or g["tau_km"]
     k = req.k or g["k_neighbors"]
@@ -565,7 +560,7 @@ def _scene_raster(study_area: str, year: int | None, needs: tuple[str, ...] = ()
     preferred; if that year's scene lacks the sensor (e.g. an S1-only 2025 scene), the nearest other year is used
     and the response says which scene was drawn."""
     import rasterio
-    scenes_dir = Path(os.environ.get("DATA_ROOT", REPO_ROOT / "data")) / "scenes" / study_area
+    scenes_dir = data_root() / "scenes" / study_area
     cands = sorted(scenes_dir.glob("*.tif")) if scenes_dir.exists() else []
     if not cands:
         raise HTTPException(404, f"no downloaded scene for {study_area}")
@@ -602,7 +597,7 @@ def scene_quicklook(study_area: str, kind: str = "s1", year: Optional[int] = Non
     if kind not in {"s1", "ndvi", "rgb"}:
         raise HTTPException(400, "kind must be s1, ndvi or rgb")
     cache_dir = OUTPUTS_DIR / "quicklooks"
-    scenes_dir = Path(os.environ.get("DATA_ROOT", REPO_ROOT / "data")) / "scenes" / study_area
+    scenes_dir = data_root() / "scenes" / study_area
     if not (scenes_dir.exists() and any(scenes_dir.glob("*.tif"))):
         # deployment without the multi-GB scene rasters: serve the pre-rendered quicklook (same year first)
         pngs = sorted(cache_dir.glob(f"{study_area}_*_{kind}.png"))
@@ -704,8 +699,8 @@ def model_detail(experiment_id: str):
 
 @app.get("/api/models/{experiment_id}/asset/{name:path}")
 def model_asset(experiment_id: str, name: str):
-    p = (SEG_DIR / Path(experiment_id).name / name).resolve()
-    if not str(p).startswith(str(SEG_DIR.resolve())) or not p.exists() or p.suffix != ".png":
+    p = contained(SEG_DIR / experiment_id / name, SEG_DIR / experiment_id)
+    if not p.exists() or p.suffix != ".png":
         raise HTTPException(404, "asset not found")
     return FileResponse(p, headers={"Cache-Control": "public, max-age=3600"})
 

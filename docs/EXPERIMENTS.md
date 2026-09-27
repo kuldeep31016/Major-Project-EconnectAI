@@ -42,7 +42,7 @@ compared across AOIs of different size; ECA % of habitat is used for cross-area 
 | Exp. 2 threshold sweep (E1 → 0.70, E2 → 0.45) | done 2026-09-18 | DEVELOPMENT-SUBSET — NOT FINAL |
 | Exp. 3–5 on real predictions (`kerala_E1_s1_b0_dev_t0.70`, `kerala_E2_s2_b0_dev_t0.45`) | done 2026-09-18 | DEVELOPMENT-SUBSET — NOT FINAL |
 | Kerala 2025 S1 acquisition (timeline) | in progress | data |
-| Sundarbans / Gulf of Mannar / Bhitarkanika | **NOT YET RUN** | — |
+| 4-area dev model `multi_E1_s1_b0_dev` + per-area graph runs (Sundarbans, Gulf of Mannar, Bhitarkanika, Kerala) | done 2026-09-18 — test IoU 0.842 vs GMW | DEVELOPMENT-SUBSET — NOT FINAL |
 | E1 final (UNB7, GPU, multi-area) | **NOT YET RUN** | — |
 
 Numbers that exist today and what they mean are listed in `docs/RESULTS_PROVENANCE.md`.
