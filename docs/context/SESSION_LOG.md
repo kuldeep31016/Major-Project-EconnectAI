@@ -14,6 +14,18 @@ Next step:
 
 ---
 
+## 2026-09-28 — Phase 8 (part): guided demo, IP notes, limitations
+
+Changed: frontend/app/demo/page.tsx + components/demo/network-canvas.tsx (Design Style 5 editorial, brand colours kept;
+real S1 quicklook positioned by X-Bounds, real patch polygons from graph.json, links animate in, focus = cut vertex
+maximising rank_by_area − rank (P17), live postWhatIf + restore scenario; chapter = last [data-chapter] above 60 %
+viewport — onViewportEnter was unreliable on mobile). lib/api.ts fetchRunGraph/Criticality/Restoration/Manifest/Metrics.
+Landing "Kerala Demo" links → /demo; assistant hidden on /demo. docs/RESEARCH_IP_NOTES.md (no novelty/patent claims,
+prior-art to check, disclosure-timing warning), docs/LIMITATIONS.md, README capability table.
+Tests: 90 passed/1 skipped; eslint 0 errors; next build OK. Browser-verified desktop + mobile.
+Next (user stopped for the day): rest of Phase 8 (CONTRIBUTING/DATA/RESEARCH docs, server-side PDF report) or
+Phase 7 (observability /health+/ready UI, refresh tokens, auth on sensitive reads, deployment + cost doc).
+
 ## 2026-09-28 — Phases 5–6: restoration decisions, field checklist, HITL, grounded assistant; logo
 
 Changed: db RestorationReview/ModelDisagreement/Evidence.checklist + FIELD_CHECKLIST/REVIEW_STAGES/FEASIBILITY_FACTORS

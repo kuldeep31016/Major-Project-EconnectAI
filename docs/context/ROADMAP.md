@@ -56,8 +56,9 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [ ] P2 Cloud deployment doc + cost estimate (free-tier stack)
 
 ## Phase 8 — Docs, GitHub, demo
-- [ ] P1 README rewrite; LIMITATIONS, CONTRIBUTING, DATA, RESEARCH, Research & IP notes
-- [ ] P1 Guided demo mode (real P17 story), landing polish
+- [x] P1 README capability table; docs/LIMITATIONS.md; docs/RESEARCH_IP_NOTES.md (2026-09-28)
+- [ ] P2 CONTRIBUTING, DATA, RESEARCH docs
+- [x] P1 Guided demo `/demo` (7-chapter scrollytelling, live data, P17 chosen by rule) + landing links (2026-09-28)
 - [ ] P2 Server-side PDF report with provenance + limitations
 
 ## Needs new ML experiments / external data (not code-only)

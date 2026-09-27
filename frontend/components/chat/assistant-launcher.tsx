@@ -158,7 +158,7 @@ export function AssistantLauncher() {
   };
 
   // The assistant is contextual to an analysis — hide it on the landing page.
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname === "/demo") return null;
 
   const lastReply = [...messages].reverse().find((m) => m.reply)?.reply;
   const chips = lastReply?.followUps?.length ? lastReply.followUps : SUGGESTIONS;

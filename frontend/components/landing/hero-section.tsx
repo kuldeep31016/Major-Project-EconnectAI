@@ -139,10 +139,10 @@ export function HeroSection() {
                 {/* Sub-link */}
                 <div className="pt-0.5">
                   <Link
-                    href="/analysis?scene=kerala-coast"
+                    href="/demo"
                     className="group inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-[#00e599] font-medium transition-colors"
                   >
-                    <span>Kerala Coast Demo</span>
+                    <span>Guided Kerala demo</span>
                     <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
                 </div>

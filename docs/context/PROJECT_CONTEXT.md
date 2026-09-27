@@ -1,6 +1,6 @@
 # EcoConnectAI — Project Context (single source of truth)
 
-_Last updated: 2026-09-28 (Phases 5–6 done)._
+_Last updated: 2026-09-28 (Phases 5–6 done; Phase 8 demo + docs)._
 
 ## 1. What this is
 
@@ -127,7 +127,8 @@ docs/           context/ (THIS), ARCHITECTURE, API, DATA_PROVENANCE, RESULTS_PRO
 mesa_prep/      evaluation prep: videos, decks, scripts, Q&A, cheat sheet (tracked)
 ```
 
-Frontend routes: `/` landing · `/login` · `/command` (main dashboard) · `/analysis` · `/graph` ·
+Frontend routes: `/` landing · `/demo` (guided story: components/demo/network-canvas.tsx SVG over S1 quicklook,
+stage by scroll position; data via lib/api fetchRun*) · `/login` · `/command` (main dashboard) · `/analysis` · `/graph` ·
 `/scenario` (Scenario Lab) · `/simulation` (legacy, duplicates scenario/restoration) · `/restoration` ·
 `/field` · `/projects` · `/alerts` · `/experiments` · `/reports` · `/history` · `/audit` · `/upload`
 (New Analysis) · `/settings` (UI only) · `/dashboard` (redirect). API client `frontend/lib/api.ts`,
