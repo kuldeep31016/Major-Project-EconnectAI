@@ -9,3 +9,4 @@ os.environ.setdefault("ECO_OUTPUTS_DIR", str(_TMP / "outputs"))
 os.environ.setdefault("ECO_DATABASE_URL", f"sqlite:///{(_TMP / 'test.db').as_posix()}")
 os.environ.setdefault("ECO_DEMO_PASSWORD", "testpass")
 os.environ.setdefault("ECO_JWT_SECRET", "test-secret")
+os.environ.setdefault("ECO_INLINE_WORKER", "0")   # tests drive jobs deterministically via backend.jobs.work_once

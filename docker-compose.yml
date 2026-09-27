@@ -12,6 +12,10 @@ services:
       - ECO_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,http://localhost
       - ECO_DEMO_PASSWORD=${ECO_DEMO_PASSWORD:-demo1234}   # local only; override via .env
       - ECO_JWT_SECRET=${ECO_JWT_SECRET:-}
+      # default: SQLite in ./outputs. With `--profile postgres`, set in .env:
+      # ECO_DATABASE_URL=postgresql+psycopg://eco:eco@db:5432/ecoconnect
+      - ECO_DATABASE_URL=${ECO_DATABASE_URL:-}
+      - ECO_STORAGE=${ECO_STORAGE:-local}
     volumes:
       - ./outputs:/app/outputs
     healthcheck:
@@ -38,3 +42,39 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+
+  # Optional extra job worker (same image; scenario/analysis jobs). Inference jobs need torch:
+  # build an image from requirements.txt for that. The API also runs an inline worker (ECO_INLINE_WORKER=1).
+  worker:
+    profiles: ["worker"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["python", "-m", "backend.worker"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ECO_DATABASE_URL=${ECO_DATABASE_URL:-}
+      - ECO_STORAGE=${ECO_STORAGE:-local}
+    volumes:
+      - ./outputs:/app/outputs
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # Optional PostgreSQL + PostGIS (docker compose --profile postgres up)
+  db:
+    profiles: ["postgres"]
+    image: postgis/postgis:16-3.4
+    environment:
+      - POSTGRES_USER=eco
+      - POSTGRES_PASSWORD=eco
+      - POSTGRES_DB=ecoconnect
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "eco"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  pgdata:

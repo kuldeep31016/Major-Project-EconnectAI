@@ -1,6 +1,6 @@
 # EcoConnectAI — Project Context (single source of truth)
 
-_Last updated: 2026-09-28 (Phase 1 done)._
+_Last updated: 2026-09-28 (Phase 2 done)._
 
 ## 1. What this is
 
@@ -84,7 +84,12 @@ Graph (k=3, τ=5 km, C(G)=IIC). Kerala LATEST = `outputs/runs/kerala-coast/keral
 ```
 backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, patch_from_dict — the ONLY run resolver;
                 tests repoint backend.paths.RUNS_DIR) · security.py (slug validation app-dependency, contained(),
-                login throttle 10 fails/5 min) · main.py (run/artefact/compute endpoints) · routers.py (platform: auth, users,
+                login throttle 10 fails/5 min) · main.py (run/artefact/compute endpoints)
+                db.py (17 tables incl. jobs, artifacts) · migrate.py + migrations/ (Alembic; runs at startup;
+                pre-Alembic DBs stamped 0001) · storage.py (LocalStorage | S3Storage via ECO_STORAGE) ·
+                artifacts.py (sha256 registry, synced in registry.sync_all) · jobs.py (DB queue, conditional-UPDATE
+                claim, inline worker thread ECO_INLINE_WORKER=1) · job_handlers.py (segment, scenario) ·
+                jobs_api.py (/api/jobs, /api/artifacts) · worker.py (`python -m backend.worker`) · routers.py (platform: auth, users,
                 alerts, detections, field tasks, evidence, projects, scenarios, audit, assistant, reports)
                 db.py (15 tables) · auth.py (JWT + 6-role RBAC) · registry.py (sync runs→DB)
                 alerts.py (rule engine) · scenarios.py (Scenario Lab A–G) · insight.py (evidence chain,
@@ -118,7 +123,8 @@ bundle state `frontend/hooks/use-analysis.tsx`, getters `frontend/lib/data.ts`.
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-api.txt pytest pandas   # API + tests (no torch)
 # full research stack incl. torch: .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q          # 2026-09-28: 63 passed, 1 skipped (ML needs torch)
+.venv/bin/python -m pytest -q          # 2026-09-28: 71 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
+# tests set ECO_INLINE_WORKER=0 and drive jobs with backend.jobs.work_once()
 .venv/bin/ruff check backend ecoconnect scripts tests --select F   # CI lint scope
 .venv/bin/python -m uvicorn backend.main:app --port 8000
 cd frontend && npm install && npm run dev   # http://localhost:3000
@@ -134,7 +140,10 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
 2. ML methodology bugs 20–28 OPEN (normaliser cache, 128 px split leakage, threshold picked on test split,
    Kerala LATEST model trained on 2025 imagery vs 2020 labels, no git commit/hash in manifests) — need re-runs.
 3. `/simulation` duplicates `/scenario` + `/restoration`; `main.py` still large; ~57 eslint warnings (unused imports).
-4. Docker images not built locally yet (daemon was off) — first CI run is the check.
+4. Docker images not built locally yet (daemon was off). **GitHub Actions cannot run: account locked for billing**
+   (user must fix billing or make repo public).
+5. `/api/segment` is now async (202 + job); frontend `postSegment` polls `waitForJob`. Inference in a worker
+   container needs a torch image (API image has no torch).
 
 ## 8. Machine / environment gotchas
 

@@ -19,8 +19,9 @@ def client(tmp_path_factory):
                        run_id="t1", out_root=out)
     import backend.main as m
     import backend.paths
-    backend.paths.RUNS_DIR = out / "runs"
-    return TestClient(m.app)
+    saved, backend.paths.RUNS_DIR = backend.paths.RUNS_DIR, out / "runs"
+    yield TestClient(m.app)
+    backend.paths.RUNS_DIR = saved
 
 
 def test_health_and_areas(client):

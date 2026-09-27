@@ -11,6 +11,8 @@ from sqlalchemy.orm import Session
 
 from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT, load_study_areas
 from .db import AnalysisVersion, LabelSource, Model, Scene, StudyArea
+from . import paths
+from .artifacts import register_model_dir, register_run_dir
 from .paths import data_root
 
 
@@ -92,7 +94,7 @@ def sync_models(db: Session) -> int:
 
 def sync_runs(db: Session) -> int:
     n = 0
-    runs = OUTPUTS_DIR / "runs"
+    runs = paths.RUNS_DIR
     for mp in sorted(runs.glob("*/*/manifest.json")) if runs.exists() else []:
         m = json.loads(mp.read_text())
         met = json.loads((mp.parent / "metrics.json").read_text())
@@ -133,6 +135,19 @@ def sync_runs(db: Session) -> int:
     return n
 
 
+def sync_artifacts(db: Session) -> int:
+    """Hash + register every run file and model record (cheap after the first pass: unchanged sizes are skipped)."""
+    n = 0
+    for av in db.query(AnalysisVersion).all():
+        if av.path and Path(av.path).is_dir():
+            n += register_run_dir(db, Path(av.path), av.id)
+    seg = paths.SEG_DIR
+    for m in db.query(Model).all():
+        if (seg / m.id).is_dir():
+            n += register_model_dir(db, seg / m.id, m.id)
+    return n
+
+
 def sync_all(db: Session) -> dict:
     out = {"study_areas": sync_study_areas(db)}
     db.flush()
@@ -141,5 +156,7 @@ def sync_all(db: Session) -> dict:
     out["models"] = sync_models(db)
     db.flush()
     out["runs"] = sync_runs(db)
+    db.flush()
+    out["artifacts"] = sync_artifacts(db)
     db.commit()
     return out

@@ -11,9 +11,7 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal, Optional
 
@@ -29,12 +27,15 @@ from ecoconnect.graph import Patch, build_graph, simulate_removal, evaluate_cand
 from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT, load_study_areas  # noqa: E402
 
 from backend import paths  # noqa: E402
-from backend.paths import SEG_DIR, abs_path, data_root, patch_from_dict, resolve_run as _resolve_run  # noqa: E402
+from backend.paths import SEG_DIR, abs_path, data_root, patch_from_dict, resolve_run as _resolve_run, run_summary as _run_summary  # noqa: E402
+from backend.db import Job  # noqa: E402
+from backend.jobs import enqueue, start_inline_worker, stop_inline_worker  # noqa: E402
+import backend.job_handlers  # noqa: E402,F401  (registers job types)
+from backend.jobs_api import artifacts_router, router as jobs_router  # noqa: E402
 
 from contextlib import asynccontextmanager  # noqa: E402
 from backend.db import SessionLocal, init_db  # noqa: E402
 from backend.auth import seed_demo_users, require, User  # noqa: E402
-from backend.db import audit as _audit  # noqa: E402
 from backend.registry import sync_all  # noqa: E402
 from backend.routers import router as workflow_router  # noqa: E402
 from backend.security import validate_path_params, contained  # noqa: E402
@@ -48,13 +49,17 @@ async def lifespan(_app: FastAPI):
         summary = sync_all(db)
         created = seed_demo_users(db)
     print(f"[startup] registry synced {summary}; demo users created: {created or 'none (exist)'}")
+    start_inline_worker()
     yield
+    stop_inline_worker()
 
 
 app = FastAPI(title="EcoConnectAI API", version=__version__, lifespan=lifespan,
               dependencies=[Depends(validate_path_params)],
               description="Coastal Ecosystem Intelligence and Decision-Support Platform - API over pipeline runs and application state.")
 app.include_router(workflow_router)
+app.include_router(jobs_router)
+app.include_router(artifacts_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=os.environ.get("ECO_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(","),
@@ -74,30 +79,6 @@ def _read_json(p: Path):
     return json.loads(p.read_text())
 
 
-def _run_summary(run_dir: Path) -> dict:
-    m = _read_json(run_dir / "manifest.json")
-    metrics = _read_json(run_dir / "metrics.json")
-    rm = metrics["research_metrics"]
-    return {
-        "runId": m["run_id"], "studyAreaId": m["study_area_id"], "timestamp": m["timestamp_utc"],
-        "resultKind": m["result_kind"], "resultLabel": m["result_label"],
-        "dataSourceType": m["data_source"].get("type"), "nPatches": rm["n_patches"], "nEdges": rm["n_edges"],
-        "nComponents": rm["n_components"], "iic": rm["iic"], "pc": rm["pc"], "ecaHa": rm["eca_ha"],
-        "ecaPctOfHabitat": rm["eca_pct_of_habitat"], "habitatAreaHa": rm["habitat_area_ha"],
-        "interfaceScore": metrics["interface_score"]["score"], "elapsedS": m.get("elapsed_s"),
-        "sceneYear": m["data_source"].get("scene_year"), "model": m["data_source"].get("model"),
-        "threshold": m["data_source"].get("threshold"),
-        "criticalPatches": _count_critical(run_dir),
-    }
-
-
-def _count_critical(run_dir: Path, s_threshold: float = 0.10) -> Optional[int]:
-    p = run_dir / "criticality.json"
-    if not p.exists():
-        return None
-    return sum(1 for r in json.loads(p.read_text()) if r["criticality_score"] >= s_threshold)
-
-
 def _load_graph(run_dir: Path):
     m = _read_json(run_dir / "manifest.json")
     inp = _read_json(run_dir / "patches_input.json")
@@ -113,6 +94,24 @@ def _load_graph(run_dir: Path):
 
 
 # --------------------------------------------------------------------------- meta
+@app.get("/api/ready")
+def ready():
+    """Readiness: database reachable and schema at the latest migration (503 otherwise)."""
+    from alembic.runtime.migration import MigrationContext
+    from alembic.script import ScriptDirectory
+    from backend.migrate import _config
+    from backend.db import engine
+    try:
+        with engine.connect() as c:
+            current = MigrationContext.configure(c).get_current_revision()
+        head = ScriptDirectory.from_config(_config()).get_current_head()
+    except Exception as e:
+        raise HTTPException(503, f"database unavailable: {type(e).__name__}")
+    if current != head:
+        raise HTTPException(503, f"schema at {current}, expected {head}")
+    return {"status": "ready", "schema": current}
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "version": __version__}
@@ -361,24 +360,8 @@ class SegmentRequest(BaseModel):
     result_kind: Literal["development"] = "development"
 
 
-import threading  # noqa: E402
-_SEGMENT_LOCK = threading.Lock()   # one inference/analysis at a time - the GPU/MPS and the LATEST pointer are shared
-
-
-@app.post("/api/segment")
-def segment(req: SegmentRequest, user: User = Depends(require("run_analysis"))):
-    if not _SEGMENT_LOCK.acquire(blocking=False):
-        raise HTTPException(409, "another analysis is already running - wait for it to finish")
-    try:
-        return _segment(req, user)
-    finally:
-        _SEGMENT_LOCK.release()
-
-
-def _segment(req: SegmentRequest, user: User):
-    """Run inference (if a scene + checkpoint are given) and then the graph analysis.
-    Synchronous: fine for the AOI sizes this project uses; returns the new run summary."""
-    py = sys.executable
+def _prepare_segment(req: SegmentRequest) -> dict:
+    """Fast, synchronous part of /api/segment: auto-discovery + validation (4xx here, never inside the job)."""
     prob = req.probability_tif
     # Auto-discovery: newest scene of the study area + newest trained checkpoint (+ its calibrated threshold)
     if not prob and not req.scene_tif:
@@ -425,36 +408,23 @@ def _segment(req: SegmentRequest, user: User):
         if ck.name != "best_model.pth" or ck.parent.parent != SEG_DIR.resolve():
             raise HTTPException(400, "checkpoint must be outputs/segmentation/<experiment>/best_model.pth")
     req.scene_tif, req.checkpoint, prob = _rel(req.scene_tif), _rel(req.checkpoint), _rel(prob)
-    if req.scene_tif:
-        if not req.checkpoint:
-            raise HTTPException(400, "checkpoint is required to run inference on a scene")
-        out = Path(req.scene_tif).with_suffix("").name + "_prob.tif"
-        prob_path = Path(req.checkpoint).parent / "predictions" / out
-        cmd = [py, str(REPO_ROOT / "scripts" / "predict.py"), "--checkpoint", req.checkpoint,
-               "--input", req.scene_tif, "--output", str(prob_path)]
-        r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT)
-        if r.returncode != 0:
-            raise HTTPException(500, f"predict.py failed (exit {r.returncode}):\n{(r.stderr or r.stdout)[-2000:]}")
-        prob = str(prob_path)
-    if not prob:
+    if req.scene_tif and not req.checkpoint:
+        raise HTTPException(400, "checkpoint is required to run inference on a scene")
+    if not prob and not req.scene_tif:
         raise HTTPException(400, "provide probability_tif or scene_tif + checkpoint")
-    cmd = [py, str(REPO_ROOT / "scripts" / "run_graph_analysis.py"), "--study-area", req.study_area,
-           "--probability", prob, "--result-kind", req.result_kind]
-    if req.threshold is not None:
-        cmd += ["--threshold", str(req.threshold)]
-    if req.checkpoint:
-        cmd += ["--model-checkpoint", req.checkpoint, "--run-id",
-                f"{req.study_area}_{Path(req.checkpoint).parent.name}_ui_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}"]
-    r = subprocess.run(cmd, capture_output=True, text=True, cwd=REPO_ROOT)
-    if r.returncode != 0:
-        raise HTTPException(500, f"run_graph_analysis.py failed (exit {r.returncode}):\n{(r.stderr or r.stdout)[-2000:]}")
-    summary = _run_summary(_resolve_run(req.study_area, "latest"))
-    with SessionLocal() as db:            # register the new analysis version in the provenance registry + audit trail
-        sync_all(db)
-        _audit(db, user, "run_analysis", "analysis_version", summary["runId"],
-               new={"scene": req.scene_tif, "checkpoint": req.checkpoint, "threshold": req.threshold, "result_kind": req.result_kind})
-        db.commit()
-    return {**summary, "scene": req.scene_tif, "checkpoint": req.checkpoint, "thresholdUsed": req.threshold}
+    return {"study_area": req.study_area, "scene_tif": req.scene_tif, "checkpoint": req.checkpoint,
+            "probability_tif": prob, "threshold": req.threshold, "result_kind": req.result_kind}
+
+
+@app.post("/api/segment", status_code=202)
+def segment(req: SegmentRequest, user: User = Depends(require("run_analysis"))):
+    """Queue inference (optional) + graph analysis as a background job; poll GET /api/jobs/{id}."""
+    params = _prepare_segment(req)
+    with SessionLocal() as db:
+        busy = db.query(Job).filter(Job.type == "segment", Job.status.in_(("QUEUED", "RUNNING"))).first()
+        if busy:     # one at a time: the GPU/MPS and the LATEST pointer are shared
+            raise HTTPException(409, f"another analysis is already queued or running (job {busy.id})")
+        return enqueue(db, "segment", params, user, req.study_area).to_dict()
 
 
 # =========================================================================== research tools

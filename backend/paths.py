@@ -2,6 +2,7 @@
 Tests may repoint ``RUNS_DIR``; every helper reads it at call time."""
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Optional
@@ -51,3 +52,33 @@ def resolve_run(study_area: str, run_id: str) -> Path:
 
 def patch_from_dict(d: dict) -> Patch:
     return Patch(**{**d, "centroid": tuple(d["centroid"]), "bbox": tuple(d["bbox"]) if d.get("bbox") else None})
+
+
+def _read_json(p: Path):
+    if not p.exists():
+        raise HTTPException(404, f"{p.name} not found")
+    return json.loads(p.read_text())
+
+
+def run_summary(run_dir: Path) -> dict:
+    m = _read_json(run_dir / "manifest.json")
+    metrics = _read_json(run_dir / "metrics.json")
+    rm = metrics["research_metrics"]
+    return {
+        "runId": m["run_id"], "studyAreaId": m["study_area_id"], "timestamp": m["timestamp_utc"],
+        "resultKind": m["result_kind"], "resultLabel": m["result_label"],
+        "dataSourceType": m["data_source"].get("type"), "nPatches": rm["n_patches"], "nEdges": rm["n_edges"],
+        "nComponents": rm["n_components"], "iic": rm["iic"], "pc": rm["pc"], "ecaHa": rm["eca_ha"],
+        "ecaPctOfHabitat": rm["eca_pct_of_habitat"], "habitatAreaHa": rm["habitat_area_ha"],
+        "interfaceScore": metrics["interface_score"]["score"], "elapsedS": m.get("elapsed_s"),
+        "sceneYear": m["data_source"].get("scene_year"), "model": m["data_source"].get("model"),
+        "threshold": m["data_source"].get("threshold"),
+        "criticalPatches": count_critical(run_dir),
+    }
+
+
+def count_critical(run_dir: Path, s_threshold: float = 0.10) -> Optional[int]:
+    p = run_dir / "criticality.json"
+    if not p.exists():
+        return None
+    return sum(1 for r in json.loads(p.read_text()) if r["criticality_score"] >= s_threshold)

@@ -122,13 +122,35 @@ export const postRestoration = (
   });
 
 /** Launch a real segmentation + graph run for a study area (backend auto-picks newest scene, checkpoint, threshold). */
-export interface SegmentRequest { study_area: string; scene_tif?: string; checkpoint?: string; threshold?: number | null; result_kind?: "development" | "experiment" }
-export const postSegment = (body: SegmentRequest) =>
-  getJson<RunSummary & { scene?: string; checkpoint?: string; thresholdUsed?: number | null }>(
-    "/api/segment",
-    { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) },
-    900000,
-  );
+export interface SegmentRequest { study_area: string; scene_tif?: string; checkpoint?: string; threshold?: number | null; result_kind?: "development" }
+type SegmentResult = RunSummary & { scene?: string; checkpoint?: string; thresholdUsed?: number | null };
+
+/** Background job record (backend/jobs.py): QUEUED → RUNNING → COMPLETED | FAILED | CANCELLED. */
+export interface JobRecord<R = unknown> {
+  id: string; type: string; status: "QUEUED" | "RUNNING" | "COMPLETED" | "FAILED" | "CANCELLED";
+  progress: number; stage: string | null; result: R | null; error: string | null; log: string | null;
+  created_at: string; started_at: string | null; finished_at: string | null;
+}
+export const fetchJob = <R = unknown>(id: string) => getJson<JobRecord<R>>(`/api/jobs/${encodeURIComponent(id)}`);
+
+/** Poll a job until it finishes; resolves with its result, rejects with its error. */
+export async function waitForJob<R>(id: string, onProgress?: (j: JobRecord<R>) => void, intervalMs = 2000): Promise<R> {
+  for (;;) {
+    const j = await fetchJob<R>(id);
+    onProgress?.(j);
+    if (j.status === "COMPLETED") return j.result as R;
+    if (j.status === "FAILED" || j.status === "CANCELLED") throw new Error(j.error || `job ${j.status.toLowerCase()}`);
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+}
+
+/** Queue segmentation + graph analysis (POST /api/segment → 202 job) and wait for the new run. */
+export async function postSegment(body: SegmentRequest, onProgress?: (j: JobRecord<SegmentResult>) => void): Promise<SegmentResult> {
+  const job = await getJson<JobRecord<SegmentResult>>("/api/segment", {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+  });
+  return waitForJob<SegmentResult>(job.id, onProgress);
+}
 
 /** Downloaded scenes (data/scenes/<area>/*.json sidecars written by the acquisition module). */
 export interface SceneRecord {

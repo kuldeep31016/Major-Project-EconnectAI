@@ -17,7 +17,7 @@ from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from ecoconnect.pipeline.config import OUTPUTS_DIR, load_dotenv
 
 load_dotenv()
-DATABASE_URL = os.environ.get("ECO_DATABASE_URL", f"sqlite:///{(OUTPUTS_DIR / 'ecoconnect.db').as_posix()}")
+DATABASE_URL = os.environ.get("ECO_DATABASE_URL") or f"sqlite:///{(OUTPUTS_DIR / 'ecoconnect.db').as_posix()}"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {})
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
@@ -282,9 +282,55 @@ class AuditLog(Base):
     ts = Column(DateTime, default=utcnow)
 
 
+# --------------------------------------------------------------------------- platform: jobs + artifacts
+JOB_STATUSES = ("QUEUED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED")
+
+
+class Job(Base):
+    """Background work (inference, analysis, reports). The browser gets an id and polls; nothing long runs in a request."""
+    __tablename__ = "jobs"
+    id = Column(String, primary_key=True)                     # uuid4 hex
+    type = Column(String, nullable=False, index=True)
+    status = Column(String, nullable=False, default="QUEUED", index=True)
+    progress = Column(Float, default=0.0)                     # 0..1
+    stage = Column(String)                                    # human-readable current step
+    params = Column(JSON)
+    result = Column(JSON)
+    error = Column(Text)
+    log = Column(Text)                                        # tail of step output
+    study_area_id = Column(String, ForeignKey("study_areas.id"))
+    created_by = Column(Integer, ForeignKey("users.id"))
+    worker = Column(String)
+    created_at = Column(DateTime, default=utcnow, index=True)
+    started_at = Column(DateTime)
+    finished_at = Column(DateTime)
+    heartbeat_at = Column(DateTime)
+
+
+class Artifact(Base):
+    """Every stored file the platform produces or consumes (rasters, GeoJSON, graphs, reports, checkpoints).
+    Bytes live in object storage (``backend.storage``); the DB keeps identity, lineage and a content hash."""
+    __tablename__ = "artifacts"
+    id = Column(String, primary_key=True)                     # sha256-derived stable id: <kind>:<key>
+    kind = Column(String, nullable=False, index=True)         # run_manifest | patches_geojson | graph | criticality | ...
+    storage = Column(String, nullable=False, default="local") # local | s3
+    key = Column(String, nullable=False, unique=True)         # object key relative to the storage root
+    sha256 = Column(String(64))
+    size_bytes = Column(Integer)
+    content_type = Column(String)
+    run_id = Column(String, ForeignKey("analysis_versions.id"), index=True)
+    model_id = Column(String, ForeignKey("models.id"))
+    job_id = Column(String, ForeignKey("jobs.id"))
+    processing_version = Column(String)                       # ecoconnect package version that wrote it
+    meta = Column(JSON)
+    created_at = Column(DateTime, default=utcnow)
+
+
 def init_db() -> None:
+    """Bring the schema to the latest Alembic revision (see backend/migrations)."""
     Path(OUTPUTS_DIR).mkdir(parents=True, exist_ok=True)
-    Base.metadata.create_all(engine)
+    from .migrate import upgrade
+    upgrade(engine)
 
 
 def get_db():
