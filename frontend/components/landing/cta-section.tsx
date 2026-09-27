@@ -59,7 +59,7 @@ export function CTASection() {
                   href="/analysis?scene=kerala-coast"
                   className="inline-flex items-center gap-2 rounded-xl border border-transparent px-4 py-3.5 text-[14px] font-medium text-slate-300 hover:text-[#00c896] transition-colors"
                 >
-                  <span>Live Kerala Demo</span>
+                  <span>Kerala Demo</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>

@@ -2,12 +2,11 @@
 projects, scenarios, audit, model cards.  Every state change is written to the append-only audit log."""
 from __future__ import annotations
 
-import json
-import shutil
+import uuid
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -17,12 +16,25 @@ from .db import (ALERT_STATUSES, DETECTION_STATUSES, ROLE_LABELS, TASK_STATUSES,
                  Detection, Evidence, FieldTask, LabelSource, Model, Project, Report, Scene, Scenario, StudyArea,
                  User, audit, get_db, utcnow)
 from .alerts import generate_alerts
+from . import paths
+from .paths import resolve_run
+from .security import login_throttle
 from .registry import sync_all
 
 router = APIRouter(prefix="/api")
 EVIDENCE_DIR = OUTPUTS_DIR / "evidence"
 ALLOWED_PHOTO = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}
 MAX_PHOTO_BYTES = 8 * 1024 * 1024
+
+
+def _image_kind(data: bytes) -> Optional[str]:
+    if data[:3] == b"\xff\xd8\xff":
+        return ".jpg"
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return ".png"
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return ".webp"
+    return None
 
 
 def _user_out(u: User) -> dict:
@@ -37,10 +49,14 @@ class LoginIn(BaseModel):
 
 
 @router.post("/auth/login")
-def login(body: LoginIn, db: Session = Depends(get_db)):
+def login(body: LoginIn, request: Request, db: Session = Depends(get_db)):
+    login_throttle.check(request, body.username)
     u = db.query(User).filter_by(username=body.username).first()
     if not u or not u.active or not verify_password(body.password, u.password_hash):
+        login_throttle.fail(request, body.username)
+        audit(db, None, "login_failed", "user", body.username[:64]); db.commit()
         raise HTTPException(401, "invalid username or password")
+    login_throttle.reset(request, body.username)
     audit(db, u, "login"); db.commit()
     return {"token": create_token(u), "user": _user_out(u)}
 
@@ -160,6 +176,13 @@ def update_alert(alert_id: int, body: AlertUpdate, user: User = Depends(require(
 
 
 # --------------------------------------------------------------------------- detections (verification workflow)
+def _check_refs(db: Session, study_area_id: str, run_id: Optional[str]) -> None:
+    if not db.get(StudyArea, study_area_id):
+        raise HTTPException(400, f"unknown study area {study_area_id!r}")
+    if run_id is not None and not db.get(AnalysisVersion, run_id):
+        raise HTTPException(400, f"unknown run {run_id!r}")
+
+
 class DetectionIn(BaseModel):
     study_area_id: str
     run_id: str
@@ -180,6 +203,7 @@ def list_detections(study_area: Optional[str] = None, db: Session = Depends(get_
 
 @router.post("/detections")
 def upsert_detection(body: DetectionIn, user: User = Depends(require("review_detections")), db: Session = Depends(get_db)):
+    _check_refs(db, body.study_area_id, body.run_id)
     d = db.query(Detection).filter_by(run_id=body.run_id, object_type=body.object_type, object_id=body.object_id).first()
     if not d:
         d = Detection(**body.model_dump(), status="AI_DETECTED", updated_by=user.id)
@@ -245,6 +269,14 @@ def list_tasks(study_area: Optional[str] = None, mine: bool = False, user: User 
 
 @router.post("/field-tasks")
 def create_task(body: TaskIn, user: User = Depends(require("assign_tasks")), db: Session = Depends(get_db)):
+    _check_refs(db, body.study_area_id, body.run_id)
+    if body.assignee_id is not None:
+        a = db.get(User, body.assignee_id)
+        if not a or not a.active or "submit_evidence" not in capabilities_for(a.role):
+            raise HTTPException(400, "assignee must be an active user who can submit field evidence")
+    for model, fid, name in ((Project, body.project_id, "project"), (Alert, body.alert_id, "alert"), (Detection, body.detection_id, "detection")):
+        if fid is not None and not db.get(model, fid):
+            raise HTTPException(400, f"unknown {name} {fid}")
     t = FieldTask(**body.model_dump(), created_by=user.id)
     db.add(t); db.flush()
     if t.detection_id:
@@ -288,7 +320,7 @@ def task_evidence(task_id: int, user: User = Depends(current_user), db: Session 
 
 
 @router.post("/field-tasks/{task_id}/evidence")
-async def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...), observed_at: str = Form(...),
+def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...), observed_at: str = Form(...),
                           observation: str = Form(...), notes: str = Form(""), photo: Optional[UploadFile] = File(None),
                           user: User = Depends(require("submit_evidence")), db: Session = Depends(get_db)):
     t = db.get(FieldTask, task_id)
@@ -300,13 +332,14 @@ async def submit_evidence(task_id: int, lat: float = Form(...), lon: float = For
         raise HTTPException(400, "invalid coordinates")
     photo_path = None
     if photo is not None:
-        if photo.content_type not in ALLOWED_PHOTO:
-            raise HTTPException(400, f"photo must be one of {list(ALLOWED_PHOTO)}")
-        data = await photo.read()
+        data = photo.file.read(MAX_PHOTO_BYTES + 1)
         if len(data) > MAX_PHOTO_BYTES:
             raise HTTPException(413, "photo larger than 8 MB")
+        kind = _image_kind(data)          # trust the bytes, not the client's content-type
+        if kind is None:
+            raise HTTPException(400, f"photo must be one of {sorted(set(ALLOWED_PHOTO.values()))}")
         EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
-        fname = f"task{task_id}_{int(utcnow().timestamp())}{ALLOWED_PHOTO[photo.content_type]}"
+        fname = f"task{task_id}_{uuid.uuid4().hex[:12]}{kind}"
         (EVIDENCE_DIR / fname).write_bytes(data)
         photo_path = fname
     e = Evidence(task_id=task_id, user_id=user.id, lat=lat, lon=lon, observed_at=observed_at,
@@ -331,17 +364,21 @@ def verify_evidence(evidence_id: int, body: VerifyIn, user: User = Depends(requi
     if not e:
         raise HTTPException(404, "evidence not found")
     old = e.verification; e.verification = body.verification
+    accepted = body.verification == "ACCEPTED"
     t = db.get(FieldTask, e.task_id)
-    if t:
-        t.status = "VERIFIED" if body.verification == "ACCEPTED" else "REJECTED"; t.updated_at = utcnow()
-        if t.detection_id:
-            d = db.get(Detection, t.detection_id)
-            if d:
-                d.status = "FIELD_VERIFIED" if body.verification == "ACCEPTED" else "REJECTED"; d.updated_by = user.id; d.updated_at = utcnow()
-        if t.alert_id:
-            a = db.get(Alert, t.alert_id)
-            if a:
-                a.status = "RESOLVED"; a.updated_at = utcnow()
+    if t and t.status in ("SUBMITTED", "IN_PROGRESS", "PENDING", "VERIFIED", "REJECTED"):
+        cascade = {"task": [t.status]}
+        # rejected evidence sends the task back to the officer instead of closing it
+        t.status = "VERIFIED" if accepted else "IN_PROGRESS"; t.updated_at = utcnow()
+        cascade["task"].append(t.status)
+        if t.detection_id and (d := db.get(Detection, t.detection_id)):
+            cascade["detection"] = [d.status]
+            d.status = "FIELD_VERIFIED" if accepted else "FIELD_ASSIGNED"; d.updated_by = user.id; d.updated_at = utcnow()
+            cascade["detection"].append(d.status)
+        if accepted and t.alert_id and (a := db.get(Alert, t.alert_id)):
+            cascade["alert"] = [a.status, "RESOLVED"]
+            a.status = "RESOLVED"; a.updated_at = utcnow()
+        audit(db, user, "verification_cascade", "field_task", t.id, new=cascade)
     audit(db, user, "verify_evidence", "evidence", e.id, old={"verification": old}, new={"verification": e.verification}, reason=body.reason); db.commit()
     return e.to_dict()
 
@@ -428,7 +465,7 @@ class ScenarioIn(BaseModel):
     run_id: str
     type: str
     params: dict
-    result: dict
+    result: Optional[dict] = None     # ignored: the server recomputes the result from params (never trust a client result)
 
 
 @router.get("/scenarios")
@@ -441,7 +478,18 @@ def list_scenarios(study_area: Optional[str] = None, db: Session = Depends(get_d
 
 @router.post("/scenarios")
 def save_scenario(body: ScenarioIn, user: User = Depends(current_user), db: Session = Depends(get_db)):
-    s = Scenario(**body.model_dump(), label="SIMULATED", created_by=user.id)
+    from .scenarios import run_scenario
+    run_dir = _run_dir_for(db, body.study_area_id, body.run_id)
+    prm = dict(body.params or {})
+    req = {"type": "remove_patches" if body.type == "remove_polygon" else body.type,
+           **{k: prm[k] for k in ("patch_ids", "candidate_ids", "taus_km", "thresholds") if k in prm}}
+    other = _run_dir_for(db, body.study_area_id, prm["run_b"]) if body.type == "compare_periods" and prm.get("run_b") else None
+    try:
+        res = run_scenario(run_dir, req, other)
+    except (ValueError, KeyError) as e:
+        raise HTTPException(400, f"cannot recompute scenario: {e}")
+    s = Scenario(study_area_id=body.study_area_id, run_id=run_dir.name if db.get(AnalysisVersion, run_dir.name) else None,
+                 type=body.type, params=body.params, result=res, label=res.get("label", "SIMULATED"), created_by=user.id)
     db.add(s); db.flush()
     audit(db, user, "save_scenario", "scenario", s.id, new={"type": body.type, "params": body.params}); db.commit()
     return s.to_dict()
@@ -461,21 +509,15 @@ from .insight import answer as _answer, evidence_chain as _evidence_chain, offic
 def _run_dir_for(db: Session, study_area: str, run_id: str) -> Path:
     q = db.query(AnalysisVersion).filter_by(study_area_id=study_area)
     if run_id == "latest":
-        ptr = OUTPUTS_DIR / "runs" / study_area / "LATEST"
-        if ptr.exists():
-            run_id = ptr.read_text().strip()
+        if (paths.RUNS_DIR / study_area / "LATEST").exists():
+            return resolve_run(study_area, "latest")
         else:
             v = q.filter(AnalysisVersion.result_kind != "synthetic").order_by(AnalysisVersion.timestamp.desc()).first() or q.first()
             if not v:
                 raise HTTPException(404, "no run")
             return Path(v.path)
-    v = db.get(AnalysisVersion, run_id) or db.get(AnalysisVersion, f"{study_area}/{run_id}")
-    if not v:
-        p = OUTPUTS_DIR / "runs" / study_area / run_id
-        if not p.exists():
-            raise HTTPException(404, "run not found")
-        return p
-    return Path(v.path)
+    v = db.get(AnalysisVersion, run_id)
+    return Path(v.path) if v else resolve_run(study_area, run_id)
 
 
 @router.get("/runs/{study_area}/{run_id}/evidence/{object_type}/{object_id}")

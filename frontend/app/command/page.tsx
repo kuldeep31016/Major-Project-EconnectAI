@@ -102,7 +102,7 @@ export default function Dashboard() {
     if (!quicklookKind || apiOnline !== true) return;
     let cancelled = false;
     const key = quicklookKey;
-    fetchSceneQuicklook(sceneId, quicklookKind, year).then((o) => { if (!cancelled) setQuicklook({ key, data: o }); });
+    fetchSceneQuicklook(sceneId, quicklookKind, year).then((o) => { if (!cancelled) setQuicklook({ key, data: o }); }).catch(() => { /* no quicklook: basemap stays */ });
     return () => { cancelled = true; };
   }, [quicklookKind, quicklookKey, sceneId, year, apiOnline]);
 
@@ -314,7 +314,7 @@ export default function Dashboard() {
         </div>
       </div>
       {!live && apiOnline === true && (
-        <div className="mx-4 mb-4 rounded-xl border border-[#fde68a] bg-[#fffbeb] px-4 py-2.5 text-[12px] text-[#78350f] sm:mx-5">No real pipeline run exists for {scene.region} yet — the map shows prototype geometry so the interface can be exercised. Use <Link href="/upload" className="underline">New Analysis</Link> once the scene is downloaded.</div>
+        <div className="mx-4 mb-4 rounded-xl border border-[#fde68a] bg-[#fffbeb] px-4 py-2.5 text-[12px] text-[#78350f] sm:mx-5">No real pipeline run exists for {scene.region} yet, so there is nothing to show. Use <Link href="/upload" className="underline">New Analysis</Link> once the scene is downloaded.</div>
       )}
     </AppShell>
   );

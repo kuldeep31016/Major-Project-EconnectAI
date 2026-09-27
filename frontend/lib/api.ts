@@ -268,6 +268,14 @@ export const submitEvidence = (taskId: number, form: FormData) => getJson<Eviden
 export const verifyEvidence = (id: number, verification: "ACCEPTED" | "REJECTED", reason?: string) => getJson<EvidenceItem>(`/api/evidence/${id}/verify`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ verification, reason }) });
 export const evidencePhotoUrl = (name: string) => `${API_URL}/api/evidence/photo/${encodeURIComponent(name)}`;
 
+/** Photos require the Bearer token, which an <img src> cannot send: fetch as a blob and return an object URL. */
+export async function fetchEvidencePhoto(name: string): Promise<string> {
+  const token = getToken();
+  const r = await fetch(evidencePhotoUrl(name), { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  if (!r.ok) throw new Error(`photo ${r.status}`);
+  return URL.createObjectURL(await r.blob());
+}
+
 export interface ProjectItem { id: number; name: string; study_area_id: string; objectives: string | null; status: string; owner_id: number | null; run_id: string | null; priority_patches: string[]; candidates: string[]; responsible: number[]; created_at: string; updated_at: string; taskCount?: number; verifiedTasks?: number; reportCount?: number }
 export const fetchProjects = (studyArea?: string) => getJson<ProjectItem[]>(`/api/projects${studyArea ? `?study_area=${encodeURIComponent(studyArea)}` : ""}`);
 export const createProject = (body: { name: string; study_area_id: string; objectives?: string; run_id?: string; priority_patches?: string[]; candidates?: string[] }) =>

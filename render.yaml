@@ -10,8 +10,8 @@ services:
     envVars:
       - key: ECO_JWT_SECRET
         generateValue: true
-      - key: ECO_DEMO_PASSWORD
-        value: demo1234
+      - key: ECO_DEMO_PASSWORD   # set in the Render dashboard; never committed
+        sync: false
       - key: ECO_CORS_ORIGINS
         value: http://localhost:3000
       - key: ECO_CORS_ORIGIN_REGEX

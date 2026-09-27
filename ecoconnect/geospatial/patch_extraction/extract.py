@@ -103,8 +103,6 @@ def extract_patches(
         for geom, val in features.shapes(kept_label, mask=kept_label > 0, transform=meta.transform, connectivity=connectivity):
             geoms.setdefault(int(val), []).append(shape(geom))
 
-    to_ll = Transformer.from_crs(meta.crs, PCRS.from_epsg(4326), always_xy=True).transform \
-        if (meta.crs is not None and meta.crs.to_epsg() != 4326) else None
 
     patches: list[Patch] = []
     width = len(str(max(len(keep_ids), 1)))

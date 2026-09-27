@@ -142,7 +142,7 @@ export function HeroSection() {
                     href="/analysis?scene=kerala-coast"
                     className="group inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-[#00e599] font-medium transition-colors"
                   >
-                    <span>Live Kerala Coast Demo</span>
+                    <span>Kerala Coast Demo</span>
                     <ArrowRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
                 </div>

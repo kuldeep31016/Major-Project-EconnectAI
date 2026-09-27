@@ -1,7 +1,6 @@
 """Verification workflow, RBAC, alerts, projects and audit over a development-kind run built from the
 prototype geometry (result_kind forced to 'development' so the alert engine accepts it; the geometry is
 still synthetic - this only tests the workflow machinery)."""
-import io
 
 import pytest
 from fastapi.testclient import TestClient
@@ -21,7 +20,8 @@ def client():
                        landscape_area_ha=a_l, cfg=cfg, data_source=src, result_kind="development",
                        candidates=cands, run_id="wf_test_run", out_root=OUTPUTS_DIR)
     import backend.main as m
-    m.RUNS_DIR = OUTPUTS_DIR / "runs"
+    import backend.paths
+    backend.paths.RUNS_DIR = OUTPUTS_DIR / "runs"
     with TestClient(m.app) as c:
         yield c
 
@@ -136,3 +136,61 @@ def test_evidence_assistant_and_official_report(client):
     assert rep["status"] == "draft" and any(sec["id"] == "verification" for sec in rep["sections"]) and rep["sections"][0]["id"] == "project"
     assert client.get("/api/reports?study_area=odisha-coast").json()[0]["id"] == rep["id"]
     assert client.post("/api/reports/generate", headers=_auth(client, "field"), json={"study_area": "odisha-coast"}).status_code == 403
+
+
+def test_login_throttled(client):
+    codes = [client.post("/api/auth/login", json={"username": "throttle-probe", "password": "x"}).status_code
+             for _ in range(11)]
+    assert codes[:10] == [401] * 10 and codes[10] == 429
+
+
+def test_segment_rejects_foreign_paths(client):
+    h = _auth(client, "admin")
+    bad = [{"study_area": "kerala-coast", "probability_tif": "/etc/passwd"},
+           {"study_area": "kerala-coast", "scene_tif": "data/x.tif", "checkpoint": "/tmp/evil.pth"},
+           {"study_area": "../x", "probability_tif": "outputs/x.tif"},
+           {"study_area": "kerala-coast", "probability_tif": "outputs/x.tif", "result_kind": "experiment"}]
+    for body in bad:
+        assert client.post("/api/segment", json=body, headers=h).status_code in (400, 404, 422), body
+
+
+def test_rejected_evidence_reopens_task_and_keeps_alert(client):
+    s, f = _auth(client, "senior"), _auth(client, "field")
+    client.post("/api/alerts/generate/odisha-coast", headers=s)
+    alert = next(a for a in client.get("/api/alerts?study_area=odisha-coast").json() if a["status"] == "OPEN")
+    field_id = client.get("/api/auth/me", headers=f).json()["id"]
+    t = client.post("/api/field-tasks", headers=s, json={
+        "study_area_id": "odisha-coast", "title": "t", "reason": "r", "lat": alert["lat"], "lon": alert["lon"],
+        "alert_id": alert["id"], "assignee_id": field_id}).json()
+    # a fake image (right MIME, wrong bytes) is refused
+    fake = client.post(f"/api/field-tasks/{t['id']}/evidence", headers=f, data={"lat": 1, "lon": 1, "observed_at": "d", "observation": "o"},
+                       files={"photo": ("x.png", b"GIF89a....", "image/png")})
+    assert fake.status_code == 400
+    ev = client.post(f"/api/field-tasks/{t['id']}/evidence", headers=f,
+                     data={"lat": 1, "lon": 1, "observed_at": "d", "observation": "o"}).json()
+    client.patch(f"/api/evidence/{ev['id']}/verify", headers=s, json={"verification": "REJECTED"})
+    task = next(x for x in client.get("/api/field-tasks", headers=s).json() if x["id"] == t["id"])
+    assert task["status"] == "IN_PROGRESS"
+    alerts = {a["id"]: a for a in client.get("/api/alerts?study_area=odisha-coast").json()}
+    assert alerts[alert["id"]]["status"] == "ASSIGNED"
+    # regenerating alerts must not break the task's reference
+    assert client.post("/api/alerts/generate/odisha-coast", headers=s).status_code == 200
+
+
+def test_task_and_detection_reference_validation(client):
+    s = _auth(client, "senior")
+    base = {"study_area_id": "odisha-coast", "title": "t", "reason": "r", "lat": 1, "lon": 1}
+    assert client.post("/api/field-tasks", headers=s, json={**base, "assignee_id": 99999}).status_code == 400
+    assert client.post("/api/field-tasks", headers=s, json={**base, "study_area_id": "nowhere"}).status_code == 400
+    assert client.post("/api/detections", headers=s, json={"study_area_id": "odisha-coast", "run_id": "nope",
+                                                           "object_type": "patch", "object_id": "P01"}).status_code == 400
+
+
+def test_saved_scenario_is_recomputed_server_side(client):
+    s = _auth(client, "senior")
+    pid = client.get("/api/runs/odisha-coast/wf_test_run/criticality").json()[0]["patch_id"]
+    out = client.post("/api/scenarios", headers=s, json={
+        "study_area_id": "odisha-coast", "run_id": "wf_test_run", "type": "remove_patches",
+        "params": {"patch_ids": [pid]}, "result": {"difference": {"loss_pct": 99.9}}}).json()
+    real = client.post("/api/runs/odisha-coast/wf_test_run/scenario", json={"type": "remove_patches", "patch_ids": [pid]}).json()
+    assert out["result"]["difference"] == real["difference"] and out["label"] == real["label"]

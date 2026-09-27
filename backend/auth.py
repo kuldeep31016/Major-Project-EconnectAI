@@ -8,7 +8,6 @@ from __future__ import annotations
 import os
 import secrets
 from datetime import timedelta
-from typing import Iterable
 
 import bcrypt
 import jwt

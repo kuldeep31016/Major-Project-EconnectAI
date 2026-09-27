@@ -11,12 +11,12 @@ from sqlalchemy.orm import Session
 
 from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT, load_study_areas
 from .db import AnalysisVersion, LabelSource, Model, Scene, StudyArea
+from .paths import data_root
 
-import os
 
 
 def _data_root() -> Path:
-    return Path(os.environ.get("DATA_ROOT") or REPO_ROOT / "data")
+    return data_root()
 
 
 def sync_study_areas(db: Session) -> int:
@@ -98,9 +98,8 @@ def sync_runs(db: Session) -> int:
         met = json.loads((mp.parent / "metrics.json").read_text())
         rm = met["research_metrics"]
         ds = m.get("data_source", {})
-        av = db.get(AnalysisVersion, m["run_id"] if m["run_id"] != "prototype_synthetic" else f"{m['study_area_id']}/prototype_synthetic")
-        rid = m["run_id"] if m["run_id"] != "prototype_synthetic" else f"{m['study_area_id']}/prototype_synthetic"
-        av = av or AnalysisVersion(id=rid)
+        rid = m["run_id"]
+        av = db.get(AnalysisVersion, rid) or AnalysisVersion(id=rid)
         av.study_area_id = m["study_area_id"]
         scene_path = ds.get("path")
         if scene_path and not Path(scene_path).is_absolute():

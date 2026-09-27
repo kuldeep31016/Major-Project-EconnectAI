@@ -1,6 +1,4 @@
 """API tests over a run produced from prototype geometry (labelled synthetic)."""
-import json
-from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -11,7 +9,7 @@ from ecoconnect.pipeline.config import load_config, load_study_areas
 
 
 @pytest.fixture(scope="module")
-def client(tmp_path_factory, monkeypatch_module=None):
+def client(tmp_path_factory):
     out = tmp_path_factory.mktemp("outputs")
     cfg = load_config("graph")
     areas = load_study_areas()
@@ -20,7 +18,8 @@ def client(tmp_path_factory, monkeypatch_module=None):
                        landscape_area_ha=a_l, cfg=cfg, data_source=src, result_kind=kind, candidates=cands,
                        run_id="t1", out_root=out)
     import backend.main as m
-    m.RUNS_DIR = out / "runs"
+    import backend.paths
+    backend.paths.RUNS_DIR = out / "runs"
     return TestClient(m.app)
 
 
@@ -81,3 +80,23 @@ def test_timeline_excludes_synthetic_runs(client):
     t = client.get("/api/runs/kerala-coast/timeline").json()
     assert t["years"] == []                                   # synthetic runs never form a timeline
     assert "note" in t
+
+
+@pytest.mark.parametrize("url", [
+    "/api/runs/%2e%2e/%2e%2e/files/.env",
+    "/api/runs/kerala-coast/%2e%2e/files/manifest.json",
+    "/api/runs/..%2f..%2f/latest/manifest",
+    "/api/models/%2e%2e/asset/x.png",
+    "/api/models/x/asset/..%2f..%2fruns%2fkerala-coast%2fLATEST",
+])
+def test_path_traversal_rejected(client, url):
+    assert client.get(url).status_code in (400, 404)
+
+
+def test_run_file_still_served(client):
+    assert client.get("/api/runs/kerala-coast/latest/files/manifest.json").status_code == 200
+
+
+def test_health_hides_server_paths(client):
+    assert "outputs_dir" not in client.get("/api/health").json()
+

@@ -22,6 +22,13 @@ export default function LandingPage() {
       {/* 2. Hero Section matching reference screenshot: 3D Floating Command Center, Video Atmosphere & Highlights Strip */}
       <HeroSection />
 
+      {/* Honesty strip: every figure below comes from a stored development run */}
+      <div className="border-y border-amber-400/20 bg-amber-400/[0.06] px-6 py-2.5 text-center text-[12px] text-amber-100/90">
+        Research prototype. Figures on this page come from a stored Kerala development run (U-Net EfficientNet-B0,
+        Sentinel-1, scored against Global Mangrove Watch reference labels). Scenarios are simulations, and nothing
+        here has been validated in the field.
+      </div>
+
       {/* 3. The Core Insight Section: "Knowing where habitat exists is only the beginning" */}
       <CoreInsightSection />
 

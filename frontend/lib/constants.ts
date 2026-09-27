@@ -89,7 +89,7 @@ export const BASEMAPS = [
     url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
     attribution: "Esri, Maxar",
     overlay:
-      "https://stamen-tiles.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}.png",
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
   },
 ] as const;
 

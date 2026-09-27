@@ -6,7 +6,7 @@
 import argparse, json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-import torch
+import torch  # noqa: F401  (fail fast if torch is missing)
 from ecoconnect.ml.common import resolve_training_config, prepare_data
 from ecoconnect.ml.inference import load_checkpoint
 from ecoconnect.ml.evaluation import build_loss

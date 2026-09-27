@@ -114,7 +114,7 @@ def answer(db: Session, question: str, study_area: str, run_dir: Optional[Path])
         expl = {e["patch_id"]: e for e in json.loads((run_dir / "explanations.json").read_text())}[r["patch_id"]]
         txt = expl["text"] if intent == "why" else (f"If {r['patch_id']} is removed (exact recomputation): {metric} falls from {r['c_before']:.3e} to {r['c_after']:.3e} (−{r['delta_pct']:.1f} %), "
                                                     f"{r['degree']} link(s) are severed and the network goes from {r['component_count_before']} to {r['component_count_after']} component(s).")
-        return {"intent": intent, "answer": txt, "sources": src + [{"type": "run", "id": m["run_id"], "file": "explanations.json"}], "label": label, "links": [link, f"/scenario"], "objects": [r["patch_id"]]}
+        return {"intent": intent, "answer": txt, "sources": src + [{"type": "run", "id": m["run_id"], "file": "explanations.json"}], "label": label, "links": [link, "/scenario"], "objects": [r["patch_id"]]}
     if intent == "change":
         runs = db.query(AnalysisVersion).filter(AnalysisVersion.study_area_id == study_area, AnalysisVersion.result_kind != "synthetic", AnalysisVersion.scene_year != None).order_by(AnalysisVersion.scene_year).all()  # noqa: E711
         if len(runs) < 2:

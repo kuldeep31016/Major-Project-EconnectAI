@@ -7,12 +7,10 @@ or a user-provided dataset must be used instead.  Exports are AOI-sized only (ge
 """
 from __future__ import annotations
 
-import json
 import urllib.request
 import zipfile
 from pathlib import Path
 
-import numpy as np
 
 from .stac_acquire import AOI, TargetGrid
 

@@ -220,7 +220,7 @@ function ScenarioLabView() {
                   </CardContent></Card>
               )}
               {user && (
-                <Button size="sm" variant="outline" onClick={async () => { const s = await saveScenario({ study_area_id: sceneId, run_id: dataSource.provenance?.runId ?? runId, type: result.type, params: result.parameters, result: { baseline: result.baseline, scenario: (result as { scenario?: unknown }).scenario, difference: (result as { difference?: unknown }).difference, explanation: result.explanation, label: result.label } }); setSaved(`Saved as scenario #${s.id} (audited).`); }}><Save className="h-3.5 w-3.5" /> Save to record</Button>
+                <Button size="sm" variant="outline" onClick={async () => { try { const s = await saveScenario({ study_area_id: sceneId, run_id: dataSource.provenance?.runId ?? runId, type: result.type, params: result.parameters, result: { baseline: result.baseline, scenario: (result as { scenario?: unknown }).scenario, difference: (result as { difference?: unknown }).difference, explanation: result.explanation, label: result.label } }); setSaved(`Saved as scenario #${s.id} (recomputed on the server, audited).`); } catch (e) { setSaved(`Could not save: ${e instanceof Error ? e.message : String(e)}`); } }}><Save className="h-3.5 w-3.5" /> Save to record</Button>
               )}
               {saved && <div className="text-[11.5px] text-[#0f5132]">{saved}</div>}
             </>

@@ -185,7 +185,7 @@ def sentinel2_composite(aoi: AOI, grid: TargetGrid, cfg: dict, acq: dict, log=pr
         chosen += dedup[: acq["max_scenes_s2"]]
     if not chosen:
         raise RuntimeError("no Sentinel-2 scene overlaps the AOI by >= 2 %")
-    log(f"  S2 granules covering the AOI: " + ", ".join(f"{t} ({max(i['_overlap'] for i in its):.0%})" for t, its in by_tile.items()))
+    log("  S2 granules covering the AOI: " + ", ".join(f"{t} ({max(i['_overlap'] for i in its):.0%})" for t, its in by_tile.items()))
     items = chosen
     names = list(cfg["bands"])
     stack = np.full((len(items), len(names), grid.height, grid.width), np.nan, np.float32)

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   AlertTriangle,
@@ -95,6 +95,10 @@ export default function SimulationPage() {
   const [budgetLakh, setBudgetLakh] = useState(180);
 
   const activeYear = timeline.years.find((y) => y.year === year) ?? timeline.years.at(-1) ?? null;
+  // keep the selected year button in sync with the year actually shown
+  useEffect(() => {
+    if (activeYear && activeYear.year !== year) setYear(activeYear.year);
+  }, [activeYear, year, setYear]);
 
   /* -------------------------------------------------- what-if maths */
 
@@ -112,7 +116,7 @@ export default function SimulationPage() {
     );
 
     if (isLive) {
-      if (!exactWhatIf || exactWhatIf.removed_patch_ids.join() !== removedPatchIds.filter((id) => mask.patches.some((p) => p.id === id)).join()) {
+      if (!exactWhatIf || [...exactWhatIf.removed_patch_ids].sort().join() !== removedPatchIds.filter((id) => mask.patches.some((p) => p.id === id)).sort().join()) {
         return {
           kind: "pending" as const,
           removed: removedPatches,
@@ -655,7 +659,7 @@ export default function SimulationPage() {
                     <ScoreDelta
                       before={conn.score}
                       after={restoredScore}
-                      label="Projected connectivity"
+                      label="Simulated connectivity"
                     />
                   )}
 
@@ -783,7 +787,7 @@ export default function SimulationPage() {
                         </span>
                       </div>
                       <div className="mt-2 flex items-center justify-between text-[12px]">
-                        <span className="text-muted-foreground">Expected gain</span>
+                        <span className="text-muted-foreground">Simulated gain</span>
                         <span className="font-bold tabular text-[#15803d]">
                           +{band.totalGain} points
                         </span>

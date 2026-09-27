@@ -1,0 +1,58 @@
+# Session log (newest first)
+
+Template for each entry:
+
+```
+## YYYY-MM-DD — <short title>
+Goal:
+Changed (files):
+Tests: <command> → <result>
+Decisions:
+Open issues / not done:
+Next step:
+```
+
+---
+
+## 2026-09-28 — Phase 1: security, honesty, regression tests, CI
+
+Changed: `backend/security.py` (new: slug validation as app-level dependency, `contained()`, login throttle),
+`backend/paths.py` (new: single run resolver/path helpers), main/routers/scenarios/registry/alerts refactored onto it;
+`/api/segment` restricted to .tif under DATA_ROOT/outputs + `outputs/segmentation/<exp>/best_model.pth`, result_kind
+fixed to development; failed logins audited; `/api/health` no longer leaks paths; verify_evidence cascade fixed (reject →
+task IN_PROGRESS, alert untouched, cascade audited); alert regen keeps task-referenced alerts (DISMISSED); photo upload
+sync + magic bytes + uuid names; saved scenarios recomputed server-side; FK/assignee validation (400 not 500).
+Frontend: experiments fabricated fallbacks removed, landing honesty strip + reworded claims, 13 unused components
+deleted (incl. invented INR costs), login no silent demo1234, evidence photos via authed blob, Esri labels instead of
+dead Stamen, what-if order-insensitive compare, year sync, error handling. render.yaml/compose no committed password;
+compose API URL fixed; `frontend/.dockerignore`; `.github/workflows/ci.yml`; ruff config in pyproject.
+Docs: README/MODEL_CARD/RESULTS_PROVENANCE/EXPERIMENTS updated with 4-area result + LATEST P17.
+Tests: `pytest -q` → 63 passed, 1 skipped; ruff F clean; tsc OK; eslint 0 errors; `next build` OK. Docker not built
+locally (daemon off).
+Decisions: defer main.py split to Phase 2 (jobs move heavy endpoints); defer /simulation retirement to Phase 4.
+Next: Phase 2 — Alembic + Postgres/PostGIS option, storage abstraction + artifacts table (sha256), job system + worker.
+
+## 2026-09-27 — Full audit + context folder
+
+Goal: user asked for a complete audit of the project (architecture, data flow, ER, ML, graph, frontend,
+API, debt, bugs, security, scalability, implemented/partial/mock, labelling) against their
+"next-generation platform" spec, and a persistent context folder so future chats need no history.
+
+Changed (files):
+- `docs/context/README.md` (how to use + update rule), `PROJECT_CONTEXT.md` (source of truth),
+  `AUDIT_2026-09-27.md` (full audit A–P, gap analysis, target architecture, classification),
+  `ROADMAP.md` (phases 1–8 with checkboxes), `SESSION_LOG.md` (this file).
+- `CLAUDE.md` at repo root (auto-loaded by Claude Code; points to docs/context).
+- No application code changed.
+
+Tests: fresh clone, venv from `requirements-api.txt` + pytest + pandas →
+`.venv/bin/python -m pytest -q` → **43 passed, 1 skipped** (ML smoke test skipped: torch not installed).
+
+Decisions:
+- Audit first, no rewrites (per spec §50). Phase 1 starts with security (path traversal is exploitable).
+- Context lives in-repo (`docs/context/`) so it survives chat deletion and fresh clones.
+
+Open issues: all bugs in audit §I are OPEN. Nothing committed yet (user commits on request).
+
+Next step: Phase 1 — fix path traversal + `/api/segment` path validation, remove committed demo password,
+honest-label UI fixes, P17/synthetic regression tests, then docs refresh.

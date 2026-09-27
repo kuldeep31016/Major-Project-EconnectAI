@@ -6,7 +6,6 @@ patch extraction -> graph run without error and produce well-formed outputs.  It
 never results.  Runs on CPU with a randomly initialised EfficientNet-B0 encoder (no download).
 """
 import json
-import os
 from pathlib import Path
 
 import numpy as np

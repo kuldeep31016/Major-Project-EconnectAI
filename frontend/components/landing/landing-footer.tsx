@@ -157,7 +157,7 @@ export function LandingFooter() {
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1.5 text-slate-400">
               <span className="h-2 w-2 rounded-full bg-[#00c896]" />
-              Government Decision-Support System
+              Research prototype · decision-support
             </span>
           </div>
         </div>
