@@ -71,7 +71,7 @@ def evidence_chain(db: Session, run_dir: Path, object_type: str, object_id: str)
 INTENTS = [
     ("critical", r"(most )?critical|priority patch|which patch(es)? (matter|are important)|top patch"),
     ("why", r"why (is|does) (patch )?(?P<pid>[A-Za-z0-9_-]+)"),
-    ("whatif", r"(what (happens|if)|remove|lose|los(s|e) of).*?(?P<pid>P\d+|[a-z-]+-p\d+)"),
+    ("whatif", r"(what (happens|if)|remove|lose|los(s|e) of).*?(?P<pid>[a-z-]+-p\d+|\bp\d+)"),
     ("change", r"chang|since|previous|last observation|trend|timeline"),
     ("restore", r"restor|candidate|cluster|gain"),
     ("alerts", r"alert|verif|pending|field"),

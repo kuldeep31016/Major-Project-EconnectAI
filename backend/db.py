@@ -250,6 +250,7 @@ class Evidence(Base):
     notes = Column(Text)
     photo_path = Column(String)
     verification = Column(String, default="SUBMITTED")   # SUBMITTED | ACCEPTED | REJECTED
+    checklist = Column(JSON)                              # structured observation (FIELD_CHECKLIST keys), migration 0004
     created_at = Column(DateTime, default=utcnow)
 
 
@@ -332,6 +333,62 @@ class Artifact(Base):
     job_id = Column(String, ForeignKey("jobs.id"))
     processing_version = Column(String)                       # ecoconnect package version that wrote it
     meta = Column(JSON)
+    created_at = Column(DateTime, default=utcnow)
+
+
+# --------------------------------------------------------------------------- Phase 5: restoration decisions + HITL
+# Structured field checklist: key -> allowed values. Free text goes in Evidence.notes.
+FIELD_CHECKLIST = {
+    "habitat_present": ("yes", "no", "unsure"),
+    "mangrove_present": ("yes", "no", "unsure"),
+    "condition": ("good", "fair", "poor", "not_applicable"),
+    "water_condition": ("tidal", "permanently_flooded", "dry", "unknown"),
+    "human_disturbance": ("none", "low", "high"),
+}
+REVIEW_STAGES = ("MODEL_CANDIDATE", "GIS_REVIEW", "FIELD_VERIFICATION", "FEASIBILITY", "DECIDED")
+# Feasibility factors the model cannot know. None = "Not assessed" (never filled with a guess).
+FEASIBILITY_FACTORS = ("ownership", "legal_status", "water_conditions", "land_use", "cost", "accessibility")
+
+
+class RestorationReview(Base):
+    """Human workflow around a model-ranked restoration candidate. The model output (gain, rank) is copied as
+    ``model_recommendation`` at creation; everything after that is a human judgement with who/when/why."""
+    __tablename__ = "restoration_reviews"
+    id = Column(Integer, primary_key=True)
+    study_area_id = Column(String, ForeignKey("study_areas.id"), index=True)
+    run_id = Column(String, ForeignKey("analysis_versions.id"), index=True)
+    candidate_id = Column(String, nullable=False)
+    stage = Column(String, default="MODEL_CANDIDATE")
+    model_recommendation = Column(JSON)                  # rank, gain_pct, area_ha, verdict, why/why_not at creation
+    gis_review = Column(JSON)                            # {outcome, notes, by, at}
+    field_task_id = Column(Integer, ForeignKey("field_tasks.id"))
+    feasibility = Column(JSON)                           # {factor: {value, source, by, at} | None}
+    decision = Column(String)                            # APPROVED | REJECTED | DEFERRED (human)
+    decision_reason = Column(Text)
+    decided_by = Column(Integer, ForeignKey("users.id"))
+    created_by = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=utcnow)
+    updated_at = Column(DateTime, default=utcnow)
+
+
+class ModelDisagreement(Base):
+    """Accepted field evidence that contradicts the model output. Candidate training data for a FUTURE experiment;
+    nothing retrains automatically. Status: OPEN -> INCLUDED | EXCLUDED (reviewed)."""
+    __tablename__ = "model_disagreements"
+    id = Column(Integer, primary_key=True)
+    evidence_id = Column(Integer, ForeignKey("evidence.id"), unique=True)
+    study_area_id = Column(String, ForeignKey("study_areas.id"), index=True)
+    run_id = Column(String, ForeignKey("analysis_versions.id"))
+    model_id = Column(String, ForeignKey("models.id"))
+    object_type = Column(String); object_id = Column(String)
+    lat = Column(Float); lon = Column(Float)
+    observed_at = Column(String)
+    model_prediction = Column(JSON)                      # {class, confidence}
+    field_observation = Column(JSON)                     # checklist + observation
+    kind = Column(String)                                # false_positive | false_negative
+    status = Column(String, default="OPEN", index=True)
+    review_note = Column(Text)
+    reviewed_by = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime, default=utcnow)
 
 

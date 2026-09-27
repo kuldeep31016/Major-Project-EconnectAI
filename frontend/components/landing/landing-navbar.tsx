@@ -41,13 +41,13 @@ export function LandingNavbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo matching reference */}
         <Link href="#home" className="group flex items-center gap-2.5">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#00e599] to-[#0d9488] text-[#041a12] shadow-md shadow-[#00e599]/20 transition-transform duration-300 group-hover:scale-105">
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-[#15803d] to-[#0f5132] text-white shadow-md shadow-[#15803d]/25 transition-transform duration-300 group-hover:scale-105">
             <Leaf className="h-5 w-5 fill-current" />
           </div>
           <div>
             <div className="flex items-center gap-0.5 text-[20px] tracking-tight text-white leading-none font-black">
               <span>EcoConnect</span>
-              <span className="text-[#00e599]">AI</span>
+              <span className="text-[#4ade80]">AI</span>
             </div>
           </div>
         </Link>

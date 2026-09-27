@@ -14,6 +14,22 @@ Next step:
 
 ---
 
+## 2026-09-28 — Phases 5–6: restoration decisions, field checklist, HITL, grounded assistant; logo
+
+Changed: db RestorationReview/ModelDisagreement/Evidence.checklist + FIELD_CHECKLIST/REVIEW_STAGES/FEASIBILITY_FACTORS
+(migration 0004); backend/workflow_api.py; routers submit_evidence(checklist) + verify_evidence → record_disagreement;
+auth decide_restoration. backend/assistant_llm.py; /api/assistant/ask rewritten (optional_user, rate limit, audit);
+insight.py what-if regex fixed (lowercase p17 fell through to summary). requirements add anthropic>=1.0; .env.example.
+Frontend: components/restoration/review-panel.tsx (model recommendation vs human decision, stages, Not assessed);
+/field checklist selects + Disagreements register (include/exclude, GeoJSON export); assistant-launcher: mode badge,
+citations, ProposedScenario card (Run → BeforeAfter). Logo: all logos theme green gradient (#15803d→#0f5132),
+"AI" #4ade80, favicon.ico (Vercel default) → app/icon.svg leaf.
+Tests: tests/test_phase5.py, tests/test_assistant.py (stubbed Claude client) → 90 passed/1 skipped; workflow tests
+made order-independent. Browser-verified: review panel with real C1; template assistant P17 what-if −27.0 %.
+Open: Claude path never called live (no ANTHROPIC_API_KEY locally). User wants: everything real (no mock), highly
+animated/unique UI, patent + funding → never claim patentability; Phase 8 has Research & IP notes.
+Next: user to choose Phase 8 (animated landing, guided P17 demo story, flow animations, IP notes) or Phase 7.
+
 ## 2026-09-28 — Phase 4 (P1): sensitivity, scenario types, digital twin
 
 Changed: ecoconnect/graph/sensitivity.py (new); backend/scenarios.py types reduce_area, add_patch (bbox-validated,

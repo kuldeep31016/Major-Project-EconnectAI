@@ -61,23 +61,24 @@ def test_verification_lifecycle(client):
         "lat": alert["lat"], "lon": alert["lon"], "object_type": "patch", "object_id": alert["object_id"],
         "run_id": alert["run_id"], "alert_id": alert["id"], "assignee_id": field_id}).json()
     assert t["status"] == "PENDING" and t["detection_id"]
-    det = client.get("/api/detections?study_area=odisha-coast").json()[0]
+    det = next(d for d in client.get("/api/detections?study_area=odisha-coast").json() if d["id"] == t["detection_id"])
     assert det["status"] == "FIELD_ASSIGNED"
     # AI output cannot be confirmed without accepted field evidence
     assert client.patch(f"/api/detections/{det['id']}/status", headers=s, json={"status": "CONFIRMED"}).status_code == 409
     # field officer sees only own tasks and can submit evidence with a validated photo
-    assert [x["id"] for x in client.get("/api/field-tasks", headers=f).json()] == [t["id"]]
+    mine = client.get("/api/field-tasks", headers=f).json()
+    assert t["id"] in [x["id"] for x in mine] and all(x["assignee_id"] == field_id for x in mine)
     bad = client.post(f"/api/field-tasks/{t['id']}/evidence", headers=f, data={"lat": 20.7, "lon": 86.9, "observed_at": "2026-09-19", "observation": "habitat_present"},
                       files={"photo": ("x.txt", b"not an image", "text/plain")})
     assert bad.status_code == 400
     ev = client.post(f"/api/field-tasks/{t['id']}/evidence", headers=f, data={"lat": 20.7, "lon": 86.9, "observed_at": "2026-09-19", "observation": "habitat_present", "notes": "ok"},
                      files={"photo": ("x.png", b"\x89PNG\r\n\x1a\n" + b"0" * 64, "image/png")}).json()
     assert ev["verification"] == "SUBMITTED"
-    assert client.get("/api/field-tasks", headers=s).json()[0]["status"] == "SUBMITTED"
+    assert next(x for x in client.get("/api/field-tasks", headers=s).json() if x["id"] == t["id"])["status"] == "SUBMITTED"
     # field officer cannot verify; senior can
     assert client.patch(f"/api/evidence/{ev['id']}/verify", headers=f, json={"verification": "ACCEPTED"}).status_code == 403
     assert client.patch(f"/api/evidence/{ev['id']}/verify", headers=s, json={"verification": "ACCEPTED", "reason": "consistent"}).json()["verification"] == "ACCEPTED"
-    det = client.get("/api/detections?study_area=odisha-coast").json()[0]
+    det = next(d for d in client.get("/api/detections?study_area=odisha-coast").json() if d["id"] == t["detection_id"])
     assert det["status"] == "FIELD_VERIFIED"
     assert client.patch(f"/api/detections/{det['id']}/status", headers=s, json={"status": "CONFIRMED"}).json()["status"] == "CONFIRMED"
     alerts = {a["id"]: a for a in client.get("/api/alerts?study_area=odisha-coast").json()}

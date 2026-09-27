@@ -40,14 +40,14 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [ ] P2 Temporal analysis with same-model enforcement, fragmentation indicators
 - [ ] P2 Transparent multi-criteria criticality (shown weights)
 
-## Phase 5 — Restoration, field, HITL
-- [ ] P1 Restoration intelligence fields ("Not assessed"), model-recommendation vs human-decision states
-- [ ] P1 Field observation checklist; link observation → model result; model-disagreement flag
-- [ ] P2 HITL disagreement dataset export (no auto-retrain)
+## Phase 5 — Restoration, field, HITL (done 2026-09-28)
+- [x] P1 Restoration intelligence fields ("Not assessed"), model-recommendation vs human-decision states
+- [x] P1 Field observation checklist; link observation → model result; model-disagreement flag
+- [x] P2 HITL disagreement dataset export (no auto-retrain)
 
-## Phase 6 — Grounded GenAI assistant
-- [ ] P1 Retrieval → evidence pack → Claude → cited answer; "not enough evidence" refusal
-- [ ] P1 NL → structured ScenarioCommand → validator → engine, confirm before run; template fallback when no API key
+## Phase 6 — Grounded GenAI assistant (done 2026-09-28; live Claude path untested — no API key on dev machine)
+- [x] P1 Retrieval → evidence pack → Claude → cited answer; "not enough evidence" refusal
+- [x] P1 NL → structured ScenarioCommand → validator → engine, confirm before run; template fallback when no API key
 
 ## Phase 7 — CI/CD, observability, security, deployment
 - [x] P0 GitHub Actions: ruff, pytest, eslint, tsc, next build, pip-audit/npm audit, docker build
