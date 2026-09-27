@@ -682,13 +682,19 @@ from backend.scenarios import run_scenario, restoration_feasibility  # noqa: E40
 
 
 class ScenarioBody(BaseModel):
-    type: str                                   # remove_patches | remove_polygon | restore | restore_multi | tau | threshold | compare_periods
+    type: str  # remove_patches | remove_polygon | restore | restore_multi | reduce_area | add_patch | radius | tau | sensitivity | threshold | compare_periods
     patch_ids: Optional[list[str]] = None
     polygon: Optional[list[list[float]]] = None  # [[lat, lon], ...]
     candidate_ids: Optional[list[str]] = None
     taus_km: Optional[list[float]] = None
     thresholds: Optional[list[float]] = None
     other_run_id: Optional[str] = None
+    retain_fraction: Optional[float] = None        # reduce_area
+    lat: Optional[float] = None                     # add_patch
+    lon: Optional[float] = None
+    area_ha: Optional[float] = None
+    tau_km: Optional[float] = None                  # radius
+    ks: Optional[list[int]] = None                  # sensitivity
 
 
 @app.post("/api/runs/{study_area}/{run_id}/scenario")

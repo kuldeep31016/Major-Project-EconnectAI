@@ -482,7 +482,7 @@ def save_scenario(body: ScenarioIn, user: User = Depends(current_user), db: Sess
     run_dir = _run_dir_for(db, body.study_area_id, body.run_id)
     prm = dict(body.params or {})
     req = {"type": "remove_patches" if body.type == "remove_polygon" else body.type,
-           **{k: prm[k] for k in ("patch_ids", "candidate_ids", "taus_km", "thresholds") if k in prm}}
+           **{k: prm[k] for k in ("patch_ids", "candidate_ids", "taus_km", "thresholds", "retain_fraction", "lat", "lon", "area_ha", "tau_km", "ks") if k in prm}}
     other = _run_dir_for(db, body.study_area_id, prm["run_b"]) if body.type == "compare_periods" and prm.get("run_b") else None
     try:
         res = run_scenario(run_dir, req, other)

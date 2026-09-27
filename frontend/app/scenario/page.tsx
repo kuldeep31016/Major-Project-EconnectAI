@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { useAuth } from "@/hooks/use-auth";
-import { fetchRuns, postScenario, saveScenario, type ScenarioResult } from "@/lib/api";
+import { fetchRuns, postScenario, saveScenario, type ScenarioResult, type SensitivityVariant } from "@/lib/api";
+import { BeforeAfter } from "@/components/simulation/before-after";
 import type { RunSummary } from "@/types";
 import { getGraph, getHabitatMask, getHeatmap, getRestoration } from "@/lib/data";
 import type { LatLng } from "@/types";
@@ -19,15 +20,19 @@ import { fmtIndex } from "@/utils/format";
 
 const GisMap = dynamic(() => import("@/components/maps/gis-map"), { ssr: false });
 
-type Kind = "remove_patches" | "remove_polygon" | "restore" | "restore_multi" | "tau" | "threshold" | "compare_periods";
+type Kind = "remove_patches" | "remove_polygon" | "restore" | "restore_multi" | "reduce_area" | "add_patch" | "radius" | "sensitivity" | "tau" | "threshold" | "compare_periods";
 const KINDS: { id: Kind; label: string; hint: string }[] = [
   { id: "remove_patches", label: "A · Remove patch", hint: "click patches on the map" },
   { id: "remove_polygon", label: "B · Remove inside polygon", hint: "draw an impact area" },
   { id: "restore", label: "C · Restore candidate", hint: "pick one candidate" },
   { id: "restore_multi", label: "D · Restore several", hint: "pick several candidates" },
-  { id: "tau", label: "E · Compare τ 3/5/8 km", hint: "dispersal threshold sensitivity" },
-  { id: "threshold", label: "F · Compare thresholds", hint: "re-extract patches at other probabilities" },
-  { id: "compare_periods", label: "G · Compare periods", hint: "two observation dates" },
+  { id: "reduce_area", label: "E · Reduce patch area", hint: "hypothetical degradation of selected patches" },
+  { id: "add_patch", label: "F · Add hypothetical patch", hint: "click a location, set an area" },
+  { id: "radius", label: "G · Change connection radius", hint: "rebuild the graph with another τ" },
+  { id: "sensitivity", label: "H · Sensitivity grid (τ × k)", hint: "is the ranking stable across assumptions?" },
+  { id: "tau", label: "I · Compare τ 3/5/8 km", hint: "dispersal threshold sensitivity" },
+  { id: "threshold", label: "J · Compare thresholds", hint: "re-extract patches at other probabilities" },
+  { id: "compare_periods", label: "K · Compare periods", hint: "two observation dates" },
 ];
 
 function Delta({ label, b, s, fmt }: { label: string; b: number; s: number; fmt: (v: number) => string }) {
@@ -67,6 +72,12 @@ function ScenarioLabView() {
   const setPolygon = (f: (p: LatLng[]) => LatLng[]) => setInputs((i) => ({ scope, polygon: f(i.scope === scope ? i.polygon : []), cands: i.scope === scope ? i.cands : [] }));
   const setCands = (f: (c: string[]) => string[]) => setInputs((i) => ({ scope, polygon: i.scope === scope ? i.polygon : [], cands: f(i.scope === scope ? i.cands : []) }));
   const [otherRun, setOtherRun] = useState("");
+  const [retainPct, setRetainPct] = useState(50);
+  const [areaHa, setAreaHa] = useState(5);
+  const [tauKm, setTauKm] = useState(3);
+  const [taus, setTaus] = useState("3, 5, 8");
+  const [ks, setKs] = useState("2, 3, 4");
+  const [point, setPoint] = useState<LatLng | null>(null);
   const [runs, setRuns] = useState<RunSummary[]>([]);
   const [res, setRes] = useState<{ scope: string; data: ScenarioResult | null } | null>(null);
   const result = res?.scope === scope ? res.data : null;
@@ -86,7 +97,8 @@ function ScenarioLabView() {
     isPolygonReady ||
     ((kind === "restore" || kind === "restore_multi") && cands.length > 0) ||
     (kind === "compare_periods" && !!otherRun) ||
-    kind === "tau" || kind === "threshold";
+    (kind === "reduce_area" && removedPatchIds.length > 0) || (kind === "add_patch" && !!point) ||
+    kind === "radius" || kind === "sensitivity" || kind === "tau" || kind === "threshold";
 
   const run = useCallback(async () => {
     setBusy(true); setError(null); setSaved(null);
@@ -97,6 +109,13 @@ function ScenarioLabView() {
         if (kind === "remove_polygon") body.polygon = polygon;
         if (kind === "restore" || kind === "restore_multi") body.candidate_ids = cands;
         if (kind === "compare_periods") body.other_run_id = otherRun;
+        if (kind === "reduce_area") { body.patch_ids = removedPatchIds; body.retain_fraction = retainPct / 100; }
+        if (kind === "add_patch" && point) { body.lat = point[0]; body.lon = point[1]; body.area_ha = areaHa; }
+        if (kind === "radius") body.tau_km = tauKm;
+        if (kind === "sensitivity") {
+          body.taus_km = taus.split(",").map(Number).filter((x) => x > 0);
+          body.ks = ks.split(",").map((x) => parseInt(x, 10)).filter((x) => x > 0);
+        }
         const resData = await postScenario(sceneId, runId, body);
         setResult(resData);
       } else {
@@ -109,7 +128,7 @@ function ScenarioLabView() {
     } finally {
       setBusy(false);
     }
-  }, [live, kind, removedPatchIds, polygon, cands, otherRun, sceneId, runId]);
+  }, [live, kind, removedPatchIds, polygon, cands, otherRun, sceneId, runId, retainPct, point, areaHa, tauKm, taus, ks]);
 
   const variants = (result as { variants?: Record<string, unknown>[] } | null)?.variants;
   const scenarioGraph = useMemo(() => {
@@ -130,6 +149,31 @@ function ScenarioLabView() {
               </button>
             ))}
           </div>
+          {kind === "reduce_area" && (
+            <div className="space-y-1.5 text-[11.5px]">
+              <div className="text-muted-foreground">Patches: {removedPatchIds.join(", ") || "click patches on the map"} {removedPatchIds.length > 0 && <button className="ml-1 underline text-[#0f5132] font-semibold" onClick={clearRemoved}>clear</button>}</div>
+              <label className="flex items-center gap-2">Keep <input type="range" min={5} max={95} step={5} value={retainPct} onChange={(e) => setRetainPct(Number(e.target.value))} className="flex-1" /> <b className="tabular">{retainPct} %</b> of area</label>
+            </div>
+          )}
+          {kind === "add_patch" && (
+            <div className="space-y-1.5 rounded-xl border border-dashed border-[#0f5132]/30 bg-[#0f5132]/5 p-3 text-[11.5px]">
+              <Button size="sm" variant={drawing ? "default" : "outline"} className="w-full" onClick={() => setDrawing((d) => !d)}>
+                <Pencil className="h-3.5 w-3.5" /> {drawing ? "Click the map to place it" : point ? "Move the patch" : "Place patch on map"}
+              </Button>
+              <div className="text-muted-foreground">{point ? `at ${point[0].toFixed(4)}, ${point[1].toFixed(4)}` : "no location yet"}</div>
+              <label className="flex items-center gap-2">Area <input type="number" min={0.1} max={10000} step={0.5} value={areaHa} onChange={(e) => setAreaHa(Number(e.target.value))} className="w-20 rounded border border-foreground/15 bg-background px-1.5 py-0.5" /> ha</label>
+              <div className="text-[10.5px] text-muted-foreground">User-defined — not a detected habitat or a restoration recommendation.</div>
+            </div>
+          )}
+          {kind === "radius" && (
+            <label className="flex items-center gap-2 text-[11.5px]">τ <input type="range" min={1} max={15} step={0.5} value={tauKm} onChange={(e) => setTauKm(Number(e.target.value))} className="flex-1" /> <b className="tabular">{tauKm} km</b></label>
+          )}
+          {kind === "sensitivity" && (
+            <div className="space-y-1.5 text-[11.5px]">
+              <label className="block">τ values (km) <input value={taus} onChange={(e) => setTaus(e.target.value)} className="mt-0.5 w-full rounded border border-foreground/15 bg-background px-1.5 py-1" /></label>
+              <label className="block">k values <input value={ks} onChange={(e) => setKs(e.target.value)} className="mt-0.5 w-full rounded border border-foreground/15 bg-background px-1.5 py-1" /></label>
+            </div>
+          )}
           {kind === "remove_patches" && <div className="text-[11.5px] text-muted-foreground">Selected: {removedPatchIds.join(", ") || "click patches on the map"} {removedPatchIds.length > 0 && <button className="ml-1 underline text-[#0f5132] font-semibold" onClick={clearRemoved}>clear</button>}</div>}
           {kind === "remove_polygon" && (
             <div className="space-y-2 rounded-xl border border-dashed border-[#0f5132]/30 bg-[#0f5132]/5 p-3 text-[11.5px]">
@@ -176,8 +220,9 @@ function ScenarioLabView() {
           <GisMap scene={scene} mask={mask} graph={scenarioGraph} heatmap={heatmap}
             layers={{ satellite: true, probability: false, habitat: true, heatmap: false, connectivity: true, protectedAreas: false, labels: false }}
             basemap="satellite" heatOpacity={0.5} selectedPatchId={selectedPatchId}
-            onSelectPatch={(id) => { if (kind === "remove_patches" && id) togglePatchRemoved(id); else setSelectedPatchId(id); }}
-            removedPatchIds={removedForMap} drawing={drawing} drawnPolygon={polygon} onDrawPoint={(p) => setPolygon((s) => [...s, p])} className="h-full w-full" />
+            onSelectPatch={(id) => { if ((kind === "remove_patches" || kind === "reduce_area") && id) togglePatchRemoved(id); else setSelectedPatchId(id); }}
+            removedPatchIds={removedForMap} drawing={drawing} drawnPolygon={kind === "add_patch" ? (point ? [point] : []) : polygon}
+            onDrawPoint={(p) => { if (kind === "add_patch") { setPoint(p); setDrawing(false); } else setPolygon((s) => [...s, p]); }} className="h-full w-full" />
           <div className="pointer-events-none absolute left-3 top-3 z-[900] rounded-lg bg-white/90 px-3 py-1.5 text-[11px] shadow">
             {result ? <span className={cn("font-semibold", result.label.startsWith("SIM") ? "text-[#c2410c]" : "text-[#1e5f8a]")}>{result.label}</span> : <span>{live ? "REAL DATA · baseline" : "no analysis for this landscape yet"}</span>}
           </div>
@@ -194,6 +239,7 @@ function ScenarioLabView() {
                 <CardContent>
                   {"scenario" in result && result.scenario && (
                     <>
+                      <div className="mb-2"><BeforeAfter b={result.baseline} s={result.scenario} /></div>
                       <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 text-[9.5px] uppercase tracking-wider text-muted-foreground"><span /><span>baseline</span><span>scenario</span><span>Δ</span></div>
                       <Delta label="IIC" b={result.baseline.iic} s={result.scenario.iic} fmt={fmtIndex} />
                       <Delta label="PC" b={result.baseline.pc} s={result.scenario.pc} fmt={fmtIndex} />
@@ -203,7 +249,17 @@ function ScenarioLabView() {
                       <Delta label="Components" b={result.baseline.n_components} s={result.scenario.n_components} fmt={(v) => String(v)} />
                     </>
                   )}
-                  {variants && (
+                  {result.type === "sensitivity" && result.stability && (
+                    <>
+                      <div className="mb-1 text-[11.5px] font-semibold">{result.verdict}</div>
+                      <table className="w-full text-[11px]"><thead className="text-[9.5px] uppercase tracking-wider text-muted-foreground"><tr><th className="text-left">τ</th><th>k</th><th>links</th><th>comp.</th><th>ρ</th><th>Kendall</th><th>top-5 ∩</th></tr></thead>
+                        <tbody className="tabular text-center">{(result.variants as unknown as SensitivityVariant[]).map((v, i) => <tr key={i} className={cn("border-t border-foreground/[0.06]", v.tau_km === result.reference?.tau_km && v.k === result.reference?.k && "font-semibold")}><td className="py-1 text-left">{v.tau_km}</td><td>{v.k}</td><td>{v.n_edges}</td><td>{v.n_components}</td><td>{Number.isFinite(v.spearman) ? v.spearman.toFixed(2) : "—"}</td><td>{Number.isFinite(v.kendall) ? v.kendall.toFixed(2) : "—"}</td><td>{(100 * v.top_overlap).toFixed(0)} %</td></tr>)}</tbody></table>
+                      <div className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground">Reference top patches across variants</div>
+                      <table className="w-full text-[11px]"><thead className="text-[9.5px] uppercase text-muted-foreground"><tr><th className="text-left">patch</th><th>ref rank</th><th>rank range</th><th>in top-5</th></tr></thead>
+                        <tbody className="tabular text-center">{result.stability.map((x) => <tr key={x.patch_id} className="border-t border-foreground/[0.06]"><td className="py-1 text-left">{x.patch_id}</td><td>#{x.reference_rank}</td><td>#{x.min_rank}–#{x.max_rank}</td><td className={x.in_top_n === x.of ? "text-[#15803d]" : "text-[#b45309]"}>{x.in_top_n}/{x.of}</td></tr>)}</tbody></table>
+                    </>
+                  )}
+                  {variants && result.type !== "sensitivity" && (
                     <table className="w-full text-[11.5px]"><thead className="text-[9.5px] uppercase tracking-wider text-muted-foreground"><tr><th className="text-left">{result.type === "tau" ? "τ" : "thr"}</th><th>links</th><th>comp.</th><th>IIC</th><th>ECA %</th><th>{result.type === "tau" ? "ρ" : "patches"}</th></tr></thead>
                       <tbody className="tabular text-center">{variants.map((v, i) => <tr key={i} className="border-t border-foreground/[0.06]"><td className="py-1 text-left">{String(v.tau_km ?? v.threshold)}</td><td>{String(v.n_edges ?? "—")}</td><td>{String(v.n_components ?? "—")}</td><td>{typeof v.iic === "number" ? fmtIndex(v.iic) : "—"}</td><td>{typeof v.eca_pct_of_habitat === "number" ? v.eca_pct_of_habitat.toFixed(1) : "—"}</td><td>{result.type === "tau" ? (typeof v.spearman_vs_reference === "number" ? v.spearman_vs_reference.toFixed(2) : "—") : String(v.n_patches ?? "—")}</td></tr>)}</tbody></table>
                   )}

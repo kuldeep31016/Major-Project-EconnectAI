@@ -1,6 +1,6 @@
 # EcoConnectAI — Project Context (single source of truth)
 
-_Last updated: 2026-09-28 (Phase 3 done)._
+_Last updated: 2026-09-28 (Phase 4 P1 done)._
 
 ## 1. What this is
 
@@ -57,6 +57,8 @@ Graph (k=3, τ=5 km, C(G)=IIC). Kerala LATEST = `outputs/runs/kerala-coast/keral
 - **P17**: 3.13 ha (1.4 % of habitat, 17th by area), degree 4, **cut vertex** (components 2→3),
   criticality rank #3, S = 0.270 (≈27 % IIC loss). P01 is #1 (S = 0.307, 16 % of habitat, not a cut vertex).
 - Restoration candidate **C1** ≈ 1.6 ha, +1.29 % IIC (simulated).
+- Sensitivity (τ 3/5/8 × k 2/3/4, 2026-09-28): stable across τ at k=3 (ρ 0.96–1.0, same top-5); k=2 drops ρ to
+  ~0.67–0.71. P01/P02/P03 top-5 in 9/9 variants; P17 top-5 in 6/9 (rank #2–#20) → P17's importance depends on k.
 - Patch IDs are reassigned by area **per run** → "P17" is not a stable ID across runs. The paper's P17
   (synthetic prototype, rank 7, S 0.194) is a different object.
 - Other runs: `<area>_multi_E1_s1_b0_dev_t0.70` for all four areas (Sundarbans 54 patches, Odisha 21,
@@ -101,7 +103,8 @@ backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, pa
                 template assistant, official report)
 ecoconnect/     gee/ (stac_acquire, gmw_labels, gee_acquire) · geospatial/ (raster io, preprocessing,
                 tiling, patch_extraction) · ml/ (datasets, models/unet, training, evaluation, inference)
-                graph/ (construction, connectivity, criticality, what_if, restoration, explain, types)
+                graph/ (construction, connectivity, criticality, what_if, restoration, explain, types, sensitivity = τ×k grid,
+                kendall, jaccard, scale_areas, hypothetical_patch)
                 pipeline/ (config, sources, analysis, report, frontend_adapter, provenance = git/config/file hashes)
 scripts/        acquire_study_area, build_tiles, train, evaluate, predict, threshold_sweep,
                 run_graph_analysis, run_pipeline, run_all_areas, phase2_*.sh
@@ -128,7 +131,7 @@ bundle state `frontend/hooks/use-analysis.tsx`, getters `frontend/lib/data.ts`.
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-api.txt pytest pandas   # API + tests (no torch)
 # full research stack incl. torch: .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q          # 2026-09-28: 76 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
+.venv/bin/python -m pytest -q          # 2026-09-28: 80 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
 # tests set ECO_INLINE_WORKER=0 and drive jobs with backend.jobs.work_once()
 .venv/bin/ruff check backend ecoconnect scripts tests --select F   # CI lint scope
 .venv/bin/python -m uvicorn backend.main:app --port 8000

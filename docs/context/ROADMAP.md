@@ -33,10 +33,10 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] P0 Provenance lineage API + drawer UI; manifests record git commit, config_sha256, input_sha256
 - [x] P1 "Reproduce this analysis" job (graph level; raster level when raster present) — all 11 stored runs reproduce
 
-## Phase 4 — Analysis features
-- [ ] P1 Sensitivity engine (τ 3/5/8, threshold, k) with rank correlation + stability summary
-- [ ] P1 Scenario engine: multi-remove, reduce area, hypothetical patch, radius; before/after panel
-- [ ] P1 Network digital twin view (cut vertices, clusters, isolated, interactive remove/restore)
+## Phase 4 — Analysis features (P1 done 2026-09-28)
+- [x] P1 Sensitivity grid τ×k (Spearman, Kendall, top-5 Jaccard, per-patch rank range, verdict); threshold variant already existed
+- [x] P1 Scenario types reduce_area, add_patch, radius, sensitivity + BeforeAfter panel
+- [x] P1 Digital twin card on /graph (remove selected / restore candidate → redrawn network + before/after)
 - [ ] P2 Temporal analysis with same-model enforcement, fragmentation indicators
 - [ ] P2 Transparent multi-criteria criticality (shown weights)
 
