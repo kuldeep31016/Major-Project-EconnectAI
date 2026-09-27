@@ -56,10 +56,10 @@ export function CTASection() {
                 </a>
 
                 <Link
-                  href="/analysis?scene=kerala-coast"
+                  href="/demo"
                   className="inline-flex items-center gap-2 rounded-xl border border-transparent px-4 py-3.5 text-[14px] font-medium text-slate-300 hover:text-[#00c896] transition-colors"
                 >
-                  <span>Kerala Demo</span>
+                  <span>Guided Kerala demo</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>

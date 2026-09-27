@@ -418,3 +418,16 @@ export const fetchDisagreements = (studyArea: string) => getJson<Disagreement[]>
 export const reviewDisagreement = (id: number, status: "INCLUDED" | "EXCLUDED", note: string) =>
   getJson<Disagreement>(`/api/hitl/disagreements/${id}`, jsonInit("PATCH", { status, note }));
 export const exportHitl = () => getJson<{ type: string; features: unknown[]; note: string }>("/api/hitl/export");
+
+/* ------------------------------------------------------------------ guided demo (/demo): raw run artefacts */
+export interface GraphNode { id: string; area_ha: number; centroid: [number, number]; confidence: number; geometry: { type: string; coordinates: number[][][] } | null; degree?: number }
+export interface GraphEdge { source: string; target: string; distance_km: number; weight: number }
+export interface RunGraph { parameters: Record<string, unknown>; nodes: GraphNode[]; edges: GraphEdge[]; n_components: number }
+export interface CriticalityRow { patch_id: string; rank: number; rank_by_area: number; area_ha: number; area_pct: number; degree: number; criticality_score: number; delta_pct: number; is_cut_vertex: boolean; component_count_before: number; component_count_after: number; neighbour_ids: string[] }
+export interface RestorationCandidateRow { candidate_id: string; rank: number; area_ha: number; centroid: [number, number]; gain_pct: number; new_links: number; linked_patch_ids: string[] }
+const runPath = (sa: string, run: string, what: string) => `/api/runs/${encodeURIComponent(sa)}/${encodeURIComponent(run)}/${what}`;
+export const fetchRunGraph = (sa: string, run = "latest") => getJson<RunGraph>(runPath(sa, run, "graph"), undefined, 20000);
+export const fetchRunCriticality = (sa: string, run = "latest") => getJson<CriticalityRow[]>(runPath(sa, run, "criticality"), undefined, 20000);
+export const fetchRunRestoration = (sa: string, run = "latest") => getJson<{ candidates: RestorationCandidateRow[]; ranking_basis: string }>(runPath(sa, run, "restoration"), undefined, 20000);
+export const fetchRunManifest = (sa: string, run = "latest") => getJson<{ run_id: string; result_label: string; study_area: { name?: string; state?: string }; data_source: { scene_year?: number; threshold?: number; model?: string }; config: { graph: { k_neighbors: number; tau_km: number } } }>(runPath(sa, run, "manifest"));
+export const fetchRunMetrics = (sa: string, run = "latest") => getJson<{ research_metrics: { n_patches: number; n_edges: number; n_components: number; habitat_area_ha: number; iic: number; eca_pct_of_habitat: number } }>(runPath(sa, run, "metrics"));

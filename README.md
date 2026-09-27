@@ -24,6 +24,23 @@ pipeline outputs through a FastAPI backend. Every number shown carries a provena
 
 ---
 
+## What the platform does (2026-09-28)
+
+| Capability | Where |
+|---|---|
+| **Guided demo** — satellite image → patches → network → the patch that matters (P17) → live what-if → restoration → evidence, all fetched from the stored run | `/demo` |
+| Exact leave-one-out **criticality**, cut vertices, **what-if** (remove / shrink / add / radius / restore) with before → after | `/scenario`, `/graph` digital twin |
+| **Assumption sensitivity** (τ × k): rank correlation, top-k overlap, per-patch rank range, stability verdict | `/scenario?type=sensitivity` |
+| **Provenance** — "Why am I seeing this?" 12-step lineage with hashes; **Reproduce this analysis** job | evidence drawer on `/analysis` |
+| **Model registry** (Development → Experimental → Candidate → Validated, validation only with independent evidence) and experiment comparison | `/experiments` |
+| **Restoration decisions** (model recommendation vs human decision; GIS → field → feasibility → decision) | `/restoration` |
+| **Field verification** checklist, model-disagreement register, GeoJSON export for future retraining (never automatic) | `/field` |
+| **Evidence-grounded AI assistant** (Claude; cites retrieved evidence; proposes scenarios you confirm) | "Ask AI" |
+| Background **jobs**, Alembic migrations (SQLite / PostgreSQL+PostGIS), S3-compatible storage, artifact hashes, RBAC + audit | `backend/` |
+
+Limitations: `docs/LIMITATIONS.md` · Research & IP notes (no novelty or patent claims): `docs/RESEARCH_IP_NOTES.md` ·
+Full hand-over context: `docs/context/`.
+
 ## Status (updated 2026-09-27) — read this first
 
 Full current context: `docs/context/PROJECT_CONTEXT.md`.
@@ -121,4 +138,5 @@ docs/                IMPLEMENTATION_AUDIT, PAPER_IMPLEMENTATION_TRACEABILITY, DA
 `docs/IMPLEMENTATION_AUDIT.md` (what existed, what changed, why) · `docs/ARCHITECTURE.md` ·
 `docs/PAPER_IMPLEMENTATION_TRACEABILITY.md` (equation → function) · `docs/DATASET_SETUP.md` ·
 `docs/PREPROCESSING.md` · `docs/TRAINING.md` · `docs/INFERENCE.md` · `docs/CONNECTIVITY_METRICS.md` ·
-`docs/GEE_SETUP.md` · `docs/EXPERIMENTS.md` · `docs/RESULTS_PROVENANCE.md` · `docs/TROUBLESHOOTING.md`
+`docs/GEE_SETUP.md` · `docs/EXPERIMENTS.md` · `docs/RESULTS_PROVENANCE.md` · `docs/TROUBLESHOOTING.md` ·
+`docs/LIMITATIONS.md` · `docs/RESEARCH_IP_NOTES.md` · `docs/context/` (project memory)
