@@ -1,6 +1,6 @@
 # EcoConnectAI — Project Context (single source of truth)
 
-_Last updated: 2026-09-28 (Phase 2 done)._
+_Last updated: 2026-09-28 (Phase 3 done)._
 
 ## 1. What this is
 
@@ -89,7 +89,12 @@ backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, pa
                 pre-Alembic DBs stamped 0001) · storage.py (LocalStorage | S3Storage via ECO_STORAGE) ·
                 artifacts.py (sha256 registry, synced in registry.sync_all) · jobs.py (DB queue, conditional-UPDATE
                 claim, inline worker thread ECO_INLINE_WORKER=1) · job_handlers.py (segment, scenario) ·
-                jobs_api.py (/api/jobs, /api/artifacts) · worker.py (`python -m backend.worker`) · routers.py (platform: auth, users,
+                jobs_api.py (/api/jobs, /api/artifacts) · worker.py (`python -m backend.worker`)
+                registry_api.py (PATCH /api/models/{id}/status, /api/registry-models, /api/experiments/compare,
+                /api/provenance/{area}/{run}, POST /api/runs/{area}/{run}/reproduce → job) · provenance.py
+                (12-step lineage, also embedded as `lineage` in the evidence-chain response) · job_handlers:
+                segment, scenario, reproduce. Model status ladder DEVELOPMENT→EXPERIMENTAL→CANDIDATE→VALIDATED
+                (manage_models: admin/analyst/gis; validate_models: admin only; migration 0003) · routers.py (platform: auth, users,
                 alerts, detections, field tasks, evidence, projects, scenarios, audit, assistant, reports)
                 db.py (15 tables) · auth.py (JWT + 6-role RBAC) · registry.py (sync runs→DB)
                 alerts.py (rule engine) · scenarios.py (Scenario Lab A–G) · insight.py (evidence chain,
@@ -97,7 +102,7 @@ backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, pa
 ecoconnect/     gee/ (stac_acquire, gmw_labels, gee_acquire) · geospatial/ (raster io, preprocessing,
                 tiling, patch_extraction) · ml/ (datasets, models/unet, training, evaluation, inference)
                 graph/ (construction, connectivity, criticality, what_if, restoration, explain, types)
-                pipeline/ (config, sources, analysis, report, frontend_adapter)
+                pipeline/ (config, sources, analysis, report, frontend_adapter, provenance = git/config/file hashes)
 scripts/        acquire_study_area, build_tiles, train, evaluate, predict, threshold_sweep,
                 run_graph_analysis, run_pipeline, run_all_areas, phase2_*.sh
 configs/        study_areas, acquisition, dataset(_s2,_s1s2), train_dev/full(_s2,_s1s2), graph, demo
@@ -123,7 +128,7 @@ bundle state `frontend/hooks/use-analysis.tsx`, getters `frontend/lib/data.ts`.
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-api.txt pytest pandas   # API + tests (no torch)
 # full research stack incl. torch: .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q          # 2026-09-28: 71 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
+.venv/bin/python -m pytest -q          # 2026-09-28: 76 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
 # tests set ECO_INLINE_WORKER=0 and drive jobs with backend.jobs.work_once()
 .venv/bin/ruff check backend ecoconnect scripts tests --select F   # CI lint scope
 .venv/bin/python -m uvicorn backend.main:app --port 8000

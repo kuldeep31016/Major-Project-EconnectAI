@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { FileSearch, X } from "lucide-react";
 import { useAnalysis } from "@/hooks/use-analysis";
-import { fetchEvidenceChain } from "@/lib/api";
+import { fetchEvidenceChain, type Lineage } from "@/lib/api";
+import { LineagePanel } from "@/components/analysis/lineage-panel";
 import { fmtIndex } from "@/utils/format";
 
 type Chain = {
@@ -18,6 +19,7 @@ type Chain = {
   restoration_calculation?: { C_G: number; C_G_plus_v: number; R_i: number; gain_pct: number; new_links: number; linked: string[]; formula: string };
   field_verification?: { detection: { status: string }; tasks: { title: string; status: string; evidence: { observation: string; verification: string; observed_at: string }[] }[] }[];
   verification_status?: string;
+  lineage?: Lineage;
 };
 
 /** Evidence drawer: the full chain behind "why is this patch high priority?" — from imagery to field verification. */
@@ -55,6 +57,7 @@ export function EvidenceDrawer({ objectType, objectId, onClose }: { objectType: 
             {c.decision && <section><div className="text-[10px] uppercase tracking-wider text-[#0f5132]">Decision</div>
               <div className="mt-1 text-[12.5px]">{c.decision.priority ? <b>Priority {c.decision.priority.toUpperCase()}</b> : null}{c.decision.rank ? ` · rank #${c.decision.rank}${c.decision.of ? ` of ${c.decision.of}` : ""}` : ""}</div>
               <p className="mt-1 text-[12px] leading-relaxed">{c.decision.explanation}</p></section>}
+            {c.lineage && <LineagePanel lineage={c.lineage} studyArea={sceneId} />}
             <section><div className="text-[10px] uppercase tracking-wider text-[#0f5132]">Verification status</div><div className="mt-1 text-[12.5px] font-semibold">{c.verification_status}</div>
               {c.field_verification?.map((f, i) => <div key={i} className="mt-1 text-[11.5px]">{f.tasks.map((t, j) => <div key={j}>{t.title} — {t.status}{t.evidence.map((e, k) => <div key={k} className="pl-3 text-muted-foreground">{e.observed_at}: {e.observation} ({e.verification})</div>)}</div>)}</div>)}</section>
             {c.criticality_calculation && <section><div className="text-[10px] uppercase tracking-wider text-[#0f5132]">Criticality calculation</div>

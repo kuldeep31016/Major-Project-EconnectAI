@@ -5,7 +5,8 @@ import { Activity, BarChart3, CheckCircle2, ChevronRight, Cpu, Eye, FileSpreadsh
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchModels, fetchModelDetail, fetchModelCards, modelAssetUrl, type ModelInfo, type ModelDetail } from "@/lib/api";
+import { compareExperiments, fetchModels, fetchModelDetail, fetchRegistryModels, modelAssetUrl, setModelStatus, type ExperimentRow, type ModelInfo, type ModelDetail, type ModelStatus, type RegistryModel } from "@/lib/api";
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 type TabKey = "metrics" | "curves" | "predictions" | "specs";
@@ -15,11 +16,26 @@ export default function ExperimentsPage() {
   const [active, setActive] = useState<string | null>(null);
   const [detail, setDetail] = useState<ModelDetail | null>(null);
   const [tab, setTab] = useState<TabKey>("metrics");
-  const [cards, setCards] = useState<{ foundationPaper: Record<string, unknown>; prototype: Record<string, unknown>; ours: Record<string, unknown>[] } | null>(null);
+  const { can } = useAuth();
+  const [registry, setRegistry] = useState<Record<string, RegistryModel>>({});
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [comparison, setComparison] = useState<{ experiments: ExperimentRow[]; note: string } | null>(null);
+  const [statusMsg, setStatusMsg] = useState<string | null>(null);
+  const loadRegistry = () => fetchRegistryModels().then((r) => setRegistry(Object.fromEntries(r.map((m) => [m.id, m])))).catch(() => setRegistry({}));
 
   useEffect(() => {
-    fetchModelCards().then(setCards).catch(() => setCards(null));
+    loadRegistry();
   }, []);
+
+  const toggleCompare = (id: string) => setCompareIds((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id].slice(-4)));
+  const runCompare = () => compareExperiments(compareIds).then(setComparison).catch((e) => setStatusMsg(String(e)));
+  const LADDER: ModelStatus[] = ["DEVELOPMENT", "EXPERIMENTAL", "CANDIDATE", "VALIDATED"];
+  const promote = async (id: string, to: ModelStatus) => {
+    const reason = window.prompt(`Reason for moving ${id} to ${to}?`);
+    if (!reason) return;
+    try { await setModelStatus(id, to, reason); setStatusMsg(`${id} → ${to} (audited)`); loadRegistry(); }
+    catch (e) { setStatusMsg(e instanceof Error ? e.message : String(e)); }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -84,10 +100,13 @@ export default function ExperimentsPage() {
                 >
                   <div className="flex items-center justify-between gap-1">
                     <div className="truncate text-xs font-bold text-foreground">{m.experimentId}</div>
-                    <Badge variant={m.mode === "full" ? "success" : "secondary"} className="text-[9.5px]">
-                      {m.mode === "full" ? "Final" : "Dev"}
+                    <Badge variant={registry[m.experimentId]?.status === "VALIDATED" ? "success" : "secondary"} className="text-[9.5px]" title="Model registry status">
+                      {registry[m.experimentId]?.status ?? (m.mode === "full" ? "full" : "dev")}
                     </Badge>
                   </div>
+                  <label className="mt-1 flex items-center gap-1.5 text-[10.5px] text-muted-foreground" onClick={(e) => e.stopPropagation()}>
+                    <input type="checkbox" checked={compareIds.includes(m.experimentId)} onChange={() => toggleCompare(m.experimentId)} /> compare
+                  </label>
                   <div className="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
                     <span className="font-mono">{m.encoder || "—"}</span>
                     <span className="text-[10px] text-emerald-700 font-medium">U-Net</span>
@@ -114,6 +133,44 @@ export default function ExperimentsPage() {
         {/* Right: Model Detail & Tabs */}
         {detail ? (
           <div className="space-y-5">
+            {compareIds.length >= 2 && (
+              <button onClick={runCompare} className="rounded-xl border border-[#15803d]/40 px-3 py-1.5 text-xs font-semibold text-[#15803d] hover:bg-[#15803d]/5">
+                Compare {compareIds.length} experiments
+              </button>
+            )}
+            {comparison && (
+              <Card className="rounded-3xl border border-black/[0.08] shadow-sm overflow-hidden">
+                <CardHeader className="pb-2"><CardTitle className="text-sm font-bold">Experiment comparison</CardTitle><CardDescription className="text-xs">{comparison.note}</CardDescription></CardHeader>
+                <CardContent className="overflow-x-auto p-0">
+                  <table className="w-full text-xs">
+                    <thead className="bg-[#f4f7f5] text-[10px] uppercase tracking-wider text-muted-foreground"><tr><th className="px-3 py-2 text-left">Field</th>{comparison.experiments.map((e) => <th key={e.id} className="px-3 py-2 text-left">{e.id}</th>)}</tr></thead>
+                    <tbody className="divide-y divide-black/[0.06]">
+                      {[["status", (e: ExperimentRow) => e.status], ["input bands", (e: ExperimentRow) => String(e.config.input_bands)], ["encoder", (e: ExperimentRow) => String(e.config.encoder)],
+                        ["train / val / test tiles", (e: ExperimentRow) => `${e.config.n_train} / ${e.config.n_val} / ${e.config.n_test}`], ["epochs (best)", (e: ExperimentRow) => `${e.config.epochs_run ?? "—"} (${e.config.best_epoch ?? "—"})`],
+                        ["calibrated threshold", (e: ExperimentRow) => String(e.calibrated_threshold ?? "—")], ["test IoU", (e: ExperimentRow) => e.test.iou?.toFixed(3) ?? "—"], ["test F1", (e: ExperimentRow) => e.test.f1?.toFixed(3) ?? "—"],
+                        ["test precision / recall", (e: ExperimentRow) => `${e.test.precision?.toFixed(3) ?? "—"} / ${e.test.recall?.toFixed(3) ?? "—"}`], ["code commit", (e: ExperimentRow) => String(e.config.code_commit ?? "not recorded").slice(0, 12)],
+                      ].map(([label, get]) => (
+                        <tr key={label as string}><td className="px-3 py-2 font-semibold">{label as string}</td>{comparison.experiments.map((e) => <td key={e.id} className="px-3 py-2">{(get as (e: ExperimentRow) => string)(e)}</td>)}</tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </CardContent>
+              </Card>
+            )}
+            {active && registry[active] && (
+              <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-black/[0.06] bg-white px-3.5 py-2.5 text-xs">
+                <span className="font-semibold">{registry[active].display_name}</span>
+                <Badge variant="secondary">{registry[active].status}</Badge>
+                <span className="text-muted-foreground">Validated only through an explicit review with independent (non-GMW) evidence.</span>
+                {(() => {
+                  const next = LADDER[LADDER.indexOf(registry[active].status) + 1];
+                  return can("manage_models") && next && next !== "VALIDATED"
+                    ? <button onClick={() => promote(active, next)} className="ml-auto rounded-lg border px-2 py-1 font-medium hover:bg-black/[0.03]">Promote to {next}</button>
+                    : null;
+                })()}
+                {statusMsg && <span className="w-full text-muted-foreground">{statusMsg}</span>}
+              </div>
+            )}
             {/* Header Card */}
             <div className="rounded-3xl border border-black/[0.08] bg-white p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
               <div>

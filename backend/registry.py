@@ -88,6 +88,15 @@ def sync_models(db: Session) -> int:
                   "validation": "spatial-block held-out test tiles; metrics are agreement with the reference map, not field truth",
                   "known_limitations": ["weak labels", "small single/multi-area training set", "class imbalance (Kerala 0.2 % positives)",
                                         "no field validation", "development encoder unless mode = full"]}
+        # registry fields: status is set once (on first sight) and afterwards only changed through the API
+        if not m.status:
+            m.status = "DEVELOPMENT" if m.mode != "full" else "EXPERIMENTAL"
+        bands = m.input_bands
+        sensor = "S1" if bands == [0, 1] else "S1S2" if bands is None else "S2" if bands and min(bands) >= 2 else "custom"
+        enc = (m.encoder or "?").replace("efficientnet-", "").upper()
+        m.display_name = f"EcoConnectAI-Seg-{enc}-{sensor}"
+        m.version = m.version or ("0.1-dev" if m.mode != "full" else "0.1")
+        m.code_commit = (exp.get("code") or {}).get("git_commit")
         db.merge(m); n += 1
     return n
 

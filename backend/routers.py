@@ -524,7 +524,9 @@ def _run_dir_for(db: Session, study_area: str, run_id: str) -> Path:
 def evidence_chain_ep(study_area: str, run_id: str, object_type: str, object_id: str, db: Session = Depends(get_db)):
     """The evidence chain behind a decision: data source → imagery → model → parameters → analysis → calculation → field verification."""
     try:
-        return _evidence_chain(db, _run_dir_for(db, study_area, run_id), object_type, object_id)
+        rd = _run_dir_for(db, study_area, run_id)
+        from .provenance import lineage
+        return _evidence_chain(db, rd, object_type, object_id) | {"lineage": lineage(db, rd, object_type, object_id)}
     except KeyError:
         raise HTTPException(404, f"{object_type} {object_id} not in run")
 

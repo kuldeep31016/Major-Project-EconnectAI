@@ -14,6 +14,19 @@ Next step:
 
 ---
 
+## 2026-09-28 — Phase 3: registry, experiments, provenance, reproducibility
+
+Changed: ecoconnect/pipeline/provenance.py (code_version, config_sha256, file_sha256) → run manifests + trainer
+experiment.json; db.Model status/display_name/version/code_commit/validation (migration 0003); registry sets status
+once; auth caps manage_models/validate_models; backend/{provenance.py, registry_api.py}; reproduce job; evidence
+chain gains `lineage`. Frontend: components/analysis/lineage-panel.tsx (steps + Reproduce button) in the evidence
+drawer; /experiments shows registry status, promote button, compare table; lib/api.ts types/clients.
+Tests: tests/test_registry.py (ladder rules, compare, P17 lineage, reproduce, fingerprints) → 76 passed/1 skipped.
+Verified in browser: compare table real numbers; P17 lineage; "Reproduced exactly (graph level)".
+All 11 stored runs reproduce exactly at graph level (raster level impossible here: rasters not in git).
+Next: Phase 4 — sensitivity engine UI (τ/threshold/k, rank correlation, stability), scenario engine (multi-remove,
+reduce area, hypothetical patch, radius, before/after), network digital twin; maybe retire /simulation.
+
 ## 2026-09-28 — Phase 2: migrations, storage, artifacts, jobs
 
 Changed: backend/{migrate.py, migrations/, storage.py, artifacts.py, jobs.py, job_handlers.py, jobs_api.py, worker.py};

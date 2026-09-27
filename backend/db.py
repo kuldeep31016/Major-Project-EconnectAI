@@ -130,6 +130,14 @@ class Model(Base):
     trained_at = Column(String)
     hardware = Column(JSON)
     card = Column(JSON, default=dict)              # model-card extras (limitations, validation methodology)
+    # registry (migration 0003): status ladder DEVELOPMENT -> EXPERIMENTAL -> CANDIDATE -> VALIDATED.
+    # VALIDATED is only reachable through PATCH /api/models/{id}/status with independent validation evidence.
+    status = Column(String, default="DEVELOPMENT", index=True)
+    display_name = Column(String)                   # e.g. EcoConnectAI-Seg-B0-S1-v0.1
+    version = Column(String)
+    code_commit = Column(String)
+    validation = Column(JSON)                       # evidence recorded when promoted to VALIDATED
+    status_updated_at = Column(DateTime)
 
 
 class AnalysisVersion(Base):
@@ -283,6 +291,7 @@ class AuditLog(Base):
 
 
 # --------------------------------------------------------------------------- platform: jobs + artifacts
+MODEL_STATUSES = ("DEVELOPMENT", "EXPERIMENTAL", "CANDIDATE", "VALIDATED")
 JOB_STATUSES = ("QUEUED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED")
 
 

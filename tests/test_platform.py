@@ -4,11 +4,14 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, inspect
 
 from backend import jobs
-from backend.migrate import upgrade
+from backend.migrate import _config, upgrade
+from alembic.script import ScriptDirectory
 from backend.storage import LocalStorage, sha256_file
 from ecoconnect.pipeline import sources
 from ecoconnect.pipeline.analysis import run_graph_analysis
 from ecoconnect.pipeline.config import OUTPUTS_DIR, load_config, load_study_areas
+
+HEAD = ScriptDirectory.from_config(_config()).get_current_head()
 
 
 @pytest.fixture(scope="module")
@@ -28,19 +31,19 @@ def _auth(c, user):
 
 
 def test_fresh_and_legacy_databases_reach_head(tmp_path):
-    from backend.db import Base
     fresh = create_engine(f"sqlite:///{tmp_path / 'fresh.db'}")
     upgrade(fresh)
     assert {"jobs", "artifacts", "alembic_version", "users"} <= set(inspect(fresh).get_table_names())
     # a pre-Alembic database (create_all of the baseline tables) is stamped, then upgraded, keeping its data
     legacy = create_engine(f"sqlite:///{tmp_path / 'legacy.db'}")
-    Base.metadata.create_all(legacy, tables=[t for n, t in Base.metadata.tables.items() if n not in ("jobs", "artifacts")])
+    upgrade(legacy, "0001_baseline")            # the exact pre-Alembic schema, then forget Alembic ever ran
     with legacy.begin() as c:
+        c.exec_driver_sql("DROP TABLE alembic_version")
         c.exec_driver_sql("INSERT INTO organizations (name) VALUES ('keep me')")
     upgrade(legacy)
     with legacy.connect() as c:
         assert c.exec_driver_sql("SELECT name FROM organizations").scalar() == "keep me"
-        assert c.exec_driver_sql("SELECT version_num FROM alembic_version").scalar() == "0002_jobs_artifacts"
+        assert c.exec_driver_sql("SELECT version_num FROM alembic_version").scalar() == HEAD
 
 
 def test_artifacts_registered_with_hashes(client):
@@ -108,6 +111,6 @@ def test_segment_is_queued_not_run_inline(client):
 
 
 def test_ready_and_artifact_listing(client):
-    assert client.get("/api/ready").json() == {"status": "ready", "schema": "0002_jobs_artifacts"}
+    assert client.get("/api/ready").json() == {"status": "ready", "schema": HEAD}
     arts = client.get("/api/artifacts?run_id=plat_run&kind=graph").json()
     assert len(arts) == 1 and len(arts[0]["sha256"]) == 64

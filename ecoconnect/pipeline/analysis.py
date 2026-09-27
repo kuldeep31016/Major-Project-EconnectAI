@@ -29,6 +29,7 @@ from ecoconnect.graph import (
     evaluate_candidates, load_costs_csv, write_restoration_csv, explain_all,
 )
 from ecoconnect.geospatial.patch_extraction import patches_to_geojson
+from .provenance import code_version, config_sha256, file_sha256
 from .config import OUTPUTS_DIR
 from .frontend_adapter import build_frontend_bundle
 
@@ -172,12 +173,16 @@ def run_graph_analysis(
         "n_patches": len(patches),
         "n_candidates": len(candidates or []),
         "config": cfg,
+        "config_sha256": config_sha256(cfg),
+        "code": code_version(),
+        "input_sha256": {k: file_sha256(data_source.get(k)) for k in ("path", "model") if data_source.get(k)},
         "hardware": {"platform": platform.platform(), "machine": platform.machine(), "python": platform.python_version()},
         "elapsed_s": round(time.time() - t0, 3),
         "files": sorted(p.name for p in run_dir.iterdir()),
     }
     if extra_files:
         manifest["extra_files"] = {k: str(v) for k, v in extra_files.items()}
+    manifest["files"] = sorted(set(manifest["files"]) | {"manifest.json", "frontend_bundle.json"})
     _dump(manifest, run_dir / "manifest.json")
 
     bundle = build_frontend_bundle(

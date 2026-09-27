@@ -27,11 +27,11 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] P1 DB-backed job system + inline/standalone worker; `/api/segment` → job; `scenario` job type (reanalyse/report stay sync: ms)
 - [ ] P2 Patches / edges / criticality as DB rows with geometry
 
-## Phase 3 — Model registry, experiments, provenance, reproducibility
-- [ ] P1 Model registry with status ladder (Development/Experimental/Candidate/Validated) + validation workflow
-- [ ] P1 Experiment tracking table seeded from `experiments.csv` + comparison UI
-- [ ] P0 Provenance chain API + "Why am I seeing this?" UI; capture git commit, config hash, artifact ids in new manifests
-- [ ] P1 "Reproduce this analysis" (re-run graph stage from stored config/artifacts; diff results)
+## Phase 3 — Model registry, experiments, provenance, reproducibility (done 2026-09-28)
+- [x] P1 Model registry status ladder + validation workflow (admin + independent non-GMW evidence)
+- [x] P1 Experiment comparison API + UI (registry synced from outputs/segmentation)
+- [x] P0 Provenance lineage API + drawer UI; manifests record git commit, config_sha256, input_sha256
+- [x] P1 "Reproduce this analysis" job (graph level; raster level when raster present) — all 11 stored runs reproduce
 
 ## Phase 4 — Analysis features
 - [ ] P1 Sensitivity engine (τ 3/5/8, threshold, k) with rank correlation + stability summary

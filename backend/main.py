@@ -32,6 +32,7 @@ from backend.db import Job  # noqa: E402
 from backend.jobs import enqueue, start_inline_worker, stop_inline_worker  # noqa: E402
 import backend.job_handlers  # noqa: E402,F401  (registers job types)
 from backend.jobs_api import artifacts_router, router as jobs_router  # noqa: E402
+from backend.registry_api import router as registry_router  # noqa: E402
 
 from contextlib import asynccontextmanager  # noqa: E402
 from backend.db import SessionLocal, init_db  # noqa: E402
@@ -60,6 +61,7 @@ app = FastAPI(title="EcoConnectAI API", version=__version__, lifespan=lifespan,
 app.include_router(workflow_router)
 app.include_router(jobs_router)
 app.include_router(artifacts_router)
+app.include_router(registry_router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=os.environ.get("ECO_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(","),
