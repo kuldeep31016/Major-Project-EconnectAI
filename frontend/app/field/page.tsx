@@ -234,8 +234,9 @@ function Disagreements({ sceneId }: { sceneId: string }) {
 }
 
 function EvidenceForm({ task, onDone }: { task: FieldTaskItem; onDone: (msg: string) => void }) {
-  const [lat, setLat] = useState(String(task.lat));
-  const [lon, setLon] = useState(String(task.lon));
+  // never pre-filled with the task target: the evidence location must come from the observer (device, typed or photo GPS)
+  const [lat, setLat] = useState("");
+  const [lon, setLon] = useState("");
   const [observation, setObservation] = useState("habitat_present");
   const [notes, setNotes] = useState("");
   const [check, setCheck] = useState<Record<string, string>>({});
@@ -251,14 +252,16 @@ function EvidenceForm({ task, onDone }: { task: FieldTaskItem; onDone: (msg: str
           e.preventDefault(); setBusy(true); setErr(null);
           try {
             const fd = new FormData();
-            fd.set("lat", lat); fd.set("lon", lon); fd.set("observed_at", new Date().toISOString()); fd.set("observation", observation); fd.set("notes", notes);
+            if (lat.trim() && lon.trim()) { fd.set("lat", lat); fd.set("lon", lon); }   // empty → server uses the photo's GPS, or refuses
+            fd.set("observed_at", new Date().toISOString()); fd.set("observation", observation); fd.set("notes", notes);
             if (Object.keys(check).length) fd.set("checklist", JSON.stringify(check));
             if (photo) fd.set("photo", photo);
-            await submitEvidence(task.id, fd);
-            onDone("Evidence submitted — awaiting officer review.");
+            const saved = await submitEvidence(task.id, fd);
+            onDone(saved.location_source === "photo_exif" ? "Evidence submitted with the photo's GPS location — awaiting officer review." : "Evidence submitted — awaiting officer review.");
             setNotes(""); setPhoto(null);
           } catch (x) { setErr(x instanceof Error ? x.message : String(x)); } finally { setBusy(false); }
         }}>
+          <p className="col-span-full text-[11px] text-muted-foreground">Leave the coordinates empty to use the GPS stored in the photo. Without either, the location is recorded as unavailable and the upload is refused.</p>
           <label>GPS latitude<input value={lat} onChange={(e) => setLat(e.target.value)} className="mt-1 w-full rounded-lg border border-foreground/15 bg-background px-2 py-1.5" /></label>
           <label>GPS longitude<input value={lon} onChange={(e) => setLon(e.target.value)} className="mt-1 w-full rounded-lg border border-foreground/15 bg-background px-2 py-1.5" /></label>
           <button type="button" onClick={locate} className="text-left text-[11px] text-[#1e5f8a] underline sm:col-span-2">Use device location</button>

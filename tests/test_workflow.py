@@ -234,3 +234,74 @@ def test_request_ids_and_admin_system(client):
     sysinfo = client.get("/api/admin/system", headers=_auth(client, "admin")).json()
     assert sysinfo["schema"]["ok"] and sysinfo["counts"]["users"] >= 6 and sysinfo["requests"]["total_requests"] > 0
     assert any(x["route"].startswith("GET /api/health") for x in sysinfo["requests"]["routes"])
+
+
+def _jpeg(gps=None) -> bytes:
+    import io
+
+    from PIL import Image
+    img, exif = Image.new("RGB", (8, 8), (20, 120, 60)), Image.Exif()
+    if gps:
+        (lat, lon) = gps
+        dms = lambda v: (abs(int(v)), int(abs(v) * 60 % 60), round(abs(v) * 3600 % 60, 2))  # noqa: E731
+        exif[0x8825] = {1: "N" if lat >= 0 else "S", 2: dms(lat), 3: "E" if lon >= 0 else "W", 4: dms(lon)}
+    buf = io.BytesIO()
+    img.save(buf, "JPEG", exif=exif.tobytes())
+    return buf.getvalue()
+
+
+def test_evidence_location_from_photo_gps_never_invented(client):
+    s, f = _auth(client, "senior"), _auth(client, "field")
+    field_id = client.get("/api/auth/me", headers=f).json()["id"]
+    t = client.post("/api/field-tasks", headers=s, json={"study_area_id": "odisha-coast", "title": "gps", "reason": "gps",
+                                                          "lat": 20.7, "lon": 86.9, "assignee_id": field_id}).json()
+    base = {"observed_at": "2026-10-01", "observation": "habitat_present"}
+    url = f"/api/field-tasks/{t['id']}/evidence"
+    # no coordinates and a photo without GPS -> refused, not guessed
+    r = client.post(url, headers=f, data=base, files={"photo": ("a.jpg", _jpeg(), "image/jpeg")})
+    assert r.status_code == 400 and "Location unavailable" in r.json()["detail"]
+    # no coordinates, photo with GPS -> the photo's position (Bhitarkanika, southern/western signs handled)
+    ev = client.post(url, headers=f, data=base, files={"photo": ("b.jpg", _jpeg((20.7123, 86.9456)), "image/jpeg")}).json()
+    assert ev["location_source"] == "photo_exif" and abs(ev["lat"] - 20.7123) < 1e-3 and abs(ev["lon"] - 86.9456) < 1e-3
+    # typed coordinates win; the photo's GPS is still recorded for comparison
+    ev = client.post(url, headers=f, data={**base, "lat": 20.8, "lon": 86.8}, files={"photo": ("c.jpg", _jpeg((-8.5, -35.2)), "image/jpeg")}).json()
+    assert ev["location_source"] == "submitted" and ev["lat"] == 20.8 and ev["photo_gps"][0] < 0 and ev["photo_gps"][1] < 0
+
+
+def test_public_compute_is_bounded(client):
+    R = "/api/runs/odisha-coast/latest"
+    assert client.post(R + "/scenario", json={"type": "tau", "taus_km": [1, 2, 3, 4, 5, 6, 7]}).status_code == 400   # > 6 values
+    assert client.post(R + "/scenario", json={"type": "tau", "taus_km": [500]}).status_code == 400                   # out of range
+    assert client.post(R + "/reanalyse", json={"k": 500}).status_code == 400
+    # a drawn area that touches no patch is an error, never "the nearest patch"
+    far = [[0.0, 0.0], [0.0, 0.01], [0.01, 0.01]]
+    r = client.post(R + "/scenario", json={"type": "remove_polygon", "polygon": far})
+    assert r.status_code == 400 and "does not overlap" in r.json()["detail"]
+    from starlette.requests import Request
+
+    from backend.security import CallLimiter
+    lim, req = CallLimiter(2, 60, "test"), Request({"type": "http", "client": ("1.2.3.4", 1), "headers": []})
+    lim.hit(req); lim.hit(req)
+    import pytest as _p
+    with _p.raises(Exception) as e:
+        lim.hit(req)
+    assert getattr(e.value, "status_code", None) == 429
+
+
+def test_field_officer_sees_only_own_evidence_and_password_policy(client):
+    s, a = _auth(client, "senior"), _auth(client, "admin")
+    # a task assigned to nobody: a field officer must not read its evidence or photos
+    t = client.post("/api/field-tasks", headers=s, json={"study_area_id": "odisha-coast", "title": "other", "reason": "x",
+                                                          "lat": 20.7, "lon": 86.9}).json()
+    client.post(f"/api/field-tasks/{t['id']}/evidence", headers=_auth(client, "range"), data={"lat": 20.7, "lon": 86.9, "observed_at": "2026-10-01",
+                                                                         "observation": "habitat_present"},
+                files={"photo": ("p.jpg", _jpeg(), "image/jpeg")})
+    f = _auth(client, "field")
+    assert client.get(f"/api/field-tasks/{t['id']}/evidence", headers=f).status_code == 403
+    photo = client.get(f"/api/field-tasks/{t['id']}/evidence", headers=s).json()[0]["photo_path"]
+    assert client.get(f"/api/evidence/photo/{photo}", headers=f).status_code == 403
+    assert client.get(f"/api/evidence/photo/{photo}", headers=s).status_code == 200
+    body = {"username": "pw_test", "full_name": "PW", "role": "analyst"}
+    assert client.post("/api/users", headers=a, json={**body, "password": "short"}).status_code == 400
+    assert client.post("/api/users", headers=a, json={**body, "password": "x" * 80}).status_code == 400   # was a 500 (bcrypt)
+    assert client.post("/api/users", headers=a, json={**body, "password": "a-valid-password"}).status_code == 200

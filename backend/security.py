@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+import os
 import threading
 import time
 from collections import defaultdict, deque
@@ -68,6 +69,36 @@ class LoginThrottle:
 
 
 login_throttle = LoginThrottle()
+
+
+class CallLimiter:
+    """Sliding-window cap on expensive public calls per client (what-if, scenarios, re-analysis, anonymous
+    assistant questions). In-process like LoginThrottle; set ECO_COMPUTE_PER_10MIN to tune (0 disables)."""
+
+    def __init__(self, max_calls: int, window_s: float, what: str):
+        self.max_calls, self.window_s, self.what = max_calls, window_s, what
+        self._calls: dict[str, deque] = defaultdict(deque)
+        self._lock = threading.Lock()
+
+    def hit(self, request: Request, who: str | None = None) -> None:
+        if self.max_calls <= 0:
+            return
+        key = who or (request.client.host if request.client else "?")
+        now = time.monotonic()
+        with self._lock:
+            q = self._calls[key]
+            while q and now - q[0] > self.window_s:
+                q.popleft()
+            if len(q) >= self.max_calls:
+                raise HTTPException(429, f"too many {self.what} requests - try again in a few minutes")
+            q.append(now)
+            if len(self._calls) > 10_000:             # bound memory: forget idle clients
+                for k in [k for k, v in self._calls.items() if not v]:
+                    del self._calls[k]
+
+
+compute_limiter = CallLimiter(int(os.environ.get("ECO_COMPUTE_PER_10MIN", "120")), 600.0, "analysis")
+anon_assistant_limiter = CallLimiter(int(os.environ.get("ECO_ANON_ASK_PER_HOUR", "20")), 3600.0, "assistant")
 
 
 def cors_config() -> tuple[list[str], str | None]:

@@ -1,5 +1,7 @@
 # EcoConnectAI — Implementation Audit v2 (product evolution)
 
+> **Superseded (2026-10-01)** by `docs/AUDIT.md and IMPLEMENTATION_STATUS.md` — kept for history; may be out of date.
+
 **Date:** 2026-09-19 · **Scope:** the whole repository as it stands after the research-implementation phase
 (35 commits, 5.7 k lines Python, 10.5 k lines TypeScript, 37 passing tests).
 **Purpose:** baseline for evolving the research implementation into a *Coastal Ecosystem Intelligence and

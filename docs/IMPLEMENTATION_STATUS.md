@@ -1,0 +1,54 @@
+# EcoConnectAI — Implementation status (2026-10-01)
+
+Paper = `docs/paper_source_main.tex` (describes a client-side prototype on synthetic data). Status values:
+**IMPLEMENTED** (works, tested) · **PARTIAL** (works with gaps) · **PROTOTYPE** (code exists, development-grade or not
+runnable here) · **SIMULATION** (exact computation of a hypothetical) · **NOT IMPLEMENTED** · **FUTURE** (planned research).
+All metrics are vs GMW weak labels; nothing is field-validated. Companion audit: [`AUDIT.md`](AUDIT.md).
+Tests on 2026-10-01: `pytest -q` 99 passed / 1 skipped; `scripts/acceptance_test.py` 16 pass / 4 skip / 0 fail.
+
+| Feature | Paper | Current Code | Status | Evidence | Required Work |
+|---|---|---|---|---|---|
+| S1 acquisition (STAC) | S1 SAR VV/VH input; paper prototype retrieved no imagery | Planetary Computer STAC search, RTC gamma0 read onto target grid | PROTOTYPE | `ecoconnect/gee/stac_acquire.py:93,229`; `scripts/acquire_study_area.py`; `tests/test_acquisition.py` | Scenes not on this machine; re-acquire to reproduce; acceptance step 3 SKIP |
+| Preprocessing / temporal median | Radiometric/geometric correction, cloud mask, co-registration | S1 temporal median in dB; S2 SCL-masked median; RTC supplies terrain correction | PROTOTYPE | `stac_acquire.py:139-260`; `ecoconnect/geospatial/preprocessing/transforms.py` | Normaliser cache bug 20 OPEN |
+| Tiling | 512×512, ≈14 000 tiles | Spatial-block tiling; 1 373 tiles across 4 areas (dev split 800/195/200) | PARTIAL | `ecoconnect/geospatial/preprocessing/tiling.py`; `scripts/build_tiles.py` | Fix overlap leakage (bug 21) and metadata overwrite (bug 25); 4-area tile set was overwritten |
+| U-Net B0 dev model | — (paper uses UNB7) | `multi_E1_s1_b0_dev`: EfficientNet-B0, S1 VV+VH, 4 areas; test IoU 0.842, F1 0.914 vs GMW | PROTOTYPE | `outputs/segmentation/multi_E1_s1_b0_dev/metrics.json`; `ecoconnect/ml/models/unet.py` | DEVELOPMENT result; checkpoint not on machine; not field truth |
+| UNB7 (EfficientNet-B7) | Core segmentation model | Config only | NOT IMPLEMENTED | `configs/train_full.yaml`; `docs/EXPERIMENTS.md` ("NOT YET RUN") | GPU training (Colab/Kaggle); 95.56 % is the foundation study's number, not ours |
+| S2 and S1+S2 ablations | Paper: S2 for indices, no fusion | Kerala-only B0 dev runs, IoU 0.054 / 0.053 | PROTOTYPE | `outputs/segmentation/kerala_E2_s2_b0_dev`, `kerala_E3_s1s2_b0_dev/metrics.json` | Weak, Kerala only; rerun at 4-area scale |
+| Threshold calibration | Fixed 0.5 | Sweep 0.30–0.70 → 0.70 (E1/multi), 0.45 (E2) | PARTIAL | `scripts/threshold_sweep.py:5,69`; `<exp>/threshold_calibration.json` | Selected on TEST split, grid edge (bug 22); use validation split, widen grid |
+| Patch extraction + MMU | Threshold 0.5, MMU 2 ha | Connected components, MMU 2 ha, area/confidence attributes | IMPLEMENTED | `ecoconnect/geospatial/patch_extraction/extract.py`; `tests/test_patch_extraction.py` | Nodata counted as valid (bug 28) |
+| Graph construction (k-NN, τ = 5 km) | k = 3, d ≤ τ, weighted edges | k-NN ∩ τ, haversine, edge_weight | IMPLEMENTED | `ecoconnect/graph/construction.py:47,224`; `tests/test_graph.py` | τ not species-calibrated |
+| IIC / PC / ECA | IIC primary, PC/ECA alongside | Exact IIC, PC, ECA; interface score demoted | IMPLEMENTED | `ecoconnect/graph/connectivity.py:36,49,85` | PC O(n³) pure Python |
+| Leave-one-out criticality | Eq. S_i by exact removal | Exact ΔC_i, S_i, rank, level | IMPLEMENTED | `ecoconnect/graph/criticality.py`; acceptance step 10 | — |
+| Cut vertices | Bridge / cut vertex in XAI | `is_cut_vertex`, components after removal | IMPLEMENTED | `construction.py:142`; `tests/test_regression.py` | — |
+| What-if removal | Paper UI heuristic; exact offline | Exact recompute (Eq. 10) | SIMULATION | `backend/main.py:354`; `ecoconnect/graph/what_if.py`; acceptance step 12 | Unauthenticated, no rate limit |
+| Scenario types | Removal, restoration | `remove_patches`, `remove_polygon`, `restore`, `restore_multi`, `tau`, `reduce_area`, `add_patch`, `radius`, `sensitivity`, `threshold`, `compare_periods` | SIMULATION | `backend/scenarios.py:64-254`; `tests/test_platform.py`, `test_sensitivity.py` | Bound `tau` list/values; `threshold` needs the probability raster; `remove_polygon` nearest-patch fallback |
+| τ×k sensitivity | τ ∈ {3,5,8} | Grid τ×k, Spearman, Kendall, top-5 Jaccard, rank range, verdict | IMPLEMENTED | `ecoconnect/graph/sensitivity.py`; `tests/test_sensitivity.py`; acceptance step 13 | — |
+| Restoration candidates + uncertain-habitat rule | Candidates, R_i by node addition | Candidates from sub-threshold probability; >5 ha and >10 % of habitat → "field check", never a gain | SIMULATION | `ecoconnect/graph/restoration.py`; `ecoconnect/pipeline/restoration_rules.py` | Large Odisha/Sundarbans sites pass the relative rule; absolute cap open |
+| Feasibility | — | 6 factors, unknowns = "Not assessed", NDWI factor if scene present | PARTIAL | `backend/scenarios.py:282`; `backend/workflow_api.py` | No tenure/legal/cost layers |
+| Cost-aware ranking | Priority = R_i / Cost_i with INR costs | Only with user-supplied costs; never invented | PARTIAL | `backend/main.py:374-381`; `ecoconnect/graph/restoration.py:110` | No validated costs exist; paper INR values are synthetic |
+| Temporal comparison + patch tracking | Future work | Polygon-overlap tracking (stable/grown/shrunk/split/merged/new/disappeared), comparability check, `compare_periods` | PROTOTYPE | `ecoconnect/graph/temporal.py` (uncommitted); `tests/test_temporal.py`; `backend/scenarios.py:226` | Needs same-model multi-year runs; model-estimated only |
+| Field tasks + evidence (+ EXIF GPS) | — | Tasks, evidence, checklist, review; EXIF GPS fallback when no coordinates | IMPLEMENTED | `backend/routers.py:41-58,363-404` (uncommitted); `tests/test_workflow.py:243-265` | Orphan photo on rejected upload; no real field data |
+| HITL disagreement register | — | Disagreement on ACCEPTED evidence; GeoJSON export; no auto-retrain | IMPLEMENTED | `backend/workflow_api.py:78,109`; `tests/test_phase5.py` | — |
+| Alerts (rules version 2) | — | Rule engine, plain titles, next step, refresh of OPEN alerts | IMPLEMENTED | `backend/alerts.py:22,128,144` | — |
+| RBAC (6 roles, backend-enforced) | — | 6 roles, capability map, `require()` dependency | IMPLEMENTED | `backend/auth.py:43-58`; `tests/test_workflow.py`, `tests/test_phase5.py`, `tests/test_registry.py` | Compute endpoints open by design (public demo) |
+| JWT + refresh tokens | — | 60-min HS256 access; sha256-stored rotating refresh, reuse revokes family | IMPLEMENTED | `backend/auth.py`; migration 0005; `tests/test_workflow.py` | Tokens in web storage |
+| Audit log | Paper: audit readiness | Workflow writes, logins, assistant questions | IMPLEMENTED | `backend/db.py:423`; acceptance step 19 | Anonymous assistant questions now write unthrottled rows |
+| Provenance / lineage + reproduce job | — | 12-step lineage; git commit, config/input sha256; graph-level reproduce job | IMPLEMENTED | `backend/provenance.py`; `backend/job_handlers.py:77`; acceptance step 2 | Raster-level reproduce impossible without scenes/checkpoints |
+| Model registry status ladder | — | DEVELOPMENT → EXPERIMENTAL → CANDIDATE → VALIDATED (admin only) | IMPLEMENTED | `backend/registry_api.py`; migration 0003; `tests/test_registry.py` | Nothing is VALIDATED |
+| Job queue | — | DB queue, conditional-UPDATE claim, heartbeats, inline or `python -m backend.worker` | IMPLEMENTED | `backend/jobs.py`, `backend/worker.py`, `backend/jobs_api.py` | — |
+| Storage abstraction (local / S3) | — | `LocalStorage`, `S3Storage` via `ECO_STORAGE` | PARTIAL | `backend/storage.py` | S3 path untested |
+| PDF reports | Report composition/export | fpdf2 server PDF, hashed artefact, audited | IMPLEMENTED | `backend/report_pdf.py`; `tests/test_workflow.py:203`; acceptance step 20 | Latin-1 transliteration |
+| Grounded Claude assistant + template fallback | — | Evidence pack E1..En, JSON schema, citation filter, validated proposed scenario; template when anonymous/no key | PARTIAL | `backend/assistant_llm.py`; `backend/insight.py`; `tests/test_assistant.py` | Live Claude path minimally exercised |
+| RAG over docs | — | **No retrieval over documentation.** Retrieval is over run artefacts and DB records; limitations are hard-coded | NOT IMPLEMENTED | `backend/assistant_llm.py:77-150` | Only if needed; must keep citation guarantees |
+| Public demo mode | — | Anonymous: view runs/maps/graph/alerts/detections/scenarios list, run what-if/scenario/reanalyse/restoration, template assistant, redacted evidence chain. Sign-in needed: reports, projects, field tasks, jobs, reproduce, audit, LLM assistant | PARTIAL | `backend/main.py:354,380,482,739`; `backend/routers.py` GET deps | Rate-limit/bound anonymous compute; public demo password exposes admin role |
+| Research mode (reanalyse) | τ sensitivity | `POST /api/runs/{a}/{r}/reanalyse` with τ/k/metric | IMPLEMENTED | `backend/main.py:482` | Bound τ and k |
+| Experiment comparison | — | `/api/experiments/compare` + `/experiments` UI | IMPLEMENTED | `backend/registry_api.py:84` | — |
+| Observability | — | `/api/health`, `/api/ready`, X-Request-ID, JSON logs, route metrics, `/system` | IMPLEMENTED | `backend/main.py:118,136`; `backend/observability.py`; `backend/admin_api.py` | In-memory metrics only |
+| Docker / compose | — | API + frontend images; profiles `postgres`, `worker` | PARTIAL | `Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml` | Never built locally; no torch image |
+| CI (GitHub Actions) | — | ruff, pytest, acceptance, pip-audit, Postgres job, tsc/eslint/build, docker, deploy hook | PARTIAL | `.github/workflows/ci.yml` | Owner's billing lock blocks all runs |
+| Deployment (Render + Vercel + Neon, free tier) | Paper: none | Live API (Render, Neon), frontend (Vercel); 14/14 smoke check on 2026-09-30 | PARTIAL | `render.yaml`; `scripts/check_deployment.py`; `docs/DEPLOYMENT.md` | Free tier sleeps; no inference; R2 optional |
+| Patches as DB rows | — | Patches/edges/criticality remain JSON/GeoJSON files | NOT IMPLEMENTED | `docs/context/ROADMAP.md` Phase 2 | PostGIS tables + migration |
+| WebSocket / SSE progress | — | None; jobs polled every 2 s | NOT IMPLEMENTED | `frontend/lib/api.ts:189` | Optional |
+| Makefile | — | setup, test, acceptance, lint, run, docker, deploy-check | IMPLEMENTED | `Makefile` (uncommitted) | Commit with the rest |
+| Grad-CAM / SHAP on segmentation | "Should follow" | — | FUTURE | paper §IV-E | Only after a validated model |
+| Species-specific connectivity, GNN, budget optimisation | Future work | — | FUTURE | paper §VII | Needs dispersal / cost data |

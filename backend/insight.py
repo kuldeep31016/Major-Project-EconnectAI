@@ -126,9 +126,14 @@ def answer(db: Session, question: str, study_area: str, run_dir: Optional[Path])
                                                     f"{r['degree']} link(s) are severed and the network goes from {r['component_count_before']} to {r['component_count_after']} component(s).")
         return {"intent": intent, "answer": txt, "sources": src + [{"type": "run", "id": m["run_id"], "file": "explanations.json"}], "label": label, "links": [link, "/scenario"], "objects": [r["patch_id"]]}
     if intent == "change":
-        runs = db.query(AnalysisVersion).filter(AnalysisVersion.study_area_id == study_area, AnalysisVersion.result_kind != "synthetic", AnalysisVersion.scene_year != None).order_by(AnalysisVersion.scene_year).all()  # noqa: E711
-        if len(runs) < 2:
-            return {"intent": intent, "answer": "Only one observation date has been analysed for this landscape; no change can be reported yet.", "sources": src, "label": label}
+        cur = db.get(AnalysisVersion, m["run_id"])
+        q = db.query(AnalysisVersion).filter(AnalysisVersion.study_area_id == study_area, AnalysisVersion.result_kind != "synthetic", AnalysisVersion.scene_year != None)  # noqa: E711
+        if cur is not None:        # like-for-like only: same model and threshold as the run being asked about
+            q = q.filter(AnalysisVersion.model_id == cur.model_id, AnalysisVersion.threshold == cur.threshold)
+        runs = q.order_by(AnalysisVersion.scene_year).all()
+        if len({r.scene_year for r in runs}) < 2:
+            return {"intent": intent, "answer": "No second observation year has been analysed with the same model and threshold as this run, so no like-for-like change can be reported. "
+                    "Comparing runs from different models would mix model differences with landscape change.", "sources": src, "label": label}
         a, b = runs[-2], runs[-1]
         txt = (f"Between {a.scene_year} and {b.scene_year} (both model outputs, cause not attributed): predicted habitat {a.habitat_area_ha:.0f} → {b.habitat_area_ha:.0f} ha, "
                f"{metric} {a.iic:.3e} → {b.iic:.3e} ({100*(b.iic-a.iic)/a.iic:+.1f} %), patches {a.n_patches} → {b.n_patches}, components {a.n_components} → {b.n_components}. "

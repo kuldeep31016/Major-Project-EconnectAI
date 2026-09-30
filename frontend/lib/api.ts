@@ -338,7 +338,7 @@ export const setTaskStatus = (id: number, status: string, reason?: string) => ge
 
 export interface EvidenceItem { id: number; task_id: number; user_id: number; lat: number; lon: number; observed_at: string; observation: string; notes: string | null; photo_path: string | null; verification: string; created_at: string }
 export const fetchEvidence = (taskId: number) => getJson<EvidenceItem[]>(`/api/field-tasks/${taskId}/evidence`);
-export const submitEvidence = (taskId: number, form: FormData) => getJson<EvidenceItem>(`/api/field-tasks/${taskId}/evidence`, { method: "POST", body: form }, 60000);
+export const submitEvidence = (taskId: number, form: FormData) => getJson<EvidenceItem & { location_source?: "submitted" | "photo_exif"; photo_gps?: [number, number] | null }>(`/api/field-tasks/${taskId}/evidence`, { method: "POST", body: form }, 60000);
 export const verifyEvidence = (id: number, verification: "ACCEPTED" | "REJECTED", reason?: string) => getJson<EvidenceItem>(`/api/evidence/${id}/verify`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ verification, reason }) });
 export const evidencePhotoUrl = (name: string) => `${API_URL}/api/evidence/photo/${encodeURIComponent(name)}`;
 
@@ -370,7 +370,9 @@ export interface ScenarioResult {
   affected_patch_ids?: string[]; removed_patch_ids?: string[]; newly_isolated_patch_ids?: string[];
   severed_edges?: { source: string; target: string }[]; edges_after?: { source: string; target: string; distance_km: number; weight: number }[];
   variants?: Record<string, unknown>[]; lost_patch_ids?: string[]; gained_patch_ids?: string[];
-  matched?: { patch_a: string; patch_b: string; area_a: number; area_b: number; S_a: number; S_b: number; rank_a: number; rank_b: number }[];
+  matched?: { patch_a: string; patch_b: string; change?: string; area_a: number; area_b: number; S_a: number; S_b: number; rank_a: number; rank_b: number }[];
+  tracking?: { counts: Record<string, number>; events: { type: string; patches_a: string[]; patches_b: string[]; area_a_ha: number; area_b_ha: number; area_change_ha: number }[] };
+  comparability?: { comparable: boolean; reasons: string[]; note: string };
   // sensitivity
   reference?: { tau_km: number; k: number }; verdict?: string; min_spearman?: number | null; robust_top?: string[];
   stability?: { patch_id: string; reference_rank: number; min_rank: number; max_rank: number; in_top_n: number; of: number }[];

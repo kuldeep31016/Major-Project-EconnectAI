@@ -37,7 +37,7 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] P1 Sensitivity grid τ×k (Spearman, Kendall, top-5 Jaccard, per-patch rank range, verdict); threshold variant already existed
 - [x] P1 Scenario types reduce_area, add_patch, radius, sensitivity + BeforeAfter panel
 - [x] P1 Digital twin card on /graph (remove selected / restore candidate → redrawn network + before/after)
-- [ ] P2 Temporal analysis with same-model enforcement, fragmentation indicators
+- [x] P2 Temporal analysis: polygon-overlap patch tracking (stable/grown/shrunk/split/merged/new/disappeared) + comparability check (2026-10-01); fragmentation indicators still open
 - [ ] P2 Transparent multi-criteria criticality (shown weights)
 
 ## Phase 5 — Restoration, field, HITL (done 2026-09-28)
@@ -65,3 +65,14 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - Fix tiling leakage + normaliser cache, rebuild 4-area tiles, threshold on validation split, re-evaluate
 - UNB7 on GPU; S2 / S1+S2 at 4-area scale; calibration; multi-year inference (same model)
 - External: multi-year scenes, field observations, cost/ownership/legal layers
+
+## Phase 9 — Spec-2 hardening (2026-10-01)
+- [x] Patch importance tab (area rank vs criticality rank, sortable leave-one-out table, explain/simulate/map)
+- [x] EXIF GPS on evidence; location never invented; photo stored only after checks; field officers see only own evidence
+- [x] Public compute bounded (per-client CallLimiter, list/range limits), proxy headers, anon assistant cap, all questions audited
+- [x] scripts/acceptance_test.py (20 steps: 16 PASS / 4 SKIP without scenes/checkpoints/torch) in CI; Makefile
+- [x] Docs: AUDIT, IMPLEMENTATION_STATUS, PAPER_IMPLEMENTATION_MATRIX, IP_READINESS, ARCHITECTURE, SECURITY, API, REPRODUCIBILITY, ML, GEOSPATIAL_PIPELINE, CONNECTIVITY, SCENARIOS, RESTORATION, GENAI; README rewritten
+- [ ] RAG over docs/paper + deterministic tier-1 answers + answer cache (user's pasted spec-3, not yet started)
+- [ ] Demo admin account exposed via public demo password (user decision); restoration review can approve with all factors "Not assessed"
+- [ ] Threshold chosen on test split (bug 22); tiling leakage; LICENSE/CITATION (owner's choice)
+

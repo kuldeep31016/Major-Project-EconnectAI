@@ -22,7 +22,9 @@ they apply; they are listed here in one place.
 ## Connectivity analysis
 - Connectivity is **structural** (patch geometry + distance), not observed animal or propagule movement.
 - The graph depends on assumptions (k nearest neighbours, τ radius, threshold). Rankings can change with them —
-  the sensitivity grid shows by how much (e.g. Kerala P17 ranks #2–#20 across τ × k).
+  the sensitivity grid shows by how much. Current Kerala run: P07 (the "small but critical" example) is in the top 5 in
+  only 4 of 9 τ × k variants — it holds for k ≥ 3 and τ ≥ 5 km (see docs/CONNECTIVITY.md). Previous run: P17 ranked #2–#20.
+- The edge weight w_ij is stored and displayed but does not enter IIC, PC, criticality or restoration gain.
 - What-if and restoration results are **simulations**, not forecasts.
 - Patch ids are assigned by area **per run**; "P17" in one run is not the same object in another.
 

@@ -1,143 +1,120 @@
 # EcoConnectAI
 
-**Coastal Ecosystem Intelligence and Decision-Support Platform** — built on the paper *A Satellite-Driven Framework for
-Coastal Ecosystem Connectivity and Conservation Decision Support*.
+**A Satellite-Driven Framework for Coastal Ecosystem Connectivity and Conservation Decision Support**
+Final-year research project · interactive research prototype · paper: [`docs/EcoConnectAI_IEEE_paper.pdf`](docs/EcoConnectAI_IEEE_paper.pdf)
 
-Platform loop: OBSERVE → ANALYSE → UNDERSTAND → SIMULATE → PRIORITISE → ACT → VERIFY → LEARN.
-*AI recommends. Evidence explains. GIS contextualises. Scenarios quantify. Officers decide. Field verification confirms.*
+> **From mapping habitat to understanding which habitat matters.**
+> Decision support — not automated conservation approval. Results are development results, checked against
+> Global Mangrove Watch reference maps, not field-validated. Scenarios are simulations.
 
-Sign in (`/login`, demo roles) → Command Center → Landscape → Evidence → Scenario Lab → Restoration Planner → Field Work →
-Official report. Platform docs: `docs/PRODUCT_REQUIREMENTS.md`, `API.md`, `FIELD_WORKFLOW.md`, `SECURITY.md`, `DEPLOYMENT.md`,
-`DATA_PROVENANCE.md`, `MODEL_CARD.md`, `PRODUCT_DIFFERENTIATION.md`, `PAPER_IMPLEMENTATION_GAP.md`.
-
-Final-year major project. This repository turns the research design in `docs/EcoConnectAI_IEEE_paper.pdf`
-into a runnable, testable pipeline:
-
-```
-Sentinel-1 / Sentinel-2  →  preprocessing  →  habitat segmentation (UNB7)  →  probability map
-      →  patch extraction  →  connectivity graph  →  IIC / PC / ECA  →  patch criticality (leave-one-out)
-      →  what-if loss simulation  →  rule-based explanation  →  restoration prioritisation  →  web dashboard
-```
-
-The web interface is the original prototype (`frontend/`, Next.js + Leaflet + React Flow), now fed by real
-pipeline outputs through a FastAPI backend. Every number shown carries a provenance label.
+Live demo (free tier, first load may take ~1 min while the API wakes): **https://major-project-econnect-ai.vercel.app**
+· guided walkthrough: `/demo` · API: https://major-project-econnectai-lzaw.onrender.com/docs
 
 ---
 
-## What the platform does (2026-09-28)
+## The problem
 
-| Capability | Where |
-|---|---|
-| **Guided demo** — satellite image → patches → network → the patch that matters (P17) → live what-if → restoration → evidence, all fetched from the stored run | `/demo` |
-| Exact leave-one-out **criticality**, cut vertices, **what-if** (remove / shrink / add / radius / restore) with before → after | `/scenario`, `/graph` digital twin |
-| **Assumption sensitivity** (τ × k): rank correlation, top-k overlap, per-patch rank range, stability verdict | `/scenario?type=sensitivity` |
-| **Provenance** — "Why am I seeing this?" 12-step lineage with hashes; **Reproduce this analysis** job | evidence drawer on `/analysis` |
-| **Model registry** (Development → Experimental → Candidate → Validated, validation only with independent evidence) and experiment comparison | `/experiments` |
-| **Restoration decisions** (model recommendation vs human decision; GIS → field → feasibility → decision) | `/restoration` |
-| **Field verification** checklist, model-disagreement register, GeoJSON export for future retraining (never automatic) | `/field` |
-| **Evidence-grounded AI assistant** (Claude; cites retrieved evidence; proposes scenarios you confirm) | "Ask AI" |
-| Background **jobs**, Alembic migrations (SQLite / PostgreSQL+PostGIS), S3-compatible storage, artifact hashes, RBAC + audit | `backend/` |
+Mapping mangroves from satellites is well studied. What conservation officers still lack is an answer to the next
+question: **once habitat is mapped, which patches hold the network together, what happens if one is lost, and where
+would restoration reconnect the most forest?** A small patch can matter more than a large one if it is the only link
+between two groups.
 
-Limitations: `docs/LIMITATIONS.md` · Research & IP notes (no novelty or patent claims): `docs/RESEARCH_IP_NOTES.md` ·
-Full hand-over context: `docs/context/`.
+## What EcoConnectAI does
 
-## Status (updated 2026-09-27) — read this first
+```
+Sentinel-1 radar (VV+VH, 10 m)  →  temporal median  →  U-Net segmentation  →  probability map  →  habitat mask
+   →  habitat patches (≥ 2 ha)  →  connectivity graph (k-NN, τ = 5 km)  →  IIC / PC / ECA
+   →  leave-one-patch-out criticality + cut vertices  →  what-if scenarios  →  τ × k sensitivity
+   →  restoration candidates  →  human field verification  →  audited reports
+```
 
-Full current context: `docs/context/PROJECT_CONTEXT.md`.
+| Step | What the user gets | Where |
+|---|---|---|
+| Detect | habitat map + per-patch model confidence | `/analysis`, `/command` |
+| Connect | the coast as a network of patches and travel links | `/graph` |
+| Prioritise | area rank vs criticality rank, sortable leave-one-out table, "explain this patch" | `/analysis` → Patch importance |
+| Simulate | remove / shrink / add patches, draw a threat polygon, change τ or threshold, compare periods (patch tracking: stable / split / merged / new / disappeared) — all labelled SIMULATION or MODEL-ESTIMATED | `/scenario` |
+| Restore | candidates ranked by connectivity gain; large uncertain areas routed to a field check; feasibility factors "not assessed" until data exists; no invented costs | `/restoration` |
+| Verify | field tasks, photo + GPS evidence (EXIF GPS read, never invented), officer sign-off, model-disagreement register | `/field` |
+| Report | PDF with provenance, limitations and verification status | `/reports` |
+| Ask | assistant that answers only from stored evidence and cites it (Claude when configured, template otherwise) | "Ask AI" |
 
-| Stage | State |
-|---|---|
-| Graph construction, IIC/PC/ECA, exact leave-one-out criticality, what-if, explanations, restoration | **Implemented, unit-tested**; reproduces the paper's Tables VI–VIII bit-for-bit from the synthetic prototype geometry. |
-| Patch extraction from probability rasters | **Implemented, unit-tested.** |
-| Backend API + frontend (exact what-if, real timeline, provenance badge, polygon scenarios) | **Implemented, verified in the browser on real runs.** |
-| Satellite acquisition (Sentinel-1 RTC, Sentinel-2 L2A, GMW weak labels; no credentials) | **Implemented and executed for Kerala 2020** (S1 ×6, S2 ×6, GMW tile N10E076). |
-| Dataset, preprocessing, UNB7 model, train/validate/evaluate/predict, threshold sweep | **Implemented and executed** on Kerala (dev mode, B0 encoder). |
-| **E1/E2/E3 development runs (Kerala, B0)** | **Done — DEVELOPMENT-SUBSET RESULTS, NOT FINAL.** Test IoU vs GMW: E1 S1-only 0.023, E2 S2-only 0.054, E3 fusion 0.053 (48 tiles). Weak: 176 training tiles, 0.2 % positives, 1–3 px fringes. See `docs/RESULTS_PROVENANCE.md`. |
-| Graph analysis on real predictions | **Done** (`outputs/runs/kerala-coast/kerala_E1_s1_b0_dev_t0.70`, 24 patches, IIC 1.59e-5, ECA 75.5 % of habitat). |
-| Other three study areas; multi-area dataset | **Done (dev).** 4-area S1 B0 model `multi_E1_s1_b0_dev`: test IoU 0.842 / F1 0.914 vs GMW weak labels (Sundarbans-dominated; Kerala weak). Graph runs for all four areas. |
-| **UNB7 final run (GPU) → OUR EXPERIMENTAL RESULT** | **NOT YET RUN.** EcoConnectAI's final segmentation accuracy is therefore **NOT AVAILABLE**; 95.56 % OA is the foundation study's (PUBLISHED BASELINE — NOT OUR RESULT). |
+Plain-language explanations are built into every page ("In plain words" line, glossary tooltips on IIC/PC/ECA/τ).
 
-Synthetic prototype geometry (`tests/fixtures/synthetic_geometry/`) is used only in tests, which reproduce the paper tables exactly.
-Runs named `kerala_E*_dev_*` are real-data development runs. Every number in the UI carries its label.
+## Current results (development — not final)
 
----
+| Item | Value | Label |
+|---|---|---|
+| Reported model | U-Net + EfficientNet-B0, Sentinel-1 VV+VH, 4 study areas (`multi_E1_s1_b0_dev`) | DEVELOPMENT |
+| Test agreement with Global Mangrove Watch | IoU 0.842 · F1 0.914 | vs weak reference labels, **not field accuracy** |
+| Kerala run (default) | 12 patches · 204.6 ha · 18 links · 3 components; P07 = 2.7 % of habitat, #7 by area, #3 by criticality, −25.6 % IIC, splits the network | DEVELOPMENT |
+| UNB7 (EfficientNet-B7), S2, S1+S2 at 4-area scale | not trained here | NOT YET RUN |
+| 95.56 % accuracy | the foundation study's figure | PUBLISHED BASELINE — NOT OUR RESULT |
+
+Details and provenance: [`docs/ML.md`](docs/ML.md), [`docs/RESULTS_PROVENANCE.md`](docs/RESULTS_PROVENANCE.md),
+[`docs/PAPER_IMPLEMENTATION_MATRIX.md`](docs/PAPER_IMPLEMENTATION_MATRIX.md).
+
+## Architecture
+
+Next.js 16 frontend → FastAPI API → SQLite (dev) / PostgreSQL (prod, Alembic migrations) · object storage (local or
+S3-compatible) · DB-backed job queue + worker · run artefacts with sha256 provenance. Training/inference run off-host
+(laptop MPS or Colab/Kaggle GPU). See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Quick start
 
 ```bash
-# 1. Python environment (Python ≥ 3.10; tested 3.14 on Apple Silicon)
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-
-# 2. Frontend
-cd frontend && npm install && cd ..
-
-# 3. Configure
-cp .env.example .env            # set DATA_ROOT (dataset location), SEGMENTATION_THRESHOLD, etc.
-
-# 4. Tests (graph maths, regression, patch extraction, ML plumbing, API, security) — 61 tests
-.venv/bin/python -m pytest -q
-
-# 5. Exercise the whole analysis + UI on the prototype geometry (labelled SYNTHETIC)
-.venv/bin/python scripts/run_graph_analysis.py --study-area kerala-coast --source prototype
-.venv/bin/python -m uvicorn backend.main:app --port 8000          # terminal 1
-cd frontend && npm run dev                                         # terminal 2 → http://localhost:3000
+make setup            # .venv with API deps + frontend packages   (make setup-ml adds PyTorch for training/inference)
+cp .env.example .env  # optional: ECO_DATABASE_URL, ANTHROPIC_API_KEY, storage settings
+make run              # API :8000 + frontend :3000  → http://localhost:3000  (demo users are created on first start)
+make test             # backend + library tests
+make acceptance       # 20-step end-to-end acceptance test on a scratch copy of the data
+make lint typecheck build
+docker compose up --build            # containers; --profile postgres for PostGIS, --profile worker for a separate worker
 ```
 
-### Real pipeline (once a dataset exists)
+Real data pipeline (needs `make setup-ml`; no credentials required for the public STAC sources):
+`scripts/acquire_study_area.py` → `scripts/build_tiles.py` → `scripts/train.py` → `scripts/evaluate.py` / `threshold_sweep.py` → `scripts/predict.py` →
+`scripts/run_graph_analysis.py` — see [`docs/GEOSPATIAL_PIPELINE.md`](docs/GEOSPATIAL_PIPELINE.md) and
+[`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md).
 
-```bash
-.venv/bin/python scripts/acquire_study_area.py --study-area kerala-coast     # or bring your own data
-.venv/bin/python scripts/build_tiles.py --image data/scenes/kerala-coast/<scene>.tif --label data/labels/kerala-coast/gmw_2020.tif
-.venv/bin/python scripts/train.py --config configs/train_dev.yaml            # MODE A laptop; train_full.yaml on a GPU
-.venv/bin/python scripts/evaluate.py --checkpoint outputs/segmentation/<exp>/best_model.pth
-.venv/bin/python scripts/predict.py  --checkpoint outputs/segmentation/<exp>/best_model.pth --input data/scenes/kerala-coast/<scene>.tif --output outputs/segmentation/<exp>/predictions/kerala-coast_prob.tif
-.venv/bin/python scripts/run_graph_analysis.py --study-area kerala-coast --probability outputs/segmentation/<exp>/predictions/kerala-coast_prob.tif --result-kind development
-# multi-area (every area with a scene + label): tiles → train → evaluate → sweep → analyse
-.venv/bin/python scripts/run_all_areas.py --stage tiles
-.venv/bin/python scripts/run_all_areas.py --stage train --config configs/train_dev.yaml --experiment-id all4_E1_s1_b0_dev
-.venv/bin/python scripts/run_all_areas.py --stage evaluate --experiment-id all4_E1_s1_b0_dev
-.venv/bin/python scripts/run_all_areas.py --stage sweep    --experiment-id all4_E1_s1_b0_dev
-.venv/bin/python scripts/run_all_areas.py --stage analyse  --experiment-id all4_E1_s1_b0_dev
-# or all of the above for one area:
-./run_demo.sh configs/demo.yaml
-# UNB7 final run on a GPU: notebooks/colab_train_unb7.ipynb
-```
+## Testing
 
----
+`make test` (unit, regression pins of stored results, API, RBAC, security, workflow, temporal tracking, EXIF GPS) and
+`make acceptance` (select area → re-run analysis job → graph → IIC → criticality → what-if → sensitivity →
+restoration → field task → report → AI answer checked against stored numbers → audit log → PDF). Steps that need
+satellite scenes, checkpoints or PyTorch report **SKIP** when those are not present — never PASS.
 
-## Repository layout
+## Deployment
 
-```
-frontend/            Next.js dashboard (the original prototype, now API-backed)   docs: frontend/README.md
-backend/main.py      FastAPI: study areas, runs, exact what-if, restoration, segment
-ecoconnect/
-  gee/               acquisition: STAC Sentinel-1/2 (no auth), GMW weak labels, optional Earth Engine
-  geospatial/        preprocessing (nodata, normalisation, tiling), raster IO, patch extraction
-  ml/                datasets, UNB7 model, training, evaluation (metrics/plots), inference
-  graph/             construction, connectivity (IIC/PC/ECA/interface score), criticality, what_if,
-                     explain, restoration
-  pipeline/          config, run orchestration + provenance exports, frontend adapter, sources
-configs/             dataset.yaml, train_dev.yaml, train_full.yaml, graph.yaml, acquisition.yaml,
-                     study_areas.yaml, demo.yaml
-scripts/             inspect_dataset, acquire_study_area, build_tiles, train, validate, evaluate,
-                     predict, run_graph_analysis, run_pipeline
-tests/               35 pytest tests on hand-checkable graphs/rasters + API + ML plumbing
-outputs/             runs/<area>/<run_id>/ (analysis) and segmentation/<exp>/ (models, metrics, curves)
-docs/                IMPLEMENTATION_AUDIT, PAPER_IMPLEMENTATION_TRACEABILITY, DATASET_SETUP, PREPROCESSING,
-                     TRAINING, INFERENCE, GEE_SETUP, ARCHITECTURE, EXPERIMENTS, CONNECTIVITY_METRICS,
-                     RESULTS_PROVENANCE, TROUBLESHOOTING, the paper PDF + LaTeX, legacy offline experiment
-```
+Free-tier demo: Vercel (frontend) + Render (API, Docker) + Neon (PostgreSQL). CI: GitHub Actions (lint, tests,
+acceptance, type-check, build, dependency audit, Docker build, deploy hook). [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) ·
+`make deploy-check API=… FRONTEND=…`
 
-## Result labels used everywhere
+## Limitations (read before presenting)
 
-`PUBLISHED BASELINE — NOT OUR RESULT` · `PROTOTYPE / SYNTHETIC RESULT` · `DEVELOPMENT-SUBSET RESULT — NOT FINAL` ·
-`OUR EXPERIMENTAL RESULT` · `NOT YET RUN` · `REQUIRES VERIFICATION`
+Weak reference labels (GMW) · development model · study areas differ strongly (Kerala has few positive test tiles) ·
+no field validation · connectivity is a structural spatial proxy, not observed animal movement · τ = 5 km is an
+assumption (sensitivity shown) · restoration candidates need field and legal assessment · no validated cost data ·
+temporal differences are model outputs · model confidence ≠ ecological certainty. Full list:
+[`docs/LIMITATIONS.md`](docs/LIMITATIONS.md).
 
-## Documentation index
+## Documentation
 
-`docs/IMPLEMENTATION_AUDIT.md` (what existed, what changed, why) · `docs/ARCHITECTURE.md` ·
-`docs/PAPER_IMPLEMENTATION_TRACEABILITY.md` (equation → function) · `docs/DATASET_SETUP.md` ·
-`docs/PREPROCESSING.md` · `docs/TRAINING.md` · `docs/INFERENCE.md` · `docs/CONNECTIVITY_METRICS.md` ·
-`docs/GEE_SETUP.md` · `docs/EXPERIMENTS.md` · `docs/RESULTS_PROVENANCE.md` · `docs/TROUBLESHOOTING.md` ·
-`docs/LIMITATIONS.md` · `docs/RESEARCH_IP_NOTES.md` · `docs/RESEARCH.md` · `docs/DATA.md` · `CONTRIBUTING.md` ·
-`docs/context/` (project memory)
+| Topic | File |
+|---|---|
+| Audit & status | [`AUDIT.md`](docs/AUDIT.md) · [`IMPLEMENTATION_STATUS.md`](docs/IMPLEMENTATION_STATUS.md) · [`PAPER_IMPLEMENTATION_MATRIX.md`](docs/PAPER_IMPLEMENTATION_MATRIX.md) |
+| Science | [`ML.md`](docs/ML.md) · [`GEOSPATIAL_PIPELINE.md`](docs/GEOSPATIAL_PIPELINE.md) · [`CONNECTIVITY.md`](docs/CONNECTIVITY.md) · [`SCENARIOS.md`](docs/SCENARIOS.md) · [`RESTORATION.md`](docs/RESTORATION.md) · [`MODEL_CARD.md`](docs/MODEL_CARD.md) · [`EXPERIMENTS.md`](docs/EXPERIMENTS.md) |
+| Platform | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`API.md`](docs/API.md) · [`GENAI.md`](docs/GENAI.md) · [`SECURITY.md`](docs/SECURITY.md) · [`DEPLOYMENT.md`](docs/DEPLOYMENT.md) · [`FIELD_WORKFLOW.md`](docs/FIELD_WORKFLOW.md) |
+| Reproducibility & honesty | [`REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) · [`RESULTS_PROVENANCE.md`](docs/RESULTS_PROVENANCE.md) · [`LIMITATIONS.md`](docs/LIMITATIONS.md) · [`IP_READINESS.md`](docs/IP_READINESS.md) (no patentability claim) |
+| Contributing | [`CONTRIBUTING.md`](CONTRIBUTING.md) · project memory for maintainers: [`docs/context/`](docs/context/README.md) |
+
+Result labels used everywhere: `PUBLISHED BASELINE — NOT OUR RESULT` · `PROTOTYPE / SYNTHETIC RESULT` ·
+`DEVELOPMENT-SUBSET RESULT — NOT FINAL` · `OUR EXPERIMENTAL RESULT` · `NOT YET RUN` · `SIMULATION` · `REQUIRES VERIFICATION`.
+
+## Future work
+
+UNB7 and S2 / S1+S2 ablations on a GPU at 4-area scale · fix tiling leakage and re-evaluate · multi-year inference
+with one model · field campaign with a forest department · ownership / legal / cost layers · patches as database rows
+with geometry · retrieval over project documentation for the assistant · live job progress streaming.
+
+Licence and citation: not yet chosen — the project owner will add `LICENSE` and `CITATION.cff`.

@@ -1,5 +1,7 @@
 # Paper ↔ implementation gap register
 
+> **Superseded (2026-10-01)** by `docs/PAPER_IMPLEMENTATION_MATRIX.md` — kept for history; may be out of date.
+
 Format: CURRENT PAPER CLAIM · IMPLEMENTATION STATUS · REQUIRED CHANGE · SCIENTIFIC IMPACT · RECOMMENDED REVISION.
 The paper is `docs/EcoConnectAI_IEEE_paper.pdf`. Nothing in the implementation changes the methodology; the
 gaps are about *status statements* and *configuration details* that the paper fixed before experiments ran.
