@@ -109,5 +109,8 @@ def test_cors_config_parsing(monkeypatch):
     monkeypatch.delenv("ECO_CORS_ALLOW_ALL", raising=False)
     monkeypatch.delenv("ECO_CORS_ORIGIN_REGEX", raising=False)
     assert cors_config() == (["http://localhost:3000", "https://app.example"], None)
+    monkeypatch.setenv("ECO_CORS_ORIGINS", "*")            # a lone wildcard never locks the frontend out
+    assert cors_config()[0] == ["*"]
+    monkeypatch.setenv("ECO_CORS_ORIGINS", "https://a.example,*")
     monkeypatch.setenv("ECO_CORS_ALLOW_ALL", "1")
     assert "*" in cors_config()[0]
