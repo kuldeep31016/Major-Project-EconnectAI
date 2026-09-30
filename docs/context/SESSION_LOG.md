@@ -14,6 +14,15 @@ Next step:
 
 ---
 
+## 2026-09-30 — two Render services found; correct one passes 14/14
+
+Live CORS '*' came from an old duplicate Render service at major-project-econnectai.onrender.com (env ECO_CORS_ORIGINS
+= '*', 1 char, per new /api/health diagnostics; a failed-login probe was NOT written to Neon). The service the user
+configured is srv-dapspsmgekts73f33760 → https://major-project-econnectai-lzaw.onrender.com: check_deployment 14/14
+PASS. PRs #10–#12: cors_config (trim, lone '*' kept permissive + loud warning, ECO_CORS_ALLOW_ALL), health CORS report.
+frontend/Dockerfile default API URL updated. User actions: Vercel NEXT_PUBLIC_API_URL → lzaw URL + redeploy; suspend old
+service; GitHub billing lock; optional R2 + Starter plan.
+
 ## 2026-09-30 — production live on Neon; CORS hardening
 
 User set Render env (Neon ECO_DATABASE_URL, CORS origins incl. Vercel URL, Anthropic key, new JWT secret; regex removed).
