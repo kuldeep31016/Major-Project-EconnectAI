@@ -72,7 +72,9 @@ app.add_middleware(
     allow_origins=_CORS_ORIGINS, allow_origin_regex=_CORS_REGEX,
     allow_methods=["*"], allow_headers=["*"], expose_headers=["X-Request-ID"],
 )
-logging.getLogger("ecoconnect").warning("cors configured", extra={"route": f"origins={_CORS_ORIGINS} regex={_CORS_REGEX}"})
+logging.getLogger("ecoconnect").warning(
+    "CORS IS OPEN TO EVERY ORIGIN - set ECO_CORS_ORIGINS to the frontend URL" if _CORS_ORIGINS == ["*"] else "cors configured",
+    extra={"route": f"origins={_CORS_ORIGINS} regex={_CORS_REGEX}"})
 app.add_middleware(RequestContextMiddleware)   # outermost: request id + metrics for every request
 app.include_router(admin_router)
 

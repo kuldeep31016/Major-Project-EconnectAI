@@ -77,6 +77,8 @@ def cors_config() -> tuple[list[str], str | None]:
     raw = os.environ.get("ECO_CORS_ORIGINS") or "http://localhost:3000,http://127.0.0.1:3000"
     origins = [o.strip().rstrip("/") for o in re.split(r"[,\s]+", raw) if o.strip()]
     if "*" in origins and os.environ.get("ECO_CORS_ALLOW_ALL") != "1":
-        origins = [o for o in origins if o != "*"]
+        explicit = [o for o in origins if o != "*"]
+        # never lock the real frontend out: a lone '*' stays permissive (with a loud startup warning in main.py)
+        origins = explicit or ["*"]
     regex = (os.environ.get("ECO_CORS_ORIGIN_REGEX") or "").strip() or None
     return origins, regex
