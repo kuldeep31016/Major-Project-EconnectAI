@@ -87,6 +87,8 @@ def build_evidence(db: Session, question: str, study_area: str, run_dir: Path) -
     met = (_j(run_dir / "metrics.json") or {}).get("research_metrics", {})
     crit = _j(run_dir / "criticality.json") or []
     rest = (_j(run_dir / "restoration.json") or {}).get("candidates", [])
+    from .restoration_rules import annotate
+    annotate(rest, float(met.get("habitat_area_ha") or 0))
     expl = {e["patch_id"]: e for e in (_j(run_dir / "explanations.json") or [])}
     run_id = m.get("run_id", run_dir.name)
     ds = m.get("data_source") or {}
@@ -117,7 +119,8 @@ def build_evidence(db: Session, question: str, study_area: str, run_dir: Path) -
                 {k: c.get(k) for k in ("candidate_id", "rank", "area_ha", "gain_pct", "new_links", "linked_patch_ids", "cost")})
     if rest:
         add("restoration_top", f"run {run_id} / restoration.json (simulated gain, no cost data unless stated)",
-            {"candidates": [{k: c.get(k) for k in ("candidate_id", "rank", "area_ha", "gain_pct", "new_links")} for c in rest[:5]]})
+            {"candidates": [{k: c.get(k) for k in ("candidate_id", "rank", "area_ha", "gain_pct", "new_links", "category_label")} for c in rest[:5]],
+             "note": "'Uncertain habitat - field check' candidates are large marginal-probability areas, likely existing mangrove; do not present their gain as a restoration benefit."})
 
     run = db.get(AnalysisVersion, run_id)
     model = db.get(Model, run.model_id) if run and run.model_id else None

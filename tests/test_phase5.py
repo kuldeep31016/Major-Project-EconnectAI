@@ -88,3 +88,46 @@ def test_disagreement_flag_review_and_export(client):
     assert client.patch(f"/api/hitl/disagreements/{dis[0]['id']}", headers=s, json={"status": "INCLUDED", "note": "clear photo, no mangrove"}).json()["status"] == "INCLUDED"
     fc = client.get("/api/hitl/export", headers=s).json()
     assert any(x["properties"]["label_mangrove"] == 0 for x in fc["features"]) and "Not used automatically" in fc["note"]
+
+
+def test_candidate_rule_and_startup_alerts(client):
+    from backend.restoration_rules import classify
+    assert classify(158.8, 204.6) == "uncertain_habitat"          # Kerala multi-model C01: bigger than the habitat itself
+    assert classify(1.6, 219.6) == "restoration_site"            # Kerala dev-model C1
+    assert classify(229.8, 63830) == "restoration_site"          # large but small relative to Sundarbans' habitat
+    rest = client.get(f"/api/runs/gulf-of-mannar/{RUN}/restoration").json()["candidates"]
+    assert all(c["category"] in ("restoration_site", "uncertain_habitat") and c["category_label"] for c in rest)
+    from backend.alerts import ensure_alerts
+    from backend.db import SessionLocal
+    with SessionLocal() as db:
+        ensure_alerts(db)
+        again = ensure_alerts(db)
+    assert again == 0                                            # idempotent: never duplicates alerts
+    from backend.alerts import RULES_VERSION
+    from backend.db import Alert
+    with SessionLocal() as db:
+        al = db.query(Alert).all()
+    assert al and all((a.evidence or {}).get("rules_version") == RULES_VERSION for a in al)
+    # restoration alerts only for restoration-sized sites; uncertain areas get their own field-check alert
+    for a in al:
+        if a.type == "restoration_opportunity":
+            assert "Restoring" in a.title and "Suggested next step" in a.reason
+
+
+def test_template_assistant_and_report_separate_uncertain_areas(client):
+    from backend.db import SessionLocal
+    from backend.insight import answer
+    from ecoconnect.pipeline.report import build_report
+    from pathlib import Path
+    rd = Path(__file__).resolve().parents[1] / "outputs" / "runs" / "kerala-coast" / "kerala-coast_multi_E1_s1_b0_dev_t0.70"
+    if not rd.exists():
+        pytest.skip("stored Kerala run not present")
+    with SessionLocal() as db:
+        rest = answer(db, "What restoration candidates rank highest?", "kerala-coast", rd)
+        cut = answer(db, "Which patches hold the network together?", "kerala-coast", rd)
+    head = rest["answer"].split("classed as uncertain habitat")[0]
+    assert head.index("C05") < head.index("C01")                 # real sites first; C01 (159 ha) only as uncertain
+    assert "C01 (" not in head and "uncertain habitat" in rest["answer"]
+    assert cut["intent"] == "cut" and set(cut["objects"]) == {"P02", "P07"}
+    sec = next(s for s in build_report(rd, load_study_areas()["kerala-coast"])["sections"] if s["id"] == "restoration")
+    assert sec["table"]["columns"][-1] == "Class" and "uncertain habitat" in sec["body"][0]

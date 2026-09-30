@@ -32,7 +32,11 @@ function AlertsView() {
   // the detail panel always reflects the freshly loaded record
   const active = alerts.find((a) => a.id === activeId) ?? null;
   const setActive = (a: AlertItem | null) => setActiveId(a?.id ?? null);
-  const shown = alerts.filter((a) => filter === "all" || a.status === filter);
+  // most urgent first; within a severity, newest first
+  const RANK: Record<string, number> = { critical: 0, high: 1, medium: 2, low: 3 };
+  const shown = alerts
+    .filter((a) => filter === "all" || a.status === filter)
+    .sort((x, y) => (RANK[x.severity] ?? 9) - (RANK[y.severity] ?? 9) || String(y.created_at).localeCompare(String(x.created_at)));
   const counts = Object.fromEntries(["OPEN", "ACKNOWLEDGED", "ASSIGNED", "RESOLVED", "DISMISSED"].map((k) => [k, alerts.filter((a) => a.status === k).length]));
 
   return (
@@ -51,7 +55,7 @@ function AlertsView() {
                 <div className="flex items-start gap-2">
                   <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: SEV[a.severity] }} />
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-2"><div className="truncate text-[12.5px] font-medium">{a.title}</div><Badge variant="secondary">{a.status}</Badge></div>
+                    <div className="flex items-start justify-between gap-2"><div className="line-clamp-2 text-[12.5px] font-medium leading-snug">{a.title}</div><Badge variant="secondary" className="shrink-0">{a.status}</Badge></div>
                     <div className="text-[10.5px] text-muted-foreground">{a.type.replace(/_/g, " ")} · {a.severity} · {new Date(a.created_at).toLocaleString()}</div>
                   </div>
                 </div>

@@ -14,6 +14,23 @@ Next step:
 
 ---
 
+## 2026-10-01 — accuracy pass, plain-language layer, meaningful alerts
+
+Goal: every module accurate and understandable to non-experts/funders.
+Changed: Kerala LATEST → multi_E1 run (user choice). restoration_rules (uncertain_habitat rule) moved to
+ecoconnect/pipeline, applied in scenarios feasibility (verdict field_check), /bundle, restoration route, assistant
+evidence, insight template answers (+ new "cut" intent), PDF report (Class column). alerts.py: plain titles +
+"Suggested next step", restoration vs uncertain alerts separated (max 3 each), RULES_VERSION=2 stamped in evidence;
+ensure_alerts() at startup creates/refreshes OPEN alerts of LATEST runs (acted-on alerts kept). /api/runs marks
+isLatest (header period selector used runs[0] → showed 2025 wrongly). Frontend: landing figures live via
+hooks/use-landing-story.tsx, new PurposeSection ("In plain words"), plain copy in pipeline/core/capabilities/why
+sections (removed false "dual-sensor fusion" claim — model is S1 VV+VH only), per-page "In plain words" line
+(lib/plain-language.ts in AppShell), glossary tooltips (components/shared/term.tsx), alerts sorted by severity,
+navbar CTA hidden on phones. check_deployment what-if uses the run's top patch (P17 no longer exists in LATEST).
+Tests: pytest 96 passed 1 skipped; ruff F clean; tsc ok; eslint 0 errors; next build ok; 18 routes crawled.
+Open: Odisha/Sundarbans large "restoration sites" (up to 587 ha) pass the relative rule — user may want an absolute cap.
+Next: user's big spec — gap check vs existing docs/features (most phases done), add missing docs/Makefile, E2E acceptance test.
+
 ## 2026-10-01 — sign-in page redesign (user mockup) + QA standard
 
 frontend/app/login/page.tsx rebuilt to the user's mockup: left story panel (Instrument Serif headline via lib/fonts.ts,

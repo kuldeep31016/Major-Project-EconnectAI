@@ -17,6 +17,7 @@ import { getGraph, getHabitatMask, getHeatmap, getRestoration } from "@/lib/data
 import type { LatLng } from "@/types";
 import { cn } from "@/lib/utils";
 import { fmtIndex } from "@/utils/format";
+import { Term } from "@/components/shared/term";
 
 const GisMap = dynamic(() => import("@/components/maps/gis-map"), { ssr: false });
 
@@ -40,7 +41,7 @@ function Delta({ label, b, s, fmt }: { label: string; b: number; s: number; fmt:
   const pct = b ? (100 * d) / b : 0;
   return (
     <div className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-2 border-t border-foreground/[0.06] py-1.5 text-[12px]">
-      <span className="text-muted-foreground">{label}</span>
+      <span className="text-muted-foreground"><Term>{label}</Term></span>
       <span className="tabular">{fmt(b)}</span>
       <span className="tabular font-semibold">{fmt(s)}</span>
       <span className={cn("tabular text-[11px]", d < 0 ? "text-[#b91c1c]" : d > 0 ? "text-[#15803d]" : "text-muted-foreground")}>{d === 0 ? "—" : `${d > 0 ? "+" : ""}${pct.toFixed(1)} %`}</span>
@@ -196,7 +197,7 @@ function ScenarioLabView() {
               <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Candidates (ranked by gain)</div>
               {restoration.actions.map((a) => (
                 <button key={a.id} onClick={() => setCands((s) => kind === "restore" ? [a.id] : s.includes(a.id) ? s.filter((x) => x !== a.id) : [...s, a.id])} className={cn("flex w-full items-center justify-between rounded-lg border px-2.5 py-2 text-[11.5px] transition", cands.includes(a.id) ? "border-[#15803d] bg-[#15803d]/10 font-semibold" : "border-foreground/[0.08]")}>
-                  <span>#{a.rank} {a.id} · {a.areaHa} ha</span><span className="tabular text-emerald-700 font-semibold">+{a.connectivityGain.toFixed(2)} %</span>
+                  <span>#{a.rank} {a.id} · {a.areaHa} ha{a.category === "uncertain_habitat" && <span className="ml-1 rounded bg-amber-100 px-1 text-[10px] font-medium text-amber-800">uncertain habitat</span>}</span><span className={cn("tabular font-semibold", a.category === "uncertain_habitat" ? "text-muted-foreground" : "text-emerald-700")}>+{a.connectivityGain.toFixed(2)} %</span>
                 </button>
               ))}
             </div>
@@ -260,7 +261,7 @@ function ScenarioLabView() {
                     </>
                   )}
                   {variants && result.type !== "sensitivity" && (
-                    <table className="w-full text-[11.5px]"><thead className="text-[9.5px] uppercase tracking-wider text-muted-foreground"><tr><th className="text-left">{result.type === "tau" ? "τ" : "thr"}</th><th>links</th><th>comp.</th><th>IIC</th><th>ECA %</th><th>{result.type === "tau" ? "ρ" : "patches"}</th></tr></thead>
+                    <table className="w-full text-[11.5px]"><thead className="text-[9.5px] uppercase tracking-wider text-muted-foreground"><tr><th className="text-left">{result.type === "tau" ? <Term side="bottom">τ</Term> : "thr"}</th><th>links</th><th><Term side="bottom">comp.</Term></th><th><Term side="bottom">IIC</Term></th><th><Term side="bottom">ECA %</Term></th><th>{result.type === "tau" ? <Term side="bottom">ρ</Term> : "patches"}</th></tr></thead>
                       <tbody className="tabular text-center">{variants.map((v, i) => <tr key={i} className="border-t border-foreground/[0.06]"><td className="py-1 text-left">{String(v.tau_km ?? v.threshold)}</td><td>{String(v.n_edges ?? "—")}</td><td>{String(v.n_components ?? "—")}</td><td>{typeof v.iic === "number" ? fmtIndex(v.iic) : "—"}</td><td>{typeof v.eca_pct_of_habitat === "number" ? v.eca_pct_of_habitat.toFixed(1) : "—"}</td><td>{result.type === "tau" ? (typeof v.spearman_vs_reference === "number" ? v.spearman_vs_reference.toFixed(2) : "—") : String(v.n_patches ?? "—")}</td></tr>)}</tbody></table>
                   )}
                 </CardContent>

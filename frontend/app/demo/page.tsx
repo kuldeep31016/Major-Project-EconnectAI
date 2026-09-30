@@ -11,6 +11,7 @@ import {
 } from "@/lib/api";
 import { NetworkCanvas, edgeKey, type Stage } from "@/components/demo/network-canvas";
 import type { WhatIfResult } from "@/types";
+import { Term } from "@/components/shared/term";
 
 /**
  * Guided story: satellite image → habitat → patches → network → which patch matters → what if it is lost →
@@ -46,7 +47,7 @@ function Chapter({ n, stage, kicker, title, children }: { n: Stage; stage: Stage
 function Figure({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
     <div className="border-l border-white/15 pl-4">
-      <div className="text-[12px] uppercase tracking-[0.12em] text-slate-400">{label}</div>
+      <div className="text-[12px] uppercase tracking-[0.12em] text-slate-400"><Term>{label}</Term></div>
       <div className="mt-1 text-[26px] font-semibold tracking-[-0.02em] text-white tabular-nums">{value}</div>
       {note && <div className="text-[13px] text-slate-400">{note}</div>}
     </div>
@@ -84,7 +85,9 @@ export default function DemoPage() {
     const cuts = data.crit.filter((r) => r.is_cut_vertex);
     return (cuts.length ? cuts : data.crit).reduce((a, b) => (b.rank_by_area - b.rank > a.rank_by_area - a.rank ? b : a));
   }, [data]);
-  const cand = data?.cands[0] ?? null;
+  // headline only a restoration-sized candidate; large marginal areas are "uncertain habitat" (backend rule)
+  const cand = data?.cands.find((c) => c.category !== "uncertain_habitat") ?? null;
+  const uncertain = data?.cands.filter((c) => c.category === "uncertain_habitat") ?? [];
 
   // live engine calls for the two simulation chapters
   useEffect(() => {
@@ -204,12 +207,19 @@ export default function DemoPage() {
               ) : <p>Waiting for the what-if engine.</p>}
             </Chapter>
 
-            <Chapter n={5} stage={stage} kicker="Where restoration could help" title={cand && restore?.difference ? `${cand.candidate_id}: +${fmt(restore.difference.c_pct ?? cand.gain_pct, 2)} % connectivity` : "Ranking candidates…"}>
+            <Chapter n={5} stage={stage} kicker="Where restoration could help" title={cand ? (restore?.difference ? `${cand.candidate_id}: +${fmt(restore.difference.c_pct ?? cand.gain_pct, 2)} % connectivity` : "Ranking candidates…") : "Where the model is unsure"}>
               {cand && (
                 <>
                   <p>Sites with a weaker habitat signal just below the threshold are tested as restoration candidates. The top one, <b className="text-white">{cand.candidate_id}</b> ({fmt(cand.area_ha, 1)} ha), would add {cand.new_links} links to {cand.linked_patch_ids.join(", ")}.</p>
                   <p className="text-[14px] text-slate-400">This is a model recommendation. Ownership, legal status, water regime and cost are not assessed. The platform routes it through GIS review, field verification and a human decision before anything is approved.</p>
                 </>
+              )}
+              {uncertain.length > 0 && (
+                <p className={cand ? "text-[14px] text-slate-400" : ""}>
+                  {uncertain.length} larger area{uncertain.length > 1 ? "s" : ""} ({uncertain.slice(0, 3).map((c) => `${c.candidate_id} ${fmt(c.area_ha, 0)} ha`).join(", ")}) sit just below the habitat threshold.
+                  They are more likely existing mangrove the model was unsure about than restoration sites, so the platform
+                  flags them for a field check instead of claiming a restoration gain.
+                </p>
               )}
             </Chapter>
 

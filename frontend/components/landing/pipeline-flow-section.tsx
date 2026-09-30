@@ -24,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { int, num, useLandingStory, type LandingStory } from "@/hooks/use-landing-story";
 
 interface PipelineStep {
   stepNum: string;
@@ -31,89 +32,95 @@ interface PipelineStep {
   shortTitle: string;
   description: string;
   activeRadioIdx: number;
-  badgeLabel: string;
+  /** Badge text, computed from the live run so no figure is typed into the page. */
+  badge: (s: LandingStory) => string;
   icon: LucideIcon;
 }
 
 const PIPELINE_STEPS: PipelineStep[] = [
   {
     stepNum: "01",
-    stepName: "OBSERVATION",
-    shortTitle: "See the landscape.",
+    stepName: "OBSERVE",
+    shortTitle: "Look at the coast from space.",
     description:
-      "High-resolution satellite imagery reveals the coastal ecosystem in its full context.",
+      "Free Sentinel-1 radar images cover the whole coastline every few days, and radar sees through monsoon cloud.",
     activeRadioIdx: 0,
-    badgeLabel: "Live Satellite View",
+    badge: (s) => `Scene year ${s.sceneYear ?? "—"}`,
     icon: Satellite,
   },
   {
     stepNum: "02",
-    stepName: "RADIOMETRY",
-    shortTitle: "Calibrate raw spectral bands.",
+    stepName: "PREPARE",
+    shortTitle: "Clean and align the images.",
     description:
-      "Cloud masking, terrain normalization, and multi-spectral calibration produce 10m analysis-ready rasters.",
+      "Images are clipped to the study area and put on one 10 m grid, so every pixel is a 10 m × 10 m square of ground.",
     activeRadioIdx: 0,
-    badgeLabel: "Radiometric Correction",
+    badge: () => "10 m pixels",
     icon: Filter,
   },
   {
     stepNum: "03",
-    stepName: "INFERENCE",
-    shortTitle: "Map habitats with deep learning.",
+    stepName: "DETECT",
+    shortTitle: "Find the mangroves.",
     description:
-      "Weakly-supervised convolutional neural networks extract precise mangrove canopy boundaries from SAR & optical data.",
+      "A neural network marks, pixel by pixel, how likely each spot is to be mangrove. It learned from the Global Mangrove Watch map, not from field surveys.",
     activeRadioIdx: 1,
-    badgeLabel: "AI Boundary Segmentation",
+    badge: (s) => `Model status: ${s.modelStatus ?? "development"}`,
     icon: Cpu,
   },
   {
     stepNum: "04",
-    stepName: "MORPHOLOGY",
-    shortTitle: "Extract discrete habitat patches.",
+    stepName: "PATCHES",
+    shortTitle: "Group pixels into forest patches.",
     description:
-      "Connected components analysis separates contiguous mangrove stands with precise area, perimeter, and centroid metrics.",
+      "Touching mangrove pixels become one patch; patches smaller than 2 ha are dropped as noise.",
     activeRadioIdx: 1,
-    badgeLabel: "24 Patches Identified",
+    badge: (s) => `${int(s.nPatches)} patches · ${num(s.habitatHa, 0)} ha`,
     icon: Leaf,
   },
   {
     stepNum: "05",
-    stepName: "TOPOLOGY",
-    shortTitle: "Construct spatial connectivity graph.",
+    stepName: "NETWORK",
+    shortTitle: "Connect patches that wildlife can travel between.",
     description:
-      "Patches become network nodes wired together by resistance-weighted ecological dispersal corridors.",
+      "Patches close enough for seeds, fish and birds to move between are linked, turning the coast into a network.",
     activeRadioIdx: 2,
-    badgeLabel: "45 Corridor Links",
+    badge: (s) => `${int(s.nEdges)} links · ${int(s.nComponents)} separate groups`,
     icon: Network,
   },
   {
     stepNum: "06",
-    stepName: "SENSITIVITY",
-    shortTitle: "Identify critical stepping stones.",
+    stepName: "CRITICAL",
+    shortTitle: "Find the patches the network cannot lose.",
     description:
-      "Leave-one-out network perturbation discovers vulnerable cut-vertices whose loss severs the entire landscape.",
+      "Each patch is removed in turn and the network re-measured. Small patches that hold groups together often matter more than big ones.",
     activeRadioIdx: 3,
-    badgeLabel: "P17 cut vertex (−27.0% IIC)",
+    badge: (s) => (s.focus ? `${s.focus.patch_id}: losing it cuts connectivity ${num(Math.abs(s.focus.delta_pct), 1)}%` : "Ranking patches…"),
     icon: Zap,
   },
   {
     stepNum: "07",
-    stepName: "SIMULATION",
-    shortTitle: "Test hypothetical stress scenarios.",
+    stepName: "WHAT-IF",
+    shortTitle: "Test a threat before it happens.",
     description:
-      "Simulate cyclonic landfalls, road severance, or port development to project post-disturbance network fragmentation.",
+      "Draw a new road, port or shrimp farm on the map and see how the network would break. These are simulations, not forecasts.",
     activeRadioIdx: 4,
-    badgeLabel: "3 → 5 Fragmented Clusters",
+    badge: () => "Simulated scenarios",
     icon: GitBranch,
   },
   {
     stepNum: "08",
-    stepName: "ACTION",
-    shortTitle: "Prioritise restoration & field patrols.",
+    stepName: "ACT",
+    shortTitle: "Decide where to protect, restore or check.",
     description:
-      "Rank restoration sites by global connectivity returned and dispatch verified patrol tasks to frontline forest rangers.",
+      "Sites are ranked by how much they would reconnect the network. Large uncertain areas go to a field team to check first.",
     activeRadioIdx: 5,
-    badgeLabel: "C1 restoration candidate (+1.29% IIC)",
+    badge: (s) =>
+      s.candidate
+        ? `${s.candidate.candidate_id}: +${num(s.candidate.gain_pct, 2)}% connectivity if restored`
+        : s.uncertain.length
+          ? `${s.uncertain.length} areas flagged for a field check`
+          : "Ranking sites…",
     icon: Sprout,
   },
 ];
@@ -128,6 +135,7 @@ const RADIO_LAYERS = [
 ];
 
 export function PipelineFlowSection() {
+  const story = useLandingStory();
   const [activeIdx, setActiveIdx] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
 
@@ -260,7 +268,7 @@ export function PipelineFlowSection() {
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/80 px-2.5 py-0.5 text-[9.5px] font-bold text-[#00c896] backdrop-blur border border-[#00c896]/30">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#00c896] animate-pulse" />
                   <Video className="h-2.5 w-2.5" />
-                  <span>{current.badgeLabel}</span>
+                  <span>{current.badge(story)}</span>
                 </span>
               </div>
             </div>
@@ -338,7 +346,7 @@ export function PipelineFlowSection() {
                 </g>
               )}
 
-              {/* Stage 06: SENSITIVITY - Highlight critical cut vertex P17 */}
+              {/* Stage 06: highlight the live run's critical patch */}
               {activeIdx === 5 && (
                 <g>
                   {/* Glowing Red Patch */}
@@ -354,7 +362,7 @@ export function PipelineFlowSection() {
                   <circle cx="250" cy="145" r="10" fill="#ef4444" fillOpacity="0.3" className="animate-ping" />
                   <circle cx="250" cy="145" r="5" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
                   <rect x="262" y="137" width="38" height="15" rx="3" fill="#040b14" stroke="#ef4444" strokeWidth="1" />
-                  <text x="281" y="148" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">P17</text>
+                  <text x="281" y="148" fill="#ffffff" fontSize="8" fontWeight="bold" textAnchor="middle">{story.focus?.patch_id ?? "—"}</text>
                 </g>
               )}
 
@@ -442,8 +450,8 @@ export function PipelineFlowSection() {
                   <Leaf className="h-3.5 w-3.5" />
                 </div>
                 <div>
-                  <div className="text-[11.5px] font-bold text-white leading-tight">220 ha</div>
-                  <div className="text-[9px] text-slate-400">Modelled habitat (Kerala dev run)</div>
+                  <div className="text-[11.5px] font-bold text-white leading-tight">{num(story.habitatHa, 0)} ha</div>
+                  <div className="text-[9px] text-slate-400">Mangrove mapped (Kerala, model output)</div>
                 </div>
               </div>
 
@@ -452,8 +460,8 @@ export function PipelineFlowSection() {
                   <Layers className="h-3.5 w-3.5" />
                 </div>
                 <div>
-                  <div className="text-[11.5px] font-bold text-white leading-tight">24 Patches</div>
-                  <div className="text-[9px] text-slate-400">AI Detected</div>
+                  <div className="text-[11.5px] font-bold text-white leading-tight">{int(story.nPatches)} Patches</div>
+                  <div className="text-[9px] text-slate-400">Found by the model</div>
                 </div>
               </div>
 
@@ -462,8 +470,8 @@ export function PipelineFlowSection() {
                   <Network className="h-3.5 w-3.5" />
                 </div>
                 <div>
-                  <div className="text-[11.5px] font-bold text-white leading-tight">45 Links</div>
-                  <div className="text-[9px] text-slate-400">Corridors</div>
+                  <div className="text-[11.5px] font-bold text-white leading-tight">{int(story.nEdges)} Links</div>
+                  <div className="text-[9px] text-slate-400">Travel links</div>
                 </div>
               </div>
             </div>

@@ -12,9 +12,12 @@ import { WhyEcoConnectSection } from "@/components/landing/why-ecoconnect-sectio
 import { ResponsibleAISection } from "@/components/landing/responsible-ai-section";
 import { CTASection } from "@/components/landing/cta-section";
 import { LandingFooter } from "@/components/landing/landing-footer";
+import { PurposeSection } from "@/components/landing/purpose-section";
+import { LandingStoryProvider } from "@/hooks/use-landing-story";
 
 export default function LandingPage() {
   return (
+    <LandingStoryProvider>
     <div id="home" className="min-h-screen bg-[#050c18] text-[#f8fafc] antialiased selection:bg-[#00c896]/30 selection:text-white">
       {/* 1. Fixed / Sticky Premium Navbar */}
       <LandingNavbar />
@@ -28,6 +31,9 @@ export default function LandingPage() {
         Sentinel-1, scored against Global Mangrove Watch reference labels). Scenarios are simulations, and nothing
         here has been validated in the field.
       </div>
+
+      {/* Plain-language purpose: problem, what it does, who it is for, where it stands, what support unlocks */}
+      <PurposeSection />
 
       {/* 3. The Core Insight Section: "Knowing where habitat exists is only the beginning" */}
       <CoreInsightSection />
@@ -59,5 +65,6 @@ export default function LandingPage() {
       {/* 12. Enterprise / Government Conservation Intelligence Footer */}
       <LandingFooter />
     </div>
+    </LandingStoryProvider>
   );
 }

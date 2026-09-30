@@ -8,6 +8,7 @@ import { useAnalysis } from "@/hooks/use-analysis";
 import { postReanalyse, type ReanalyseResult } from "@/lib/api";
 import { applyReanalysis, getLiveBundle } from "@/lib/data";
 import { fmtIndex } from "@/utils/format";
+import { Term } from "@/components/shared/term";
 
 /**
  * Parameter sensitivity explorer (paper Sections VI-F, VII): change the dispersal threshold τ, the
@@ -165,7 +166,7 @@ export function SensitivityExplorer() {
         <div className="grid grid-cols-3 gap-2 text-center">
           {cells.map(([l, v]) => (
             <div key={l} className="rounded-lg bg-foreground/[0.04] px-2 py-1.5">
-              <div className="text-[8.5px] uppercase tracking-wider text-muted-foreground">{l}</div>
+              <div className="text-[8.5px] uppercase tracking-wider text-muted-foreground"><Term>{l}</Term></div>
               <div className="text-[12.5px] font-semibold tabular">{busy ? "…" : v}</div>
             </div>
           ))}

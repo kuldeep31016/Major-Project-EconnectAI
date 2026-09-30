@@ -18,6 +18,7 @@ import { requestMapFocus, useMapFocus } from "@/lib/map-focus";
 const GisMap = dynamic(() => import("@/components/maps/gis-map"), { ssr: false });
 const VERDICT: Record<string, { label: string; variant: "success" | "warning" | "danger" }> = {
   recommended: { label: "Recommended", variant: "success" }, conditional: { label: "Conditional", variant: "warning" }, not_recommended: { label: "Not recommended", variant: "danger" },
+  field_check: { label: "Uncertain habitat — field check", variant: "warning" },
 };
 
 /** Restoration Planner: gain ranking (Eq. 11), rule-based feasibility with WHY / WHY NOT / NOT ASSESSED, optional cost upload (Eq. 12). */
@@ -73,7 +74,7 @@ export default function RestorationPlanner() {
         </div>
         <div className="relative min-h-[420px]">
           <GisMap scene={scene} mask={mask} graph={graph} heatmap={heatmap} layers={{ satellite: true, probability: false, habitat: true, heatmap: false, connectivity: true, protectedAreas: false, labels: false }} basemap="satellite" heatOpacity={0.5} selectedPatchId={selectedPatchId} onSelectPatch={setSelectedPatchId} className="h-full w-full"
-            markers={(fe?.candidates ?? []).map((c) => ({ id: c.candidate_id, lat: c.centroid[0], lon: c.centroid[1], color: c.verdict === "recommended" ? "#16a34a" : c.verdict === "conditional" ? "#f59e0b" : "#b91c1c", label: `#${c.rank} ${c.candidate_id} · +${c.gain_pct.toFixed(2)} % · ${VERDICT[c.verdict].label}`, kind: "candidate" as const, onClick: () => setActive(c) }))}
+            markers={(fe?.candidates ?? []).map((c) => ({ id: c.candidate_id, lat: c.centroid[0], lon: c.centroid[1], color: c.verdict === "recommended" ? "#16a34a" : c.verdict === "conditional" || c.verdict === "field_check" ? "#f59e0b" : "#b91c1c", label: `#${c.rank} ${c.candidate_id} · +${c.gain_pct.toFixed(2)} % · ${VERDICT[c.verdict].label}`, kind: "candidate" as const, onClick: () => setActive(c) }))}
             focus={focus} />
           <div className="pointer-events-none absolute left-3 top-3 z-[900] rounded-lg bg-white/90 px-3 py-1.5 text-[11px] shadow">{live ? "REAL DATA · candidates are model output (marginal-probability areas), not surveyed sites" : "no analysis for this landscape yet"}</div>
           {active && <div className="absolute bottom-3 left-3 z-[900] rounded-lg bg-white/95 px-3 py-2 text-[11px] shadow">Candidate {active.candidate_id} at {active.centroid[0].toFixed(4)}, {active.centroid[1].toFixed(4)} · links to {active.linked_patch_ids.join(", ") || "—"}</div>}
