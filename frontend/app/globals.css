@@ -3,6 +3,8 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+/* short viewports (laptops with a small browser window): used by the sign-in page to fit one screen */
+@custom-variant short (@media (max-height: 1000px));
 
 @theme inline {
   --color-background: var(--background);

@@ -190,9 +190,9 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
   ECO_DATABASE_URL line out to use SQLite). Tests always use their own temp DB.
 - Live (2026-09-30): the CORRECT API is Render service srv-dapspsmgekts73f33760 at
   https://major-project-econnectai-lzaw.onrender.com (Neon DB, Anthropic key, CORS = localhost:3000 + Vercel URL);
-  `scripts/check_deployment.py` → 14/14 PASS. Frontend https://major-project-econnect-ai.vercel.app must use
-  NEXT_PUBLIC_API_URL = that URL (Vercel env). An OLD duplicate service answers at major-project-econnectai.onrender.com
-  (SQLite, CORS '*') — user to suspend/delete it. `/api/health` reports effective CORS origins for diagnosis.
+  `scripts/check_deployment.py` → 14/14 PASS. Frontend https://major-project-econnect-ai.vercel.app uses it (Vercel NEXT_PUBLIC_API_URL, type Config — NEXT_PUBLIC_*
+  cannot be Secret); verified 2026-10-01: bundle contains only the -lzaw URL, /demo loads live data in a browser. An OLD duplicate service answers at major-project-econnectai.onrender.com
+  (SQLite, CORS *) — SUSPENDED by user 2026-10-01 (answers 503; Render project "Major Project", Frankfurt). `/api/health` reports effective CORS origins for diagnosis.
 - Target stack: Vercel (frontend) + Render web service (API, Docker) + Neon PostgreSQL + Cloudflare R2 (photos) +
   GitHub Actions CI with deploy hook. GitHub Actions still blocked: account billing lock (user must fix in
   github.com/settings/billing; repo is public).
