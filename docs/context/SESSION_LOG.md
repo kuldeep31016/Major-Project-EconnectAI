@@ -14,6 +14,17 @@ Next step:
 
 ---
 
+## 2026-10-01 — sign-in page redesign (user mockup) + QA standard
+
+frontend/app/login/page.tsx rebuilt to the user's mockup: left story panel (Instrument Serif headline via lib/fonts.ts,
+3 feature cards, real Vembanad imagery graded emerald + dashed contours), right card (icon inputs, Forgot password =
+honest "ask your State Administrator" note, Remember me = real: tokens in sessionStorage when unchecked, via
+lib/api setRememberSession/readKey/writeKey), collapsible demo accounts. "Continue with Google" deliberately omitted
+(no OAuth). Height-aware sizing (clamp/vh) + `short:` custom variant (max-height 1000px, globals.css) → fits one
+viewport: QA-measured at 1110×600 (user's window), 1280×720, 1440×900, 1920×1080, 375×812. Assistant hidden on /login.
+Old Render service suspended (503). User rule: screenshot/measure every UI change at those sizes before reporting.
+Next: user wants all modules functionally perfect and the product explained in plain language for funders/stakeholders.
+
 ## 2026-09-30 — two Render services found; correct one passes 14/14
 
 Live CORS '*' came from an old duplicate Render service at major-project-econnectai.onrender.com (env ECO_CORS_ORIGINS

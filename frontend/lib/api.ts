@@ -10,33 +10,47 @@ export const API_URL =
   (typeof process !== "undefined" && process.env.NEXT_PUBLIC_API_URL) || "http://localhost:8000";
 
 const TOKEN_KEY = "ecoconnect:token";
-export function getToken(): string | null {
+const REMEMBER_KEY = "ecoconnect:remember";
+/** "Remember me": tokens live in localStorage (survive restarts) or sessionStorage (cleared when the browser closes). */
+export function setRememberSession(remember: boolean) {
   try {
-    return typeof window !== "undefined" ? window.localStorage.getItem(TOKEN_KEY) : null;
+    window.localStorage.setItem(REMEMBER_KEY, remember ? "1" : "0");
+  } catch { /* ignore */ }
+}
+function store(): Storage | null {
+  try {
+    if (typeof window === "undefined") return null;
+    return window.localStorage.getItem(REMEMBER_KEY) === "0" ? window.sessionStorage : window.localStorage;
   } catch {
     return null;
   }
 }
-export function setToken(t: string | null) {
+function readKey(key: string): string | null {
   try {
-    if (t) window.localStorage.setItem(TOKEN_KEY, t);
-    else window.localStorage.removeItem(TOKEN_KEY);
+    return typeof window === "undefined" ? null : window.localStorage.getItem(key) ?? window.sessionStorage.getItem(key);
   } catch {
-    /* ignore */
+    return null;
   }
+}
+function writeKey(key: string, v: string | null) {
+  try {
+    window.localStorage.removeItem(key); window.sessionStorage.removeItem(key);
+    if (v) store()?.setItem(key, v);
+  } catch { /* ignore */ }
+}
+export function getToken(): string | null {
+  return readKey(TOKEN_KEY);
+}
+export function setToken(t: string | null) {
+  writeKey(TOKEN_KEY, t);
 }
 
 const REFRESH_KEY = "ecoconnect:refresh";
 export function setRefreshToken(t: string | null) {
-  try {
-    if (t) window.localStorage.setItem(REFRESH_KEY, t);
-    else window.localStorage.removeItem(REFRESH_KEY);
-  } catch {
-    /* ignore */
-  }
+  writeKey(REFRESH_KEY, t);
 }
 function getRefreshToken(): string | null {
-  try { return typeof window !== "undefined" ? window.localStorage.getItem(REFRESH_KEY) : null; } catch { return null; }
+  return readKey(REFRESH_KEY);
 }
 
 // One refresh at a time: concurrent 401s share the same rotation (a rotated token must never be sent twice).
