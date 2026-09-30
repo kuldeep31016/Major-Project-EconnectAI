@@ -51,15 +51,15 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 
 ## Phase 7 — CI/CD, observability, security, deployment
 - [x] P0 GitHub Actions: ruff, pytest, eslint, tsc, next build, pip-audit/npm audit, docker build
-- [ ] P1 `/health`, `/ready`, request IDs, structured logs, admin health page
-- [ ] P1 Refresh tokens / shorter access tokens; auth on sensitive reads
-- [ ] P2 Cloud deployment doc + cost estimate (free-tier stack)
+- [x] P1 `/health` (uptime), `/ready`, X-Request-ID, JSON logs, route metrics, `/system` admin page (2026-09-30)
+- [x] P1 60-min access + rotating refresh tokens (reuse revokes family), logout; auth on reports/projects, anonymous evidence chain redacted (2026-09-30)
+- [x] P2 docs/DEPLOYMENT.md rewrite + cost table; render.yaml secrets sync:false, /api/ready health check; CI deploy job via RENDER_DEPLOY_HOOK_URL (2026-09-30) (free-tier stack)
 
 ## Phase 8 — Docs, GitHub, demo
 - [x] P1 README capability table; docs/LIMITATIONS.md; docs/RESEARCH_IP_NOTES.md (2026-09-28)
-- [ ] P2 CONTRIBUTING, DATA, RESEARCH docs
+- [x] P2 CONTRIBUTING, DATA, RESEARCH docs (2026-09-30)
 - [x] P1 Guided demo `/demo` (7-chapter scrollytelling, live data, P17 chosen by rule) + landing links (2026-09-28)
-- [ ] P2 Server-side PDF report with provenance + limitations
+- [x] P2 Server-side PDF report (fpdf2; /api/reports/{id}/pdf, hashed artifact, audited) (2026-09-30)
 
 ## Needs new ML experiments / external data (not code-only)
 - Fix tiling leakage + normaliser cache, rebuild 4-area tiles, threshold on validation split, re-evaluate

@@ -38,4 +38,4 @@ they apply; they are listed here in one place.
 
 ## Platform
 - The public demo backend runs on a free tier (sleeps when idle; SQLite state resets on redeploy).
-- CI is defined but GitHub Actions is currently blocked on the owner account (billing lock).
+- CI is defined but GitHub Actions is currently blocked by a billing lock on the owner account (the repository is public; the lock must be cleared in GitHub billing settings).

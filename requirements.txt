@@ -49,3 +49,5 @@ bcrypt>=4.0
 python-multipart>=0.0.9
 # Evidence-grounded assistant (optional at runtime: without credentials it falls back to templates)
 anthropic>=1.0
+# server-side PDF reports (backend/report_pdf.py)
+fpdf2>=2.7

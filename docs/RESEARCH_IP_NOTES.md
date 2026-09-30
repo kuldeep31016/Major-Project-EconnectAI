@@ -7,6 +7,11 @@ connectivity, e.g. Conefor / Graphab / Circuitscape and remote-sensing mangrove 
 must be made with a registered patent agent or IP attorney. Public disclosure (GitHub, demos, papers, talks) can
 affect patentability in many jurisdictions — ask the IP professional about timing **before** further disclosure.
 
+**Disclosure status (for the IP professional):** the GitHub repository `kuldeep31016/Major-Project-EconnectAI` is
+**public**, so its code, documentation (including this file) and commit history are publicly available from the
+date of each push. A live demo may also have been shown publicly. Bring the first-push date and any demo/talk dates
+to the consultation — they matter for novelty and any grace-period rules.
+
 This document records what the system actually does, so that an IP professional can assess it.
 
 ## 1. Technical problem

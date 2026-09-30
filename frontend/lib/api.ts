@@ -26,7 +26,41 @@ export function setToken(t: string | null) {
   }
 }
 
-async function getJson<T>(path: string, init?: RequestInit, timeoutMs = 8000): Promise<T> {
+const REFRESH_KEY = "ecoconnect:refresh";
+export function setRefreshToken(t: string | null) {
+  try {
+    if (t) window.localStorage.setItem(REFRESH_KEY, t);
+    else window.localStorage.removeItem(REFRESH_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+function getRefreshToken(): string | null {
+  try { return typeof window !== "undefined" ? window.localStorage.getItem(REFRESH_KEY) : null; } catch { return null; }
+}
+
+// One refresh at a time: concurrent 401s share the same rotation (a rotated token must never be sent twice).
+let refreshing: Promise<boolean> | null = null;
+async function tryRefresh(): Promise<boolean> {
+  const rt = getRefreshToken();
+  if (!rt) return false;
+  refreshing ??= (async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/auth/refresh`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: rt }) });
+      if (!res.ok) { setToken(null); setRefreshToken(null); return false; }
+      const j = (await res.json()) as { token: string; refresh_token: string };
+      setToken(j.token); setRefreshToken(j.refresh_token);
+      return true;
+    } catch {
+      return false;
+    } finally {
+      setTimeout(() => { refreshing = null; }, 0);
+    }
+  })();
+  return refreshing;
+}
+
+async function getJson<T>(path: string, init?: RequestInit, timeoutMs = 8000, retried = false): Promise<T> {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
@@ -34,6 +68,10 @@ async function getJson<T>(path: string, init?: RequestInit, timeoutMs = 8000): P
     const headers = new Headers(init?.headers);
     if (token) headers.set("Authorization", `Bearer ${token}`);
     const res = await fetch(`${API_URL}${path}`, { ...init, headers, signal: ctrl.signal, cache: "no-store" });
+    // expired access token: rotate the refresh token once and retry the request
+    if (res.status === 401 && token && !retried && !/^\/api\/auth\/(login|refresh|logout)/.test(path) && (await tryRefresh())) {
+      return getJson<T>(path, init, timeoutMs, true);
+    }
     if (!res.ok) {
       // surface the backend's own explanation (FastAPI `detail`) so the UI never shows a bare status code
       let detail = "";
@@ -263,7 +301,7 @@ export type Role = "state_admin" | "senior_officer" | "range_officer" | "field_o
 export interface SessionUser { id: number; username: string; fullName: string; role: Role; roleLabel: string; capabilities: string[]; orgId: number | null }
 
 export const login = (username: string, password: string) =>
-  getJson<{ token: string; user: SessionUser }>("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password }) });
+  getJson<{ token: string; refresh_token: string; expires_in: number; user: SessionUser }>("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username, password }) });
 export const fetchMe = () => getJson<SessionUser>("/api/auth/me");
 export const fetchUsers = () => getJson<SessionUser[]>("/api/users");
 
@@ -431,3 +469,34 @@ export const fetchRunCriticality = (sa: string, run = "latest") => getJson<Criti
 export const fetchRunRestoration = (sa: string, run = "latest") => getJson<{ candidates: RestorationCandidateRow[]; ranking_basis: string }>(runPath(sa, run, "restoration"), undefined, 20000);
 export const fetchRunManifest = (sa: string, run = "latest") => getJson<{ run_id: string; result_label: string; study_area: { name?: string; state?: string }; data_source: { scene_year?: number; threshold?: number; model?: string }; config: { graph: { k_neighbors: number; tau_km: number } } }>(runPath(sa, run, "manifest"));
 export const fetchRunMetrics = (sa: string, run = "latest") => getJson<{ research_metrics: { n_patches: number; n_edges: number; n_components: number; habitat_area_ha: number; iic: number; eca_pct_of_habitat: number } }>(runPath(sa, run, "metrics"));
+
+/** Server-rendered PDF of a stored official report (auth required; the file is hashed + audited server-side). */
+export async function downloadReportPdf(reportId: number): Promise<void> {
+  const token = getToken();
+  const r = await fetch(`${API_URL}/api/reports/${reportId}/pdf`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
+  if (!r.ok) throw new Error(r.status === 401 ? "Sign in to download official reports" : `PDF failed (${r.status})`);
+  const url = URL.createObjectURL(await r.blob());
+  const a = document.createElement("a");
+  a.href = url; a.download = `ecoconnect-report-${reportId}.pdf`; a.click();
+  URL.revokeObjectURL(url);
+}
+
+/** Revoke the refresh-token family on the server (best effort), then clear local tokens. */
+export async function logout(): Promise<void> {
+  const rt = getRefreshToken();
+  const token = getToken();
+  if (rt) {
+    try {
+      await fetch(`${API_URL}/api/auth/logout`, { method: "POST", headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) }, body: JSON.stringify({ refresh_token: rt }) });
+    } catch { /* offline: tokens are still cleared locally */ }
+  }
+  setToken(null); setRefreshToken(null);
+}
+
+export interface SystemInfo {
+  version: string; database: string; schema: { current: string; head: string; ok: boolean }; storage: string; inline_worker: boolean; assistant: string;
+  jobs: { by_status: Record<string, number>; failed_24h: { id: string; type: string; error: string | null; at: string | null }[] };
+  counts: Record<string, number>; config: Record<string, unknown>;
+  requests: { uptime_s: number; total_requests: number; total_5xx: number; routes: { route: string; requests: number; errors_5xx: number; p50_ms: number; p95_ms: number }[]; recent_errors: { route: string; status: number; request_id: string; at: string }[] };
+}
+export const fetchSystem = () => getJson<SystemInfo>("/api/admin/system");

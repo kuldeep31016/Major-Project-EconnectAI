@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import os
 import secrets
-from datetime import timedelta
+from datetime import timedelta, timezone
 
 import bcrypt
 import jwt
@@ -34,7 +34,9 @@ def _dev_secret() -> str:
 
 JWT_SECRET = os.environ.get("ECO_JWT_SECRET") or _dev_secret()
 JWT_ALG = "HS256"
-TOKEN_HOURS = int(os.environ.get("ECO_TOKEN_HOURS", "12"))
+# Short-lived access tokens + rotating refresh tokens (Phase 7). ECO_TOKEN_HOURS is honoured for old deployments.
+ACCESS_MINUTES = int(os.environ.get("ECO_ACCESS_MINUTES") or 60 * int(os.environ.get("ECO_TOKEN_HOURS", "0")) or 60)
+REFRESH_DAYS = int(os.environ.get("ECO_REFRESH_DAYS", "14"))
 
 # Capability matrix (what each role may do). Keep it small and explicit.
 PERMISSIONS: dict[str, set[str]] = {
@@ -70,8 +72,52 @@ def verify_password(pw: str, hashed: str) -> bool:
 
 def create_token(user: User) -> str:
     payload = {"sub": user.username, "uid": user.id, "role": user.role,
-               "exp": utcnow() + timedelta(hours=TOKEN_HOURS)}
+               "exp": utcnow() + timedelta(minutes=ACCESS_MINUTES), "typ": "access"}
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALG)
+
+
+def _hash(raw: str) -> str:
+    import hashlib
+    return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def issue_refresh(db: Session, user: User, family: str | None = None) -> str:
+    from .db import RefreshToken
+    raw = secrets.token_urlsafe(40)
+    db.add(RefreshToken(user_id=user.id, token_hash=_hash(raw), family=family or secrets.token_hex(8),
+                        expires_at=utcnow() + timedelta(days=REFRESH_DAYS)))
+    return raw
+
+
+def rotate_refresh(db: Session, raw: str) -> tuple[User, str]:
+    """Exchange a refresh token for a new one (same family). Presenting an already-rotated token revokes the
+    whole family - a stolen token can be used at most once before both parties are signed out."""
+    from .db import RefreshToken
+    t = db.query(RefreshToken).filter_by(token_hash=_hash(raw)).first()
+    if not t:
+        raise HTTPException(401, "invalid refresh token")
+    if t.revoked:
+        db.query(RefreshToken).filter_by(family=t.family).update({"revoked": True})
+        from .db import audit
+        audit(db, db.get(User, t.user_id), "refresh_token_reuse", "user", t.user_id, reason="rotated token presented again; family revoked")
+        db.commit()
+        raise HTTPException(401, "refresh token reuse detected - signed out")
+    exp = t.expires_at if t.expires_at.tzinfo else t.expires_at.replace(tzinfo=timezone.utc)
+    user = db.get(User, t.user_id)
+    if exp < utcnow() or not user or not user.active:
+        raise HTTPException(401, "refresh token expired")
+    t.revoked = True
+    new = issue_refresh(db, user, t.family)
+    db.commit()
+    return user, new
+
+
+def revoke_family(db: Session, raw: str) -> None:
+    from .db import RefreshToken
+    t = db.query(RefreshToken).filter_by(token_hash=_hash(raw)).first()
+    if t:
+        db.query(RefreshToken).filter_by(family=t.family).update({"revoked": True})
+        db.commit()
 
 
 def current_user(request: Request, db: Session = Depends(get_db)) -> User:

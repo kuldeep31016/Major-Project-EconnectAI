@@ -14,6 +14,22 @@ Next step:
 
 ---
 
+## 2026-09-30 — Phase 8 finish + Phase 7 + deployment prep
+
+Changed: backend/report_pdf.py + GET /api/reports/{id}/pdf (reports page downloads it for official-* reports);
+CONTRIBUTING.md, docs/DATA.md, docs/RESEARCH.md; RESEARCH_IP_NOTES public-disclosure note (repo is public).
+Phase 7: backend/observability.py, backend/admin_api.py, frontend /system page (+nav for admin/senior); refresh tokens
+(db RefreshToken, migration 0005, auth.issue/rotate/revoke, routers refresh/logout; frontend lib/api tryRefresh single-flight
+retry on 401 except login/refresh/logout — bug found in browser: /api/auth/me was excluded); auth required on
+/api/reports, /api/projects*; anonymous evidence chain redacts field personal data. Evidence photos now in object
+storage. boto3 in requirements-api. render.yaml: /api/ready health check, secrets sync:false (DB URL, CORS origin,
+Anthropic key, R2). CI: deploy job (needs RENDER_DEPLOY_HOOK_URL secret). docs/DEPLOYMENT.md rewritten with cost table.
+User gave Anthropic key → only in local .env.
+Tests: 93 passed/1 skipped; eslint 0 errors; next build OK. Browser: /system live; corrupted access token auto-refreshed.
+CI: still "account locked due to a billing issue" (not code).
+Next: user creates accounts/secrets (Neon, R2, Render env, Vercel env, GitHub secret) → deploy; then live-test assistant
+with a few questions only (user wants the key conserved).
+
 ## 2026-09-28 — Phase 8 (part): guided demo, IP notes, limitations
 
 Changed: frontend/app/demo/page.tsx + components/demo/network-canvas.tsx (Design Style 5 editorial, brand colours kept;

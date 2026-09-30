@@ -336,6 +336,19 @@ class Artifact(Base):
     created_at = Column(DateTime, default=utcnow)
 
 
+# --------------------------------------------------------------------------- Phase 7: refresh tokens
+class RefreshToken(Base):
+    """Rotating refresh tokens. Only a sha256 of the token is stored; reuse of a rotated token revokes its family."""
+    __tablename__ = "refresh_tokens"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    token_hash = Column(String(64), unique=True, nullable=False)
+    family = Column(String(32), index=True, nullable=False)
+    expires_at = Column(DateTime, nullable=False)
+    revoked = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=utcnow)
+
+
 # --------------------------------------------------------------------------- Phase 5: restoration decisions + HITL
 # Structured field checklist: key -> allowed values. Free text goes in Evidence.notes.
 FIELD_CHECKLIST = {

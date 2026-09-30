@@ -125,17 +125,20 @@ def test_evidence_assistant_and_official_report(client):
     s = _auth(client, "senior")
     crit = client.get("/api/runs/odisha-coast/wf_test_run/criticality").json()
     pid = crit[0]["patch_id"]
-    ch = client.get(f"/api/runs/odisha-coast/wf_test_run/evidence/patch/{pid}").json()
+    ch = client.get(f"/api/runs/odisha-coast/wf_test_run/evidence/patch/{pid}", headers=s).json()
     assert ch["decision"]["rank"] == 1 and ch["criticality_calculation"]["S_i"] == crit[0]["criticality_score"]
     assert ch["field_verification"] and ch["verification_status"] == "CONFIRMED"      # from the lifecycle test
     a = client.post("/api/assistant/ask", json={"question": "Which patches are most critical?", "study_area": "odisha-coast", "run_id": "wf_test_run"}).json()
     assert a["intent"] == "critical" and pid in a["answer"] and a["label"]
     w = client.post("/api/assistant/ask", json={"question": f"what happens if {pid} is removed", "study_area": "odisha-coast", "run_id": "wf_test_run"}).json()
     assert w["intent"] == "whatif" and f"{crit[0]['delta_pct']:.1f}" in w["answer"]
-    p = client.get("/api/projects").json()[0]
+    anon = client.get(f"/api/runs/odisha-coast/wf_test_run/evidence/patch/{pid}").json()
+    assert anon["redacted"] and "lat" not in str(anon["field_verification"]) and "user_id" not in str(anon["field_verification"])
+    assert client.get("/api/projects").status_code == 401 and client.get("/api/reports").status_code == 401
+    p = client.get("/api/projects", headers=s).json()[0]
     rep = client.post("/api/reports/generate", headers=s, json={"study_area": "odisha-coast", "run_id": "wf_test_run", "project_id": p["id"]}).json()
     assert rep["status"] == "draft" and any(sec["id"] == "verification" for sec in rep["sections"]) and rep["sections"][0]["id"] == "project"
-    assert client.get("/api/reports?study_area=odisha-coast").json()[0]["id"] == rep["id"]
+    assert client.get("/api/reports?study_area=odisha-coast", headers=s).json()[0]["id"] == rep["id"]
     assert client.post("/api/reports/generate", headers=_auth(client, "field"), json={"study_area": "odisha-coast"}).status_code == 403
 
 
@@ -195,3 +198,39 @@ def test_saved_scenario_is_recomputed_server_side(client):
         "params": {"patch_ids": [pid]}, "result": {"difference": {"loss_pct": 99.9}}}).json()
     real = client.post("/api/runs/odisha-coast/wf_test_run/scenario", json={"type": "remove_patches", "patch_ids": [pid]}).json()
     assert out["result"]["difference"] == real["difference"] and out["label"] == real["label"]
+
+
+def test_official_report_pdf(client):
+    s = _auth(client, "senior")
+    rep = client.post("/api/reports/generate", headers=s, json={"study_area": "odisha-coast", "run_id": "wf_test_run"}).json()
+    rid = int(rep["id"].split("-")[1])
+    assert client.get(f"/api/reports/{rid}/pdf").status_code == 401
+    r = client.get(f"/api/reports/{rid}/pdf", headers=s)
+    assert r.status_code == 200 and r.headers["content-type"] == "application/pdf" and r.content[:5] == b"%PDF-"
+    assert len(r.content) > 3000
+    arts = client.get("/api/artifacts?kind=report_pdf").json()
+    assert any(a["meta"]["report_id"] == rid and len(a["sha256"]) == 64 for a in arts)
+
+
+def test_refresh_rotation_reuse_detection_and_logout(client):
+    r = client.post("/api/auth/login", json={"username": "gis", "password": "testpass"}).json()
+    assert r["expires_in"] > 0 and r["refresh_token"]
+    r2 = client.post("/api/auth/refresh", json={"refresh_token": r["refresh_token"]}).json()
+    assert r2["token"] and r2["refresh_token"] != r["refresh_token"]
+    assert client.get("/api/auth/me", headers={"Authorization": "Bearer " + r2["token"]}).json()["username"] == "gis"
+    # presenting the rotated token again = theft signal: the whole family is revoked
+    assert client.post("/api/auth/refresh", json={"refresh_token": r["refresh_token"]}).status_code == 401
+    assert client.post("/api/auth/refresh", json={"refresh_token": r2["refresh_token"]}).status_code == 401
+    r3 = client.post("/api/auth/login", json={"username": "gis", "password": "testpass"}).json()
+    assert client.post("/api/auth/logout", json={"refresh_token": r3["refresh_token"]}).json()["ok"]
+    assert client.post("/api/auth/refresh", json={"refresh_token": r3["refresh_token"]}).status_code == 401
+
+
+def test_request_ids_and_admin_system(client):
+    r = client.get("/api/health", headers={"X-Request-ID": "trace-abc-12345"})
+    assert r.headers["X-Request-ID"] == "trace-abc-12345" and r.json()["uptime_s"] >= 0
+    assert len(client.get("/api/health").headers["X-Request-ID"]) == 16
+    assert client.get("/api/admin/system", headers=_auth(client, "field")).status_code == 403
+    sysinfo = client.get("/api/admin/system", headers=_auth(client, "admin")).json()
+    assert sysinfo["schema"]["ok"] and sysinfo["counts"]["users"] >= 6 and sysinfo["requests"]["total_requests"] > 0
+    assert any(x["route"].startswith("GET /api/health") for x in sysinfo["requests"]["routes"])

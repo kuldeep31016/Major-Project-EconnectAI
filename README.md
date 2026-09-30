@@ -139,4 +139,5 @@ docs/                IMPLEMENTATION_AUDIT, PAPER_IMPLEMENTATION_TRACEABILITY, DA
 `docs/PAPER_IMPLEMENTATION_TRACEABILITY.md` (equation → function) · `docs/DATASET_SETUP.md` ·
 `docs/PREPROCESSING.md` · `docs/TRAINING.md` · `docs/INFERENCE.md` · `docs/CONNECTIVITY_METRICS.md` ·
 `docs/GEE_SETUP.md` · `docs/EXPERIMENTS.md` · `docs/RESULTS_PROVENANCE.md` · `docs/TROUBLESHOOTING.md` ·
-`docs/LIMITATIONS.md` · `docs/RESEARCH_IP_NOTES.md` · `docs/context/` (project memory)
+`docs/LIMITATIONS.md` · `docs/RESEARCH_IP_NOTES.md` · `docs/RESEARCH.md` · `docs/DATA.md` · `CONTRIBUTING.md` ·
+`docs/context/` (project memory)

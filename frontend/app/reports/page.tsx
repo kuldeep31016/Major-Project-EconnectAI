@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { EASE } from "@/components/shared/motion";
-import { fetchOfficialReports, fetchProjects, fetchReport, fetchRuns, generateOfficialReport, type ProjectItem } from "@/lib/api";
+import { fetchOfficialReports, fetchProjects, fetchReport, fetchRuns, generateOfficialReport, type ProjectItem, downloadReportPdf } from "@/lib/api";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { useAuth } from "@/hooks/use-auth";
 import type { ScientificReport } from "@/types";
@@ -81,9 +81,17 @@ function ReportsView() {
     [reports, activeId],
   );
 
-  // Reports are printed to PDF by the browser (no server-side PDF renderer).
-  const handleDownload = () => {
+  // Stored official reports → server-rendered PDF (provenance, network figure, decisions, audit footer).
+  // Per-run preview reports are not stored, so they fall back to the browser's print-to-PDF.
+  const handleDownload = async () => {
+    const m = /^official-(\d+)$/.exec(report?.id ?? "");
     setDownloading(true);
+    if (m) {
+      try { await downloadReportPdf(Number(m[1])); }
+      catch (e) { window.alert(e instanceof Error ? e.message : String(e)); }
+      finally { setDownloading(false); }
+      return;
+    }
     window.setTimeout(() => {
       setDownloading(false);
       window.print();

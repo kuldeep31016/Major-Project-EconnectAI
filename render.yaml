@@ -1,18 +1,39 @@
 # Render blueprint for the EcoConnectAI API (Dashboard -> New -> Blueprint -> this repo).
-# The frontend is deployed separately (Vercel, root directory frontend/).
+# The frontend is deployed separately (Vercel, root directory frontend/). Full guide: docs/DEPLOYMENT.md.
+#
+# Every `sync: false` value is a secret or environment-specific setting: enter it in the Render dashboard
+# (Environment tab). Nothing secret is committed here.
 services:
   - type: web
     name: major-project-econnectai
     runtime: docker
     dockerfilePath: ./Dockerfile
+    # free = sleeps when idle and cold-starts slowly. For a demo that must always answer, use `starter` (paid).
     plan: free
-    healthCheckPath: /api/health
+    # readiness: 503 until the database is reachable and migrated, so traffic only reaches a working instance
+    healthCheckPath: /api/ready
     envVars:
       - key: ECO_JWT_SECRET
         generateValue: true
-      - key: ECO_DEMO_PASSWORD   # set in the Render dashboard; never committed
+      - key: ECO_DATABASE_URL         # persistent PostgreSQL, e.g. Neon: postgresql+psycopg://USER:PASS@HOST/DB?sslmode=require
         sync: false
-      - key: ECO_CORS_ORIGINS
-        value: http://localhost:3000
-      - key: ECO_CORS_ORIGIN_REGEX
-        value: https://.*\.vercel\.app
+      - key: ECO_CORS_ORIGINS         # the exact frontend origin, e.g. https://ecoconnect-ai.vercel.app
+        sync: false
+      - key: ANTHROPIC_API_KEY        # evidence-grounded assistant (optional; unset = template answers)
+        sync: false
+      - key: ECO_ASSISTANT_PER_HOUR   # per-user question cap (cost control)
+        value: "30"
+      - key: ECO_DEMO_PASSWORD        # demo accounts' password (only seeded into an empty database)
+        sync: false
+      - key: ECO_STORAGE              # set to "s3" once the bucket below exists (field photos then survive redeploys)
+        sync: false
+      - key: ECO_S3_BUCKET
+        sync: false
+      - key: ECO_S3_ENDPOINT_URL      # R2: https://<account-id>.r2.cloudflarestorage.com
+        sync: false
+      - key: AWS_ACCESS_KEY_ID        # R2/S3 access key (bucket-scoped token)
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION       # R2 uses "auto"
+        value: auto

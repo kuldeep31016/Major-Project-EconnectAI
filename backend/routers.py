@@ -12,7 +12,8 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ecoconnect.pipeline.config import OUTPUTS_DIR
-from .auth import ROLES, capabilities_for, create_token, current_user, optional_user, require, verify_password, hash_password
+from .auth import (ACCESS_MINUTES, ROLES, capabilities_for, create_token, current_user, hash_password, issue_refresh,
+                   optional_user, require, revoke_family, rotate_refresh, verify_password)
 from .db import (ALERT_STATUSES, DETECTION_STATUSES, ROLE_LABELS, TASK_STATUSES, Alert, AnalysisVersion, AuditLog,
                  Detection, Evidence, FieldTask, LabelSource, Model, Project, Report, Scene, Scenario, StudyArea,
                  User, audit, get_db, utcnow)
@@ -23,7 +24,6 @@ from .security import login_throttle
 from .registry import sync_all
 
 router = APIRouter(prefix="/api")
-EVIDENCE_DIR = OUTPUTS_DIR / "evidence"
 ALLOWED_PHOTO = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp"}
 MAX_PHOTO_BYTES = 8 * 1024 * 1024
 
@@ -58,8 +58,28 @@ def login(body: LoginIn, request: Request, db: Session = Depends(get_db)):
         audit(db, None, "login_failed", "user", body.username[:64]); db.commit()
         raise HTTPException(401, "invalid username or password")
     login_throttle.reset(request, body.username)
+    refresh = issue_refresh(db, u)
     audit(db, u, "login"); db.commit()
-    return {"token": create_token(u), "user": _user_out(u)}
+    return {"token": create_token(u), "refresh_token": refresh, "expires_in": ACCESS_MINUTES * 60, "user": _user_out(u)}
+
+
+class RefreshIn(BaseModel):
+    refresh_token: str = Field(min_length=20, max_length=200)
+
+
+@router.post("/auth/refresh")
+def refresh(body: RefreshIn, db: Session = Depends(get_db)):
+    """Rotate: returns a new access token and a new refresh token; the presented refresh token stops working."""
+    u, new = rotate_refresh(db, body.refresh_token)
+    return {"token": create_token(u), "refresh_token": new, "expires_in": ACCESS_MINUTES * 60, "user": _user_out(u)}
+
+
+@router.post("/auth/logout")
+def logout(body: RefreshIn, user: Optional[User] = Depends(optional_user), db: Session = Depends(get_db)):
+    revoke_family(db, body.refresh_token)
+    if user:
+        audit(db, user, "logout"); db.commit()
+    return {"ok": True}
 
 
 @router.get("/auth/me")
@@ -340,9 +360,10 @@ def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...)
         kind = _image_kind(data)          # trust the bytes, not the client's content-type
         if kind is None:
             raise HTTPException(400, f"photo must be one of {sorted(set(ALLOWED_PHOTO.values()))}")
-        EVIDENCE_DIR.mkdir(parents=True, exist_ok=True)
+        from .storage import get_storage
         fname = f"task{task_id}_{uuid.uuid4().hex[:12]}{kind}"
-        (EVIDENCE_DIR / fname).write_bytes(data)
+        # object storage (local disk in dev, S3/R2 in production) - survives redeploys of the API container
+        get_storage().put_bytes(f"evidence/{fname}", data, content_type={".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}[kind])
         photo_path = fname
     from .workflow_api import validate_checklist
     e = Evidence(task_id=task_id, user_id=user.id, lat=lat, lon=lon, observed_at=observed_at,
@@ -391,11 +412,15 @@ def verify_evidence(evidence_id: int, body: VerifyIn, user: User = Depends(requi
 
 @router.get("/evidence/photo/{name}")
 def evidence_photo(name: str, user: User = Depends(current_user)):
-    from fastapi.responses import FileResponse
-    p = (EVIDENCE_DIR / Path(name).name)
-    if not p.exists():
+    from fastapi.responses import Response
+    from .storage import get_storage
+    key = f"evidence/{Path(name).name}"
+    st = get_storage()
+    if not st.exists(key):
         raise HTTPException(404, "photo not found")
-    return FileResponse(p)
+    kind = Path(name).suffix.lower()
+    return Response(st.get_bytes(key), media_type={".jpg": "image/jpeg", ".png": "image/png", ".webp": "image/webp"}.get(kind, "application/octet-stream"),
+                    headers={"Cache-Control": "private, max-age=3600"})
 
 
 # --------------------------------------------------------------------------- projects
@@ -410,7 +435,7 @@ class ProjectIn(BaseModel):
 
 
 @router.get("/projects")
-def list_projects(study_area: Optional[str] = None, db: Session = Depends(get_db)):
+def list_projects(study_area: Optional[str] = None, user: User = Depends(current_user), db: Session = Depends(get_db)):
     q = db.query(Project)
     if study_area:
         q = q.filter_by(study_area_id=study_area)
@@ -456,7 +481,7 @@ def update_project(project_id: int, body: ProjectUpdate, user: User = Depends(re
 
 
 @router.get("/projects/{project_id}")
-def project_detail(project_id: int, db: Session = Depends(get_db)):
+def project_detail(project_id: int, user: User = Depends(current_user), db: Session = Depends(get_db)):
     p = db.get(Project, project_id)
     if not p:
         raise HTTPException(404, "project not found")
@@ -527,12 +552,22 @@ def _run_dir_for(db: Session, study_area: str, run_id: str) -> Path:
 
 
 @router.get("/runs/{study_area}/{run_id}/evidence/{object_type}/{object_id}")
-def evidence_chain_ep(study_area: str, run_id: str, object_type: str, object_id: str, db: Session = Depends(get_db)):
-    """The evidence chain behind a decision: data source → imagery → model → parameters → analysis → calculation → field verification."""
+def evidence_chain_ep(study_area: str, run_id: str, object_type: str, object_id: str,
+                      user: Optional[User] = Depends(optional_user), db: Session = Depends(get_db)):
+    """The evidence chain behind a decision: data source → imagery → model → parameters → analysis → calculation → field verification.
+    Anonymous callers get the analytical chain but not field personal data (officer ids, GPS, notes, photos)."""
     try:
         rd = _run_dir_for(db, study_area, run_id)
         from .provenance import lineage
-        return _evidence_chain(db, rd, object_type, object_id) | {"lineage": lineage(db, rd, object_type, object_id)}
+        chain = _evidence_chain(db, rd, object_type, object_id) | {"lineage": lineage(db, rd, object_type, object_id)}
+        if user is None:
+            chain["field_verification"] = [{"detection": {"status": f["detection"].get("status")},
+                                             "tasks": [{"title": t.get("title"), "status": t.get("status"),
+                                                        "evidence": [{"verification": e.get("verification"), "observed_at": e.get("observed_at"), "observation": e.get("observation")}
+                                                                     for e in t.get("evidence", [])]} for t in f["tasks"]]}
+                                           for f in chain.get("field_verification", [])]
+            chain["redacted"] = "sign in to see field officers, GPS positions and notes"
+        return chain
     except KeyError:
         raise HTTPException(404, f"{object_type} {object_id} not in run")
 
@@ -595,7 +630,7 @@ def generate_report(body: ReportIn, user: User = Depends(require("generate_repor
 
 
 @router.get("/reports")
-def list_reports(study_area: Optional[str] = Query(None), db: Session = Depends(get_db)):
+def list_reports(study_area: Optional[str] = Query(None), user: User = Depends(current_user), db: Session = Depends(get_db)):
     q = db.query(Report)
     if study_area:
         q = q.filter_by(study_area_id=study_area)
@@ -603,3 +638,35 @@ def list_reports(study_area: Optional[str] = Query(None), db: Session = Depends(
     for r in q.order_by(Report.created_at.desc()).all():
         c = dict(r.content or {}); c["id"] = f"official-{r.id}"; out.append(c)
     return out
+
+
+@router.get("/reports/{report_id}/pdf")
+def report_pdf(report_id: int, user: User = Depends(current_user), db: Session = Depends(get_db)):
+    """Render a stored official report as PDF (+ live lineage, network figure, restoration decisions).
+    The file is kept under outputs/reports/ and registered as a hashed artifact; the download is audited."""
+    from fastapi.responses import Response
+    from .artifacts import register_file
+    from .provenance import lineage
+    from .report_pdf import render_official_pdf
+    from .workflow_api import _out as review_out
+    from .db import RestorationReview
+    r = db.get(Report, report_id)
+    if not r:
+        raise HTTPException(404, "report not found")
+    rep = r.content or {}
+    run_dir = _run_dir_for(db, r.study_area_id, r.run_id or "latest")
+    try:
+        lin = lineage(db, run_dir)
+    except (OSError, KeyError, ValueError):
+        lin = None
+    reviews = [review_out(x, db) for x in db.query(RestorationReview).filter_by(run_id=r.run_id).all()]
+    pdf = render_official_pdf(rep, lineage=lin, run_dir=run_dir, reviews=reviews,
+                              generated_by=f"{user.full_name} ({user.role})", report_id=f"official-{r.id}")
+    out = OUTPUTS_DIR / "reports" / f"official-{r.id}.pdf"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_bytes(pdf)
+    register_file(db, out, "report_pdf", run_id=r.run_id, meta={"report_id": r.id})
+    audit(db, user, "download_report_pdf", "report", r.id)
+    db.commit()
+    return Response(pdf, media_type="application/pdf",
+                    headers={"Content-Disposition": f'attachment; filename="ecoconnect-report-{r.id}.pdf"'})
