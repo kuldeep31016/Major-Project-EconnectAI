@@ -14,6 +14,14 @@ Next step:
 
 ---
 
+## 2026-09-30 — local PostgreSQL + live deployment check
+
+Added scripts/local_postgres.sh (init/start/stop/status/url; data/postgres) — dev DB created, migrated to 0005, synced
+(4 areas, 11 runs, 5 models, 167 artifacts, 6 demo users); full suite 93 passed on a fresh local PG test DB.
+.env now points at it. Added scripts/check_deployment.py; live run: health/ready/run data/what-if P17 −27.0 %/
+traversal/auth all PASS; CORS allow-origin '*' FAIL (user fix in Render). Vercel CLI not logged in; no Render/Neon/R2
+CLIs — account creation and entering secrets are the user's steps (docs/DEPLOYMENT.md §3, final chat message).
+
 ## 2026-09-30 — Phase 8 finish + Phase 7 + deployment prep
 
 Changed: backend/report_pdf.py + GET /api/reports/{id}/pdf (reports page downloads it for official-* reports);
