@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Literal, Optional
@@ -128,7 +129,11 @@ def health():
     """Liveness: the process answers. Readiness (DB + schema) is /api/ready."""
     from backend.observability import STARTED
     import time
-    return {"status": "ok", "version": __version__, "uptime_s": round(time.time() - STARTED)}
+    raw = os.environ.get("ECO_CORS_ORIGINS")
+    # origins are public (browsers see them in every response); reported so a misconfiguration is diagnosable remotely
+    return {"status": "ok", "version": __version__, "uptime_s": round(time.time() - STARTED),
+            "cors": {"origins": _CORS_ORIGINS, "regex": _CORS_REGEX, "env_set": raw is not None,
+                     "env_chars": len(raw) if raw is not None else 0}}
 
 
 @app.get("/api/study-areas")
