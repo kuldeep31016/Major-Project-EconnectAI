@@ -10,7 +10,7 @@ Run:  uvicorn backend.main:app --reload --port 8000
 from __future__ import annotations
 
 import json
-import os
+import logging
 import sys
 from pathlib import Path
 from typing import Literal, Optional
@@ -42,7 +42,7 @@ from backend.db import SessionLocal, init_db  # noqa: E402
 from backend.auth import seed_demo_users, require, User  # noqa: E402
 from backend.registry import sync_all  # noqa: E402
 from backend.routers import router as workflow_router  # noqa: E402
-from backend.security import validate_path_params, contained  # noqa: E402
+from backend.security import cors_config, validate_path_params, contained  # noqa: E402
 
 
 @asynccontextmanager
@@ -66,12 +66,13 @@ app.include_router(jobs_router)
 app.include_router(artifacts_router)
 app.include_router(registry_router)
 app.include_router(phase5_router)
+_CORS_ORIGINS, _CORS_REGEX = cors_config()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=os.environ.get("ECO_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(","),
-    allow_origin_regex=os.environ.get("ECO_CORS_ORIGIN_REGEX") or None,  # e.g. https://.*\.vercel\.app
+    allow_origins=_CORS_ORIGINS, allow_origin_regex=_CORS_REGEX,
     allow_methods=["*"], allow_headers=["*"], expose_headers=["X-Request-ID"],
 )
+logging.getLogger("ecoconnect").warning("cors configured", extra={"route": f"origins={_CORS_ORIGINS} regex={_CORS_REGEX}"})
 app.add_middleware(RequestContextMiddleware)   # outermost: request id + metrics for every request
 app.include_router(admin_router)
 

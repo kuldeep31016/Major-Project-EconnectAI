@@ -68,3 +68,15 @@ class LoginThrottle:
 
 
 login_throttle = LoginThrottle()
+
+
+def cors_config() -> tuple[list[str], str | None]:
+    """Allowed browser origins from ECO_CORS_ORIGINS (comma/space/newline separated, trailing '/' ignored).
+    A bare '*' is dropped unless ECO_CORS_ALLOW_ALL=1 - a wildcard lets any website call the API from a browser."""
+    import os
+    raw = os.environ.get("ECO_CORS_ORIGINS") or "http://localhost:3000,http://127.0.0.1:3000"
+    origins = [o.strip().rstrip("/") for o in re.split(r"[,\s]+", raw) if o.strip()]
+    if "*" in origins and os.environ.get("ECO_CORS_ALLOW_ALL") != "1":
+        origins = [o for o in origins if o != "*"]
+    regex = (os.environ.get("ECO_CORS_ORIGIN_REGEX") or "").strip() or None
+    return origins, regex

@@ -101,3 +101,13 @@ def test_run_file_still_served(client):
 def test_health_hides_server_paths(client):
     assert "outputs_dir" not in client.get("/api/health").json()
 
+
+
+def test_cors_config_parsing(monkeypatch):
+    from backend.security import cors_config
+    monkeypatch.setenv("ECO_CORS_ORIGINS", " http://localhost:3000,\n https://app.example/ , * ")
+    monkeypatch.delenv("ECO_CORS_ALLOW_ALL", raising=False)
+    monkeypatch.delenv("ECO_CORS_ORIGIN_REGEX", raising=False)
+    assert cors_config() == (["http://localhost:3000", "https://app.example"], None)
+    monkeypatch.setenv("ECO_CORS_ALLOW_ALL", "1")
+    assert "*" in cors_config()[0]
