@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { fetchMe, getToken, login as apiLogin, setToken, type SessionUser } from "@/lib/api";
+import { fetchMe, getToken, login as apiLogin, logout as apiLogout, setRefreshToken, setToken, type SessionUser } from "@/lib/api";
 
 interface AuthState {
   user: SessionUser | null;
@@ -29,12 +29,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback(async (username: string, password: string) => {
     const r = await apiLogin(username, password);
     setToken(r.token);
+    setRefreshToken(r.refresh_token);
     setUser(r.user);
     return r.user;
   }, []);
   const signOut = useCallback(() => {
-    setToken(null);
     setUser(null);
+    void apiLogout();          // revokes the refresh-token family server-side, clears local tokens
   }, []);
   const can = useCallback((cap: string) => !!user?.capabilities.includes(cap), [user]);
 

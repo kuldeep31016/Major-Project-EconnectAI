@@ -34,6 +34,8 @@ import backend.job_handlers  # noqa: E402,F401  (registers job types)
 from backend.jobs_api import artifacts_router, router as jobs_router  # noqa: E402
 from backend.registry_api import router as registry_router  # noqa: E402
 from backend.workflow_api import router as phase5_router  # noqa: E402
+from backend.admin_api import router as admin_router  # noqa: E402
+from backend.observability import RequestContextMiddleware  # noqa: E402
 
 from contextlib import asynccontextmanager  # noqa: E402
 from backend.db import SessionLocal, init_db  # noqa: E402
@@ -68,8 +70,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=os.environ.get("ECO_CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(","),
     allow_origin_regex=os.environ.get("ECO_CORS_ORIGIN_REGEX") or None,  # e.g. https://.*\.vercel\.app
-    allow_methods=["*"], allow_headers=["*"],
+    allow_methods=["*"], allow_headers=["*"], expose_headers=["X-Request-ID"],
 )
+app.add_middleware(RequestContextMiddleware)   # outermost: request id + metrics for every request
+app.include_router(admin_router)
 
 
 # --------------------------------------------------------------------------- helpers
@@ -118,7 +122,10 @@ def ready():
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "version": __version__}
+    """Liveness: the process answers. Readiness (DB + schema) is /api/ready."""
+    from backend.observability import STARTED
+    import time
+    return {"status": "ok", "version": __version__, "uptime_s": round(time.time() - STARTED)}
 
 
 @app.get("/api/study-areas")

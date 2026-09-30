@@ -80,3 +80,19 @@ jobs:
         run: docker build -t ecoconnect-api .
       - name: Build frontend image
         run: docker build -t ecoconnect-web --build-arg NEXT_PUBLIC_API_URL=http://localhost:8000 frontend
+
+  deploy:
+    # Continuous deployment: only after every check above passed, only for pushes to main.
+    # Needs the repository secret RENDER_DEPLOY_HOOK_URL (Render service -> Settings -> Deploy Hook).
+    # Vercel deploys the frontend from Git on its own.
+    needs: [docker]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::notice::RENDER_DEPLOY_HOOK_URL not set - skipping deploy"; exit 0; fi
+          curl -fsS -X POST "$HOOK" > /dev/null && echo "Render deploy triggered"
+

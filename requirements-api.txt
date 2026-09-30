@@ -22,6 +22,9 @@ httpx>=0.27
 certifi>=2024
 # PostgreSQL driver, used only when ECO_DATABASE_URL points at Postgres
 psycopg[binary]>=3.1
-# Optional S3-compatible object storage (ECO_STORAGE=s3): pip install boto3
+# S3-compatible object storage in production (ECO_STORAGE=s3: AWS S3, Cloudflare R2, Backblaze B2, MinIO)
+boto3>=1.34
 # Evidence-grounded assistant (optional at runtime: without credentials it falls back to templates)
 anthropic>=1.0
+# server-side PDF reports (backend/report_pdf.py)
+fpdf2>=2.7

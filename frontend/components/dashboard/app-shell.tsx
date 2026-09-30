@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  Activity,
   Bell, Calendar, ChevronDown, ChevronsLeft, ChevronsRight, ClipboardList, Cpu, Database, FileText, FlaskConical, FolderKanban,
   History, LayoutDashboard, Leaf, LogOut, Map as MapIcon, MapPin, Menu, ScrollText, Search, Settings, Sprout, UploadCloud, X,
 } from "lucide-react";
@@ -36,6 +37,7 @@ const NAV: { href: string; label: string; icon: typeof LayoutDashboard; roles?: 
   { href: "/alerts", label: "Alerts", icon: Bell },
   { href: "/history", label: "Analyses", icon: History, roles: ["gis_officer", "analyst", "state_admin", "senior_officer", "range_officer"] },
   { href: "/audit", label: "Audit", icon: ScrollText, roles: ["state_admin", "senior_officer"] },
+  { href: "/system", label: "System health", icon: Activity, roles: ["state_admin", "senior_officer"] },
   { href: "/dashboard", label: "Overview", icon: Cpu, roles: ["analyst", "gis_officer", "state_admin"] },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

@@ -1,6 +1,6 @@
 # EcoConnectAI — Project Context (single source of truth)
 
-_Last updated: 2026-09-28 (Phases 5–6 done; Phase 8 demo + docs)._
+_Last updated: 2026-09-30 (all 8 phases implemented; deployment pending user credentials)._
 
 ## 1. What this is
 
@@ -103,7 +103,11 @@ backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, pa
                 record_disagreement hooked into verify_evidence on ACCEPTED) · assistant_llm.py (Phase 6: evidence pack
                 E1..En → Claude claude-opus-5, output_config json_schema, fallbacks="default"; citations filtered to pack;
                 proposed_scenario validated vs real ids, executed only by user click; signed-in + ANTHROPIC_API_KEY else
-                template insight.answer; 30 q/user/h; audited) · routers.py (platform: auth, users,
+                template insight.answer; 30 q/user/h; audited)
+                observability.py (X-Request-ID middleware, JSON logs, in-memory route metrics) · admin_api.py
+                (/api/admin/system, view_audit) · report_pdf.py (fpdf2, Latin-1 transliteration) · auth: ECO_ACCESS_MINUTES
+                (60) + RefreshToken table (migration 0005, sha256-stored, rotation, reuse → family revoked), /api/auth/refresh,
+                /api/auth/logout · evidence photos via storage.get_storage() key evidence/<file> (S3/R2 in prod) · routers.py (platform: auth, users,
                 alerts, detections, field tasks, evidence, projects, scenarios, audit, assistant, reports)
                 db.py (15 tables) · auth.py (JWT + 6-role RBAC) · registry.py (sync runs→DB)
                 alerts.py (rule engine) · scenarios.py (Scenario Lab A–G) · insight.py (evidence chain,
@@ -139,7 +143,7 @@ bundle state `frontend/hooks/use-analysis.tsx`, getters `frontend/lib/data.ts`.
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-api.txt pytest pandas   # API + tests (no torch)
 # full research stack incl. torch: .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q          # 2026-09-28: 90 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
+.venv/bin/python -m pytest -q          # 2026-09-30: 93 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
 # tests set ECO_INLINE_WORKER=0 and drive jobs with backend.jobs.work_once()
 .venv/bin/ruff check backend ecoconnect scripts tests --select F   # CI lint scope
 .venv/bin/python -m uvicorn backend.main:app --port 8000
@@ -176,3 +180,11 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
   `docs/context/README.md`). User wants zero need to re-read chats or the whole codebase next session.
 - Work phase by phase (ROADMAP), preserve working functionality, run tests each phase, prefer fewer
   excellent features over many broken ones, keep costs student-friendly (free tiers, optional GPU).
+
+## 10. Secrets & deployment state (2026-09-30)
+
+- Local `.env` (gitignored, chmod 600) holds ANTHROPIC_API_KEY (user-provided; user asked not to spend it — no test
+  calls made). Never commit it; in deployment it goes into the Render dashboard (render.yaml `sync: false`).
+- Target stack: Vercel (frontend) + Render web service (API, Docker) + Neon PostgreSQL + Cloudflare R2 (photos) +
+  GitHub Actions CI with deploy hook. GitHub Actions still blocked: account billing lock (user must fix in
+  github.com/settings/billing; repo is public).
