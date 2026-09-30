@@ -12,6 +12,7 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
+from .restoration_rules import UNCERTAIN_NOTE, annotate
 from .db import Alert, AnalysisVersion, Detection, Evidence, FieldTask, Model, Project, Scene, User
 
 
@@ -69,6 +70,7 @@ def evidence_chain(db: Session, run_dir: Path, object_type: str, object_id: str)
 
 # --------------------------------------------------------------------------- assistant
 INTENTS = [
+    ("cut", r"hold.*together|cut vert|bridg|stepping.stone|split|fragment"),
     ("critical", r"(most )?critical|priority patch|which patch(es)? (matter|are important)|top patch"),
     ("why", r"why (is|does) (patch )?(?P<pid>[A-Za-z0-9_-]+)"),
     ("whatif", r"(what (happens|if)|remove|lose|los(s|e) of).*?(?P<pid>[a-z-]+-p\d+|\bp\d+)"),
@@ -106,6 +108,14 @@ def answer(db: Session, question: str, study_area: str, run_dir: Optional[Path])
         txt = f"Most critical patches in {study_area} (run {m['run_id']}, exact leave-one-out on {metric}): " + "; ".join(
             f"#{r['rank']} {r['patch_id']} ({r['area_ha']:.1f} ha, S = {r['criticality_score']:.3f}, −{r['delta_pct']:.1f} %{', cut vertex' if r['is_cut_vertex'] else ''})" for r in top) + "."
         return {"intent": intent, "answer": txt, "sources": src, "label": label, "links": [link], "objects": [r["patch_id"] for r in top]}
+    if intent == "cut":
+        cuts = [r for r in crit if r["is_cut_vertex"]]
+        if not cuts:
+            txt = f"No single patch splits the network in run {m['run_id']}: every patch has an alternative route around it."
+        else:
+            txt = (f"{len(cuts)} patch(es) hold groups of the network together; removing any one splits it (run {m['run_id']}, exact recomputation): " + "; ".join(
+                f"{r['patch_id']} ({r['area_ha']:.1f} ha, {r['area_pct']:.1f} % of habitat, −{r['delta_pct']:.1f} % {metric}, {r['component_count_before']} → {r['component_count_after']} components)" for r in cuts[:6]) + ".")
+        return {"intent": intent, "answer": txt, "sources": src, "label": label, "links": [link], "objects": [r["patch_id"] for r in cuts[:6]]}
     if intent in ("why", "whatif"):
         pid_norm = pid or ""
         r = next((x for x in crit if x["patch_id"].upper() == pid_norm or x["patch_id"].upper().endswith(pid_norm)), None)
@@ -126,12 +136,16 @@ def answer(db: Session, question: str, study_area: str, run_dir: Optional[Path])
         return {"intent": intent, "answer": txt, "sources": [{"type": "run", "id": a.id}, {"type": "run", "id": b.id}], "label": b.result_label, "links": ["/scenario"]}
     if intent == "restore":
         rest = json.loads((run_dir / "restoration.json").read_text())
-        cs = rest["candidates"][:5]
+        allc = annotate(rest["candidates"], rm["habitat_area_ha"])
+        cs = [c for c in allc if c["category"] != "uncertain_habitat"][:5]
+        unc = [c for c in allc if c["category"] == "uncertain_habitat"]
         joins = [c for c in cs if c["components_after"] < c["components_before"]]
-        txt = ("Restoration candidates ranked by connectivity gain (no cost data): " + "; ".join(f"{c['candidate_id']} (+{c['gain_pct']:.2f} % {metric}, {c['new_links']} links → {', '.join(c['linked_patch_ids'])})" for c in cs) + ". "
-               + (f"Candidates that join separate components: {', '.join(c['candidate_id'] for c in joins)}." if joins else "None of the top candidates joins two separate components at the current τ.")
-               + " Feasibility (water, legal status, cost) is assessed separately in the Restoration Planner.")
-        return {"intent": intent, "answer": txt, "sources": src + [{"type": "run", "id": m["run_id"], "file": "restoration.json"}], "label": label, "links": ["/restoration"], "objects": [c["candidate_id"] for c in cs]}
+        txt = (("Restoration candidates ranked by connectivity gain (no cost data): " + "; ".join(f"{c['candidate_id']} ({c['area_ha']:.1f} ha, +{c['gain_pct']:.2f} % {metric}, {c['new_links']} links → {', '.join(c['linked_patch_ids'])})" for c in cs) + ". "
+                if cs else "No restoration-sized candidate in this run. ")
+               + ((f"Candidates that join separate components: {', '.join(c['candidate_id'] for c in joins)}. " if joins else "None of them joins two separate components at the current τ. ") if cs else "")
+               + (f"{', '.join(c['candidate_id'] for c in unc)} are large areas ({', '.join('%.0f ha' % c['area_ha'] for c in unc)}) classed as uncertain habitat, not restoration sites: {UNCERTAIN_NOTE} " if unc else "")
+               + "Feasibility (water, legal status, cost) is assessed separately in the Restoration Planner.")
+        return {"intent": intent, "answer": txt, "sources": src + [{"type": "run", "id": m["run_id"], "file": "restoration.json"}], "label": label, "links": ["/restoration"], "objects": [c["candidate_id"] for c in cs + unc]}
     if intent == "alerts":
         al = db.query(Alert).filter(Alert.study_area_id == study_area, Alert.status.in_(["OPEN", "ACKNOWLEDGED", "ASSIGNED"])).all()
         pend = db.query(Detection).filter(Detection.study_area_id == study_area, Detection.status.in_(["AI_DETECTED", "UNDER_REVIEW", "FIELD_ASSIGNED"])).all()

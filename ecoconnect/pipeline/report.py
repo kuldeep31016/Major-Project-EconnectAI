@@ -9,6 +9,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from .restoration_rules import UNCERTAIN_FRACTION, UNCERTAIN_MIN_HA, UNCERTAIN_NOTE, annotate
+
 
 def _fmt(v, nd=3):
     return f"{v:.{nd}f}" if isinstance(v, (int, float)) else str(v)
@@ -46,8 +48,11 @@ def build_report(run_dir: Path, study_area: dict) -> dict:
     crit_rows = [[r["rank"], r["patch_id"], round(r["area_ha"], 1), round(r["area_pct"], 1), r["degree"],
                   f"{r['delta_connectivity']:.3e}", round(r["criticality_score"], 3), r["component_count_after"],
                   r["rank_by_area"], "yes" if r["is_cut_vertex"] else "no"] for r in crit[:10]]
+    annotate(rest["candidates"], rm["habitat_area_ha"])
+    n_uncertain = sum(c["category"] == "uncertain_habitat" for c in rest["candidates"])
     rest_rows = [[c["rank"], c["candidate_id"], round(c["area_ha"], 1), round(c["gain_pct"], 3), c["new_links"],
-                  c["cost"] if c["cost"] is not None else "—", round(c["gain_per_cost"], 4) if c["gain_per_cost"] is not None else "—"]
+                  c["cost"] if c["cost"] is not None else "—", round(c["gain_per_cost"], 4) if c["gain_per_cost"] is not None else "—",
+                  c["category_label"]]
                  for c in rest["candidates"][:10]]
     tau_rows = [[k.replace("tau_", "").replace("km", " km"), v["edges"], v["components"], round(v["spearman_vs_reference"], 3),
                  ", ".join(v["top5"][:3])] for k, v in tau["results"].items()]
@@ -89,8 +94,10 @@ def build_report(run_dir: Path, study_area: dict) -> dict:
          "table": {"columns": ["τ", "Links", "Components", "ρ vs reference", "Top-3 patches"], "rows": tau_rows}},
         {"id": "restoration", "heading": "6. Restoration prioritisation",
          "body": [f"{len(rest['candidates'])} candidate sites ({rest.get('candidate_source')}) were each inserted into the graph and {metric} recomputed (R_i = C(G+v_i) − C(G)). "
-                  + (f"Ranking basis: {rest['ranking_basis']}. " ) + rest["cost_note"] + "."],
-         "table": {"columns": ["Rank", "Candidate", "Area (ha)", "R_i (% of C(G))", "New links", "Cost", "Gain per cost"], "rows": rest_rows}},
+                  + (f"Ranking basis: {rest['ranking_basis']}. " ) + rest["cost_note"] + ". "
+                  + (f"{n_uncertain} candidate(s) are larger than {UNCERTAIN_MIN_HA:.0f} ha and {UNCERTAIN_FRACTION:.0%} of the mapped habitat and are "
+                     f"classed as uncertain habitat, not restoration sites: {UNCERTAIN_NOTE}" if n_uncertain else "")],
+         "table": {"columns": ["Rank", "Candidate", "Area (ha)", "R_i (% of C(G))", "New links", "Cost", "Gain per cost", "Class"], "rows": rest_rows}},
         {"id": "limits", "heading": "7. Provenance and limitations",
          "bullets": [f"Result label: {label}.",
                      "Segmentation labels are Global Mangrove Watch (an existing map): metrics against them measure agreement with that map, not field-truth accuracy." if ds.get("type") == "probability_raster" else "Patch geometry is synthetic.",

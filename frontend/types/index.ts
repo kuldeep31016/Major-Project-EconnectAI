@@ -277,6 +277,9 @@ export interface SimulationData {
 /* ------------------------------------------------------------------ */
 
 export interface RestorationAction {
+  /** backend/restoration_rules.py: large marginal-probability areas are "uncertain_habitat" (field check), not restoration sites */
+  category?: "restoration_site" | "uncertain_habitat";
+  category_label?: string;
   id: string;
   rank: number;
   name: string;
@@ -530,6 +533,8 @@ export interface FrontendBundle {
 }
 
 export interface RunSummary {
+  /** True for the run the study area's LATEST pointer selects (the default shown everywhere). */
+  isLatest?: boolean;
   runId: string;
   studyAreaId: string;
   timestamp: string;

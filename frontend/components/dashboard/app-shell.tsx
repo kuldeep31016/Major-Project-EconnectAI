@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Activity,
   Bell, Calendar, ChevronDown, ChevronsLeft, ChevronsRight, ClipboardList, Cpu, Database, FileText, FlaskConical, FolderKanban,
-  History, LayoutDashboard, Leaf, LogOut, Map as MapIcon, MapPin, Menu, ScrollText, Search, Settings, Sprout, UploadCloud, X,
+  History, Info, LayoutDashboard, Leaf, LogOut, Map as MapIcon, MapPin, Menu, ScrollText, Search, Settings, Sprout, UploadCloud, X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import { ProvenanceBadge } from "@/components/shared/provenance-badge";
 import { fetchAlerts } from "@/lib/api";
 import { getHabitatMask, getScenes } from "@/lib/data";
 import { requestMapFocus } from "@/lib/map-focus";
+import { plainPurpose } from "@/lib/plain-language";
 import { cn } from "@/lib/utils";
 
 /** Navigation is role-aware: technical ML controls are hidden from field/officer roles. */
@@ -66,6 +67,7 @@ export function AppShell({
   const [toolsOpen, setToolsOpen] = useState(pathname.startsWith("/graph") || pathname.startsWith("/simulation"));
   const { user, signOut } = useAuth();
   const visibleNav = NAV.filter((n) => !n.roles || !user || n.roles.includes(user.role));
+  const purpose = plainPurpose(pathname);
 
   return (
     <div className="flex min-h-screen bg-[#f4f7f5]">
@@ -167,6 +169,12 @@ export function AppShell({
             <div className="min-w-0 flex-1">
               <h1 className="truncate text-[18px] font-semibold tracking-tight">{title}</h1>
               {subtitle && <p className="truncate text-[12px] text-muted-foreground">{subtitle}</p>}
+              {purpose && (
+                <p className="mt-1 flex items-start gap-1.5 text-[12.5px] leading-snug text-[#0f5132]">
+                  <Info className="mt-[2px] h-3.5 w-3.5 shrink-0" aria-hidden />
+                  <span><span className="font-semibold">In plain words:</span> {purpose}</span>
+                </p>
+              )}
             </div>
             {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
           </div>
@@ -244,7 +252,7 @@ function PeriodSelect() {
   const { runs, runId, setRunId, apiOnline } = useAnalysis();
   const label = (r: (typeof runs)[number]) => `${r.sceneYear ?? "—"}${r.resultKind === "development" ? " · dev" : r.resultKind === "synthetic" ? " · synthetic" : ""} · ${r.runId}`;
   if (apiOnline !== true || runs.length === 0) return null;
-  const latest = runs[0];
+  const latest = runs.find((r) => r.isLatest) ?? runs[0];
   return (
     <label className="hidden h-10 items-center gap-2 rounded-lg border border-black/[0.08] bg-white px-3 text-[13px] lg:flex">
       <Calendar className="h-4 w-4 text-[#15803d]" />

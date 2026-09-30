@@ -15,6 +15,7 @@ import { fetchAlerts, fetchSceneQuicklook, fetchTasks, type AlertItem, type Fiel
 import { getConnectivity, getGraph, getHabitatMask, getHeatmap, getRestoration, getTimeline, hasLiveTimeline } from "@/lib/data";
 import { useMapFocus } from "@/lib/map-focus";
 import { cn } from "@/lib/utils";
+import { Term } from "@/components/shared/term";
 
 const GisMap = dynamic(() => import("@/components/maps/gis-map"), { ssr: false });
 
@@ -75,7 +76,7 @@ export default function Dashboard() {
   const conn = getConnectivity(sceneId);
   const restoration = getRestoration(sceneId);
   const timeline = hasLiveTimeline(sceneId) ? getTimeline(sceneId) : null;
-  const run = runs.find((r) => r.runId === runId) ?? runs[0] ?? null;
+  const run = runs.find((r) => r.runId === runId) ?? runs.find((r) => r.isLatest) ?? runs[0] ?? null;
   const year = run?.sceneYear ?? null;
   const years = (timeline?.years ?? []).slice().sort((a, b) => a.year - b.year);
   const cur = years.find((y) => y.year === year) ?? years[years.length - 1] ?? null;
@@ -329,7 +330,7 @@ function Kpi({ icon: Icon, color, value, label, d }: { icon: typeof Leaf; color:
   );
 }
 function Metric({ v, l, d }: { v: string | number; l: string; d: ReactNode }) {
-  return <div className="min-w-0"><div className="text-[18px] font-bold leading-none">{v}</div><div className="mt-1 text-[10.5px] leading-tight text-muted-foreground">{l}</div><div className="mt-1">{d}</div></div>;
+  return <div className="min-w-0"><div className="text-[18px] font-bold leading-none">{v}</div><div className="mt-1 text-[10.5px] leading-tight text-muted-foreground"><Term>{l}</Term></div><div className="mt-1">{d}</div></div>;
 }
 
 /** Real imagery of the patch's bounding box with its polygon outline. */

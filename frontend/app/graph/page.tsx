@@ -207,7 +207,7 @@ export default function GraphPage() {
                       </Button>
                       <select value={cand} onChange={(e) => setCand(e.target.value)} className="rounded-md border border-foreground/15 bg-background px-1.5 text-[11.5px]">
                         <option value="">restore…</option>
-                        {restoration.actions.map((a) => <option key={a.id} value={a.id}>{a.id} · {a.areaHa} ha</option>)}
+                        {restoration.actions.map((a) => <option key={a.id} value={a.id}>{a.id} · {a.areaHa} ha{a.category === "uncertain_habitat" ? " · uncertain habitat" : ""}</option>)}
                       </select>
                       <Button size="sm" variant="outline" disabled={!cand || twin.busy} onClick={() => runTwin({ type: "restore", candidate_ids: [cand] })}>Restore</Button>
                       {twinRes && <Button size="sm" variant="ghost" onClick={() => setTwin({ scope: twinScope, busy: false, res: null, err: null })}>Reset</Button>}

@@ -381,7 +381,7 @@ export const postScenario = (studyArea: string, runId: string, body: Record<stri
 export const saveScenario = (body: { study_area_id: string; run_id: string; type: string; params: unknown; result: unknown }) =>
   getJson<{ id: number }>("/api/scenarios", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
-export interface FeasibilityCandidate { candidate_id: string; rank: number; area_ha: number; centroid: [number, number]; gain_pct: number; new_links: number; linked_patch_ids: string[]; nearest_habitat_km: number | null; ndwi_mean: number | null; overlaps_existing: boolean; overlap_fraction: number; verdict: "recommended" | "conditional" | "not_recommended"; why: string[]; why_not: string[]; not_assessed: string[]; geometry: unknown }
+export interface FeasibilityCandidate { candidate_id: string; rank: number; area_ha: number; centroid: [number, number]; gain_pct: number; new_links: number; linked_patch_ids: string[]; nearest_habitat_km: number | null; ndwi_mean: number | null; overlaps_existing: boolean; overlap_fraction: number; verdict: "recommended" | "conditional" | "not_recommended" | "field_check"; category?: string; why: string[]; why_not: string[]; not_assessed: string[]; geometry: unknown }
 export interface Feasibility { metric: string; baseline_c: number; ranking_basis: string; candidate_method: string; rules: Record<string, unknown>; candidates: FeasibilityCandidate[] }
 export const fetchFeasibility = (studyArea: string, runId: string) => getJson<Feasibility>(`/api/runs/${encodeURIComponent(studyArea)}/${encodeURIComponent(runId)}/restoration/feasibility`, undefined, 60000);
 
@@ -475,8 +475,8 @@ export const exportHitl = () => getJson<{ type: string; features: unknown[]; not
 export interface GraphNode { id: string; area_ha: number; centroid: [number, number]; confidence: number; geometry: { type: string; coordinates: number[][][] } | null; degree?: number }
 export interface GraphEdge { source: string; target: string; distance_km: number; weight: number }
 export interface RunGraph { parameters: Record<string, unknown>; nodes: GraphNode[]; edges: GraphEdge[]; n_components: number }
-export interface CriticalityRow { patch_id: string; rank: number; rank_by_area: number; area_ha: number; area_pct: number; degree: number; criticality_score: number; delta_pct: number; is_cut_vertex: boolean; component_count_before: number; component_count_after: number; neighbour_ids: string[] }
-export interface RestorationCandidateRow { candidate_id: string; rank: number; area_ha: number; centroid: [number, number]; gain_pct: number; new_links: number; linked_patch_ids: string[] }
+export interface CriticalityRow { confidence?: number; delta_connectivity?: number; patch_id: string; rank: number; rank_by_area: number; area_ha: number; area_pct: number; degree: number; criticality_score: number; delta_pct: number; is_cut_vertex: boolean; component_count_before: number; component_count_after: number; neighbour_ids: string[] }
+export interface RestorationCandidateRow { category?: "restoration_site" | "uncertain_habitat"; category_label?: string; candidate_id: string; rank: number; area_ha: number; centroid: [number, number]; gain_pct: number; new_links: number; linked_patch_ids: string[] }
 const runPath = (sa: string, run: string, what: string) => `/api/runs/${encodeURIComponent(sa)}/${encodeURIComponent(run)}/${what}`;
 export const fetchRunGraph = (sa: string, run = "latest") => getJson<RunGraph>(runPath(sa, run, "graph"), undefined, 20000);
 export const fetchRunCriticality = (sa: string, run = "latest") => getJson<CriticalityRow[]>(runPath(sa, run, "criticality"), undefined, 20000);

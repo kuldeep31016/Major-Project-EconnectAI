@@ -55,11 +55,15 @@ def main() -> int:
         check("frontend /demo route", r.status_code == 200, f"{r.status_code}")
 
     sa = a.study_area
+    top = None
     for part in ("graph", "criticality", "restoration", "manifest"):
         r = c.get(f"{api}/api/runs/{sa}/latest/{part}")
         check(f"run data: {part}", r.status_code == 200, f"{r.status_code}")
-    r = c.post(f"{api}/api/runs/{sa}/latest/what-if", json={"patch_ids": ["P17"]})
-    check("what-if engine (P17)", r.status_code == 200, f"loss {r.json().get('loss_pct', '?'):.1f} %" if r.status_code == 200 else r.text[:100])
+        if part == "criticality" and r.status_code == 200 and r.json():
+            top = r.json()[0]["patch_id"]  # the run's top-ranked patch; ids differ between runs
+    if top:
+        r = c.post(f"{api}/api/runs/{sa}/latest/what-if", json={"patch_ids": [top]})
+        check(f"what-if engine ({top})", r.status_code == 200, f"loss {r.json().get('loss_pct', '?'):.1f} %" if r.status_code == 200 else r.text[:100])
     r = c.get(f"{api}/api/runs/%2e%2e/%2e%2e/files/.env")
     check("path traversal blocked", r.status_code in (400, 404), f"{r.status_code}")
     r = c.get(f"{api}/api/reports")

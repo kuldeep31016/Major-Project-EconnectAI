@@ -37,6 +37,7 @@ from backend.registry_api import router as registry_router  # noqa: E402
 from backend.workflow_api import router as phase5_router  # noqa: E402
 from backend.admin_api import router as admin_router  # noqa: E402
 from backend.observability import RequestContextMiddleware  # noqa: E402
+from backend.restoration_rules import annotate  # noqa: E402
 
 from contextlib import asynccontextmanager  # noqa: E402
 from backend.db import SessionLocal, init_db  # noqa: E402
@@ -53,6 +54,8 @@ async def lifespan(_app: FastAPI):
     with SessionLocal() as db:
         summary = sync_all(db)
         created = seed_demo_users(db)
+        from backend.alerts import ensure_alerts
+        summary["alerts_created"] = ensure_alerts(db)
     print(f"[startup] registry synced {summary}; demo users created: {created or 'none (exist)'}")
     start_inline_worker()
     yield
@@ -155,9 +158,11 @@ def list_runs(study_area: Optional[str] = None):
     for sa_dir in sorted(paths.RUNS_DIR.glob("*")) if paths.RUNS_DIR.exists() else []:
         if not sa_dir.is_dir() or (study_area and sa_dir.name != study_area):
             continue
+        ptr = sa_dir / "LATEST"
+        current = ptr.read_text().strip() if ptr.exists() else None
         for run_dir in sorted(sa_dir.glob("*")):
             if (run_dir / "manifest.json").exists():
-                out.append(_run_summary(run_dir))
+                out.append({**_run_summary(run_dir), "isLatest": run_dir.name == current})  # LATEST is chosen, not the newest
     return sorted(out, key=lambda r: r["timestamp"], reverse=True)
 
 
@@ -203,9 +208,16 @@ def manifest(study_area: str, run_id: str):
     return _read_json(_resolve_run(study_area, run_id) / "manifest.json")
 
 
+def _habitat_ha(run_dir: Path) -> float:
+    return float(_read_json(run_dir / "metrics.json")["research_metrics"]["habitat_area_ha"])
+
+
 @app.get("/api/runs/{study_area}/{run_id}/bundle")
 def bundle(study_area: str, run_id: str):
-    return _read_json(_resolve_run(study_area, run_id) / "frontend_bundle.json")
+    run_dir = _resolve_run(study_area, run_id)
+    b = _read_json(run_dir / "frontend_bundle.json")
+    annotate((b.get("restoration") or {}).get("actions") or [], _habitat_ha(run_dir), area_key="areaHa")
+    return b
 
 
 for _name, _file in {
@@ -215,7 +227,11 @@ for _name, _file in {
 }.items():
     def _make(fname):
         def _ep(study_area: str, run_id: str):
-            return _read_json(_resolve_run(study_area, run_id) / fname)
+            run_dir = _resolve_run(study_area, run_id)
+            data = _read_json(run_dir / fname)
+            if fname == "restoration.json":           # same candidate rule everywhere (backend/restoration_rules.py)
+                annotate(data.get("candidates") or [], _habitat_ha(run_dir))
+            return data
         return _ep
     app.add_api_route(f"/api/runs/{{study_area}}/{{run_id}}/{_name}", _make(_file), methods=["GET"], name=_name)
 

@@ -69,7 +69,7 @@ export function LandingNavbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/command"
-            className="group relative inline-flex items-center gap-1.5 rounded-full bg-[#00e599] px-5 py-2.5 text-[13px] font-extrabold text-[#041a12] shadow-lg shadow-[#00e599]/25 transition-all duration-300 hover:bg-[#00c896] hover:shadow-[#00c896]/40 hover:scale-[1.02] active:scale-[0.98]"
+            className="group relative hidden sm:inline-flex items-center gap-1.5 rounded-full bg-[#00e599] whitespace-nowrap px-5 py-2.5 text-[13px] font-extrabold text-[#041a12] shadow-lg shadow-[#00e599]/25 transition-all duration-300 hover:bg-[#00c896] hover:shadow-[#00c896]/40 hover:scale-[1.02] active:scale-[0.98]"
           >
             <span>Launch Command Center</span>
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />

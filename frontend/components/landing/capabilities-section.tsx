@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
+import { int, num, useLandingStory, type LandingStory } from "@/hooks/use-landing-story";
 import {
   ArrowRight,
   ChevronRight,
@@ -21,7 +22,7 @@ interface Capability {
   href: string;
   badge: string;
   icon: LucideIcon;
-  renderVisual: () => React.ReactNode;
+  renderVisual: (s: LandingStory) => React.ReactNode;
 }
 
 const CAPABILITIES: Capability[] = [
@@ -32,7 +33,7 @@ const CAPABILITIES: Capability[] = [
     href: "/analysis?scene=kerala-coast",
     badge: "Spatial GIS",
     icon: Layers,
-    renderVisual: () => (
+    renderVisual: (s) => (
       <div className="relative h-24 w-full rounded-lg bg-[#040914] overflow-hidden border border-white/10 p-3 flex flex-col justify-between">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-40"
@@ -45,8 +46,8 @@ const CAPABILITIES: Capability[] = [
           <span className="text-white/80 font-mono text-[9px]">9.87°N, 76.37°E</span>
         </div>
         <div className="relative z-10 flex items-center justify-between text-[10px]">
-          <span className="text-slate-300">24 patches · 2025 run</span>
-          <span className="text-[#00c896] font-bold">84% mean P(mangrove)</span>
+          <span className="text-slate-300">{int(s.nPatches)} patches · scene {s.sceneYear ?? "—"}</span>
+          <span className="text-[#00c896] font-bold">{num(s.habitatHa, 0)} ha mapped</span>
         </div>
       </div>
     ),
@@ -79,24 +80,24 @@ const CAPABILITIES: Capability[] = [
   {
     number: "03",
     title: "Criticality Analysis",
-    tagline: "Automated identification of fragile stepping-stones whose loss severs the network.",
+    tagline: "Finds the small stepping-stone patches whose loss would break the network apart.",
     href: "/analysis?scene=kerala-coast",
     badge: "Graph Sensitivity",
     icon: AlertTriangle,
-    renderVisual: () => (
+    renderVisual: (s) => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
           <span className="font-bold text-[#ef4444] flex items-center gap-1.5">
             <span className="h-1.5 w-1.5 rounded-full bg-[#ef4444] animate-pulse" />
-            P17 · cut vertex
+            {s.focus?.patch_id ?? "—"} · holds the network together
           </span>
           <span className="bg-[#ef4444]/20 text-[#ef4444] px-1.5 py-0.5 rounded text-[9px] font-bold">
-            Rank #3 of 24
+            Rank #{s.focus?.rank ?? "—"} of {int(s.nPatches)}
           </span>
         </div>
         <div className="flex justify-between items-center bg-[#ef4444]/10 p-2 rounded border border-[#ef4444]/20">
-          <span className="text-slate-300">IIC loss if removed (3.1 ha)</span>
-          <span className="text-[#ef4444] font-mono font-bold text-[12px]">-27.0% IIC</span>
+          <span className="text-slate-300">Connectivity lost if removed ({num(s.focus?.area_ha)} ha)</span>
+          <span className="text-[#ef4444] font-mono font-bold text-[12px]">−{num(s.focus?.delta_pct)}%</span>
         </div>
       </div>
     ),
@@ -104,19 +105,19 @@ const CAPABILITIES: Capability[] = [
   {
     number: "04",
     title: "Scenario Lab",
-    tagline: "Remove patches or a drawn area, restore sites, or change τ and threshold — recomputed exactly.",
+    tagline: "Draw a threat or a restoration on the map and see the effect, recomputed exactly. Simulated, not a forecast.",
     href: "/simulation",
     badge: "What-if",
     icon: GitBranch,
-    renderVisual: () => (
+    renderVisual: (s) => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
-          <span className="text-slate-400">Remove P17</span>
+          <span className="text-slate-400">Remove {s.focus?.patch_id ?? "—"}</span>
           <span className="text-amber-400 font-semibold text-[9px]">Exact recompute</span>
         </div>
         <div className="flex items-center justify-between bg-white/5 p-2 rounded">
           <span className="text-slate-300">Components</span>
-          <span className="text-white font-mono font-bold">2 → 3</span>
+          <span className="text-white font-mono font-bold">{int(s.focus?.component_count_before)} → {int(s.focus?.component_count_after)}</span>
         </div>
       </div>
     ),
@@ -124,21 +125,21 @@ const CAPABILITIES: Capability[] = [
   {
     number: "05",
     title: "Restoration Planner",
-    tagline: "Candidate sites ranked by connectivity gain; cost-aware only with validated cost data.",
+    tagline: "Sites ranked by how much forest they would reconnect; costs only when real cost data exists.",
     href: "/restoration",
     badge: "Corridor Design",
     icon: Sprout,
-    renderVisual: () => (
+    renderVisual: (s) => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
-          <span className="font-bold text-white">Top candidate C1 · 1.6 ha</span>
+          <span className="font-bold text-white">{s.candidate ? `Top site ${s.candidate.candidate_id} · ${num(s.candidate.area_ha)} ha` : `${s.uncertain.length} uncertain areas`}</span>
           <span className="bg-[#00c896]/20 text-[#00c896] px-1.5 py-0.5 rounded text-[9px] font-bold">
-            Priority #1
+            {s.candidate ? "Priority #1" : "Check first"}
           </span>
         </div>
         <div className="flex justify-between items-center bg-[#00c896]/10 p-2 rounded border border-[#00c896]/20">
-          <span className="text-slate-300">Network Gain</span>
-          <span className="text-[#00c896] font-mono font-bold text-[12px]">+1.29% IIC</span>
+          <span className="text-slate-300">{s.candidate ? "Connectivity gain" : "Next step"}</span>
+          <span className="text-[#00c896] font-mono font-bold text-[12px]">{s.candidate ? `+${num(s.candidate.gain_pct, 2)}%` : "field visit"}</span>
         </div>
       </div>
     ),
@@ -150,10 +151,10 @@ const CAPABILITIES: Capability[] = [
     href: "/field",
     badge: "Human review",
     icon: ShieldCheck,
-    renderVisual: () => (
+    renderVisual: (s) => (
       <div className="h-24 w-full rounded-lg bg-[#040914] p-3 border border-white/10 flex flex-col justify-between text-[10px]">
         <div className="flex justify-between items-center">
-          <span className="font-bold text-white">Verify critical patch P17</span>
+          <span className="font-bold text-white">Verify critical patch {s.focus?.patch_id ?? "—"}</span>
           <span className="text-[#00c896] font-semibold text-[9px] bg-[#00c896]/15 px-1.5 py-0.5 rounded">
             Pending
           </span>
@@ -168,6 +169,7 @@ const CAPABILITIES: Capability[] = [
 ];
 
 export function CapabilitiesSection() {
+  const story = useLandingStory();
   return (
     <section id="capabilities" className="relative bg-[#060e1d] py-12 lg:py-16 text-white border-t border-white/10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -219,7 +221,7 @@ export function CapabilitiesSection() {
                   </div>
 
                   {/* Clean Visual Preview */}
-                  <div className="mb-3">{cap.renderVisual()}</div>
+                  <div className="mb-3">{cap.renderVisual(story)}</div>
 
                   {/* Title & Tagline */}
                   <h3 className="text-sm font-bold text-white group-hover:text-[#00c896] transition-colors leading-snug">

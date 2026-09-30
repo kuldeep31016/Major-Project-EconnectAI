@@ -23,6 +23,7 @@ import {
   Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { int, num, useLandingStory } from "@/hooks/use-landing-story";
 
 interface StageInfo {
   id: number;
@@ -43,7 +44,7 @@ const STAGES: StageInfo[] = [
     title: "Observe the Real Landscape",
     desc: "Start with trusted satellite observations to understand the coastal ecosystem as it exists today.",
     tagTitle: "Satellite Observation",
-    tagSubtitle: "Sentinel-2 · 10m resolution",
+    tagSubtitle: "Sentinel-1 radar · 10 m pixels",
     icon: Satellite,
   },
   {
@@ -53,7 +54,7 @@ const STAGES: StageInfo[] = [
     title: "Detect Habitats from Space",
     desc: "Use AI to map and classify mangroves and coastal habitats across the landscape.",
     tagTitle: "Habitat Detection",
-    tagSubtitle: "AI segmentation · Multi-spectral",
+    tagSubtitle: "AI mapping · sees through cloud",
     icon: Leaf,
   },
   {
@@ -61,9 +62,9 @@ const STAGES: StageInfo[] = [
     stageNum: "03",
     pillLabel: "03  TOPOLOGY",
     title: "Understand Connectivity",
-    desc: "Convert habitat patches into a graph to reveal how the ecosystem is connected.",
+    desc: "Link patches that wildlife can travel between, so the coast becomes a network.",
     tagTitle: "Connectivity Topology",
-    tagSubtitle: "Patches + Links + Network Graph",
+    tagSubtitle: "Patches + travel links",
     icon: Network,
   },
   {
@@ -71,9 +72,9 @@ const STAGES: StageInfo[] = [
     stageNum: "04",
     pillLabel: "04  CRITICALITY",
     title: "Identify Critical Areas",
-    desc: "Analyze network vulnerability to find stepping-stone patches that hold the ecosystem together.",
+    desc: "Find the small stepping-stone patches that hold the whole network together.",
     tagTitle: "Criticality Analysis",
-    tagSubtitle: "Network metrics + Vulnerability",
+    tagSubtitle: "What we cannot afford to lose",
     icon: Zap,
   },
   {
@@ -83,7 +84,7 @@ const STAGES: StageInfo[] = [
     title: "Test What-If Scenarios",
     desc: "Simulate patch removal or restoration to see how connectivity and resilience change.",
     tagTitle: "Scenario Simulation",
-    tagSubtitle: "Before / After + Impact analysis",
+    tagSubtitle: "Simulated, not a forecast",
     icon: GitBranch,
   },
   {
@@ -91,7 +92,7 @@ const STAGES: StageInfo[] = [
     stageNum: "06",
     pillLabel: "06  ACT",
     title: "Turn Insight into Action",
-    desc: "Prioritize restoration areas, plan interventions and enable field implementation.",
+    desc: "Rank sites to protect or restore, and send uncertain ones to field teams to check.",
     tagTitle: "Prioritised Action",
     tagSubtitle: "Restoration + Field deployment",
     icon: MapPin,
@@ -99,6 +100,10 @@ const STAGES: StageInfo[] = [
 ];
 
 export function CoreInsightSection() {
+  const story = useLandingStory();
+  const f = story.focus;
+  const act = story.candidate ?? story.uncertain[0] ?? null;
+  const actIsCandidate = !!story.candidate;
   const [activeStage, setActiveStage] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
@@ -462,7 +467,7 @@ export function CoreInsightSection() {
                       <polygon points="315,205 350,195 368,228 338,242 310,225" fill="#22c55e" fillOpacity="0.4" stroke="#4ade80" strokeWidth="1.2" />
                       <polygon points="380,210 415,198 435,230 402,245 375,228" fill="#22c55e" fillOpacity="0.4" stroke="#4ade80" strokeWidth="1.2" />
 
-                      {/* Critical patch P17 (Glowing Red) */}
+                      {/* Critical patch (live run) */}
                       <polygon points="245,135 285,128 300,162 268,178 240,158" fill="#ef4444" fillOpacity="0.75" stroke="#f87171" strokeWidth="1.8" />
 
                       {/* Links */}
@@ -500,12 +505,12 @@ export function CoreInsightSection() {
                         <circle cx="400" cy="222" r="3.5" />
                       </g>
 
-                      {/* P17 callout pill */}
+                      {/* critical patch callout pill */}
                       <g>
                         <circle cx="270" cy="148" r="10" fill="#ef4444" fillOpacity="0.3" className="animate-ping" />
                         <circle cx="270" cy="148" r="5.5" fill="#ef4444" stroke="#ffffff" strokeWidth="1.5" />
                         <rect x="284" y="140" width="38" height="16" rx="3" fill="#040b14" stroke="#ef4444" strokeWidth="1.2" />
-                        <text x="303" y="151" fill="#ffffff" fontSize="8.5" fontWeight="bold" textAnchor="middle">P17</text>
+                        <text x="303" y="151" fill="#ffffff" fontSize="8.5" fontWeight="bold" textAnchor="middle">{f?.patch_id ?? "—"}</text>
                       </g>
                     </svg>
                   </motion.div>
@@ -525,7 +530,7 @@ export function CoreInsightSection() {
                     <div className="flex-1 h-full rounded-xl border border-white/15 bg-[#050c18]/90 p-2.5 flex flex-col justify-between backdrop-blur">
                       <div className="flex items-center justify-between pb-1 border-b border-white/10 text-[10px]">
                         <span className="font-bold text-white">Before (Current)</span>
-                        <span className="text-[#00c896] font-mono">P17 selected</span>
+                        <span className="text-[#00c896] font-mono">{f?.patch_id ?? "—"} selected</span>
                       </div>
 
                       <div className="relative h-24 w-full">
@@ -537,7 +542,7 @@ export function CoreInsightSection() {
                             <polygon points="45,85 70,80 80,105 60,115 35,100" />
                             <polygon points="135,85 160,80 170,105 150,115 125,100" />
                           </g>
-                          {/* Bridge P17 */}
+                          {/* bridge patch */}
                           <polygon points="85,55 115,50 125,75 105,85 80,70" fill="#ef4444" fillOpacity="0.65" stroke="#f87171" strokeWidth="1.2" />
                           <line x1="40" y1="40" x2="100" y2="65" stroke="#ef4444" strokeWidth="1.2" />
                           <line x1="100" y1="65" x2="155" y2="40" stroke="#ef4444" strokeWidth="1.2" />
@@ -546,8 +551,8 @@ export function CoreInsightSection() {
                       </div>
 
                       <div className="flex items-center justify-between text-[9.5px] pt-1 border-t border-white/10">
-                        <span className="text-slate-300">2 components</span>
-                        <span className="text-[#00c896] font-bold">IIC baseline</span>
+                        <span className="text-slate-300">{int(f?.component_count_before)} groups</span>
+                        <span className="text-[#00c896] font-bold">Connected today</span>
                       </div>
                     </div>
 
@@ -559,20 +564,20 @@ export function CoreInsightSection() {
                     {/* After Card */}
                     <div className="flex-1 h-full rounded-xl border border-[#ef4444]/40 bg-[#160608]/90 p-2.5 flex flex-col justify-between backdrop-blur">
                       <div className="flex items-center justify-between pb-1 border-b border-white/10 text-[10.5px]">
-                        <span className="font-bold text-[#ef4444]">After (remove P17, 3.1 ha)</span>
+                        <span className="font-bold text-[#ef4444]">After (remove {f?.patch_id ?? "—"}, {num(f?.area_ha)} ha)</span>
                         <span className="text-slate-400 font-mono">Fragmented</span>
                       </div>
 
                       <div className="relative h-24 w-full">
                         <svg className="h-full w-full" viewBox="0 0 200 120">
-                          {/* 5 Isolated Clusters */}
+                          {/* isolated clusters (illustration) */}
                           <g fill="#10b981" fillOpacity="0.3" stroke="#34d399" strokeWidth="1">
                             <polygon points="25,30 45,25 55,45 35,55 20,45" />
                             <polygon points="145,30 165,25 175,45 155,55 140,45" />
                             <polygon points="45,85 70,80 80,105 60,115 35,100" />
                             <polygon points="135,85 160,80 170,105 150,115 125,100" />
                           </g>
-                          {/* Severed Disconnected P17 outline */}
+                          {/* removed patch outline */}
                           <polygon points="85,55 115,50 125,75 105,85 80,70" fill="none" stroke="#ef4444" strokeWidth="1.2" strokeDasharray="3 3" opacity="0.6" />
                           <circle cx="100" cy="65" r="2.5" fill="#64748b" />
                           <text x="100" y="68" fill="#ef4444" fontSize="7" fontWeight="bold" textAnchor="middle">✕</text>
@@ -580,8 +585,8 @@ export function CoreInsightSection() {
                       </div>
 
                       <div className="flex items-center justify-between text-[9.5px] pt-1 border-t border-white/10">
-                        <span className="text-[#ef4444] font-bold">3 components</span>
-                        <span className="text-[#ef4444] font-bold">IIC −27.0%</span>
+                        <span className="text-[#ef4444] font-bold">{int(f?.component_count_after)} groups</span>
+                        <span className="text-[#ef4444] font-bold">Connectivity −{num(f?.delta_pct)}%</span>
                       </div>
                     </div>
                   </motion.div>
@@ -602,27 +607,27 @@ export function CoreInsightSection() {
                       <div className="flex items-center justify-between">
                         <div className="font-bold text-white text-[10.5px]">Action Details</div>
                         <span className="rounded bg-[#eab308]/20 text-[#eab308] px-1.5 py-0.2 text-[8px] font-bold border border-[#eab308]/30">
-                          High Priority
+                          {actIsCandidate ? "High Priority" : "Check first"}
                         </span>
                       </div>
 
                       <div>
-                        <div className="text-[12px] font-bold text-white font-mono">C1</div>
-                        <div className="text-[9px] text-slate-400">Restoration candidate</div>
+                        <div className="text-[12px] font-bold text-white font-mono">{act?.candidate_id ?? "—"}</div>
+                        <div className="text-[9px] text-slate-400">{actIsCandidate ? "Restoration candidate" : "Uncertain area — field check"}</div>
                       </div>
 
                       <div className="space-y-0.5 bg-white/5 p-1 rounded text-[9.5px]">
                         <div className="flex justify-between">
                           <span className="text-slate-400">Area:</span>
-                          <span className="font-bold text-white">1.6 ha</span>
+                          <span className="font-bold text-white">{num(act?.area_ha)} ha</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-400">Expected Gain:</span>
-                          <span className="font-bold text-[#00c896]">+1.29% IIC</span>
+                          <span className="text-slate-400">{actIsCandidate ? "Connectivity gain:" : "Why:"}</span>
+                          <span className="font-bold text-[#00c896]">{actIsCandidate ? `+${num(act?.gain_pct, 2)}%` : "may be unmapped forest"}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-400">New links:</span>
-                          <span className="font-bold text-white">P01 · P06 · P13</span>
+                          <span className="font-bold text-white">{act?.linked_patch_ids?.slice(0, 3).join(" · ") || "—"}</span>
                         </div>
                       </div>
 

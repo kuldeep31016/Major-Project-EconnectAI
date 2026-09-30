@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { int, num, useLandingStory } from "@/hooks/use-landing-story";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -14,6 +15,11 @@ import {
 export function LiveProductSection() {
   const [selectedPatch, setSelectedPatch] = useState<"p16" | "p14">("p16");
   const [simulatingLoss, setSimulatingLoss] = useState(false);
+  const story = useLandingStory();
+  const sel = selectedPatch === "p16" ? story.focus : story.top;
+  const lossLine = sel
+    ? `Removing ${sel.patch_id} (${num(sel.area_pct)}% of habitat) lowers IIC by ${num(sel.delta_pct)}% and ${sel.component_count_after > sel.component_count_before ? `splits the network into ${sel.component_count_after} components` : `keeps ${sel.component_count_after} components (alternative routes exist)`}.`
+    : "Loading the stored run…";
 
   return (
     <section className="relative bg-[#050c18] py-10 lg:py-14 text-white border-t border-white/10">
@@ -49,10 +55,10 @@ export function LiveProductSection() {
                 </div>
                 <div className="flex items-center gap-1.5 text-slate-400">
                   <span className="bg-white/5 px-2 py-0.5 rounded border border-white/10 text-[10px]">
-                    24 patches
+                    {int(story.nPatches)} patches
                   </span>
                   <span className="bg-[#00c896]/10 text-[#00c896] px-2 py-0.5 rounded border border-[#00c896]/20 text-[10px] font-bold">
-                    Sentinel-2 10m
+                    Sentinel-1 10 m
                   </span>
                 </div>
               </div>
@@ -176,7 +182,7 @@ export function LiveProductSection() {
                         : "bg-white/5 text-slate-300 hover:bg-white/10"
                     }`}
                   >
-                    P17 (cut vertex)
+                    {story.focus?.patch_id ?? "—"} ({story.focus?.is_cut_vertex ? "cut vertex" : "worked example"})
                   </button>
                   <button
                     onClick={() => {
@@ -189,7 +195,7 @@ export function LiveProductSection() {
                         : "bg-white/5 text-slate-300 hover:bg-white/10"
                     }`}
                   >
-                    P01 (largest patch)
+                    {story.top?.patch_id ?? "—"} (largest patch)
                   </button>
                 </div>
               </div>
@@ -203,7 +209,7 @@ export function LiveProductSection() {
                   <div>
                     <div className="text-[9px] uppercase font-bold text-slate-400">Patch ID</div>
                     <div className="text-base font-mono font-bold text-white">
-                      {selectedPatch === "p16" ? "P17" : "P01"}
+                      {sel?.patch_id ?? "—"}
                     </div>
                   </div>
                   <span
@@ -213,7 +219,7 @@ export function LiveProductSection() {
                         : "bg-[#38bdf8]/20 text-[#38bdf8] border-[#38bdf8]/30"
                     }`}
                   >
-                    {selectedPatch === "p16" ? "Critical · cut vertex" : "Critical · largest patch"}
+                    {selectedPatch === "p16" ? `Rank #${sel?.rank ?? "—"} · ${sel?.is_cut_vertex ? "cut vertex" : "high criticality"}` : "Largest patch"}
                   </span>
                 </div>
 
@@ -222,10 +228,10 @@ export function LiveProductSection() {
                   <div className="bg-white/5 p-1.5 rounded-lg border border-white/5">
                     <div className="text-slate-400 text-[8.5px]">Habitat Area</div>
                     <div className="text-[12px] font-bold text-white mt-0.5">
-                      {selectedPatch === "p16" ? "3.13 ha" : "35.1 ha"}
+                      {num(sel?.area_ha, 2)} ha
                     </div>
                     <div className="text-[8.5px] text-slate-400">
-                      {selectedPatch === "p16" ? "1.4% of habitat" : "16.0% of habitat"}
+                      {num(sel?.area_pct)}% of habitat
                     </div>
                   </div>
 
@@ -236,24 +242,24 @@ export function LiveProductSection() {
                         selectedPatch === "p16" ? "text-[#ef4444]" : "text-slate-200"
                       }`}
                     >
-                      {selectedPatch === "p16" ? "-27.0% IIC" : "-30.7% IIC"}
+                      -{num(sel?.delta_pct)}% IIC
                     </div>
                     <div className="text-[8.5px] text-slate-400">
-                      {selectedPatch === "p16" ? "Rank #3 of 24" : "Rank #1 of 24"}
+                      Rank #{sel?.rank ?? "—"} of {int(story.nPatches)}
                     </div>
                   </div>
 
                   <div className="bg-white/5 p-1.5 rounded-lg border border-white/5">
                     <div className="text-slate-400 text-[8.5px]">Confidence</div>
                     <div className="text-[12px] font-bold text-[#00c896] mt-0.5">
-                      {selectedPatch === "p16" ? "0.84" : "0.88"}
+                      {num(sel?.confidence, 2)}
                     </div>
                   </div>
 
                   <div className="bg-white/5 p-1.5 rounded-lg border border-white/5">
                     <div className="text-slate-400 text-[8.5px]">Corridors</div>
                     <div className="text-[12px] font-bold text-white mt-0.5">
-                      {selectedPatch === "p16" ? "4 links" : "5 links"}
+                      {int(sel?.degree)} links
                     </div>
                   </div>
                 </div>
@@ -296,15 +302,13 @@ export function LiveProductSection() {
                         selectedPatch === "p16" ? "text-[#ef4444]" : "text-[#00c896]"
                       }`}
                     >
-                      {selectedPatch === "p16" ? "3 components" : "2 components"}
+                      {int(sel?.component_count_after)} components
                     </div>
                   </div>
                 </div>
 
                 <p className="text-[10.5px] text-slate-300 leading-snug">
-                  {selectedPatch === "p16"
-                    ? "Removing P17 (1.4% of habitat) cuts IIC by 27.0% and splits the network into 3 components."
-                    : "Removing P01 cuts IIC by 30.7% but costs 16% of habitat; alternative routes keep 2 components."}
+                  {lossLine}
                 </p>
               </div>
             </div>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import type { RestorationCandidateRow } from "@/lib/api";
+import { num, useLandingStory } from "@/hooks/use-landing-story";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -10,7 +12,7 @@ import {
 interface RestorationCandidate {
   id: string;
   name: string;
-  areaHa: number;
+  areaHa: string;
   gainPct: string;
   affectedPatches: string;
   confidence: string;
@@ -18,43 +20,36 @@ interface RestorationCandidate {
   rationale: string;
 }
 
-const CANDIDATES: RestorationCandidate[] = [
-  // Real candidates from the Kerala 2025 analysis run (kerala-coast_20260920T182222Z) — development model, not final.
-  {
-    id: "C1",
-    name: "Candidate C1 — marginal-habitat site",
-    areaHa: 1.6,
-    gainPct: "+1.29% IIC",
-    affectedPatches: "3 new links: P01, P06, P13",
-    confidence: "model probability 0.3–0.5 (marginal)",
-    priorityLevel: "High",
-    rationale: "Largest connectivity gain of the four candidates; nearest existing habitat 0.58 km away.",
-  },
-  {
-    id: "C2",
-    name: "Candidate C2 — marginal-habitat site",
-    areaHa: 1.3,
-    gainPct: "+1.04% IIC",
-    affectedPatches: "3 new links: P02, P06, P12",
-    confidence: "model probability 0.3–0.5 (marginal)",
-    priorityLevel: "High",
-    rationale: "Second-ranked by gain; links the central group of patches.",
-  },
-  {
-    id: "C3",
-    name: "Candidate C3 — marginal-habitat site",
-    areaHa: 1.1,
-    gainPct: "+0.83% IIC",
-    affectedPatches: "3 new links: P01, P11, P13",
-    confidence: "model probability 0.3–0.5 (marginal)",
-    priorityLevel: "Medium",
-    rationale: "Adjacent to existing habitat (0.09 km); smaller gain.",
-  },
-];
+const UNSET: RestorationCandidate = {
+  id: "—", name: "Loading the latest run…", areaHa: "—", gainPct: "—", affectedPatches: "—", confidence: "—",
+  priorityLevel: "Medium", rationale: "",
+};
+
+/** Turn the live run's candidates into cards; large uncertain areas are shown as "check first", never as a gain. */
+function toCard(c: RestorationCandidateRow, i: number): RestorationCandidate {
+  const uncertain = c.category === "uncertain_habitat";
+  return {
+    id: c.candidate_id,
+    name: uncertain ? `${c.candidate_id} — possible unmapped forest` : `${c.candidate_id} — restoration candidate`,
+    areaHa: num(c.area_ha),
+    gainPct: uncertain ? "field check first" : `+${num(c.gain_pct, 2)}% connectivity`,
+    affectedPatches: c.linked_patch_ids.length ? `${c.new_links} new links: ${c.linked_patch_ids.slice(0, 3).join(", ")}` : "—",
+    confidence: "weak model signal (probability 0.3–0.7)",
+    priorityLevel: uncertain ? "Strategic" : i === 0 ? "High" : "Medium",
+    rationale: uncertain
+      ? "Too large to be a planting site. It may be real mangrove the map missed, so a field team should look before anything is planned."
+      : "Ranked by how much it would reconnect the network if restored. Cost and land ownership are not yet assessed.",
+  };
+}
 
 export function RestorationSection() {
-  const [selectedCandidate, setSelectedCandidate] = useState<string>("C1");
-  const active = CANDIDATES.find((c) => c.id === selectedCandidate) || CANDIDATES[0];
+  const story = useLandingStory();
+  // real restoration sites first, then the large uncertain areas that need a field check
+  const ordered = [...story.candidates.filter((c) => c.category !== "uncertain_habitat"), ...story.uncertain];
+  const cards = ordered.map(toCard);
+  const [selected, setSelected] = useState(0);
+  const active = cards[selected] ?? cards[0] ?? UNSET;
+  const c1 = cards[0]?.id ?? "—";
 
   return (
     <section id="restoration" className="relative bg-[#060e1d] py-16 lg:py-20 text-white border-t border-white/10">
@@ -71,8 +66,8 @@ export function RestorationSection() {
           </h2>
 
           <p className="mt-2 text-[13.5px] text-slate-300 leading-relaxed">
-            Prioritize conservation interventions based on connectivity gained rather than simple
-            land size. Candidates are ranked by connectivity gain; cost-aware ranking only when validated cost data is supplied.
+            Restoration money should go where it reconnects the most forest, not simply where there is space.
+            Sites are ranked by the connectivity they would add back; costs are included only when real cost data exists.
           </p>
         </div>
 
@@ -112,7 +107,7 @@ export function RestorationSection() {
                 Kerala Backwaters · Candidate Layer
               </span>
               <span className="bg-[#00c896]/20 text-[#00c896] px-2 py-0.5 rounded backdrop-blur font-bold border border-[#00c896]/30">
-                Top 3 of 4 candidates · schematic
+                {story.candidates.length - story.uncertain.length} sites · {story.uncertain.length} to field-check · schematic map
               </span>
             </div>
 
@@ -123,29 +118,29 @@ export function RestorationSection() {
               <polygon points="260,70 340,60 360,130 290,140" fill="#22c55e" fillOpacity="0.3" stroke="#22c55e" strokeWidth="1.5" />
               <polygon points="170,190 240,180 260,240 190,250" fill="#22c55e" fillOpacity="0.3" stroke="#22c55e" strokeWidth="1.5" />
 
-              {/* Restoration Candidate C1 */}
-              <g className="cursor-pointer" onClick={() => setSelectedCandidate("C1")}>
+              {/* first candidate */}
+              <g className="cursor-pointer" onClick={() => setSelected(0)}>
                 <polygon
                   points="145,85 245,80 255,120 155,125"
-                  fill={selectedCandidate === "C1" ? "#00c896" : "#f59e0b"}
+                  fill={selected === 0 ? "#00c896" : "#f59e0b"}
                   fillOpacity="0.55"
-                  stroke={selectedCandidate === "C1" ? "#00c896" : "#f59e0b"}
+                  stroke={selected === 0 ? "#00c896" : "#f59e0b"}
                   strokeWidth="2.5"
                   strokeDasharray="4 2"
                 />
                 <circle cx="200" cy="102" r="5" fill="#00c896" stroke="#ffffff" strokeWidth="1.5" />
                 <text x="200" y="93" fill="#ffffff" fontSize="9" fontWeight="bold" textAnchor="middle">
-                  Candidate C1
+                  {c1}
                 </text>
               </g>
 
-              {/* Restoration Candidate C2 */}
-              <g className="cursor-pointer" onClick={() => setSelectedCandidate("C2")}>
+              {/* second candidate */}
+              <g className="cursor-pointer" onClick={() => setSelected(1)}>
                 <polygon
                   points="210,140 280,135 290,175 220,180"
-                  fill={selectedCandidate === "C2" ? "#00c896" : "#f59e0b"}
+                  fill={selected === 1 ? "#00c896" : "#f59e0b"}
                   fillOpacity="0.45"
-                  stroke={selectedCandidate === "C2" ? "#00c896" : "#f59e0b"}
+                  stroke={selected === 1 ? "#00c896" : "#f59e0b"}
                   strokeWidth="2"
                   strokeDasharray="4 2"
                 />
@@ -159,8 +154,8 @@ export function RestorationSection() {
 
             {/* Bottom Status */}
             <div className="relative z-10 bg-black/80 p-2 rounded-lg backdrop-blur border border-white/10 text-[10px] text-slate-300 flex justify-between items-center">
-              <span>Click polygon to inspect opportunity</span>
-              <span className="font-mono text-[#00c896] font-bold">Gain: {active.gainPct} · no cost data</span>
+              <span>Click a site to inspect it</span>
+              <span className="font-mono text-[#00c896] font-bold">{active.gainPct} · no cost data</span>
             </div>
           </div>
 

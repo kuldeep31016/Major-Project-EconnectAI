@@ -13,7 +13,7 @@ connectivity graph → IIC/PC/ECA → leave-one-out patch criticality → what-i
 field verification → reports → audit trail.
 
 **Status: development / research prototype.** No field validation, no government deployment, no validated
-restoration costs, assistant is template/retrieval (not an LLM). Owner: GitHub `kuldeep31016`,
+restoration costs. Assistant = grounded Claude (claude-opus-5) when ANTHROPIC_API_KEY set, template fallback otherwise. Owner: GitHub `kuldeep31016`,
 repo `kuldeep31016/Major-Project-EconnectAI`, default branch `main`.
 
 **Long-term goal (user's spec, 2026-09-27):** evolve into a cloud-native, provenance-aware, honest,
@@ -52,8 +52,15 @@ Segmentation (`outputs/segmentation/<exp>/metrics.json`, test @ threshold 0.5, n
 - The 4-area tile set was **overwritten** by a Kerala-only rebuild on 2026-09-20; the raw data/checkpoints
   are not in git (gitignored), so these results are **not reproducible from the repo alone**.
 
-Graph (k=3, τ=5 km, C(G)=IIC). Kerala LATEST = `outputs/runs/kerala-coast/kerala-coast_20260920T182222Z`
-(model `kerala-coast_development`, threshold 0.5), 24 patches:
+Graph (k=3, τ=5 km, C(G)=IIC). **Kerala LATEST (since 2026-10-01) = `kerala-coast_multi_E1_s1_b0_dev_t0.70`**
+(reported 4-area model, 2020 scene, t 0.70): 12 patches, 18 links, 3 components, 204.6 ha. Worked example **P07**
+(5.49 ha, 2.7 %, 7th by area, rank #3, −25.6 % IIC, cut vertex 3→4); cut vertices P02, P07; P01 #1 (−63.8 %).
+Restoration: C01–C04 (21–159 ha) are *uncertain habitat* (rule below); first real site **C05** 18 ha +16.45 %.
+Candidate rule (`ecoconnect/pipeline/restoration_rules.py`, re-exported by backend): uncertain_habitat if
+area > 5 ha AND > 10 % of mapped habitat → shown as "field check", never as a restoration gain (API, alerts,
+assistant, PDF report, UI). Landing page figures come live from the LATEST run (`frontend/hooks/use-landing-story.tsx`).
+Previous LATEST (still stored, reproducible) = `kerala-coast_20260920T182222Z` (model `kerala-coast_development`,
+threshold 0.5), 24 patches — the "P17 story" below refers to that run:
 - **P17**: 3.13 ha (1.4 % of habitat, 17th by area), degree 4, **cut vertex** (components 2→3),
   criticality rank #3, S = 0.270 (≈27 % IIC loss). P01 is #1 (S = 0.307, 16 % of habitat, not a cut vertex).
 - Restoration candidate **C1** ≈ 1.6 ha, +1.29 % IIC (simulated).

@@ -79,7 +79,7 @@ const GREETING =
   "I answer only from the stored results of the selected landscape and run — patches, criticality, connectivity, model record, alerts and field tasks — and cite the evidence behind every answer. If the data doesn't answer your question, I say so. Ask me to simulate a change and I'll propose it; you decide whether to run it.";
 const SUGGESTIONS = [
   "Which patch is most critical and why?",
-  "What happens if P17 is removed?",
+  "Which patches hold the network together?",
   "How much habitat and how many patches does this run have?",
   "What restoration candidates rank highest?",
   "Are there open alerts for this landscape?",

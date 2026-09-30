@@ -25,6 +25,7 @@ from ecoconnect.graph.sensitivity import hypothetical_patch, scale_areas, sensit
 from ecoconnect.pipeline.config import REPO_ROOT
 
 from .paths import abs_path, patch_from_dict
+from .restoration_rules import UNCERTAIN_NOTE, classify
 
 
 def _abs(p) -> Path:
@@ -311,10 +312,15 @@ def restoration_feasibility(run_dir: Path, scene_path: Optional[str], water_ndwi
         unknown += ["legal status / protected-area boundary not assessed (no layer loaded)",
                     "land ownership, settlements, infrastructure and accessibility not assessed (no layer loaded)",
                     "cost not assessed (no cost data supplied)"]
-        verdict = "not_recommended" if (r.new_links == 0 or overlaps) else ("conditional" if reasons_against else "recommended")
+        category = classify(r.area_ha, sum(p.area_ha for p in patches))
+        if category == "uncertain_habitat":
+            reasons_against.insert(0, UNCERTAIN_NOTE)
+            verdict = "field_check"
+        else:
+            verdict = "not_recommended" if (r.new_links == 0 or overlaps) else ("conditional" if reasons_against else "recommended")
         out.append({"candidate_id": r.candidate_id, "rank": r.rank, "area_ha": r.area_ha, "centroid": r.centroid, "gain_pct": r.gain_pct,
                     "new_links": r.new_links, "linked_patch_ids": r.linked_patch_ids, "nearest_habitat_km": d_near, "ndwi_mean": ndwi,
-                    "overlaps_existing": overlaps, "overlap_fraction": overlap_frac, "verdict": verdict, "why": reasons_for, "why_not": reasons_against, "not_assessed": unknown,
+                    "overlaps_existing": overlaps, "overlap_fraction": overlap_frac, "verdict": verdict, "category": category, "why": reasons_for, "why_not": reasons_against, "not_assessed": unknown,
                     "geometry": c.geometry})
     return {"metric": metric, "baseline_c": c_base, "ranking_basis": "raw connectivity gain (no cost data)",
             "candidate_method": ("candidates = connected components of the probability raster with "
