@@ -185,6 +185,12 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
 
 - Local `.env` (gitignored, chmod 600) holds ANTHROPIC_API_KEY (user-provided; user asked not to spend it — no test
   calls made). Never commit it; in deployment it goes into the Render dashboard (render.yaml `sync: false`).
+- Local dev DB: PostgreSQL 18 cluster in data/postgres (gitignored) on 127.0.0.1:5433, db `ecoconnect`, user `eco`
+  (trust auth, localhost only); `scripts/local_postgres.sh start` BEFORE the backend (.env points at it; comment the
+  ECO_DATABASE_URL line out to use SQLite). Tests always use their own temp DB.
+- Live: API https://major-project-econnectai.onrender.com (auto-deploys main; /api/ready 200, schema 0005),
+  frontend https://major-project-econnect-ai.vercel.app. `scripts/check_deployment.py` 2026-09-30: all pass except
+  CORS = '*' (Render dashboard ECO_CORS_ORIGINS must be set to the Vercel URL by the user).
 - Target stack: Vercel (frontend) + Render web service (API, Docker) + Neon PostgreSQL + Cloudflare R2 (photos) +
   GitHub Actions CI with deploy hook. GitHub Actions still blocked: account billing lock (user must fix in
   github.com/settings/billing; repo is public).

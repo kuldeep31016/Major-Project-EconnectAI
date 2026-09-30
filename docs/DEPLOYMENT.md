@@ -12,6 +12,8 @@ docker compose --profile postgres up --build    # + PostGIS; set ECO_DATABASE_UR
 docker compose --profile worker up --build      # + a separate job worker
 ```
 Without Docker: `.venv/bin/python -m uvicorn backend.main:app --port 8000` and `cd frontend && npm run dev`.
+Local PostgreSQL without Docker: `scripts/local_postgres.sh init` (once), then `scripts/local_postgres.sh start`
+and `ECO_DATABASE_URL=$(scripts/local_postgres.sh url)` in `.env`.
 
 ## 2. Components
 
@@ -65,6 +67,10 @@ public demos without sign-in; delete intermediate rasters after a run is registe
 training only on demand.
 
 ## 6. Release checklist
+
+0. `.venv/bin/python scripts/check_deployment.py --api <render-url> --frontend <vercel-url> [--user admin --password …]`
+   — liveness, readiness, CORS (exact origin, foreign origins rejected), run data, what-if, traversal guard,
+   sign-in, database type, storage backend, assistant mode. Never calls the paid assistant.
 
 1. `pytest -q`, `ruff`, `tsc`, `eslint`, `next build` green (CI runs them; GitHub Actions needs the owner account's
    billing lock cleared).
