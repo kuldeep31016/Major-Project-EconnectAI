@@ -1,5 +1,7 @@
 # Paper → code traceability
 
+> **Superseded (2026-10-01)** by `docs/PAPER_IMPLEMENTATION_MATRIX.md` — kept for history; may be out of date.
+
 Paper: `docs/EcoConnectAI_IEEE_paper.pdf` (source `docs/paper_source_main.tex`). Equation numbers follow the paper.
 
 | Paper element | Statement | Code | Test |

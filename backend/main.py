@@ -10,13 +10,14 @@ Run:  uvicorn backend.main:app --reload --port 8000
 from __future__ import annotations
 
 import json
+import re
 import logging
 import os
 import sys
 from pathlib import Path
 from typing import Literal, Optional
 
-from fastapi import FastAPI, HTTPException, Body, Depends
+from fastapi import FastAPI, HTTPException, Body, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel, Field
@@ -44,7 +45,7 @@ from backend.db import SessionLocal, init_db  # noqa: E402
 from backend.auth import seed_demo_users, require, User  # noqa: E402
 from backend.registry import sync_all  # noqa: E402
 from backend.routers import router as workflow_router  # noqa: E402
-from backend.security import cors_config, validate_path_params, contained  # noqa: E402
+from backend.security import compute_limiter, cors_config, validate_path_params, contained  # noqa: E402
 
 
 @asynccontextmanager
@@ -88,10 +89,15 @@ def _abs(p: str | None) -> str | None:
     return str(abs_path(p)) if p else p
 
 
+# absolute paths recorded on the machine that produced a run (e.g. /Users/<name>/.../outputs/x) are served
+# repo-relative: they reveal the producer's home directory and mean nothing on another host
+_ABS_ARTEFACT_PATH = re.compile(r'"(?:[A-Za-z]:)?[/\\][^"]*?[/\\]((?:outputs|data|models)[/\\][^"]*)"')
+
+
 def _read_json(p: Path):
     if not p.exists():
         raise HTTPException(404, f"{p.name} not found")
-    return json.loads(p.read_text())
+    return json.loads(_ABS_ARTEFACT_PATH.sub(r'"\1"', p.read_text()))
 
 
 def _load_graph(run_dir: Path):
@@ -346,7 +352,8 @@ class WhatIfRequest(BaseModel):
 
 
 @app.post("/api/runs/{study_area}/{run_id}/what-if")
-def what_if(study_area: str, run_id: str, req: WhatIfRequest):
+def what_if(study_area: str, run_id: str, req: WhatIfRequest, request: Request):
+    compute_limiter.hit(request)
     """Exact Eq. (10): rebuild G without the patches and recompute C(G).  No heuristics."""
     graph, _, a_l, metric, kw, _ = _load_graph(_resolve_run(study_area, run_id))
     try:
@@ -372,7 +379,8 @@ class RestorationRequest(BaseModel):
 
 
 @app.post("/api/runs/{study_area}/{run_id}/restoration")
-def restoration(study_area: str, run_id: str, req: RestorationRequest = Body(default=RestorationRequest())):
+def restoration(request: Request, study_area: str, run_id: str, req: RestorationRequest = Body(default=RestorationRequest())):
+    compute_limiter.hit(request)
     """Eq. (11)-(12) with optional user-supplied costs; never invents costs."""
     graph, cands, a_l, metric, kw, m = _load_graph(_resolve_run(study_area, run_id))
     if req.candidates:
@@ -474,10 +482,15 @@ class ReanalyseRequest(BaseModel):
 
 
 @app.post("/api/runs/{study_area}/{run_id}/reanalyse")
-def reanalyse(study_area: str, run_id: str, req: ReanalyseRequest):
+def reanalyse(study_area: str, run_id: str, req: ReanalyseRequest, request: Request):
     """Parameter sensitivity explorer: rebuild the graph of an existing run with another tau / k / metric
     and recompute IIC/PC/ECA, criticality and components exactly. Patches are unchanged (they come from the
     segmentation); nothing is re-trained. Milliseconds for tens of patches."""
+    compute_limiter.hit(request)
+    if req.tau_km is not None and not 0.5 <= req.tau_km <= 50:
+        raise HTTPException(400, "tau_km must be between 0.5 and 50 km")
+    if req.k is not None and not 1 <= req.k <= 10:
+        raise HTTPException(400, "k must be between 1 and 10")
     run_dir = _resolve_run(study_area, run_id)
     m = _read_json(run_dir / "manifest.json")
     inp = _read_json(run_dir / "patches_input.json")
@@ -731,9 +744,10 @@ class ScenarioBody(BaseModel):
 
 
 @app.post("/api/runs/{study_area}/{run_id}/scenario")
-def scenario(study_area: str, run_id: str, body: ScenarioBody):
+def scenario(study_area: str, run_id: str, body: ScenarioBody, request: Request):
     """Scenario Lab: exact baseline → scenario → difference over the run's patches. Labelled SIMULATED,
-    except compare_periods which is OBSERVED (MODEL OUTPUT)."""
+    except compare_periods: MODEL-ESTIMATED CHANGE, or NOT LIKE-FOR-LIKE when the two runs differ in model/settings."""
+    compute_limiter.hit(request)
     run_dir = _resolve_run(study_area, run_id)
     other = _resolve_run(study_area, body.other_run_id) if body.other_run_id else None
     try:

@@ -2,7 +2,7 @@
 
 Every scenario returns  baseline -> scenario -> difference  computed EXACTLY on the run's patches (graph rebuilt,
 index recomputed) and is labelled SIMULATED.  Period comparison compares two stored runs (both model outputs)
-and is labelled OBSERVED (MODEL OUTPUT) - it is still not a field observation.
+and is labelled MODEL-ESTIMATED CHANGE (or NOT LIKE-FOR-LIKE when model/settings differ) - never a field observation.
 
 Restoration feasibility uses only layers that really exist for the run: the run's own patches (existing
 habitat), the scene's Sentinel-2 NDWI (open-water indicator) when the scene carries S2 bands, and distance
@@ -22,6 +22,8 @@ from ecoconnect.graph import (build_graph, connectivity, compute_criticality, ev
                               simulate_removal, summarise)
 from ecoconnect.graph.construction import haversine_km
 from ecoconnect.graph.sensitivity import hypothetical_patch, scale_areas, sensitivity
+from ecoconnect.graph.temporal import comparability, track_patches
+from ecoconnect.graph.temporal import summarise as summarise_tracking
 from ecoconnect.pipeline.config import REPO_ROOT
 
 from .paths import abs_path, patch_from_dict
@@ -59,6 +61,14 @@ def _diff(b: dict, s: dict) -> dict:
     return out
 
 
+def _bounded(values, lo: float, hi: float, max_n: int, name: str) -> list[float]:
+    """Public endpoints must not accept unbounded work: every list parameter is capped in length and range."""
+    vals = [float(v) for v in values]
+    if len(vals) > max_n or any(not lo <= v <= hi for v in vals):
+        raise ValueError(f"{name}: at most {max_n} values, each between {lo} and {hi}")
+    return vals
+
+
 def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None) -> dict:
     m, patches, cands, a_l, g, metric = _load(run_dir)
     k, tau, dm = g["k_neighbors"], g["tau_km"], g["distance_mode"]
@@ -85,10 +95,8 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
                     pt2 = Point(p.centroid[0], p.centroid[1])
                     if poly_lonlat.contains(pt1) or poly_latlon.contains(pt2) or poly_latlon.contains(pt1):
                         ids.append(p.id)
-            if not ids and patches:
-                poly_c = poly_latlon.centroid
-                patches_by_dist = sorted(patches, key=lambda p: (p.centroid[0] - poly_c.x)**2 + (p.centroid[1] - poly_c.y)**2 if p.centroid else 999999)
-                ids = [patches_by_dist[0].id]
+            if not ids:
+                raise ValueError("The drawn area does not overlap any habitat patch, so nothing would be removed.")
         else:
             ids = list(body.get("patch_ids", []))
         if not ids:
@@ -125,7 +133,7 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
                 "edges_after": [e.to_dict() for e in sg.edges.values()], "explanation": expl}
 
     if t == "tau":
-        taus = body.get("taus_km") or [3.0, 5.0, 8.0]
+        taus = _bounded(body.get("taus_km") or [3.0, 5.0, 8.0], 0.5, 50, 6, "taus_km")
         out = []
         base_rows, _ = compute_criticality(base_graph, a_l, metric)
         base_rank = {r.patch_id: r.rank for r in base_rows}
@@ -211,7 +219,7 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
             raise ValueError("threshold scenarios need the run's probability raster on disk (not available for synthetic runs)")
         from ecoconnect.pipeline.sources import from_probability_raster
         out = []
-        for thr in body.get("thresholds") or [0.4, 0.5, 0.6, 0.7]:
+        for thr in _bounded(body.get("thresholds") or [0.4, 0.5, 0.6, 0.7], 0.05, 0.95, 8, "thresholds"):
             p2, _, a2, _, _ = from_probability_raster(_abs(src["path"]), threshold=float(thr), mmu_ha=src.get("mmu_ha", 2.0), candidate_threshold=None)
             if not p2:
                 out.append({"threshold": thr, "n_patches": 0}); continue
@@ -227,29 +235,29 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
         m2, p2, _, a2, g2, metric2 = _load(other_run_dir)
         g_other = build_graph(p2, k=g2["k_neighbors"], tau_km=g2["tau_km"], distance_mode=g2["distance_mode"])
         other = _summary(g_other, a2, metric2)
-        # patch identity is positional (ids are per-run); match by centroid proximity (< 300 m)
-        matched, lost, gained = [], [], []
-        for p in patches:
-            best = min(p2, key=lambda q: haversine_km(p.centroid, q.centroid), default=None)
-            if best and haversine_km(p.centroid, best.centroid) < 0.3:
-                matched.append((p.id, best.id, p.area_ha, best.area_ha))
-            else:
-                lost.append(p.id)
-        matched_b = {b for _, b, _, _ in matched}
-        gained = [q.id for q in p2 if q.id not in matched_b]
+        # patch ids are per run: identity comes from polygon overlap (ecoconnect.graph.temporal)
+        tracking = track_patches(json.loads((run_dir / "patches.geojson").read_text()),
+                                 json.loads((other_run_dir / "patches.geojson").read_text()))
+        comp = comparability(m, m2)
+        one_to_one = [e for e in tracking["events"] if e["type"] in ("stable", "grown", "shrunk")]
+        lost = [i for e in tracking["events"] if e["type"] == "disappeared" for i in e["patches_a"]]
+        gained = [i for e in tracking["events"] if e["type"] == "new" for i in e["patches_b"]]
         crit_a, _ = compute_criticality(base_graph, a_l, metric)
         crit_b, _ = compute_criticality(g_other, a2, metric2)
         ra, rb = {r.patch_id: r for r in crit_a}, {r.patch_id: r for r in crit_b}
-        crit_change = [{"patch_a": a, "patch_b": b, "area_a": aa, "area_b": ab, "S_a": ra[a].criticality_score, "S_b": rb[b].criticality_score,
-                        "rank_a": ra[a].rank, "rank_b": rb[b].rank} for a, b, aa, ab in matched]
+        crit_change = [{"patch_a": e["patches_a"][0], "patch_b": e["patches_b"][0], "change": e["type"], "area_a": e["area_a_ha"], "area_b": e["area_b_ha"],
+                        "S_a": ra[e["patches_a"][0]].criticality_score, "S_b": rb[e["patches_b"][0]].criticality_score,
+                        "rank_a": ra[e["patches_a"][0]].rank, "rank_b": rb[e["patches_b"][0]].rank} for e in one_to_one]
         d = _diff(baseline, other)
         expl = (f"Between run {m['run_id']} ({m['data_source'].get('scene_year')}) and {m2['run_id']} ({m2['data_source'].get('scene_year')}): "
                 f"habitat {baseline['habitat_area_ha']:.0f} → {other['habitat_area_ha']:.0f} ha, {metric.upper()} {baseline['iic']:.3e} → {other['iic']:.3e} ({d['iic_pct']:+.1f} %), "
-                f"components {baseline['n_components']} → {other['n_components']}; {len(lost)} patch(es) without a counterpart within 300 m, {len(gained)} new. "
-                "Both are model outputs; differences include model uncertainty and no cause is attributed.")
-        return {"type": t, "label": "OBSERVED (MODEL OUTPUT)", "parameters": {"run_a": m["run_id"], "run_b": m2["run_id"]},
+                f"components {baseline['n_components']} → {other['n_components']}. {summarise_tracking(tracking)} "
+                "'Disappeared' means no patch above the minimum size overlaps it in the later run (it may have shrunk below that size). "
+                + comp["note"] + " No cause is attributed.")
+        return {"type": t, "label": "MODEL-ESTIMATED CHANGE" if comp["comparable"] else "NOT LIKE-FOR-LIKE (DIFFERENT MODEL/SETTINGS)",
+                "parameters": {"run_a": m["run_id"], "run_b": m2["run_id"]},
                 "baseline": baseline, "scenario": other, "difference": d, "lost_patch_ids": lost, "gained_patch_ids": gained,
-                "matched": crit_change, "explanation": expl}
+                "matched": crit_change, "tracking": tracking, "comparability": comp, "explanation": expl}
 
     raise ValueError(f"unknown scenario type {t}")
 

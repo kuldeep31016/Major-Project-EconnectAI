@@ -14,6 +14,22 @@ Next step:
 
 ---
 
+## 2026-10-01 — spec-2 gap closing: temporal tracking, patch importance, security, acceptance test, docs
+
+Goal: user's big "lead architect" spec — close real gaps, no fabrication.
+Changed: ecoconnect/graph/temporal.py (polygon-overlap patch tracking, comparability incl. path-independent model key)
+used by compare_periods (labels MODEL-ESTIMATED CHANGE / NOT LIKE-FOR-LIKE); insight "change" intent same-model only;
+frontend Analysis "Patch importance" tab (components/analysis/patch-importance.tsx); evidence: EXIF GPS (routers.exif_gps),
+no pre-filled target coords, photo stored after checks, field officers only own tasks' evidence/photos; password 10–72 B;
+security.CallLimiter on what-if/scenario/reanalyse/restoration + anon assistant; Dockerfile --proxy-headers; list/range
+bounds; remove_polygon no longer falls back to nearest patch; _read_json strips absolute producer paths; every assistant
+question audited (anonymous as public). scripts/acceptance_test.py (+CI step), Makefile, README rewrite, 14 docs (4 agents),
+old docs marked superseded, footer "Decision support — not automated conservation approval". Landing PurposeSection
+REMOVED at user request (hook + plain-language page lines stay).
+Tests: pytest 102 passed 1 skipped; acceptance 16 PASS / 4 SKIP / 0 FAIL; ruff F clean; tsc ok; eslint 0 errors; build ok.
+Open: demo admin exposure on live (user decision); user pasted spec-3 (RAG chatbot, tier-1 no-LLM answers, cache, context-aware
+assistant, diagnostics panel, 30-question eval) — NOT started, awaiting go-ahead; spec-3 quotes old P17 run figures.
+
 ## 2026-10-01 — accuracy pass, plain-language layer, meaningful alerts
 
 Goal: every module accurate and understandable to non-experts/funders.

@@ -1,5 +1,7 @@
 # Research & IP notes
 
+> **Superseded (2026-10-01)** by `docs/IP_READINESS.md` — kept for history; may be out of date.
+
 **Status: internal working notes, not legal advice.** Nothing here claims that EcoConnectAI is novel or
 patentable. Novelty can only be judged after a professional prior-art search (patent databases such as
 Espacenet / Google Patents / Indian Patent Office InPASS, and the scientific literature on landscape

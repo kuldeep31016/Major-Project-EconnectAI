@@ -70,7 +70,9 @@ threshold 0.5), 24 patches — the "P17 story" below refers to that run:
   (synthetic prototype, rank 7, S 0.194) is a different object.
 - Other runs: `<area>_multi_E1_s1_b0_dev_t0.70` for all four areas (Sundarbans 54 patches, Odisha 21,
   Gulf of Mannar 16, Kerala 12).
-- Synthetic prototype maths reproduce paper Tables VI–VIII exactly (ad-hoc check; **no test enforces it**).
+- Synthetic prototype maths reproduce paper Tables VI–VIII exactly; Tables VI–VII pinned by tests/test_regression.py, VIII/ρ/τ-robustness not yet pinned.
+- P07 'small but critical' holds only for k ≥ 3, τ ≥ 5 km (top-5 in 4/9 τ×k variants) — say so when presenting.
+- Paper ↔ code: 18 disagreements listed in docs/PAPER_IMPLEMENTATION_MATRIX.md (real runs do NOT reproduce the paper's synthetic headline findings).
 
 ## 4. Tech stack
 
@@ -94,7 +96,7 @@ threshold 0.5), 24 patches — the "P17 story" below refers to that run:
 backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, patch_from_dict — the ONLY run resolver;
                 tests repoint backend.paths.RUNS_DIR) · security.py (slug validation app-dependency, contained(),
                 login throttle 10 fails/5 min) · main.py (run/artefact/compute endpoints)
-                db.py (17 tables incl. jobs, artifacts) · migrate.py + migrations/ (Alembic; runs at startup;
+                db.py (20 tables incl. jobs, artifacts) · migrate.py + migrations/ (Alembic; runs at startup;
                 pre-Alembic DBs stamped 0001) · storage.py (LocalStorage | S3Storage via ECO_STORAGE) ·
                 artifacts.py (sha256 registry, synced in registry.sync_all) · jobs.py (DB queue, conditional-UPDATE
                 claim, inline worker thread ECO_INLINE_WORKER=1) · job_handlers.py (segment, scenario) ·

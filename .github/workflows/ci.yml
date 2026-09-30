@@ -25,6 +25,8 @@ jobs:
         run: ruff check backend ecoconnect scripts tests --select F
       - name: Tests (graph maths, P17 regression, API, security, workflow)
         run: python -m pytest -q
+      - name: End-to-end acceptance (20 steps; data/model steps SKIP without scenes/checkpoints)
+        run: python scripts/acceptance_test.py
       - name: Dependency audit
         run: pip-audit -r requirements-api.txt || echo "::warning::pip-audit reported issues"
 

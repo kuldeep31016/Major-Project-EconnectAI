@@ -271,10 +271,29 @@ function ScenarioLabView() {
                 <Card><CardHeader className="pb-1"><CardTitle className="text-[13px]">Affected patches</CardTitle></CardHeader><CardContent className="text-[12px]">{result.affected_patch_ids.join(", ")}{result.newly_isolated_patch_ids?.length ? <div className="mt-1 text-[#b91c1c]">Newly isolated: {result.newly_isolated_patch_ids.join(", ")}</div> : null}</CardContent></Card>
               )}
               {"lost_patch_ids" in result && (
-                <Card><CardHeader className="pb-1"><CardTitle className="text-[13px]">Patch-level change</CardTitle><CardDescription>matched by centroid proximity (&lt; 300 m); model outputs, no cause attributed</CardDescription></CardHeader>
-                  <CardContent className="text-[12px] space-y-1"><div>Without counterpart in later period ({result.lost_patch_ids?.length}): {result.lost_patch_ids?.join(", ") || "—"}</div><div>New in later period ({result.gained_patch_ids?.length}): {result.gained_patch_ids?.join(", ") || "—"}</div>
+                <Card><CardHeader className="pb-1"><CardTitle className="text-[13px]">Patch-level change</CardTitle>
+                  <CardDescription>Patches matched by polygon overlap (≥ 10 % of the smaller patch). Model-estimated change, no cause attributed.</CardDescription></CardHeader>
+                  <CardContent className="text-[12px] space-y-2">
+                    {result.comparability && !result.comparability.comparable && (
+                      <div className="rounded-md border border-amber-300 bg-amber-50 px-2 py-1.5 text-[11.5px] text-amber-900">{result.comparability.note}</div>
+                    )}
+                    {result.tracking && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {["stable", "grown", "shrunk", "split", "merged", "reorganised", "disappeared", "new"].filter((k) => result.tracking!.counts[k]).map((k) => (
+                          <span key={k} className="rounded-full bg-foreground/[0.06] px-2 py-0.5 text-[11px]"><b>{result.tracking!.counts[k]}</b> {k}</span>
+                        ))}
+                      </div>
+                    )}
+                    {result.tracking && (
+                      <table className="w-full text-[11px]"><thead className="text-[9.5px] uppercase text-muted-foreground"><tr><th className="text-left">change</th><th className="text-left">earlier → later</th><th>area (ha)</th></tr></thead>
+                        <tbody className="tabular">{result.tracking.events.filter((e) => e.type !== "stable").slice(0, 14).map((e, i) => (
+                          <tr key={i} className="border-t border-foreground/[0.06]"><td>{e.type}</td><td>{e.patches_a.join(" + ") || "—"} → {e.patches_b.join(" + ") || "—"}</td><td className="text-center">{e.area_a_ha.toFixed(1)} → {e.area_b_ha.toFixed(1)}</td></tr>
+                        ))}</tbody></table>
+                    )}
+                    <p className="text-[11px] text-muted-foreground">&ldquo;Disappeared&rdquo; means no patch above the minimum size overlaps it later; it may have shrunk below that size.</p>
                     {result.matched && result.matched.length > 0 && <table className="mt-1 w-full text-[11px]"><thead className="text-[9.5px] uppercase text-muted-foreground"><tr><th className="text-left">A → B</th><th>area</th><th>S_A → S_B</th><th>rank</th></tr></thead><tbody className="tabular text-center">{result.matched.slice(0, 12).map((x, i) => <tr key={i} className="border-t border-foreground/[0.06]"><td className="text-left">{x.patch_a} → {x.patch_b}</td><td>{x.area_a.toFixed(0)} → {x.area_b.toFixed(0)}</td><td>{x.S_a.toFixed(3)} → {x.S_b.toFixed(3)}</td><td>{x.rank_a} → {x.rank_b}</td></tr>)}</tbody></table>}
-                  </CardContent></Card>
+                  </CardContent>
+                </Card>
               )}
               {user && (
                 <Button size="sm" variant="outline" onClick={async () => { try { const s = await saveScenario({ study_area_id: sceneId, run_id: dataSource.provenance?.runId ?? runId, type: result.type, params: result.parameters, result: { baseline: result.baseline, scenario: (result as { scenario?: unknown }).scenario, difference: (result as { difference?: unknown }).difference, explanation: result.explanation, label: result.label } }); setSaved(`Saved as scenario #${s.id} (recomputed on the server, audited).`); } catch (e) { setSaved(`Could not save: ${e instanceof Error ? e.message : String(e)}`); } }}><Save className="h-3.5 w-3.5" /> Save to record</Button>

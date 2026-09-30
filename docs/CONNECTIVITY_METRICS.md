@@ -1,5 +1,7 @@
 # Connectivity metrics — formulas, inputs, units, implementation
 
+> **Superseded (2026-10-01)** by `docs/CONNECTIVITY.md` — kept for history; may be out of date.
+
 All in `ecoconnect/graph/connectivity.py`; tested in `tests/test_graph.py` against hand-computed values.
 
 ## Research metrics (used for every reported result)

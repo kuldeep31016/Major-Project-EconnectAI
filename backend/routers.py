@@ -38,6 +38,26 @@ def _image_kind(data: bytes) -> Optional[str]:
     return None
 
 
+def exif_gps(data: bytes) -> Optional[tuple[float, float]]:
+    """GPS position from a photo's EXIF block, or None when the photo carries none (never guessed)."""
+    try:
+        import io
+
+        from PIL import Image
+        gps = Image.open(io.BytesIO(data)).getexif().get_ifd(0x8825)       # GPSInfo IFD
+        if not gps or 2 not in gps or 4 not in gps:
+            return None
+        dms = lambda v: float(v[0]) + float(v[1]) / 60 + float(v[2]) / 3600  # noqa: E731
+        lat, lon = dms(gps[2]), dms(gps[4])
+        if str(gps.get(1, "N")).upper().startswith("S"):
+            lat = -lat
+        if str(gps.get(3, "E")).upper().startswith("W"):
+            lon = -lon
+        return (lat, lon) if -90 <= lat <= 90 and -180 <= lon <= 180 else None
+    except Exception:
+        return None
+
+
 def _user_out(u: User) -> dict:
     return {"id": u.id, "username": u.username, "fullName": u.full_name, "role": u.role,
             "roleLabel": ROLE_LABELS.get(u.role, u.role), "capabilities": capabilities_for(u.role), "orgId": u.org_id}
@@ -109,6 +129,8 @@ class UserIn(BaseModel):
 def create_user(body: UserIn, user: User = Depends(require("manage_users")), db: Session = Depends(get_db)):
     if body.role not in ROLES:
         raise HTTPException(400, f"role must be one of {ROLES}")
+    if not 10 <= len(body.password.encode()) <= 72:     # bcrypt only uses the first 72 bytes
+        raise HTTPException(400, "password must be 10–72 bytes long")
     if db.query(User).filter_by(username=body.username).first():
         raise HTTPException(409, "username exists")
     u = User(username=body.username, full_name=body.full_name, role=body.role, email=body.email,
@@ -335,13 +357,23 @@ def task_status(task_id: int, body: StatusIn, user: User = Depends(current_user)
     return t.to_dict()
 
 
+def _check_task_access(user: User, t: Optional[FieldTask]) -> FieldTask:
+    """Field officers see only evidence of tasks assigned to them (photos carry GPS); other roles review all."""
+    if t is None:
+        raise HTTPException(404, "task not found")
+    if user.role == "field_officer" and t.assignee_id != user.id:
+        raise HTTPException(403, "task is not assigned to you")
+    return t
+
+
 @router.get("/field-tasks/{task_id}/evidence")
 def task_evidence(task_id: int, user: User = Depends(current_user), db: Session = Depends(get_db)):
+    _check_task_access(user, db.get(FieldTask, task_id))
     return [e.to_dict() for e in db.query(Evidence).filter_by(task_id=task_id).order_by(Evidence.created_at).all()]
 
 
 @router.post("/field-tasks/{task_id}/evidence")
-def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...), observed_at: str = Form(...),
+def submit_evidence(task_id: int, lat: Optional[float] = Form(None), lon: Optional[float] = Form(None), observed_at: str = Form(...),
                           observation: str = Form(...), notes: str = Form(""), photo: Optional[UploadFile] = File(None),
                           checklist: str = Form(""),
                           user: User = Depends(require("submit_evidence")), db: Session = Depends(get_db)):
@@ -350,9 +382,9 @@ def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...)
         raise HTTPException(404, "task not found")
     if user.role == "field_officer" and t.assignee_id != user.id:
         raise HTTPException(403, "task is not assigned to you")
-    if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+    if (lat is None) != (lon is None) or (lat is not None and not (-90 <= lat <= 90 and -180 <= lon <= 180)):
         raise HTTPException(400, "invalid coordinates")
-    photo_path = None
+    photo_path, photo_gps, data, kind = None, None, None, None
     if photo is not None:
         data = photo.file.read(MAX_PHOTO_BYTES + 1)
         if len(data) > MAX_PHOTO_BYTES:
@@ -360,6 +392,15 @@ def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...)
         kind = _image_kind(data)          # trust the bytes, not the client's content-type
         if kind is None:
             raise HTTPException(400, f"photo must be one of {sorted(set(ALLOWED_PHOTO.values()))}")
+        photo_gps = exif_gps(data)
+    # typed/device coordinates win; otherwise the photo's own GPS; otherwise refuse (a location is never invented)
+    if lat is not None:
+        loc_source = "submitted"
+    elif photo_gps is not None:
+        (lat, lon), loc_source = photo_gps, "photo_exif"
+    else:
+        raise HTTPException(400, "Location unavailable: enter coordinates or attach a photo that has GPS data")
+    if data is not None:                  # stored only after every check passed (no orphan files)
         from .storage import get_storage
         fname = f"task{task_id}_{uuid.uuid4().hex[:12]}{kind}"
         # object storage (local disk in dev, S3/R2 in production) - survives redeploys of the API container
@@ -371,8 +412,9 @@ def submit_evidence(task_id: int, lat: float = Form(...), lon: float = Form(...)
     db.add(e); db.flush()
     if t.status in ("PENDING", "IN_PROGRESS"):
         t.status = "SUBMITTED"; t.updated_at = utcnow()
-    audit(db, user, "submit_evidence", "evidence", e.id, new={"task_id": task_id, "observation": observation, "photo": photo_path}); db.commit()
-    return e.to_dict()
+    audit(db, user, "submit_evidence", "evidence", e.id, new={"task_id": task_id, "observation": observation, "photo": photo_path,
+                                                             "location_source": loc_source, "photo_gps": photo_gps}); db.commit()
+    return {**e.to_dict(), "location_source": loc_source, "photo_gps": photo_gps}
 
 
 class VerifyIn(BaseModel):
@@ -411,9 +453,13 @@ def verify_evidence(evidence_id: int, body: VerifyIn, user: User = Depends(requi
 
 
 @router.get("/evidence/photo/{name}")
-def evidence_photo(name: str, user: User = Depends(current_user)):
+def evidence_photo(name: str, user: User = Depends(current_user), db: Session = Depends(get_db)):
     from fastapi.responses import Response
     from .storage import get_storage
+    ev = db.query(Evidence).filter_by(photo_path=Path(name).name).first()
+    if ev is None:
+        raise HTTPException(404, "photo not found")
+    _check_task_access(user, db.get(FieldTask, ev.task_id))
     key = f"evidence/{Path(name).name}"
     st = get_storage()
     if not st.exists(key):
@@ -583,7 +629,7 @@ _ask_log: dict[int, list[float]] = {}
 
 
 @router.post("/assistant/ask")
-def assistant_ask(body: AskIn, user: Optional[User] = Depends(optional_user), db: Session = Depends(get_db)):
+def assistant_ask(body: AskIn, request: Request, user: Optional[User] = Depends(optional_user), db: Session = Depends(get_db)):
     """Evidence-grounded assistant. Signed-in users get Claude answers built only from retrieved stored evidence,
     with citations and an optional *proposed* (never executed) scenario; everyone else, or any API failure, gets
     the template assistant. See backend/assistant_llm.py."""
@@ -593,6 +639,9 @@ def assistant_ask(body: AskIn, user: Optional[User] = Depends(optional_user), db
         rd = _run_dir_for(db, body.study_area, body.run_id)
     except HTTPException:
         rd = None
+    if user is None:                   # public demo: template answers only, capped per client (also bounds audit rows)
+        from .security import anon_assistant_limiter
+        anon_assistant_limiter.hit(request)
     use_llm = user is not None and llm_available()
     if use_llm:
         now = time.time()
@@ -601,11 +650,13 @@ def assistant_ask(body: AskIn, user: Optional[User] = Depends(optional_user), db
             raise HTTPException(429, f"assistant limit of {_ASK_LIMIT} questions per hour reached")
         _ask_log[user.id] = recent + [now]
     out = grounded_answer(db, body.question, body.study_area, rd, use_llm=use_llm)
-    if use_llm:
-        audit(db, user, "assistant_question", "run", body.run_id,
-              new={"mode": out["mode"], "question": body.question[:300], "cited": [c["id"] for c in out.get("citations", [])],
-                   "proposed": out.get("proposed_scenario")})
-        db.commit()
+    # every question is audited (template and Claude answers alike; anonymous public-demo questions without a user)
+    from types import SimpleNamespace
+    who = user or SimpleNamespace(id=None, username="anonymous", role="public")
+    audit(db, who, "assistant_question", "run", body.run_id or "latest",
+          new={"mode": out.get("mode", "template"), "study_area": body.study_area, "question": body.question[:300],
+               "cited": [c["id"] for c in out.get("citations", [])], "proposed": out.get("proposed_scenario")})
+    db.commit()
     return out
 
 

@@ -11,6 +11,7 @@ import {
   Download,
   Flame,
   Layers,
+  ListOrdered,
   Loader2,
   Map as MapIcon,
   Network,
@@ -44,6 +45,7 @@ import { requestMapFocus, useMapFocus } from "@/lib/map-focus";
 import { useSearchParams } from "next/navigation";
 import { SensitivityExplorer } from "@/components/analysis/sensitivity-explorer";
 import { EvidenceDrawer } from "@/components/analysis/evidence-drawer";
+import { PatchImportance } from "@/components/analysis/patch-importance";
 import { SENSITIVITY_META, type BasemapId } from "@/lib/constants";
 import { fmtArea, fmtDate, fmtRatio, fmtIndex } from "@/utils/format";
 import { cn } from "@/lib/utils";
@@ -61,7 +63,7 @@ const GisMap = dynamic(() => import("@/components/maps/gis-map"), {
   ),
 });
 
-type ViewMode = "map" | "split";
+type ViewMode = "map" | "split" | "importance";
 
 export default function AnalysisPage() {
   return <Suspense><AnalysisView /></Suspense>;
@@ -278,6 +280,7 @@ function AnalysisView() {
             items={[
               { value: "split", label: "Split", icon: Columns2 },
               { value: "map", label: "Map", icon: MapIcon },
+              { value: "importance", label: "Patch importance", icon: ListOrdered },
             ]}
           />
           <Button asChild variant="outline" size="sm" className="hidden md:inline-flex">
@@ -306,7 +309,12 @@ function AnalysisView() {
       >
         {/* ------------------------------------------------ map area */}
         <div className="relative min-h-0 flex-1">
-          {view === "map" ? (
+          {view === "importance" ? (
+            <>
+              <PatchImportance onExplain={(id) => setEvidenceFor(id)} onShowOnMap={(id) => { setSelectedPatchId(id); setView("map"); }} />
+              {evidenceFor && <EvidenceDrawer objectType="patch" objectId={evidenceFor} onClose={() => setEvidenceFor(null)} />}
+            </>
+          ) : view === "map" ? (
             mapPane
           ) : (
             <div className="grid h-full grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
