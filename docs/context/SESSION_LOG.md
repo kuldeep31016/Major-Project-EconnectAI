@@ -14,6 +14,15 @@ Next step:
 
 ---
 
+## 2026-09-30 — production live on Neon; CORS hardening
+
+User set Render env (Neon ECO_DATABASE_URL, CORS origins incl. Vercel URL, Anthropic key, new JWT secret; regex removed).
+Neon verified from here: schema 0005, Render seeded 6 users / 11 runs / 5 models / 167 artifacts. Live CORS still
+answered '*' although local reproduction with the same value was correct → security.cors_config(): split on , and
+whitespace, strip trailing '/', drop '*' unless ECO_CORS_ALLOW_ALL=1; startup logs "cors configured origins=[...]";
+/api/admin/system shows effective origins. Test added (94 passed). If '*' persists after deploy, look for another
+source of ECO_CORS_ORIGINS in Render (environment group / secret file).
+
 ## 2026-09-30 — local PostgreSQL + live deployment check
 
 Added scripts/local_postgres.sh (init/start/stop/status/url; data/postgres) — dev DB created, migrated to 0005, synced

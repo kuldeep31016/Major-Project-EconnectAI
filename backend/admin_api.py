@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from ecoconnect import __version__
 
 from .auth import require
+from .security import cors_config
 from .db import AnalysisVersion, Artifact, AuditLog, Job, Model, User, get_db, utcnow
 from .observability import METRICS
 
@@ -41,5 +42,5 @@ def system(user: User = Depends(require("view_audit")), db: Session = Depends(ge
         "counts": {"users": db.query(User).count(), "runs": db.query(AnalysisVersion).count(), "models": db.query(Model).count(),
                    "artifacts": db.query(Artifact).count(), "audit_events": db.query(AuditLog).count()},
         "requests": METRICS.snapshot(),
-        "config": {"token_minutes": int(os.environ.get("ECO_ACCESS_MINUTES", "60")), "cors_origins": os.environ.get("ECO_CORS_ORIGINS", "localhost")},
+        "config": {"token_minutes": int(os.environ.get("ECO_ACCESS_MINUTES", "60")), "cors_origins": ", ".join(cors_config()[0]) + (f" + regex {cors_config()[1]}" if cors_config()[1] else "")},
     }
