@@ -14,6 +14,29 @@ Next step:
 
 ---
 
+## 2026-10-02 — production RAG assistant + learning guide
+
+Goal: user's spec-3/spec-4 — RAG chatbot (P07 as worked example), then production-grade RAG; plus a learning file.
+Built: backend/rag/ (config, sources+parsers, structure-aware chunking, embeddings [fastembed bge-small 384-d | hashing
+for tests | none], versioned incremental ingest [rag_documents/rag_chunks/rag_embedding_cache, statuses, delete
+propagation, stale detection, admin uploads], hybrid retrieval [ACL before scoring, BM25 + dense, pgvector on PG when the
+extension exists else numpy, RRF + priors], conditional heuristic reranker [cross-encoder optional], confidence/
+abstention incl. object-scope rule, ContextBuilder [dedupe, budget, injection neutralised, <source> fencing], rule-based
+classify/follow-up rewrite/memory, generation [routing Haiku 4.5 / Sonnet 5.5, retries+jitter, different fallback model,
+streaming, prompt cache_control, cost from usage], service). backend/chat.py = structured tools + response cache + trace;
+backend/chat_api.py = /api/chat, /api/chat/stream (SSE), /api/chat/feedback, /api/chat/diagnostics, /api/rag/*.
+Migrations 0006 (chat_cache, chat_events) + 0007 (rag tables, trace/cost columns, pgvector column when possible).
+Frontend: components/chat/eco-assistant.tsx (streaming, sources list, retry, feedback, context-aware), /system Assistant
++ Knowledge index cards, lib/chat-focus.ts. backend/knowledge.py removed; scripts/chat_eval.py + docs/CHAT_EVAL.md
+removed (superseded by scripts/rag_eval.py + tests/rag/golden.jsonl). Dockerfile copies docs/ + 2 frontend files and
+bakes the embedding model; .dockerignore/.gitignore updated. Docs: docs/rag/*.md, docs/ASSISTANT_FAQ.md,
+docs/BASIC_UNDERSTANDING.md (learning guide for the user).
+Tests: pytest 143 passed 1 skipped; golden eval 64/64 (real model; recall@5 1.0, abstention 1.0, LLM off);
+acceptance 16/4/0; ruff F clean; tsc ok; eslint 0 errors; next build ok; secret scan clean.
+NOT verified: live Claude answers (no API spend by user's rule), pgvector path (no extension locally), Docker image build
+(daemon off). Render free tier memory may be tight with the embedding model (EMBEDDING_PROVIDER=none fallback).
+Open: user decides LLM_ENABLED on Render (demo login exposes LLM to anyone); private demo password.
+
 ## 2026-10-01 — spec-2 gap closing: temporal tracking, patch importance, security, acceptance test, docs
 
 Goal: user's big "lead architect" spec — close real gaps, no fabrication.

@@ -4,7 +4,10 @@ data
 models
 logs
 notebooks
-frontend
+frontend/**
+!frontend/lib/plain-language.ts
+!frontend/components/shared/term.tsx
+outputs/models_cache
 outputs/ecoconnect.db*
 outputs/.jwt_secret
 **/__pycache__

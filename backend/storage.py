@@ -40,6 +40,7 @@ class Storage(Protocol):
     def put_bytes(self, key: str, data: bytes, content_type: str | None = None) -> str: ...
     def get_bytes(self, key: str) -> bytes: ...
     def exists(self, key: str) -> bool: ...
+    def delete(self, key: str) -> None: ...
     def local_path(self, key: str) -> Path | None: ...       # direct path when the backend is a filesystem
     def url(self, key: str, expires_s: int = 3600) -> str | None: ...
 
@@ -74,6 +75,11 @@ class LocalStorage:
             return self._path(key).exists()
         except Exception:
             return False
+
+    def delete(self, key):
+        p = self._path(key)
+        if p.exists():
+            p.unlink()
 
     def local_path(self, key):
         return self._path(key)
@@ -113,6 +119,9 @@ class S3Storage:
             return True
         except Exception:
             return False
+
+    def delete(self, key):
+        self.client.delete_object(Bucket=self.bucket, Key=self._k(key))
 
     def local_path(self, key):
         return None

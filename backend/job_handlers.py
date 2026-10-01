@@ -143,3 +143,12 @@ def reproduce(ctx: JobContext, p: dict) -> dict:
             "code": {"run": m.get("code"), "now": code_version()},
             "note": ("graph stage recomputed from stored patches; the probability raster is not on this server"
                      if level == "graph" and ds.get("type") == "probability_raster" else None)}
+
+
+@handler("rag_ingest")
+def rag_ingest(ctx: JobContext, p: dict) -> dict:
+    """Incremental, versioned RAG ingestion (backend/rag/ingest.py). Unchanged documents are skipped by content hash."""
+    from .rag.ingest import ingest
+    with SessionLocal() as db:
+        keys = set(p.get("only_keys") or []) or None
+        return ingest(db, force=bool(p.get("force")), only_keys=keys, progress=lambda f, s: ctx.progress(0.05 + 0.9 * f, "indexing"))

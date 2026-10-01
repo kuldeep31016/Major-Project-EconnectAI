@@ -3,7 +3,7 @@ import "./globals.css";
 import { AnalysisProvider } from "@/hooks/use-analysis";
 import { AuthProvider } from "@/hooks/use-auth";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AssistantLauncher } from "@/components/chat/assistant-launcher";
+import { EcoAssistant } from "@/components/chat/eco-assistant";
 import { BRAND } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <AnalysisProvider>
             <TooltipProvider delayDuration={200}>
               {children}
-              <AssistantLauncher />
+              <EcoAssistant />
             </TooltipProvider>
           </AnalysisProvider>
         </AuthProvider>

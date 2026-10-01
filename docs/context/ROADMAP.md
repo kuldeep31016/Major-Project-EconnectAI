@@ -72,7 +72,8 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] Public compute bounded (per-client CallLimiter, list/range limits), proxy headers, anon assistant cap, all questions audited
 - [x] scripts/acceptance_test.py (20 steps: 16 PASS / 4 SKIP without scenes/checkpoints/torch) in CI; Makefile
 - [x] Docs: AUDIT, IMPLEMENTATION_STATUS, PAPER_IMPLEMENTATION_MATRIX, IP_READINESS, ARCHITECTURE, SECURITY, API, REPRODUCIBILITY, ML, GEOSPATIAL_PIPELINE, CONNECTIVITY, SCENARIOS, RESTORATION, GENAI; README rewritten
-- [ ] RAG over docs/paper + deterministic tier-1 answers + answer cache (user's pasted spec-3, not yet started)
+- [x] Production RAG assistant (2026-10-02): versioned ingestion, hybrid retrieval, ACL, rerank, abstention, streaming, fallback, cost tracking, 64-question golden eval
+- [ ] Live-LLM answer evaluation (needs API spend); verify pgvector on Neon and Docker image build
 - [ ] Demo admin account exposed via public demo password (user decision); restoration review can approve with all factors "Not assessed"
 - [ ] Threshold chosen on test split (bug 22); tiling leakage; LICENSE/CITATION (owner's choice)
 
