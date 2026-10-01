@@ -5,7 +5,7 @@ PY      ?= .venv/bin/python
 PIP     ?= .venv/bin/pip
 NPM     ?= npm --prefix frontend
 
-.PHONY: help setup setup-ml test acceptance lint typecheck build run api web docker docker-postgres deploy-check clean
+.PHONY: help setup setup-ml test acceptance rag-ingest rag-status rag-eval lint typecheck build run api web docker docker-postgres deploy-check clean
 
 help:            ## list commands
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-16s %s\n", $$1, $$2}'
@@ -23,6 +23,15 @@ test:            ## backend + library tests
 
 acceptance:      ## 20-step end-to-end acceptance test on a scratch copy of outputs/ (no paid API calls)
 	$(PY) scripts/acceptance_test.py
+
+rag-ingest:      ## incremental RAG ingestion (FORCE=1 re-indexes everything)
+	$(PY) scripts/rag_ingest.py $(if $(FORCE),--force)
+
+rag-status:      ## RAG index status (documents by status, chunks, embedder, stale sources)
+	$(PY) scripts/rag_ingest.py --status
+
+rag-eval:        ## RAG golden-set evaluation with the real local embedding model -> docs/rag/EVAL_RESULTS.md
+	$(PY) scripts/rag_eval.py
 
 lint:            ## ruff (CI rule set) + eslint
 	$(PY) -m ruff check backend ecoconnect scripts tests --select F

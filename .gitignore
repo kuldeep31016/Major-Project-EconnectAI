@@ -39,3 +39,5 @@ outputs/ecoconnect.db*
 outputs/.jwt_secret
 logs/
 .serena/
+# local embedding/reranker model downloads (fastembed); re-created on demand
+outputs/models_cache/

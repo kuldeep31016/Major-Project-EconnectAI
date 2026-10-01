@@ -337,6 +337,116 @@ class Artifact(Base):
 
 
 # --------------------------------------------------------------------------- Phase 7: refresh tokens
+class ChatCache(Base):
+    """Grounded assistant answers keyed by a normalised question + scope (study area, run, selected object, role
+    scope, knowledge-index version). A new run or re-indexed docs change the key, so stale answers are never served."""
+    __tablename__ = "chat_cache"
+    id = Column(Integer, primary_key=True)
+    key = Column(String(64), unique=True, nullable=False)
+    scope = Column(String(64), index=True, nullable=False)       # hash of everything except the question
+    canonical = Column(String(400), nullable=False)               # normalised question tokens (semantic match)
+    answer = Column(JSON, nullable=False)
+    hits = Column(Integer, default=0)
+    created_at = Column(DateTime, default=utcnow)
+
+
+class ChatEvent(Base):
+    """One row per assistant question: which tier answered, cache hit/miss, retrieval size, whether an LLM was
+    called and its estimated tokens/latency. Admin diagnostics + cost control; the question is truncated."""
+    __tablename__ = "chat_events"
+    id = Column(Integer, primary_key=True)
+    ts = Column(DateTime, default=utcnow, index=True)
+    session_id = Column(String(64), index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    role = Column(String(32))
+    study_area_id = Column(String(64))
+    run_id = Column(String(200))
+    question = Column(String(200))
+    tier = Column(String(16))                 # structured | retrieval | llm | refused
+    intent = Column(String(48))
+    cache_hit = Column(Boolean, default=False)
+    llm_called = Column(Boolean, default=False)
+    llm_reason = Column(String(120))
+    retrieval_count = Column(Integer, default=0)
+    tokens_in_est = Column(Integer, default=0)
+    tokens_out_est = Column(Integer, default=0)
+    latency_ms = Column(Float)
+    llm_latency_ms = Column(Float)
+    error = Column(String(200))
+    # RAG tracing + cost (migration 0007)
+    request_id = Column(String(32), index=True)
+    query_type = Column(String(24))
+    rewritten_query = Column(String(300))
+    retrieval_method = Column(String(40))
+    candidate_count = Column(Integer)
+    reranker = Column(String(40))
+    selected_chunks = Column(JSON)                 # chunk ids only, never raw text
+    retrieval_ms = Column(Float)
+    rerank_ms = Column(Float)
+    model = Column(String(80))
+    embedding_model = Column(String(120))
+    index_version = Column(String(32))
+    citation_count = Column(Integer)
+    confidence = Column(Float)
+    abstain_reason = Column(String(120))
+    cache_read_tokens = Column(Integer)
+    cost_usd = Column(Float)
+    feedback = Column(Integer)                     # +1 / -1 from the user
+
+
+class RagDocument(Base):
+    """One indexed source (a doc file, a paper section set, a run object, an uploaded file). content_hash decides
+    whether re-indexing is needed; version increments on every content change; DELETED rows keep the history."""
+    __tablename__ = "rag_documents"
+    id = Column(Integer, primary_key=True)
+    source_key = Column(String(300), unique=True, nullable=False)     # stable identity, e.g. doc:docs/ML.md
+    source_type = Column(String(40), index=True, nullable=False)       # PROJECT_DOCS, PAPER, PATCH_RESULTS, UPLOAD ...
+    title = Column(String(300))
+    uri = Column(String(500))
+    visibility = Column(String(16), default="public", index=True)    # public | staff | admin
+    study_area_id = Column(String(64), index=True)
+    run_id = Column(String(200))
+    content_hash = Column(String(64))
+    version = Column(Integer, default=0)
+    status = Column(String(16), default="PENDING", index=True)        # PENDING PROCESSING INDEXED FAILED STALE DELETED
+    chunk_count = Column(Integer, default=0)
+    embedding_model = Column(String(120))
+    error = Column(String(500))
+    meta = Column(JSON)
+    created_at = Column(DateTime, default=utcnow)
+    updated_at = Column(DateTime, default=utcnow)
+    indexed_at = Column(DateTime)
+
+
+class RagChunk(Base):
+    """A retrievable unit with provenance + ACL copied from its document (filtered before scoring)."""
+    __tablename__ = "rag_chunks"
+    id = Column(Integer, primary_key=True)
+    document_id = Column(Integer, ForeignKey("rag_documents.id", ondelete="CASCADE"), index=True, nullable=False)
+    chunk_index = Column(Integer, nullable=False)
+    section = Column(String(300))
+    page = Column(Integer)
+    text = Column(Text, nullable=False)
+    content_hash = Column(String(64), index=True, nullable=False)
+    token_count = Column(Integer)
+    visibility = Column(String(16), default="public", index=True)
+    study_area_id = Column(String(64), index=True)
+    object_id = Column(String(16))                                     # patch / candidate id for run records
+    meta = Column(JSON)
+    embedding = Column(JSON)                                           # list[float]; NULL until embedded
+    embedding_model = Column(String(120))
+    created_at = Column(DateTime, default=utcnow)
+
+
+class RagEmbeddingCache(Base):
+    """content hash + model -> vector, so identical text is never embedded twice (also across documents)."""
+    __tablename__ = "rag_embedding_cache"
+    content_hash = Column(String(64), primary_key=True)
+    model = Column(String(120), primary_key=True)
+    vector = Column(JSON, nullable=False)
+    created_at = Column(DateTime, default=utcnow)
+
+
 class RefreshToken(Base):
     """Rotating refresh tokens. Only a sha256 of the token is stored; reuse of a rotated token revokes its family."""
     __tablename__ = "refresh_tokens"

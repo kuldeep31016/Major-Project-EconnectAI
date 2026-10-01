@@ -14,6 +14,7 @@ import { applyRestorationRanking, createTask, fetchFeasibility, postRestoration,
 import { applyRestorationActions, getGraph, getHabitatMask, getHeatmap, getRestoration } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { requestMapFocus, useMapFocus } from "@/lib/map-focus";
+import { setChatFocus } from "@/lib/chat-focus";
 
 const GisMap = dynamic(() => import("@/components/maps/gis-map"), { ssr: false });
 const VERDICT: Record<string, { label: string; variant: "success" | "warning" | "danger" }> = {
@@ -33,7 +34,8 @@ export default function RestorationPlanner() {
   const fe = feRes?.key === feKey ? feRes.data : null;
   const [activeId, setActiveId] = useState<string | null>(null);
   const active = fe?.candidates.find((c) => c.candidate_id === activeId) ?? null;
-  const setActive = (c: FeasibilityCandidate | null) => setActiveId(c?.candidate_id ?? null);
+  const setActive = (c: FeasibilityCandidate | null) => { setActiveId(c?.candidate_id ?? null); setChatFocus({ candidate: c?.candidate_id ?? null }); };
+  useEffect(() => () => setChatFocus({ candidate: null }), []);   // leaving the page clears the assistant's focus
   const [note, setNote] = useState<string | null>(null);
   const mask = getHabitatMask(sceneId); const graph = getGraph(sceneId); const heatmap = getHeatmap(sceneId); const restoration = getRestoration(sceneId);
 

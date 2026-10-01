@@ -22,7 +22,7 @@ router = APIRouter(prefix="/api/admin", tags=["admin"])
 def system(user: User = Depends(require("view_audit")), db: Session = Depends(get_db)):
     from alembic.runtime.migration import MigrationContext
     from alembic.script import ScriptDirectory
-    from .assistant_llm import llm_available
+    from .llm_provider import get_provider, llm_enabled
     from .db import engine
     from .jobs import _inline
     from .migrate import _config
@@ -37,7 +37,8 @@ def system(user: User = Depends(require("view_audit")), db: Session = Depends(ge
     return {
         "version": __version__, "database": engine.dialect.name, "schema": {"current": current, "head": head, "ok": current == head},
         "storage": get_storage().name, "inline_worker": _inline is not None,
-        "assistant": "claude" if llm_available() else "template (no Anthropic credentials)",
+        "assistant": ("RAG + " + get_provider().name + " LLM (routed) for explanations" if llm_enabled() and get_provider().available()
+                      else "RAG only (structured + retrieval; LLM " + ("off" if not llm_enabled() else "not configured") + ")"),
         "jobs": {"by_status": by_status, "failed_24h": [{"id": j.id, "type": j.type, "error": j.error, "at": j.created_at.isoformat() if j.created_at else None} for j in failed]},
         "counts": {"users": db.query(User).count(), "runs": db.query(AnalysisVersion).count(), "models": db.query(Model).count(),
                    "artifacts": db.query(Artifact).count(), "audit_events": db.query(AuditLog).count()},

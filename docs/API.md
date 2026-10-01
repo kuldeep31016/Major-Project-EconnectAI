@@ -147,5 +147,6 @@ requirements were read from each route's dependencies._
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
+| POST | `/api/chat` | optional | EcoConnectAI Assistant (RAG): structured → cache → retrieval → optional LLM; see docs/GENAI.md. `GET /api/chat/diagnostics`, `POST /api/chat/reindex`, `DELETE /api/chat/cache` need view_audit. |
 | POST | `/api/assistant/ask` | optional | Evidence-grounded answer. Claude for signed-in users when configured (per-user hourly cap), template otherwise. Every question is audited. |
 | GET | `/api/audit` | cap:view_audit | Audit log |

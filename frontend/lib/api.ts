@@ -516,3 +516,105 @@ export interface SystemInfo {
   requests: { uptime_s: number; total_requests: number; total_5xx: number; routes: { route: string; requests: number; errors_5xx: number; p50_ms: number; p95_ms: number }[]; recent_errors: { route: string; status: number; request_id: string; at: string }[] };
 }
 export const fetchSystem = () => getJson<SystemInfo>("/api/admin/system");
+
+/* ---------------------------------------------------------------- EcoConnectAI Assistant (RAG chatbot) */
+export interface ChatSource { label: string; type?: string | null; id?: string | null; run_id?: string | null; object?: string | null;
+  title?: string | null; section?: string | null; page?: number | null; uri?: string | null }
+export interface ChatAnswer {
+  answer: string;
+  tier: "structured" | "retrieval" | "llm" | "refused" | "conversation";
+  intent: string;
+  sources: ChatSource[];
+  action?: { label: string; href: string; patch?: string } | null;
+  proposed_scenario?: Record<string, unknown> | null;
+  note?: string | null;
+  cache_hit: boolean;
+  llm_called: boolean;
+  study_area: string;
+  run_id?: string | null;
+  resolved_question?: string | null;
+  confidence?: number | null;
+  query_type?: string | null;
+  request_id?: string;
+  event_id?: number;
+  debug?: { latency_ms: number; llm_reason?: string | null; llm_ms?: number | null; retrieved: { source: string; category: string; score: number }[];
+            cache_similarity?: number | null; tokens_in_est: number; tokens_out_est: number; provider: string; error?: string | null };
+}
+export interface ChatContextBody { study_area?: string; run_id?: string; selected_patch?: string | null; selected_candidate?: string | null; module?: string }
+export interface ChatTurn { role: "user" | "assistant"; text: string }
+export const askChat = (question: string, context: ChatContextBody, sessionId: string, debug = false, history: ChatTurn[] = []) =>
+  getJson<ChatAnswer>("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question, context, session_id: sessionId, debug, history }) }, 60000);
+
+/** Streaming variant (Server-Sent Events over a POST). Calls onStatus / onDelta as events arrive; resolves with the
+ *  final answer (cleaned text + validated citations). Falls back to the JSON endpoint if streaming is unavailable. */
+export async function streamChat(question: string, context: ChatContextBody, sessionId: string, history: ChatTurn[], debug: boolean,
+  on: { onStatus?: (s: string) => void; onDelta?: (t: string) => void }): Promise<ChatAnswer> {
+  const token = getToken();
+  const res = await fetch(`${API_URL}/api/chat/stream`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    body: JSON.stringify({ question, context, session_id: sessionId, history, debug }),
+  });
+  if (res.status === 429) throw new Error("429");
+  if (!res.ok || !res.body) return askChat(question, context, sessionId, debug, history);
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = "";
+  let final: ChatAnswer | null = null;
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let i: number;
+    while ((i = buf.indexOf("\n\n")) >= 0) {
+      const block = buf.slice(0, i);
+      buf = buf.slice(i + 2);
+      const ev = /^event: (.+)$/m.exec(block)?.[1];
+      const data = /^data: (.*)$/m.exec(block)?.[1];
+      if (!ev || data === undefined) continue;
+      const parsed = JSON.parse(data);
+      if (ev === "status") on.onStatus?.(parsed.stage);
+      else if (ev === "delta") on.onDelta?.(parsed.text);
+      else if (ev === "final") final = parsed as ChatAnswer;
+      else if (ev === "error") throw new Error(parsed.message || "stream error");
+    }
+  }
+  if (!final) throw new Error("stream ended without an answer");
+  return final;
+}
+
+export const sendChatFeedback = (eventId: number, rating: 1 | -1, sessionId: string) =>
+  getJson<{ ok: boolean }>("/api/chat/feedback", { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ event_id: eventId, rating, session_id: sessionId }) });
+export interface ChatDiagnostics {
+  config: { llm_enabled: boolean; provider: string; provider_available: boolean; max_output_tokens: number };
+  index: { documents_by_status: Record<string, number>; chunks: number; chunks_embedded: number; pgvector: boolean };
+  embedder: { provider: string; model_version: string | null; error: string | null };
+  cache: { entries: number; total_hits: number };
+  last_24h: { questions: number; by_tier: Record<string, number>; llm_calls: number; cache_hits: number; llm_share: number; tokens_in_est: number; tokens_out_est: number;
+    cost_usd: number; cost_per_answer_usd: number; cost_by_user_usd: Record<string, number>; latency_p50_ms: number | null; latency_p95_ms: number | null;
+    feedback: { up: number; down: number } };
+  recent: { ts: string | null; role: string | null; question: string | null; tier: string | null; intent: string | null; cache_hit: boolean; llm_called: boolean;
+            llm_reason: string | null; retrieval_count: number; latency_ms: number | null; llm_latency_ms: number | null; error: string | null; run_id: string | null;
+            model?: string | null; cost_usd?: number | null; query_type?: string | null; reranker?: string | null; confidence?: number | null }[];
+}
+export const fetchChatDiagnostics = () => getJson<ChatDiagnostics>("/api/chat/diagnostics");
+export const reindexChat = () => getJson<{ job_id: string }>("/api/chat/reindex", { method: "POST" });
+export const clearChatCache = () => getJson<{ deleted: number }>("/api/chat/cache", { method: "DELETE" });
+
+/* ---------------------------------------------------------------- knowledge index (admin) */
+export interface RagDoc { id: number; source_key: string; source_type: string; title: string | null; visibility: string; status: string;
+  version: number; chunk_count: number; embedding_model: string | null; content_hash: string; error: string | null; study_area: string | null;
+  indexed_at: string | null; updated_at: string | null }
+export const fetchRagDocuments = () => getJson<RagDoc[]>("/api/rag/documents");
+export const fetchRagStatus = () => getJson<{ documents_by_status: Record<string, number>; chunks: number; chunks_embedded: number; pgvector: boolean;
+  stale_detected_now: number; embedder: { provider: string; model_version: string | null; error: string | null } }>("/api/rag/status");
+export const ingestRag = (force = false) => getJson<{ job_id: string; status: string }>(`/api/rag/ingest?force=${force}`, { method: "POST" });
+export const reindexRagDoc = (id: number) => getJson<{ job_id: string }>(`/api/rag/documents/${id}/reindex`, { method: "POST" });
+export const deleteRagDoc = (id: number) => getJson<RagDoc>(`/api/rag/documents/${id}`, { method: "DELETE" });
+export const uploadRagDoc = (file: File, visibility: string, title = "") => {
+  const fd = new FormData();
+  fd.set("file", file); fd.set("visibility", visibility); fd.set("title", title);
+  return getJson<{ document: RagDoc; job_id: string }>("/api/rag/upload", { method: "POST", body: fd }, 60000);
+};

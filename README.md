@@ -37,7 +37,7 @@ Sentinel-1 radar (VV+VH, 10 m)  →  temporal median  →  U-Net segmentation  �
 | Restore | candidates ranked by connectivity gain; large uncertain areas routed to a field check; feasibility factors "not assessed" until data exists; no invented costs | `/restoration` |
 | Verify | field tasks, photo + GPS evidence (EXIF GPS read, never invented), officer sign-off, model-disagreement register | `/field` |
 | Report | PDF with provenance, limitations and verification status | `/reports` |
-| Ask | assistant that answers only from stored evidence and cites it (Claude when configured, template otherwise) | "Ask AI" |
+| Ask | EcoConnectAI Assistant (production RAG): counts and facts from stored data with no AI call; explanations from hybrid retrieval (BM25 + local embeddings, pgvector) over the docs, paper and run results with cited sources; streamed Claude answers only when needed, with validated citations and cost tracking; knows the patch or candidate on screen ([docs/rag](docs/rag/ARCHITECTURE.md)) | chat button (⌘K) |
 
 Plain-language explanations are built into every page ("In plain words" line, glossary tooltips on IIC/PC/ECA/τ).
 
@@ -68,6 +68,7 @@ cp .env.example .env  # optional: ECO_DATABASE_URL, ANTHROPIC_API_KEY, storage s
 make run              # API :8000 + frontend :3000  → http://localhost:3000  (demo users are created on first start)
 make test             # backend + library tests
 make acceptance       # 20-step end-to-end acceptance test on a scratch copy of the data
+make rag-eval         # assistant golden-set evaluation (64 questions) -> docs/rag/EVAL_RESULTS.md
 make lint typecheck build
 docker compose up --build            # containers; --profile postgres for PostGIS, --profile worker for a separate worker
 ```
@@ -104,7 +105,7 @@ temporal differences are model outputs · model confidence ≠ ecological certai
 |---|---|
 | Audit & status | [`AUDIT.md`](docs/AUDIT.md) · [`IMPLEMENTATION_STATUS.md`](docs/IMPLEMENTATION_STATUS.md) · [`PAPER_IMPLEMENTATION_MATRIX.md`](docs/PAPER_IMPLEMENTATION_MATRIX.md) |
 | Science | [`ML.md`](docs/ML.md) · [`GEOSPATIAL_PIPELINE.md`](docs/GEOSPATIAL_PIPELINE.md) · [`CONNECTIVITY.md`](docs/CONNECTIVITY.md) · [`SCENARIOS.md`](docs/SCENARIOS.md) · [`RESTORATION.md`](docs/RESTORATION.md) · [`MODEL_CARD.md`](docs/MODEL_CARD.md) · [`EXPERIMENTS.md`](docs/EXPERIMENTS.md) |
-| Platform | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`API.md`](docs/API.md) · [`GENAI.md`](docs/GENAI.md) · [`SECURITY.md`](docs/SECURITY.md) · [`DEPLOYMENT.md`](docs/DEPLOYMENT.md) · [`FIELD_WORKFLOW.md`](docs/FIELD_WORKFLOW.md) |
+| Platform | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`API.md`](docs/API.md) · [`docs/rag/`](docs/rag/ARCHITECTURE.md) (RAG: architecture, setup, ingestion, retrieval, evaluation, security, cost) · [`ASSISTANT_FAQ.md`](docs/ASSISTANT_FAQ.md) · [`SECURITY.md`](docs/SECURITY.md) · [`DEPLOYMENT.md`](docs/DEPLOYMENT.md) · [`FIELD_WORKFLOW.md`](docs/FIELD_WORKFLOW.md) |
 | Reproducibility & honesty | [`REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md) · [`RESULTS_PROVENANCE.md`](docs/RESULTS_PROVENANCE.md) · [`LIMITATIONS.md`](docs/LIMITATIONS.md) · [`IP_READINESS.md`](docs/IP_READINESS.md) (no patentability claim) |
 | Contributing | [`CONTRIBUTING.md`](CONTRIBUTING.md) · project memory for maintainers: [`docs/context/`](docs/context/README.md) |
 
@@ -115,6 +116,6 @@ Result labels used everywhere: `PUBLISHED BASELINE — NOT OUR RESULT` · `PROTO
 
 UNB7 and S2 / S1+S2 ablations on a GPU at 4-area scale · fix tiling leakage and re-evaluate · multi-year inference
 with one model · field campaign with a forest department · ownership / legal / cost layers · patches as database rows
-with geometry · retrieval over project documentation for the assistant · live job progress streaming.
+with geometry · a live-LLM evaluation of the assistant's generated answers · live job progress streaming.
 
 Licence and citation: not yet chosen — the project owner will add `LICENSE` and `CITATION.cff`.

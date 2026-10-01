@@ -28,3 +28,5 @@ boto3>=1.34
 anthropic>=1.0
 # server-side PDF reports (backend/report_pdf.py)
 fpdf2>=2.7
+fastembed>=0.5        # local ONNX embeddings for RAG (no API key); falls back to lexical search if unavailable
+pypdf>=4              # PDF parsing for RAG uploads

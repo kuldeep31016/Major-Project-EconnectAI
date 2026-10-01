@@ -37,6 +37,7 @@ from backend.jobs_api import artifacts_router, router as jobs_router  # noqa: E4
 from backend.registry_api import router as registry_router  # noqa: E402
 from backend.workflow_api import router as phase5_router  # noqa: E402
 from backend.admin_api import router as admin_router  # noqa: E402
+from backend.chat_api import rag_router, router as chat_router  # noqa: E402
 from backend.observability import RequestContextMiddleware  # noqa: E402
 from backend.restoration_rules import annotate  # noqa: E402
 
@@ -57,6 +58,12 @@ async def lifespan(_app: FastAPI):
         created = seed_demo_users(db)
         from backend.alerts import ensure_alerts
         summary["alerts_created"] = ensure_alerts(db)
+        if os.environ.get("RAG_INGEST_ON_START", "1") != "0":   # incremental: unchanged documents are skipped by hash
+            from backend.db import Job
+            from backend.jobs import enqueue
+            if not db.query(Job).filter(Job.type == "rag_ingest", Job.status.in_(("QUEUED", "RUNNING"))).first():
+                enqueue(db, "rag_ingest", {"force": False})
+                db.commit()
     print(f"[startup] registry synced {summary}; demo users created: {created or 'none (exist)'}")
     start_inline_worker()
     yield
@@ -82,6 +89,8 @@ logging.getLogger("ecoconnect").warning(
     extra={"route": f"origins={_CORS_ORIGINS} regex={_CORS_REGEX}"})
 app.add_middleware(RequestContextMiddleware)   # outermost: request id + metrics for every request
 app.include_router(admin_router)
+app.include_router(chat_router)
+app.include_router(rag_router)
 
 
 # --------------------------------------------------------------------------- helpers

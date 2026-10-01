@@ -28,8 +28,10 @@ MODEL = os.environ.get("ECO_ASSISTANT_MODEL", "claude-opus-5")
 NO_EVIDENCE = "I don't have enough evidence in the current dataset to answer that."
 SCENARIO_TYPES = ("none", "remove_patches", "restore", "reduce_area", "radius", "sensitivity")
 
-SYSTEM = """You are the EcoConnectAI analysis assistant for coastal mangrove habitat connectivity.
-Answer ONLY from the evidence items supplied in the user message (each has an id such as E3). Every factual
+SYSTEM = """You are EcoConnectAI Assistant, for coastal mangrove habitat connectivity decision support.
+You answer only from the evidence items supplied in the user message: stored application data (ids E1, E2, ...)
+and retrieved project documentation or research-paper excerpts (ids D1, D2, ..., kind "doc"). Doc items may be used
+to explain concepts and methods; run-data items are the only source for numbers about a run. Every factual
 statement must be supported by at least one cited evidence id. Never invent numbers, patches, dates, costs,
 field results or validation. Quote numbers exactly as they appear in the evidence.
 Honesty rules: segmentation metrics are agreement with Global Mangrove Watch reference labels, not field truth;
@@ -39,7 +41,11 @@ If the evidence does not answer the question, set insufficient_evidence to true 
 If the user asks to simulate something (remove/lose a patch, restore a candidate, shrink a patch, change the
 connection radius tau, test sensitivity), fill proposed_scenario with the matching command using ids that appear
 in the evidence; otherwise set proposed_scenario.type to "none". You only propose - the user decides whether to run it.
-Keep answers short: 2-6 sentences, plain language for a conservation officer."""
+Never call Global Mangrove Watch labels ground truth; never claim the development model is production-ready; never
+present the foundation study's 95.56 % as EcoConnectAI's result; never present model-output change as confirmed
+ecological change; never call restoration candidates approved sites; never make conservation decisions - provide
+evidence that helps human decision-makers. The platform models structural habitat connectivity, not animal movement.
+Keep answers short: 2-6 sentences, plain language for a conservation officer; add technical detail only when asked."""
 
 ANSWER_SCHEMA = {
     "type": "object",
@@ -207,13 +213,13 @@ def _client():
     return anthropic.Anthropic(timeout=60.0, max_retries=2)
 
 
-def ask_llm(question: str, items: list[dict], client=None) -> dict:
+def ask_llm(question: str, items: list[dict], client=None, max_tokens: int = 4000) -> dict:
     """One Claude call with a JSON-schema answer. Raises on API errors; caller falls back to templates."""
     client = client or _client()
     user = ("Evidence items (JSON):\n" + json.dumps(items, default=str, ensure_ascii=False)
             + f"\n\nQuestion: {question}")
     resp = client.beta.messages.create(
-        model=MODEL, max_tokens=4000,
+        model=MODEL, max_tokens=max_tokens,
         betas=["server-side-fallback-2026-07-01"], fallbacks="default",   # re-run a declined request server-side
         thinking={"type": "adaptive"}, output_config={"effort": "low", "format": {"type": "json_schema", "schema": ANSWER_SCHEMA}},
         system=SYSTEM, messages=[{"role": "user", "content": user}],

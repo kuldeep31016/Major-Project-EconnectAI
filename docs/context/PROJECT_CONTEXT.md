@@ -13,7 +13,7 @@ connectivity graph → IIC/PC/ECA → leave-one-out patch criticality → what-i
 field verification → reports → audit trail.
 
 **Status: development / research prototype.** No field validation, no government deployment, no validated
-restoration costs. Assistant = grounded Claude (claude-opus-5) when ANTHROPIC_API_KEY set, template fallback otherwise. Owner: GitHub `kuldeep31016`,
+restoration costs. Assistant = production RAG (backend/rag/, docs/rag/): structured tools → cache → hybrid BM25 + local bge-small embeddings → routed Claude (Haiku 4.5 / Sonnet 5.5) only for signed-in users with validated citations, extractive fallback; 64/64 golden eval with LLM off. Learning guide for the owner: docs/BASIC_UNDERSTANDING.md. Owner: GitHub `kuldeep31016`,
 repo `kuldeep31016/Major-Project-EconnectAI`, default branch `main`.
 
 **Long-term goal (user's spec, 2026-09-27):** evolve into a cloud-native, provenance-aware, honest,
@@ -96,7 +96,7 @@ threshold 0.5), 24 patches — the "P17 story" below refers to that run:
 backend/        paths.py (RUNS_DIR/SEG_DIR, data_root, abs_path, resolve_run, patch_from_dict — the ONLY run resolver;
                 tests repoint backend.paths.RUNS_DIR) · security.py (slug validation app-dependency, contained(),
                 login throttle 10 fails/5 min) · main.py (run/artefact/compute endpoints)
-                db.py (20 tables incl. jobs, artifacts) · migrate.py + migrations/ (Alembic; runs at startup;
+                db.py (25 tables incl. jobs, artifacts, chat_cache, chat_events, rag_documents, rag_chunks, rag_embedding_cache; Alembic 0001–0007) · migrate.py + migrations/ (Alembic; runs at startup;
                 pre-Alembic DBs stamped 0001) · storage.py (LocalStorage | S3Storage via ECO_STORAGE) ·
                 artifacts.py (sha256 registry, synced in registry.sync_all) · jobs.py (DB queue, conditional-UPDATE
                 claim, inline worker thread ECO_INLINE_WORKER=1) · job_handlers.py (segment, scenario) ·

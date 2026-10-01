@@ -27,6 +27,8 @@ jobs:
         run: python -m pytest -q
       - name: End-to-end acceptance (20 steps; data/model steps SKIP without scenes/checkpoints)
         run: python scripts/acceptance_test.py
+      - name: Assistant RAG evaluation (64-question golden set, hashing embeddings, LLM off - no API cost)
+        run: python scripts/rag_eval.py --embedder hashing --min-pass 0.95 --out /tmp/EVAL_RESULTS.md
       - name: Dependency audit
         run: pip-audit -r requirements-api.txt || echo "::warning::pip-audit reported issues"
 
