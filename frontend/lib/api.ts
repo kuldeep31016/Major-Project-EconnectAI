@@ -537,6 +537,7 @@ export interface ChatAnswer {
   query_type?: string | null;
   request_id?: string;
   event_id?: number;
+  suggestions?: string[];
   debug?: { latency_ms: number; llm_reason?: string | null; llm_ms?: number | null; retrieved: { source: string; category: string; score: number }[];
             cache_similarity?: number | null; tokens_in_est: number; tokens_out_est: number; provider: string; error?: string | null };
 }

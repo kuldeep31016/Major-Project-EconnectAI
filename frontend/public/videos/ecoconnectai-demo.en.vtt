@@ -1,0 +1,145 @@
+WEBVTT
+
+00:00:01.600 --> 00:00:06.151
+Mangroves are forests that grow along the coast, where land meets the sea.
+
+00:00:06.651 --> 00:00:10.113
+They help protect the coast from strong waves and storms,
+
+00:00:10.113 --> 00:00:11.146
+reduce soil loss,
+
+00:00:11.146 --> 00:00:11.936
+store carbon,
+
+00:00:11.936 --> 00:00:15.520
+and provide a safe place for young fish and other sea life.
+
+00:00:16.921 --> 00:00:19.564
+But mangroves are being lost in many places.
+
+00:00:19.564 --> 00:00:21.246
+And when mangroves are lost,
+
+00:00:21.246 --> 00:00:25.511
+the remaining forests can become smaller and separated from each other.
+
+00:00:26.912 --> 00:00:29.698
+A normal map can show us where the mangroves are.
+
+00:00:30.198 --> 00:00:35.469
+But it does not tell us which areas are important for keeping the whole mangrove system connected.
+
+00:00:35.469 --> 00:00:39.289
+And it does not show us what could happen if an important area is lost.
+
+00:00:41.689 --> 00:00:43.752
+This is where EcoConnectAI comes in.
+
+00:00:43.752 --> 00:00:49.769
+It takes the mangrove map one step further and helps us understand how the different areas are connected.
+
+00:00:51.170 --> 00:00:51.550
+First,
+
+00:00:51.550 --> 00:00:54.403
+we use satellite images to look at the coast,
+
+00:00:54.403 --> 00:00:57.764
+even when clouds make normal images difficult to use.
+
+00:00:58.614 --> 00:01:02.352
+Then AI identifies the areas that are likely to be mangroves.
+
+00:01:03.202 --> 00:01:08.221
+Next, we turn those areas into separate mangrove patches and connect them like a network.
+
+00:01:08.221 --> 00:01:11.491
+This helps us find which patches are especially important.
+
+00:01:12.342 --> 00:01:15.511
+We can then ask, “What happens if this patch is lost?
+
+00:01:15.511 --> 00:01:17.067
+” and simulate the result.
+
+00:01:17.917 --> 00:01:22.604
+We can also find possible places where new mangroves could help reconnect the network.
+
+00:01:22.604 --> 00:01:24.675
+These are suggestions from the system,
+
+00:01:24.675 --> 00:01:28.273
+and would need to be checked on the ground before any real action.
+
+00:01:29.673 --> 00:01:32.324
+All of this comes together in one dashboard.
+
+00:01:32.324 --> 00:01:33.771
+You can explore the map,
+
+00:01:33.771 --> 00:01:35.097
+see important patches,
+
+00:01:35.097 --> 00:01:36.423
+run what-if scenarios,
+
+00:01:36.423 --> 00:01:38.110
+look at restoration options,
+
+00:01:38.110 --> 00:01:39.014
+create reports,
+
+00:01:39.014 --> 00:01:41.968
+and ask the built-in assistant about the project.
+
+00:01:43.368 --> 00:01:48.703
+EcoConnectAI is designed to support forest officers, conservation teams, and researchers.
+
+00:01:48.703 --> 00:01:49.842
+The goal is simple:
+
+00:01:49.842 --> 00:01:55.476
+give them useful information that can help them understand the area and make better decisions.
+
+00:01:56.877 --> 00:01:59.873
+Today, EcoConnectAI is a working research prototype.
+
+00:01:59.873 --> 00:02:02.813
+It has been set up for four coastal areas in India.
+
+00:02:02.813 --> 00:02:06.386
+Its results are compared with an existing global mangrove map,
+
+00:02:06.386 --> 00:02:09.729
+but the system has not yet been tested with field surveys.
+
+00:02:11.129 --> 00:02:14.715
+The next step is to test the system in the field with partners.
+
+00:02:14.715 --> 00:02:16.992
+We also want to track changes over time,
+
+00:02:16.992 --> 00:02:18.359
+use more satellite data,
+
+00:02:18.359 --> 00:02:23.540
+and add information such as land and cost details to make restoration planning more useful.
+
+00:02:25.540 --> 00:02:27.438
+EcoConnectAI is more than a map.
+
+00:02:27.438 --> 00:02:29.990
+It helps us understand where mangroves are,
+
+00:02:29.990 --> 00:02:31.354
+how they are connected,
+
+00:02:31.354 --> 00:02:33.075
+which areas may be important,
+
+00:02:33.075 --> 00:02:36.161
+and what could happen if those connections are lost.
+
+00:02:36.161 --> 00:02:39.484
+EcoConnectAI — understand what holds the coast together.

@@ -9,10 +9,10 @@ import {
   MapPin,
   Minus,
   Network,
-  Play,
   Plus,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { WatchDemoButton } from "@/components/landing/demo-video-modal";
 
 export function HeroSection() {
   const [timeSec, setTimeSec] = useState(0);
@@ -114,7 +114,7 @@ export function HeroSection() {
                 transition={{ duration: 0.5, delay: 0.25 }}
                 className="pt-2 space-y-3"
               >
-                <div className="flex flex-wrap items-center gap-3.5">
+                <div className="flex flex-wrap items-center gap-3">
                   {/* Primary CTA */}
                   <Link
                     href="/command"
@@ -124,16 +124,8 @@ export function HeroSection() {
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
                   </Link>
 
-                  {/* Secondary 'See How It Works' */}
-                  <a
-                    href="#how-it-works"
-                    className="inline-flex items-center gap-2.5 rounded-full border border-white/20 bg-white/[0.06] px-5 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-200 hover:bg-white/15 hover:border-white/35"
-                  >
-                    <div className="grid h-5 w-5 place-items-center rounded-full bg-white/20 text-white">
-                      <Play className="h-2 w-2 fill-current ml-0.5" />
-                    </div>
-                    <span>See How It Works</span>
-                  </a>
+                  {/* Secondary: short product teaser in a modal */}
+                  <WatchDemoButton />
                 </div>
 
                 {/* Sub-link */}

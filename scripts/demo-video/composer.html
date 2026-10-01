@@ -1,0 +1,393 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<!-- EcoConnectAI story teaser. Deterministic timeline: window.render(t). Timing comes from the narration (timeline.js). -->
+<script src="timeline.js"></script>
+<script src="icons.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #020b14; }
+  body { font-family: -apple-system, "SF Pro Display", "Helvetica Neue", Arial, sans-serif; color: #fff; -webkit-font-smoothing: antialiased; }
+  .layer { position: absolute; inset: 0; overflow: hidden; opacity: 0; display: none; }
+  .fill { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .abs { position: absolute; }
+  .eyebrow { position: absolute; font-size: 18px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: #00e599; }
+  .h1 { position: absolute; font-size: 74px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+  .h2 { position: absolute; font-size: 60px; font-weight: 700; letter-spacing: -0.026em; line-height: 1.08; }
+  .sub { position: absolute; font-size: 28px; font-weight: 450; color: #b6c4d0; line-height: 1.45; letter-spacing: -0.005em; }
+  .accent { color: #00e599; }
+  .ico { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .chip { display: flex; align-items: center; gap: 14px; padding: 16px 24px; border-radius: 18px; font-size: 25px; font-weight: 600;
+          background: rgba(6, 20, 30, .62); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px); }
+  .chip .ib { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: rgba(0,229,153,.14); color: #00e599; border: 1px solid rgba(0,229,153,.28); }
+  .tag { position: absolute; display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-radius: 999px; font-size: 19px; font-weight: 600;
+         background: rgba(4, 14, 22, .82); border: 1px solid rgba(255,255,255,.16); white-space: nowrap; }
+  .tag i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .illus { position: absolute; right: 70px; top: 46px; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: #6f8597; }
+  .logo { display: flex; align-items: center; gap: 24px; }
+  .logo .mark { width: 96px; height: 96px; border-radius: 28px; display: grid; place-items: center; background: linear-gradient(135deg, #15803d, #0f5132); box-shadow: 0 18px 60px rgba(21,128,61,.35); }
+  .logo .word { font-size: 96px; font-weight: 800; letter-spacing: -0.035em; }
+  .step { display: flex; align-items: center; gap: 22px; padding: 18px 22px; border-radius: 20px; border: 1px solid transparent; }
+  .step .num { width: 56px; height: 56px; border-radius: 16px; display: grid; place-items: center; background: rgba(255,255,255,.06); color: #6f8597; border: 1px solid rgba(255,255,255,.1); }
+  .step .tt { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; }
+  .step .dd { font-size: 20px; color: #8ea2b4; margin-top: 3px; }
+  .card { position: absolute; border-radius: 26px; padding: 34px; background: linear-gradient(160deg, rgba(14,32,44,.9), rgba(6,16,26,.9)); border: 1px solid rgba(255,255,255,.12); box-shadow: 0 30px 90px rgba(0,0,0,.45); }
+  .card .ib { width: 72px; height: 72px; border-radius: 20px; display: grid; place-items: center; background: rgba(0,229,153,.13); color: #00e599; border: 1px solid rgba(0,229,153,.3); margin-bottom: 26px; }
+  .card .ib .ico { width: 38px; height: 38px; }
+  .card .tt { font-size: 32px; font-weight: 700; letter-spacing: -0.015em; }
+  .card .dd { font-size: 21px; color: #8ea2b4; margin-top: 10px; line-height: 1.45; }
+  .row { display: flex; align-items: center; gap: 22px; font-size: 30px; font-weight: 600; letter-spacing: -0.01em; }
+  .row .ib { width: 60px; height: 60px; border-radius: 17px; display: grid; place-items: center; background: rgba(0,229,153,.13); color: #00e599; border: 1px solid rgba(0,229,153,.3); flex: none; }
+  .row.warn .ib { background: rgba(245,158,11,.14); color: #fbbf24; border-color: rgba(245,158,11,.35); }
+  .pillsm { display: inline-block; padding: 7px 15px; border-radius: 999px; font-size: 19px; font-weight: 600; color: #cfe9de; background: rgba(0,229,153,.09); border: 1px solid rgba(0,229,153,.25); margin: 8px 10px 0 0; }
+  .win { position: absolute; border-radius: 18px; overflow: hidden; background: #0d1824; border: 1px solid rgba(255,255,255,.16); box-shadow: 0 50px 140px rgba(0,0,0,.65); }
+  .win .bar { height: 38px; display: flex; align-items: center; gap: 9px; padding: 0 18px; background: #0f1d2b; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .win .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,.18); }
+  .win .ttl { margin-left: 14px; font-size: 15px; color: #8fa3b5; font-weight: 500; }
+  .win img { position: absolute; left: 0; top: 38px; width: 100%; }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.55) 100%); }
+  .ms { position: absolute; width: 360px; text-align: left; }
+  .ms .dotm { width: 26px; height: 26px; border-radius: 50%; background: #020b14; border: 3px solid #00e599; box-shadow: 0 0 24px rgba(0,229,153,.5); margin-bottom: 30px; }
+  .ms .ib { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; background: rgba(0,229,153,.12); color: #00e599; border: 1px solid rgba(0,229,153,.28); margin-bottom: 20px; }
+  .ms .tt { font-size: 29px; font-weight: 700; line-height: 1.2; letter-spacing: -0.012em; }
+</style></head>
+<body>
+
+<!-- COAST: why mangroves matter (project's own drone clip) -->
+<div class="layer" id="coast">
+  <video id="drone" class="fill" src="drone.mp4" muted preload="auto"></video>
+  <div class="abs" style="inset:0; background: linear-gradient(90deg, rgba(2,11,20,.88) 0%, rgba(2,11,20,.55) 42%, rgba(2,11,20,.12) 75%), linear-gradient(0deg, rgba(2,11,20,.7), transparent 45%)"></div>
+  <div class="eyebrow" id="c-e" style="left:120px; top:250px">Mangrove forests</div>
+  <div class="h1" id="c-h" style="left:120px; top:300px; width:900px">Where the land<br>meets the sea.</div>
+  <div class="abs" id="c-chips" style="left:120px; top:540px; width:820px; display:grid; grid-template-columns: 1fr 1fr; gap:18px">
+    <div class="chip" id="c-c1"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="waves"></svg></span>Protect the coast</div>
+    <div class="chip" id="c-c2"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="shield"></svg></span>Reduce soil loss</div>
+    <div class="chip" id="c-c3"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="leaf"></svg></span>Store carbon</div>
+    <div class="chip" id="c-c4"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="fish"></svg></span>Support sea life</div>
+  </div>
+</div>
+
+<!-- LANDSCAPE: illustrative coast used for threat, problem and how-it-works -->
+<div class="layer" id="land">
+  <svg id="landsvg" class="abs" style="left:860px; top:40px" width="1000" height="1000" viewBox="0 0 1000 1000">
+    <defs>
+      <radialGradient id="fade" cx="50%" cy="50%" r="50%"><stop offset="62%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/></radialGradient>
+      <mask id="m"><rect width="1000" height="1000" fill="url(#fade)"/></mask>
+      <linearGradient id="sea" x1="0" x2="1"><stop offset="0" stop-color="#061826"/><stop offset="1" stop-color="#0d3042"/></linearGradient>
+      <radialGradient id="redglow"><stop offset="0" stop-color="#ef4444" stop-opacity=".7"/><stop offset="1" stop-color="#ef4444" stop-opacity="0"/></radialGradient>
+    </defs>
+    <g mask="url(#m)">
+      <rect width="1000" height="1000" fill="url(#sea)"/>
+      <path id="landpath" fill="#17271d"/><path id="coastline" fill="none" stroke="#2c4a52" stroke-width="2"/>
+      <g id="creeks" fill="none" stroke="#0b2230" stroke-width="7" stroke-linecap="round"></g>
+      <g id="cells"></g>
+      <g id="links" fill="none" stroke-linecap="round"></g>
+      <g id="nodes"></g>
+      <rect id="scan" x="0" width="1000" height="3" fill="#00e599" opacity="0"/>
+      <polygon id="beam" fill="#7dd3fc" opacity="0"/>
+      <g id="clouds"></g>
+    </g>
+  </svg>
+  <div class="illus" id="l-illus">Illustration</div>
+  <div class="tag" id="t-mapped"><i style="background:#00e599"></i>Mangroves on the map</div>
+  <div class="tag" id="t-q" style="font-size:30px; padding:6px 18px">?</div>
+  <div class="tag" id="t-radar"><svg class="ico" style="width:22px;height:22px" viewBox="0 0 24 24" data-i="cloud"></svg>Sees through clouds</div>
+  <div class="abs" id="sat" style="width:76px; height:76px; border-radius:22px; display:grid; place-items:center; background:#0d2131; border:1px solid rgba(125,211,252,.4); color:#7dd3fc; box-shadow:0 0 40px rgba(125,211,252,.25)"><svg class="ico" style="width:42px;height:42px" viewBox="0 0 24 24" data-i="satellite"></svg></div>
+  <div class="tag" id="t-mapd"><i style="background:#00e599"></i>Likely mangrove areas</div>
+  <div class="tag" id="t-crit"><i style="background:#ef4444"></i>Important patch</div>
+  <div class="tag" id="t-split"><i style="background:#a78bfa"></i>If it is lost, the network splits (simulation)</div>
+  <div class="tag" id="t-rest"><i style="background:#facc15"></i>Possible restoration place</div>
+  <div class="tag" id="t-field" style="border-color: rgba(250,204,21,.45)"><svg class="ico" style="width:22px;height:22px;color:#facc15" viewBox="0 0 24 24" data-i="clipboard-check"></svg>Needs a ground check first</div>
+
+  <!-- threat / problem text -->
+  <div class="eyebrow" id="th-e" style="left:120px; top:340px">The threat</div>
+  <div class="h2" id="th-h" style="left:120px; top:392px; width:720px"><span id="th-w1">Mangroves are being lost.</span><br><span id="th-w2" style="display:block; margin-top:18px; color:#fca5a5; font-size:44px; line-height:1.15">What remains can become broken into separate pieces.</span><span id="th-w3"></span></div>
+  <div class="eyebrow" id="pr-e" style="left:120px; top:300px">The problem</div>
+  <div class="h2" id="pr-a" style="left:120px; top:352px; width:720px">A map shows <span class="accent">where</span> mangroves are.</div>
+  <div class="h2" id="pr-b" style="left:120px; top:540px; width:720px; color:#d7e3ec">But which areas are important for keeping them connected?</div>
+
+  <!-- how it works -->
+  <div class="eyebrow" id="hw-e" style="left:120px; top:150px">How EcoConnectAI works</div>
+  <div class="abs" id="steps" style="left:100px; top:205px; width:740px; display:flex; flex-direction:column; gap:12px"></div>
+</div>
+
+<!-- BRAND -->
+<div class="layer" id="brand">
+  <div class="abs" style="inset:0; background: radial-gradient(ellipse at 50% 45%, #0b2a26 0%, #020b14 65%)"></div>
+  <div style="position:absolute; left:0; right:0; top: 345px; display:flex; flex-direction:column; align-items:center; gap: 44px">
+    <div class="logo" id="b-logo"><div class="mark"><svg width="52" height="52" viewBox="0 0 24 24" fill="#fff"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" stroke="#0f5132" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div><div class="word">EcoConnect<span style="color:#4ade80">AI</span></div></div>
+    <div id="b-t" style="font-size: 36px; font-weight: 600; color: #cfdbe4; letter-spacing: -0.01em">From mapping mangroves to <span class="accent">understanding their connections.</span></div>
+  </div>
+</div>
+
+<!-- PRODUCT: two real screens, shown still -->
+<div class="layer" id="product">
+  <div class="abs" style="inset:0; background: radial-gradient(ellipse at 70% 45%, #0c2a2a 0%, #020b14 62%)"></div>
+  <div class="eyebrow" id="p-e" style="left:120px; top:250px">The dashboard</div>
+  <div class="h2" id="p-h" style="left:120px; top:300px; width:620px">One dashboard.</div>
+  <div class="abs" id="p-rows" style="left:120px; top:470px; display:flex; flex-direction:column; gap:20px"></div>
+  <div class="win" id="p-win" style="left:780px; top:230px; width:1040px; height:623px">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="ttl" id="p-ttl">EcoConnectAI — Command Center</span></div>
+    <img id="p-a" src="command.png"><img id="p-b" src="restoration-c01.png" style="opacity:0">
+  </div>
+  <div class="abs" id="p-note" style="left:780px; top:872px; font-size:18px; color:#8ea2b4">Real interface · stored Kerala development run</div>
+</div>
+
+<!-- WHO -->
+<div class="layer" id="who">
+  <div class="abs" style="inset:0; background: radial-gradient(ellipse at 50% 60%, #0a2420 0%, #020b14 65%)"></div>
+  <div class="h2" id="w-h" style="left:0; right:0; top:190px; text-align:center">Made for the people who decide.</div>
+  <div class="sub" id="w-s" style="left:0; right:0; top:285px; text-align:center">Better information for better decisions</div>
+  <div class="card" id="w-1" style="left:150px; top:430px; width:520px; height:360px"><div class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="trees"></svg></div><div class="tt">Forest officers</div><div class="dd">Which areas to protect first.</div></div>
+  <div class="card" id="w-2" style="left:700px; top:430px; width:520px; height:360px"><div class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="users"></svg></div><div class="tt">Conservation teams</div><div class="dd">Where restoration could help.</div></div>
+  <div class="card" id="w-3" style="left:1250px; top:430px; width:520px; height:360px"><div class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="microscope"></svg></div><div class="tt">Researchers</div><div class="dd">Clear methods they can check.</div></div>
+</div>
+
+<!-- STATUS: honest -->
+<div class="layer" id="status">
+  <div class="abs" style="inset:0; background: radial-gradient(ellipse at 30% 40%, #0b2224 0%, #020b14 65%)"></div>
+  <div class="eyebrow" id="s-e" style="left:430px; top:190px">Today</div>
+  <div class="h2" id="s-h" style="left:430px; top:240px">Where we are today.</div>
+  <div class="abs" style="left:430px; top:400px; display:flex; flex-direction:column; gap:34px; width:1200px">
+    <div class="row" id="s-1"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="flask-conical"></svg></span>Working research prototype</div>
+    <div class="row" id="s-2" style="align-items:flex-start"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="map"></svg></span><div>4 coastal areas in India<div><span class="pillsm">Vembanad, Kerala</span><span class="pillsm">Sundarbans</span><span class="pillsm">Gulf of Mannar</span><span class="pillsm">Bhitarkanika</span></div></div></div>
+    <div class="row" id="s-3"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="layers"></svg></span>Compared with an existing global mangrove map</div>
+    <div class="row warn" id="s-4"><span class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="triangle-alert"></svg></span>Field testing is still to come</div>
+  </div>
+</div>
+
+<!-- FUTURE -->
+<div class="layer" id="future">
+  <div class="abs" style="inset:0; background: radial-gradient(ellipse at 50% 55%, #0b2a26 0%, #020b14 65%)"></div>
+  <div class="eyebrow" id="f-e" style="left:0; right:0; top:200px; text-align:center">Roadmap</div>
+  <div class="h2" id="f-h" style="left:0; right:0; top:248px; text-align:center">What comes next.</div>
+  <div class="abs" id="f-line" style="left:200px; top:493px; height:3px; width:1520px; background: linear-gradient(90deg, #00e599, rgba(0,229,153,.15)); transform-origin: 0 0"></div>
+  <div class="ms" id="f-1" style="left:200px; top:480px"><div class="dotm"></div><div class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="clipboard-check"></svg></div><div class="tt">Field testing with partners</div></div>
+  <div class="ms" id="f-2" style="left:590px; top:480px"><div class="dotm"></div><div class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="calendar-range"></svg></div><div class="tt">Track changes over time</div></div>
+  <div class="ms" id="f-3" style="left:980px; top:480px"><div class="dotm"></div><div class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="satellite"></svg></div><div class="tt">More satellite data</div></div>
+  <div class="ms" id="f-4" style="left:1370px; top:480px"><div class="dotm"></div><div class="ib"><svg class="ico" viewBox="0 0 24 24" data-i="coins"></svg></div><div class="tt">Land &amp; cost information for restoration</div></div>
+  <div class="abs" id="f-n" style="left:0; right:0; top:900px; text-align:center; font-size:19px; color:#7d93a5">Planned — not built yet</div>
+</div>
+
+<!-- CLOSE -->
+<div class="layer" id="close">
+  <video id="drone2" class="fill" src="drone.mp4" muted preload="auto"></video>
+  <div class="abs" style="inset:0; background: rgba(2,11,20,.66)"></div>
+  <div class="vignette"></div>
+  <div style="position:absolute; left:0; right:0; top: 300px; display:flex; flex-direction:column; align-items:center; gap: 44px; text-align:center">
+    <div class="logo" id="z-logo"><div class="mark"><svg width="52" height="52" viewBox="0 0 24 24" fill="#fff"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" stroke="#0f5132" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div><div class="word">EcoConnect<span style="color:#4ade80">AI</span></div></div>
+    <div id="z-h" style="font-size: 60px; font-weight: 700; letter-spacing: -0.025em; line-height: 1.15">More than a map.<br>Understand what holds the <span class="accent">coast together.</span></div>
+    <div id="z-n" style="font-size: 20px; color: #93a7b8">Research prototype · field testing still to come</div>
+  </div>
+</div>
+<div id="black" style="position:absolute; inset:0; background:#000; opacity:0"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const ease = (x) => { x = clamp(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const outE = (x) => 1 - Math.pow(1 - clamp(x), 3);
+const lerp = (a, b, k) => a + (b - a) * k;
+const mix = (c1, c2, k) => { const a = c1.match(/\w\w/g).map((h) => parseInt(h, 16)), b = c2.match(/\w\w/g).map((h) => parseInt(h, 16)); return "#" + a.map((v, i) => Math.round(lerp(v, b[i], k)).toString(16).padStart(2, "0")).join(""); };
+const S = TL.scenes, LN = Object.fromEntries(TL.lines.map((l) => [l.id, l]));
+const at = (id, f = 0) => LN[id].start + LN[id].dur * f;               // time at a fraction of a narration line
+const since = (t, id, f = 0, d = .9) => clamp((t - at(id, f)) / d);      // 0→1 starting at that point
+document.querySelectorAll("svg[data-i]").forEach((s) => (s.innerHTML = ICONS[s.dataset.i]));
+
+function layer(id, t, a, b, fi = .8, fo = .8) {
+  const o = t < a || t > b ? 0 : Math.min(fi ? ease((t - a) / fi) : 1, fo ? ease((b - t) / fo) : 1);
+  $(id).style.opacity = o; $(id).style.display = o > .001 ? "block" : "none"; return o > .001;
+}
+function show(id, t, a, b = 1e9, rise = 22) {  // fade + rise + de-blur in at a, out at b
+  const el = $(id); const i = outE((t - a) / .9), o = ease((t - (b - .6)) / .6);
+  const op = t < a || t > b ? 0 : i * (1 - o);
+  el.style.opacity = op; el.style.transform = `translateY(${(1 - i) * rise - o * 8}px)`; el.style.filter = `blur(${(1 - i) * 8 + o * 5}px)`;
+}
+async function seek(v, s) { s = clamp(s, 0, v.duration - .05); if (Math.abs(v.currentTime - s) < 1e-4) return; await new Promise((r) => { v.addEventListener("seeked", r, { once: true }); v.currentTime = s; }); }
+
+/* ---------- illustrative landscape (deterministic) ---------- */
+let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const coast = (y) => 420 + 62 * Math.sin(y / 150) + 24 * Math.sin(y / 47 + 1);
+const FR = [["F1", 50, 200], ["F2", 268, 395], ["F3", 462, 588], ["F4", 652, 790], ["F5", 846, 950]];
+const NS = "http://www.w3.org/2000/svg", cells = [], el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+{ let d = "M " + coast(0) + " 0"; for (let y = 0; y <= 1000; y += 10) d += ` L ${coast(y).toFixed(1)} ${y}`; $("landpath").setAttribute("d", d + " L 1000 1000 L 1000 0 Z"); $("coastline").setAttribute("d", d); }
+for (const [x1, y1, x2, y2] of [[coast(300) + 40, 300, 880, 250], [coast(520) + 30, 520, 900, 600], [coast(760) + 40, 760, 870, 860]])
+  el("path", { d: `M ${x1} ${y1} Q ${(x1 + x2) / 2} ${(y1 + y2) / 2 - 60} ${x2} ${y2}` }, $("creeks"));
+function hex(cx, cy, r) { let p = ""; for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3 + rnd() * .3; const rr = r * (.8 + rnd() * .35); p += `${(cx + rr * Math.cos(a)).toFixed(1)},${(cy + rr * Math.sin(a)).toFixed(1)} `; } return p; }
+for (let y = 40; y <= 960; y += 19) {
+  const width = 72 + 38 * Math.sin(y / 90);
+  for (let dx = -14; dx < width; dx += 21) {
+    const x = coast(y) + dx + (rnd() - .5) * 8, yy = y + (rnd() - .5) * 8;
+    const f = FR.find(([, a, b]) => yy >= a && yy <= b);
+    const c = { x, y: yy, frag: f ? f[0] : null, gap: !f, r: .1 + rnd() * .75 };
+    c.thin = !c.gap && rnd() < .1;
+    c.el = el("polygon", { points: hex(x, yy, 13) }, $("cells")); cells.push(c);
+  }
+}
+const blob = (name, cx, cy, n, rad) => { for (let i = 0; i < n; i++) { const a = rnd() * Math.PI * 2, d = Math.sqrt(rnd()) * rad; const c = { x: cx + d * Math.cos(a), y: cy + d * .8 * Math.sin(a), frag: name, gap: false, r: 1, thin: false }; c.el = el("polygon", { points: hex(c.x, c.y, 13) }, $("cells")); cells.push(c); } };
+blob("F6", 700, 300, 16, 48); blob("F7", 712, 770, 16, 48); blob("C", 632, 528, 15, 44);
+const cen = {}; for (const k of ["F1", "F2", "F3", "F4", "F5", "F6", "F7", "C"]) { const cs = cells.filter((c) => c.frag === k && !c.thin); cen[k] = { x: cs.reduce((a, c) => a + c.x, 0) / cs.length, y: cs.reduce((a, c) => a + c.y, 0) / cs.length }; }
+const GA = new Set(["F1", "F2", "F6"]);
+const LINKS = [["F1", "F2"], ["F2", "F3"], ["F3", "F4"], ["F4", "F5"], ["F1", "F6"], ["F2", "F6"], ["F4", "F7"], ["F5", "F7"], ["C", "F2"], ["C", "F4"]].map(([a, b]) => {
+  const len = Math.hypot(cen[a].x - cen[b].x, cen[a].y - cen[b].y);
+  return { a, b, len, el: el("line", { x1: cen[a].x, y1: cen[a].y, x2: cen[b].x, y2: cen[b].y, "stroke-dasharray": `${len} ${len}` }, $("links")) };
+});
+const NODES = Object.fromEntries(["F1", "F2", "F3", "F4", "F5", "F6", "F7", "C"].map((k) => {
+  const g = el("g", {}, $("nodes"));
+  const glow = el("circle", { cx: cen[k].x, cy: cen[k].y, r: 46, fill: "url(#redglow)", opacity: 0 }, g);
+  const c = el("circle", { cx: cen[k].x, cy: cen[k].y, r: 12, fill: "#fff", stroke: "#020b14", "stroke-width": 4 }, g);
+  return [k, { g, c, glow }];
+}));
+const CLOUDS = [[200, 260, 210], [520, 520, 260], [300, 800, 230], [760, 140, 190]].map(([x, y, r]) => ({ x, y, r, el: el("ellipse", { cx: x, cy: y, rx: r, ry: r * .45, fill: "#dfe8ee", filter: "blur(18px)" }, $("clouds")) }));
+const svgPos = (x, y) => [860 + x, 40 + y];
+function tagAt(id, t, a, b, x, y, dx = 30, dy = -20) { const [px, py] = svgPos(x, y); $(id).style.left = px + dx + "px"; $(id).style.top = py + dy + "px"; show(id, t, a, b, 10); }
+
+function landscape(t) {
+  const how = t >= S.how1.a;
+  const clearP = clamp((t - at("n3", .05)) / (LN.n3.dur * .9));
+  const scan1 = (t - LN.n4.start) / (LN.n4.dur * .85), scan2 = (t - LN.n8.start) / (LN.n8.dur * .8);
+  const removeK = ease(since(t, "n10", .62, 1.4)), candK = ease(since(t, "n11", .05, 1.2));
+  for (const c of cells) {
+    let fill = "#1f8f5f", fop = .82, stroke = "none", sop = 0, op = 1, dash = "";
+    if (c.frag === "C") { op = how ? candK : 0; fill = "#facc15"; fop = .35; stroke = "#facc15"; sop = .9; dash = "4 3"; }
+    else {
+      if (c.gap || c.thin) { const k = clamp((clearP - c.r) / .1); fill = mix("#1f8f5f", "#6b4f2c", clamp(k * 2)); op = 1 - clamp(k * 2 - 1); }
+      if (!how) { if (scan1 > 0 && c.y < scan1 * 1100 - 50) { stroke = "#00e599"; sop = .9; fill = "#20a06a"; } }
+      else {
+        const mapped = scan2 > 0 && c.y < scan2 * 1100 - 50;
+        fill = mapped ? "#00c896" : "#55665c"; fop = mapped ? .6 : .55; stroke = mapped ? "#00e599" : "none"; sop = mapped ? .95 : 0;
+        if (c.frag === "F3" && removeK > 0) { op = 1 - removeK * .8; stroke = "#ef4444"; dash = "3 3"; }
+      }
+    }
+    const s = c.el.style; s.fill = fill; s.fillOpacity = fop; s.stroke = stroke; s.strokeOpacity = sop; s.strokeWidth = 1.6; s.strokeDasharray = dash; s.opacity = op;
+  }
+  // scan lines
+  const sc = !how ? (scan1 > 0 && scan1 < 1 ? scan1 : -1) : (scan2 > 0 && scan2 < 1 ? scan2 : -1);
+  $("scan").setAttribute("y", sc * 1100 - 50); $("scan").setAttribute("opacity", sc > 0 ? .85 : 0);
+  // links + nodes
+  const probLinks = t >= LN.n5.start && t < S.brand.b, howLinks = t >= LN.n9.start;
+  for (const [i, L] of LINKS.entries()) {
+    let draw = 0, color = "#7dd3fc", w = 3, op = .9, dash = null;
+    const isC = L.a === "C";
+    if (!how && probLinks && !isC) { draw = clamp((t - LN.n5.start - i * .12) / 1.2); dash = "10 9"; op = .65; }
+    if (how && howLinks && !isC) { draw = clamp((t - LN.n9.start - i * .15) / 1.3); color = "#38bdf8"; w = 4; }
+    if (how && (L.a === "F3" || L.b === "F3")) op *= 1 - removeK;
+    if (how && removeK > 0 && !isC && !GA.has(L.a)) color = mix("#38bdf8", "#a78bfa", removeK * (1 - ease(since(t, "n11", .35, 1))));
+    if (isC && how) { draw = ease(since(t, "n11", .2, 1.4)); color = "#facc15"; w = 4; dash = "12 9"; }
+    const e = L.el; e.style.stroke = color; e.style.strokeWidth = w; e.style.opacity = draw > 0 ? op : 0;
+    if (dash && draw >= 1) { e.style.strokeDasharray = dash; e.style.strokeDashoffset = 0; }
+    else { e.style.strokeDasharray = `${L.len} ${L.len}`; e.style.strokeDashoffset = L.len * (1 - draw); }
+  }
+  const critK = ease(since(t, "n9", .55, .8));
+  for (const [k, N] of Object.entries(NODES)) {
+    let op = how && t >= LN.n9.start ? outE((t - LN.n9.start - .3) / .8) : 0;
+    if (k === "C") op = how ? ease(since(t, "n11", .3, .8)) : 0;
+    if (k === "F3") op *= 1 - removeK;
+    let fill = "#ffffff", r = 12;
+    if (k === "F3") { fill = mix("#ffffff", "#ef4444", critK); r = 12 + critK * 5; }
+    if (k === "C") fill = "#facc15";
+    if (removeK > 0 && !GA.has(k) && k !== "C" && k !== "F3") fill = mix("#ffffff", "#c4b5fd", removeK * (1 - ease(since(t, "n11", .35, 1))));
+    N.c.setAttribute("fill", fill); N.c.setAttribute("r", r); N.g.style.opacity = op;
+    N.glow.setAttribute("opacity", k === "F3" ? critK * (1 - removeK) * (.65 + .35 * Math.sin(t * 4)) : 0);
+  }
+  // satellite + radar beam + clouds (how1 only)
+  const h1 = how && t < S.how2.b ? Math.min(ease((t - S.how1.a - .4) / .8), 1 - ease((t - (S.how2.a + .4)) / .8)) : 0;
+  const sy = lerp(60, 880, clamp((t - S.how1.a) / (S.how1.b - S.how1.a)));
+  const [sx, spy] = svgPos(905, sy); $("sat").style.left = sx - 38 + "px"; $("sat").style.top = spy - 38 + "px"; $("sat").style.opacity = h1;
+  $("beam").setAttribute("points", `905,${sy - 14} 905,${sy + 14} 300,${sy + 95} 300,${sy - 95}`); $("beam").setAttribute("opacity", h1 * .2);
+  for (const [i, c] of CLOUDS.entries()) { c.el.setAttribute("cx", c.x + (t - S.how1.a) * (14 + i * 4)); c.el.setAttribute("opacity", h1 * .16); }
+  // tags
+  $("l-illus").style.opacity = 1;
+  tagAt("t-mapped", t, at("n4", .3), S.problem.b - .9, cen.F1.x + 60, cen.F1.y - 10);
+  tagAt("t-q", t, at("n5", .25), S.problem.b - .9, cen.F3.x + 40, cen.F3.y - 30, 0, 0);
+  $("t-q").style.borderColor = "rgba(0,229,153,.6)"; $("t-q").style.color = "#00e599";
+  tagAt("t-radar", t, S.how1.a + 1.4, S.how1.b - .6, 120, 70, 0, 0);
+  tagAt("t-mapd", t, at("n8", .55), S.how2.b - .3, cen.F1.x + 60, cen.F1.y - 10);
+  tagAt("t-crit", t, at("n9", .6), S.how3.b - .2, cen.F3.x + 34, cen.F3.y - 20);
+  tagAt("t-split", t, at("n10", .72), S.how4.b - .2, cen.F7.x - 260, cen.F7.y + 70, 0, 0);
+  tagAt("t-rest", t, at("n11", .3), 1e9, cen.C.x - 40, cen.C.y + 52, 0, 0);
+  tagAt("t-field", t, at("n11", .5), 1e9, cen.C.x - 40, cen.C.y + 102, 0, 0);
+  // slight life: slow drift of the whole map
+  $("landsvg").style.transform = `scale(${1 + Math.sin(t / 9) * .006})`;
+}
+
+/* ---------- how-it-works step list ---------- */
+const STEPS = [["satellite", "See", "Look at the coast from satellites", "n7"], ["scan-search", "Find", "AI finds likely mangrove areas", "n8"], ["network", "Connect", "Understand how the patches are linked", "n9"], ["flask-conical", "Test", "See what happens if a patch is lost", "n10"], ["sprout", "Restore", "Find possible places to reconnect habitat", "n11"]];
+$("steps").innerHTML = STEPS.map(([i, tt, dd], k) => `<div class="step" id="st${k}"><div class="num"><svg class="ico" viewBox="0 0 24 24">${ICONS[i]}</svg></div><div><div class="tt">${tt}</div><div class="dd">${dd}</div></div></div>`).join("");
+function steps(t) {
+  STEPS.forEach(([, , , id], k) => {
+    const on = t >= LN[id].start - .3 && (k === 4 || t < LN[STEPS[k + 1][3]].start - .3);
+    const done = k < 4 && t >= LN[STEPS[k + 1][3]].start - .3;
+    const e = $("st" + k), n = e.querySelector(".num");
+    const appear = outE((t - (S.how1.a + .3 + k * .12)) / .8);
+    e.style.opacity = appear * (on ? 1 : done ? .62 : .38); e.style.transform = `translateX(${(1 - appear) * -20}px)`;
+    e.style.background = on ? "rgba(0,229,153,.08)" : "transparent"; e.style.borderColor = on ? "rgba(0,229,153,.3)" : "transparent";
+    n.style.background = on ? "#00e599" : done ? "rgba(0,229,153,.14)" : "rgba(255,255,255,.06)"; n.style.color = on ? "#02151d" : done ? "#00e599" : "#6f8597";
+  });
+}
+
+/* ---------- product rows ---------- */
+const PROWS = [["map", "Maps", .3], ["network", "Important patches", .4], ["flask-conical", "What-if analysis", .5], ["sprout", "Restoration", .6], ["file-text", "Reports", .7], ["message-square-text", "AI Assistant", .8]];
+$("p-rows").innerHTML = PROWS.map(([i, tt], k) => `<div class="row" id="pr${k}" style="font-size:27px"><span class="ib" style="width:52px;height:52px"><svg class="ico" viewBox="0 0 24 24">${ICONS[i]}</svg></span>${tt}</div>`).join("");
+
+window.render = async function (t) {
+  // COAST
+  if (layer("coast", t, -1, S.coast.b, .01, .9)) {
+    await seek($("drone"), t * .9);
+    $("drone").style.transform = `scale(${1.03 + t * .004})`;
+    $("coast").style.opacity = Math.min(+$("coast").style.opacity, ease(t / 1.2));
+    show("c-e", t, .9, S.coast.b - .3); show("c-h", t, 1.1, S.coast.b - .3);
+    [.0, .2, .43, .66].forEach((f, i) => show("c-c" + (i + 1), t, at("n2", f), S.coast.b - .3, 16));
+  }
+  // LANDSCAPE (threat → problem, then how-it-works after the brand beat)
+  const landOn = (t >= S.threat.a && t <= S.problem.b) || (t >= S.how1.a && t <= S.how5.b);
+  if (landOn) {
+    const a = t <= S.problem.b ? S.threat.a : S.how1.a, b = t <= S.problem.b ? S.problem.b : S.how5.b;
+    layer("land", t, a, b); landscape(t);
+    show("th-e", t, S.threat.a + .5, S.problem.a + .9); show("th-w1", t, at("n3", .02), S.problem.a + .9); show("th-w2", t, at("n3", .42), S.problem.a + .9);
+    $("th-h").style.opacity = 1;
+    show("pr-e", t, S.problem.a + 1.0, S.problem.b - .2); show("pr-a", t, LN.n4.start, S.problem.b - .2); show("pr-b", t, LN.n5.start + .2, S.problem.b - .2);
+    show("hw-e", t, S.how1.a + .3, S.how5.b - .2); steps(t);
+  } else layer("land", t, 1, 0);
+  // BRAND
+  if (layer("brand", t, S.brand.a, S.brand.b)) { show("b-logo", t, S.brand.a + .4, S.brand.b - .2, 30); show("b-t", t, LN.n6.start + .6, S.brand.b - .2); }
+  // PRODUCT
+  if (layer("product", t, S.product.a, S.product.b)) {
+    show("p-e", t, S.product.a + .5, S.product.b - .2); show("p-h", t, S.product.a + .6, S.product.b - .2);
+    PROWS.forEach(([, , f], k) => show("pr" + k, t, at("n12", f), S.product.b - .2, 14));
+    const w = outE((t - S.product.a - .3) / 1.4); $("p-win").style.opacity = w; $("p-win").style.transform = `translateY(${(1 - w) * 40}px)`;
+    const k = ease(since(t, "n12", .6, .8)); $("p-b").style.opacity = k; $("p-ttl").textContent = k > .5 ? "EcoConnectAI — Restoration Planner" : "EcoConnectAI — Command Center";
+    show("p-note", t, S.product.a + 1.2, S.product.b - .2, 6);
+  }
+  // WHO
+  if (layer("who", t, S.who.a, S.who.b)) {
+    show("w-h", t, S.who.a + .5, S.who.b - .2); show("w-s", t, at("n13", .5), S.who.b - .2);
+    [.18, .28, .37].forEach((f, i) => show("w-" + (i + 1), t, at("n13", f), S.who.b - .2, 30));
+  }
+  // STATUS
+  if (layer("status", t, S.status.a, S.status.b)) {
+    show("s-e", t, S.status.a + .4, S.status.b - .2); show("s-h", t, S.status.a + .5, S.status.b - .2);
+    [.03, .25, .47, .75].forEach((f, i) => show("s-" + (i + 1), t, at("n14", f), S.status.b - .2, 14));
+  }
+  // FUTURE
+  if (layer("future", t, S.future.a, S.future.b)) {
+    show("f-e", t, S.future.a + .4, S.future.b - .2); show("f-h", t, S.future.a + .5, S.future.b - .2);
+    $("f-line").style.transform = `scaleX(${ease(since(t, "n15", 0, LN.n15.dur * .85))})`; $("f-line").style.opacity = 1 - ease((t - (S.future.b - .6)) / .6);
+    [.04, .42, .58, .7].forEach((f, i) => show("f-" + (i + 1), t, at("n15", f), S.future.b - .2, 24));
+    show("f-n", t, at("n15", .4), S.future.b - .2, 6);
+  }
+  // CLOSE
+  if (layer("close", t, S.close.a, TL.total + 1, .9, 0)) {
+    await seek($("drone2"), 2 + (t - S.close.a) * .72);
+    $("drone2").style.transform = `scale(${1.1 - (t - S.close.a) * .006})`;
+    show("z-logo", t, S.close.a + .4, 1e9, 30); show("z-h", t, LN.n16.start + 1.4, 1e9); show("z-n", t, LN.n16.start + 3.0, 1e9, 8);
+  }
+  $("black").style.opacity = ease((t - (TL.total - 1)) / 1);
+  return true;
+};
+window.ready = (async () => {
+  await Promise.all([...document.images].map((i) => i.decode().catch(() => {})));
+  for (const v of [$("drone"), $("drone2")]) if (v.readyState < 1) await new Promise((r) => v.addEventListener("loadedmetadata", r, { once: true }));
+  await document.fonts.ready; return true;
+})();
+</script>
+</body></html>

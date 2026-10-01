@@ -128,6 +128,8 @@ ecoconnect/     gee/ (stac_acquire, gmw_labels, gee_acquire) · geospatial/ (ras
                 pipeline/ (config, sources, analysis, report, frontend_adapter, provenance = git/config/file hashes)
 scripts/        acquire_study_area, build_tiles, train, evaluate, predict, threshold_sweep,
                 run_graph_analysis, run_pipeline, run_all_areas, phase2_*.sh
+                demo-video/ (Watch Demo video pipeline: capture real UI → composer.html timeline → Piper TTS voice
+                → ffmpeg; build.sh; work files in outputs/demo-video/, git-ignored; see docs/DEMO_VIDEO.md)
 configs/        study_areas, acquisition, dataset(_s2,_s1s2), train_dev/full(_s2,_s1s2), graph, demo
 outputs/        runs/<area>/<run_id>/ (manifest, patches.geojson, graph, metrics, criticality, explanations,
                 restoration, what_if_top1, tau_sensitivity, patches_input, frontend_bundle) + LATEST
@@ -140,7 +142,9 @@ docs/           context/ (THIS), ARCHITECTURE, API, DATA_PROVENANCE, RESULTS_PRO
 mesa_prep/      evaluation prep: videos, decks, scripts, Q&A, cheat sheet (tracked)
 ```
 
-Frontend routes: `/` landing · `/demo` (guided story: components/demo/network-canvas.tsx SVG over S1 quicklook,
+Frontend routes: `/` landing (hero "Watch Demo" → components/landing/demo-video-modal.tsx, custom player, video in
+public/videos/ecoconnectai-demo.{webm,mp4,en.vtt}, bump VERSION when replacing; sections wrapped in
+components/landing/scroll-reveal.tsx scroll blur/reveal; chat launcher = LauncherMark in eco-assistant.tsx) · `/demo` (guided story: components/demo/network-canvas.tsx SVG over S1 quicklook,
 stage by scroll position; data via lib/api fetchRun*) · `/login` · `/command` (main dashboard) · `/analysis` · `/graph` ·
 `/scenario` (Scenario Lab) · `/simulation` (legacy, duplicates scenario/restoration) · `/restoration` ·
 `/field` · `/projects` · `/alerts` · `/experiments` · `/reports` · `/history` · `/audit` · `/upload`

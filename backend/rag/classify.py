@@ -15,7 +15,9 @@ from .config import S
 from .context import INJECTION
 from .text import object_ids, tokens
 
-CASUAL = re.compile(r"^\s*(hi|hello|hey|thanks?|thank you|ok(ay)?|good (morning|afternoon|evening)|bye|goodbye|who are you|what can you do|help)\b[\s!.?]*$", re.I)
+CASUAL = re.compile(r"^\s*(hi+|hey+|hel+o+|hiya|yo|namaste|thanks?|thank you( so much)?|thx|ok(ay)?|cool|great|nice|good (morning|afternoon|evening|night)|"
+                    r"high|bye|goodbye|see you|how are you( doing)?|who are you|what are you|what can you do|what do you do|help( me)?)"
+                    r"(\s+(there|assistant|bot|ecoconnect(ai)?|buddy|friend|again))?[\s!.?,]*$", re.I)
 SECRETS = re.compile(r"\b(api[\s_-]?key|secret key|password|credential|token|env(ironment)? variables?|system prompt|hidden (prompt|instructions))\b", re.I)
 FOLLOW = re.compile(r"^\s*(and|what about|how about|and what about|same for|also|then)\b|\b(which one|that one|the other one|those|them|it|its|this one)\b", re.I)
 ANALYTICAL = re.compile(r"\b(why|what makes|how come|reason|explain|compare|difference|versus|vs\.?|how does|how do|what if|impact|implication|trade[- ]?off|interpret)\b", re.I)

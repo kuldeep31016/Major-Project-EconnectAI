@@ -19,8 +19,8 @@ from .retrieval import Cand, retrieve
 from .text import object_ids, tokens
 
 ABSTAIN = "I couldn't find enough information in the available project data to answer that reliably."
-LOW_CONF = ("I don't have enough verified information in the available data to answer that confidently. "
-            "Try naming a patch (e.g. P07), a study area, or a topic such as connectivity, restoration or the model.")
+LOW_CONF = ("I couldn't find a reliable answer to that in EcoConnectAI's data or documents, so I won't guess. "
+            "I can help with the study areas, habitat patches, connectivity, what-if scenarios, restoration and the model.")
 DEGRADED = ("I can still answer questions using the application's stored project data, but generative explanation "
             "is temporarily unavailable.")
 _CITE = re.compile(r"\[(S\d+)\]")
