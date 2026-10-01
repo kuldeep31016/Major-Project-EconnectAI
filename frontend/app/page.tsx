@@ -13,10 +13,12 @@ import { ResponsibleAISection } from "@/components/landing/responsible-ai-sectio
 import { CTASection } from "@/components/landing/cta-section";
 import { LandingFooter } from "@/components/landing/landing-footer";
 import { LandingStoryProvider } from "@/hooks/use-landing-story";
+import { Reveal, ScrollBlurProvider } from "@/components/landing/scroll-reveal";
 
 export default function LandingPage() {
   return (
     <LandingStoryProvider>
+    <ScrollBlurProvider>
     <div id="home" className="min-h-screen bg-[#050c18] text-[#f8fafc] antialiased selection:bg-[#00c896]/30 selection:text-white">
       {/* 1. Fixed / Sticky Premium Navbar */}
       <LandingNavbar />
@@ -24,43 +26,37 @@ export default function LandingPage() {
       {/* 2. Hero Section matching reference screenshot: 3D Floating Command Center, Video Atmosphere & Highlights Strip */}
       <HeroSection />
 
-      {/* Honesty strip: every figure below comes from a stored development run */}
-      <div className="border-y border-amber-400/20 bg-amber-400/[0.06] px-6 py-2.5 text-center text-[12px] text-amber-100/90">
-        Research prototype. Figures on this page come from a stored Kerala development run (U-Net EfficientNet-B0,
-        Sentinel-1, scored against Global Mangrove Watch reference labels). Scenarios are simulations, and nothing
-        here has been validated in the field.
-      </div>
-
       {/* 3. The Core Insight Section: "Knowing where habitat exists is only the beginning" */}
-      <CoreInsightSection />
+      <Reveal><CoreInsightSection /></Reveal>
 
       {/* 4. "From Satellite to Decision" 8-Stage Animated Pipeline Flow */}
-      <PipelineFlowSection />
+      <Reveal><PipelineFlowSection /></Reveal>
 
       {/* 5. Six Core Product Capabilities with Mini UI Previews */}
-      <CapabilitiesSection />
+      <Reveal><CapabilitiesSection /></Reveal>
 
       {/* 6. Live Interactive Command Center & Patch Removal Simulation Showcase */}
-      <LiveProductSection />
+      <Reveal><LiveProductSection /></Reveal>
 
       {/* 7. Four Iconic Coastal Demonstration Landscapes (Vembanad, Sundarbans, Mannar, Bhitarkanika) */}
-      <StudyAreasSection />
+      <Reveal><StudyAreasSection /></Reveal>
 
       {/* 8. Targeted Restoration Section with Satellite Overlay & Opportunity Card */}
-      <RestorationSection />
+      <Reveal><RestorationSection /></Reveal>
 
       {/* 9. Why EcoConnectAI: Decision-Support Philosophy & 6 Capability Pillars */}
-      <WhyEcoConnectSection />
+      <Reveal><WhyEcoConnectSection /></Reveal>
 
       {/* 10. Responsible AI, Provenance & Audit Readiness */}
-      <ResponsibleAISection />
+      <Reveal><ResponsibleAISection /></Reveal>
 
       {/* 11. Final High-Impact Call to Action */}
-      <CTASection />
+      <Reveal><CTASection /></Reveal>
 
       {/* 12. Enterprise / Government Conservation Intelligence Footer */}
       <LandingFooter />
     </div>
+    </ScrollBlurProvider>
     </LandingStoryProvider>
   );
 }

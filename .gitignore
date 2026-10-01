@@ -41,3 +41,6 @@ logs/
 .serena/
 # local embedding/reranker model downloads (fastembed); re-created on demand
 outputs/models_cache/
+
+# demo teaser work files (captures, frames) — rebuilt by scripts/demo-video/build.sh
+outputs/demo-video/

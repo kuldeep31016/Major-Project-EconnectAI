@@ -60,6 +60,7 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] P2 CONTRIBUTING, DATA, RESEARCH docs (2026-09-30)
 - [x] P1 Guided demo `/demo` (7-chapter scrollytelling, live data, P17 chosen by rule) + landing links (2026-09-28)
 - [x] P2 Server-side PDF report (fpdf2; /api/reports/{id}/pdf, hashed artifact, audited) (2026-09-30)
+- [x] P1 Landing "Watch Demo": narrated 2:43 story video (plain-language script, AI voice, optional subtitles, custom player) + scroll blur/reveal; chat redesign (context starters, launcher) (2026-10-02)
 
 ## Needs new ML experiments / external data (not code-only)
 - Fix tiling leakage + normaliser cache, rebuild 4-area tiles, threshold on validation split, re-evaluate

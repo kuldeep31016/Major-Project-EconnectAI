@@ -14,6 +14,31 @@ Next step:
 
 ---
 
+## 2026-10-02 — chat polish, Watch Demo video, scroll reveal
+
+Goal: user requests — fix typo questions + clearer assistant answers, cleaner chat UI; replace "See How It Works" with a
+real product video; scroll blur/reveal on the landing page.
+Changed:
+- Assistant: backend/rag/spell.py (difflib typo fix on domain words, never touches P07/Sentinel-1), chat.py friendlier
+  structured answers + suggestions, classify.py casual intents, service.py clearer abstention; golden set updated.
+  eco-assistant.tsx: compact ChatGPT-style panel, mode tabs removed (starters follow page/selection), new LauncherMark
+  (glowing orb, bubble + leaf, online dot).
+- Landing: hero secondary CTA = WatchDemoButton (demo-video-modal.tsx: portal modal, scroll lock, inert background,
+  focus trap, Esc/outside close; custom player with play/seek/volume/subtitles/fullscreen; subtitles off by default,
+  drawn from the VTT track; native error handling + one retry + "open video directly"; URLs versioned ?v=3).
+  scroll-reveal.tsx (framer-motion: entrance blur/rise per section + velocity blur ≤5px desktop/≤2px mobile, off with
+  reduced motion). Amber "Research prototype…" strip removed at user's request (footer still says research prototype;
+  the video states "not yet tested in the field").
+- Video: public/videos/ecoconnectai-demo.{webm 8.9MB, mp4 17.6MB, en.vtt}, poster webp. User-written plain-language
+  script, Piper en_US-lessac-high voice (offline, AI narration), illustrated coastline network (labelled
+  "Illustration") + two real still screens; no statistics. scripts/demo-video/ rebuilds it; docs/DEMO_VIDEO.md.
+Tests: pytest 143 passed 1 skipped; tsc ok; eslint 0 errors; next build ok. Player verified headless (normal, WebM
+blocked → MP4, both blocked → error UI, subtitles toggle) and at 1440/1280/1110×600/1024/768/430/390.
+Decisions: AI voice disclosed only in docs now (user removed the modal footer text). Piper installed outside the
+project env. The user's Chrome showed a pending update ("Finish update") when playback failed there; other browsers OK.
+Open: confirm playback in user's Chrome after relaunch; repo now carries ~27 MB of video (consider external hosting).
+Next step: user review on the deployed site.
+
 ## 2026-10-02 — production RAG assistant + learning guide
 
 Goal: user's spec-3/spec-4 — RAG chatbot (P07 as worked example), then production-grade RAG; plus a learning file.

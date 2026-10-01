@@ -36,6 +36,7 @@ from .rag.config import PROMPT_VERSION, RERANKER_VERSION
 from .rag.embeddings import get_embedder
 from .rag.generation import get_llm, route
 from .rag.retrieval import index_version
+from .rag.spell import correct
 from .rag.text import tokens
 
 MAX_QUESTION_CHARS = 500
@@ -187,10 +188,17 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
     why = bool(_WHY.search(ql))
     ids = [x.upper() for x in re.findall(r"\b([pc]\d{1,3})\b", ql)]
 
-    if re.search(r"\b(how many|which|list|what are the|number of)\b.*\bstudy areas?\b|\bstudy areas?\b.*\b(are there|do (we|you) (have|use))", ql):
+    no_object = not re.search(r"\b[pc]\d{1,3}\b", ql) and not re.search(r"\b(habitat|mangrove|patch|restoration|candidate|mapped)", ql)
+    if no_object and (
+            re.search(r"\b(how many|which|list|what are|what|number of|name)\b.*\b(study areas?|case stud(y|ies)|study sites?|landscapes)\b", ql)
+            or re.search(r"\b(how many|which|list|what are the|name the)\b.*\b(areas|regions|sites|locations)\b", ql)
+            or re.search(r"\bstudy areas?\b.*\b(are there|do (we|you) (have|use)|using|used)", ql)):
         areas = load_study_areas()
-        return Answer(f"EcoConnectAI currently uses {len(areas)} study areas: " + "; ".join(a.get("name", k) for k, a in areas.items()) + ".",
-                      "structured", "study_areas", [{"label": "Study-area configuration", "type": "config", "id": "study_areas"}])
+        lines = [f"{i}. {a.get('name', k)} ({a.get('state', '')})" for i, (k, a) in enumerate(areas.items(), 1)]
+        return Answer(f"EcoConnectAI currently uses {len(areas)} study areas (case studies):\n" + "\n".join(lines)
+                      + "\nSwitch between them with the study-area selector at the top of the app.",
+                      "structured", "study_areas", [{"label": "Study-area configuration", "type": "config", "id": "study_areas"}],
+                      action={"label": "Open Command Center", "href": "/command"})
 
     if re.search(r"\b(who am i|my role|current user|logged in as|signed in as)\b", ql):
         if not ctx.user:
@@ -216,17 +224,14 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
                           f"{crit[0]['patch_id']}–{crit[-1]['patch_id'] if crit else '—'}. Patch IDs are assigned by area in each run, "
                           "so the same ID in another run is a different patch.", "structured", "patch_missing", [run.src("criticality")])
         what_if = re.search(r"\b(what (happens|would happen|if)|if .* (remov|lost|lose|destroy|clear))", ql) and re.search(r"remov|lose|lost|destroy|clear|disappear", ql)
-        facts = (f"{pid} covers {_num(r['area_ha'], 2)} ha ({_num(r['area_pct'])} % of mapped habitat, #{r['rank_by_area']} by area) and ranks "
-                 f"#{r['rank']} of {len(crit)} by criticality. Removing it lowers IIC by {_num(r['delta_pct'])} %"
-                 + (f" and splits the network from {r['component_count_before']} into {r['component_count_after']} components (cut vertex)."
-                    if r["is_cut_vertex"] else f"; the network stays at {r['component_count_after']} component(s)."))
         src = [run.src(f"{pid} criticality", pid)]
         if what_if:
-            return Answer(f"Simulation (current graph assumptions, run {rid}): removing {pid} lowers IIC by {_num(r['delta_pct'])} %, "
-                          f"removes {_num(r['area_ha'], 2)} ha ({_num(r['area_pct'])} % of habitat) and "
-                          + (f"splits the network from {r['component_count_before']} into {r['component_count_after']} components."
-                             if r["is_cut_vertex"] else f"leaves {r['component_count_after']} component(s).")
-                          + " This is a scenario result, not a forecast.", "structured", "what_if", src,
+            return Answer(f"If **{pid}** were lost, connectivity would fall by **{_num(r['delta_pct'])} %**.\n"
+                          f"- Habitat removed: {_num(r['area_ha'], 2)} ha ({_num(r['area_pct'])} % of the mapped forest)\n"
+                          + (f"- Network: splits the network from {r['component_count_before']} into {r['component_count_after']} separate groups\n"
+                             if r["is_cut_vertex"] else f"- Network: stays at {r['component_count_after']} group(s) - other links route around it\n")
+                          + "This is a simulation under the current assumptions (3 nearest neighbours, 5 km), not a forecast.",
+                          "structured", "what_if", src,
                           action={"label": "Run it in Scenario Lab", "href": "/scenario?type=remove_patches", "patch": pid})
         if re.search(r"\b(verified|confirmed|validated|ground[- ]?truth(ed)?|field (check|visit|verification|survey))\b", ql):
             from .db import Detection
@@ -240,11 +245,11 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
         if why:
             return None                                                    # explanation -> tier 2
         if re.search(r"\b(area|hectare|ha|size|big|large|small)\b", ql):
-            return Answer(f"{pid} covers {_num(r['area_ha'], 2)} ha, {_num(r['area_pct'])} % of the mapped habitat in run {rid} (#{r['rank_by_area']} of {len(crit)} by area).",
+            return Answer(f"**{pid}** covers **{_num(r['area_ha'], 2)} ha** - {_num(r['area_pct'])} % of the mapped forest (#{r['rank_by_area']} of {len(crit)} by size).",
                           "structured", "patch_area", src)
         if re.search(r"\b(loss|drop|impact|lower|decrease|reduce|criticality|score)\b", ql):
-            return Answer(f"Removing {pid} lowers IIC by {_num(r['delta_pct'])} % (criticality S = {r['criticality_score']:.3f}, rank #{r['rank']} of {len(crit)}) "
-                          "under the current graph assumptions. Simulation, not a forecast.", "structured", "patch_loss", src)
+            return Answer(f"Losing **{pid}** would cut connectivity by **{_num(r['delta_pct'])} %**, making it #{r['rank']} of {len(crit)} by criticality.\n"
+                          "This is a simulation under the current assumptions, not a forecast.", "structured", "patch_loss", src)
         if re.search(r"\b(neighbou?rs?|connected to|links?|degree|edges?)\b", ql):
             return Answer(f"{pid} has {r['degree']} link(s): " + ", ".join(f"{n} ({d:.1f} km)" for n, d in zip(r.get("neighbour_ids") or [], r.get("neighbour_distances_km") or []))
                           + ".", "structured", "patch_links", src)
@@ -259,7 +264,11 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
         if re.search(r"\b(rank|position)\b", ql):
             return Answer(f"{pid} ranks #{r['rank']} of {len(crit)} by criticality and #{r['rank_by_area']} by area.", "structured", "patch_rank", src)
         if re.search(r"^\s*(what|tell me|show|describe|give).{0,20}\b" + pid.lower() + r"\b\s*\??\s*$|^\s*" + pid.lower() + r"\s*\??$", ql):
-            return Answer(facts + f" ({CAVEAT})", "structured", "patch_summary", src)
+            return Answer(f"**{pid}** at a glance:\n- Size: {_num(r['area_ha'], 2)} ha ({_num(r['area_pct'])} % of the forest, #{r['rank_by_area']} by size)\n"
+                          f"- Criticality: #{r['rank']} of {len(crit)} - losing it cuts connectivity by {_num(r['delta_pct'])} %\n"
+                          + (f"- Role: a bridge - removing it splits the network from {r['component_count_before']} into {r['component_count_after']} groups\n"
+                             if r["is_cut_vertex"] else "- Role: other links route around it\n")
+                          + "Model result - not yet field-validated.", "structured", "patch_summary", src)
         return None
 
     if cid:
@@ -285,16 +294,18 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
     # --- run-level counts ----------------------------------------------------------------
     rsrc = [run.src("summary")]
     if re.search(r"\b(how many|number of|count of|total)\b.*\bpatch", ql) or re.fullmatch(r"\s*patch(es)?\s*\??\s*", ql):
-        return Answer(f"The current {run.name} run ({rid}) has {rm['n_patches']} habitat patches covering {_num(rm['habitat_area_ha'])} ha "
-                      f"(minimum patch size {ds.get('mmu_ha', '—')} ha).", "structured", "n_patches", rsrc)
+        return Answer(f"{run.name} has **{rm['n_patches']} habitat patches**, covering **{_num(rm['habitat_area_ha'])} ha** of mapped mangrove.\n"
+                      f"Only patches of at least {ds.get('mmu_ha', '—')} ha are counted.", "structured", "n_patches", rsrc)
     if re.search(r"\b(how many|number of|count of)\b.*\b(links?|edges?|connections?)\b", ql):
         g = m["config"]["graph"]
-        return Answer(f"The {run.name} network has {rm['n_edges']} links (each patch joined to its {g['k_neighbors']} nearest neighbours within "
-                      f"τ = {g['tau_km']} km).", "structured", "n_links", rsrc)
+        return Answer(f"The {run.name} network has **{rm['n_edges']} links**. Each patch is linked to its {g['k_neighbors']} nearest neighbours "
+                      f"that are within {g['tau_km']:g} km.", "structured", "n_links", rsrc)
     if re.search(r"\b(how many|number of)\b.*\b(components?|groups?|clusters?)\b", ql):
-        return Answer(f"The {run.name} network has {rm['n_components']} connected components (separate groups of patches).", "structured", "n_components", rsrc)
+        return Answer(f"The {run.name} network has **{rm['n_components']} connected components** - separate groups of patches with no link between them.",
+                      "structured", "n_components", rsrc)
     if re.search(r"\b(how much|total|mapped)\b.*\b(habitat|mangrove|area|hectares?)\b", ql) and "study area" not in ql:
-        return Answer(f"The current {run.name} run maps {_num(rm['habitat_area_ha'])} ha of mangrove habitat in {rm['n_patches']} patches. {CAVEAT}",
+        return Answer(f"The {run.name} analysis maps **{_num(rm['habitat_area_ha'])} ha** of mangrove in {rm['n_patches']} patches.\n"
+                      "This is a model estimate, checked against Global Mangrove Watch, not yet field-validated.",
                       "structured", "habitat_area", rsrc)
     if re.search(r"\b(iic|eca|connectivity)\b.*\b(value|score|level|current|now)\b|\b(value|score) of (iic|eca)", ql):
         return Answer(f"Run {rid}: IIC = {rm['iic']:.3e}; ECA = {_num(rm['eca_ha'], 0)} ha ({_num(rm['eca_pct_of_habitat'])} % of mapped habitat). "
@@ -302,8 +313,9 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
     if re.search(r"\b(how many|number of)\b.*\b(restoration|candidates?|sites?)\b", ql):
         sites = [c for c in run.cands if c["category"] != "uncertain_habitat"]
         unc = [c for c in run.cands if c["category"] == "uncertain_habitat"]
-        return Answer(f"Run {rid} has {len(run.cands)} computed candidates: {len(sites)} potential restoration site(s) and {len(unc)} large uncertain "
-                      "area(s) that need a field check first. All are computational candidates requiring field and legal assessment.",
+        return Answer(f"There are **{len(run.cands)} computed candidates** in {run.name}:\n"
+                      f"- {len(sites)} potential restoration site(s)\n- {len(unc)} large uncertain area(s) that need a field check first\n"
+                      "All of them still need field and legal assessment.",
                       "structured", "n_candidates", [run.src("restoration")])
     if re.search(r"\bwhere\b.*\brestor|\brestor\w*\b.*\b(where|help|best|top|recommend|priorit)|\b(best|top) (restoration|candidates?|sites?)\b", ql):
         sites = [c for c in run.cands if c["category"] != "uncertain_habitat"][:3]
@@ -311,35 +323,44 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
         if not sites:
             return Answer(f"Run {rid} has no restoration-sized candidate; {', '.join(unc) or 'no'} large uncertain area(s) need a field check first.",
                           "structured", "restoration_where", [run.src("restoration")], action={"label": "Open Restoration Planner", "href": "/restoration"})
-        return Answer("Potential restoration candidates with the largest simulated connectivity gain (run " + rid + "): "
-                      + "; ".join(f"{c['candidate_id']} ({_num(c['area_ha'])} ha, +{_num(c['gain_pct'], 2)} % IIC, {c['new_links']} new link(s) to {', '.join(c['linked_patch_ids'])})" for c in sites)
-                      + ". " + (f"{', '.join(unc)} are large uncertain areas that need a field check, not restoration sites. " if unc else "")
-                      + "These are computational candidates: land ownership, legal status, water availability and cost are not assessed and every site requires field assessment.",
+        return Answer(f"Restoring **{sites[0]['candidate_id']}** would reconnect the most forest (+{_num(sites[0]['gain_pct'], 2)} % connectivity).\n"
+                      "Best restoration candidates:\n"
+                      + "\n".join(f"{i}. **{c['candidate_id']}** - {_num(c['area_ha'])} ha · +{_num(c['gain_pct'], 2)} % · links to {', '.join(c['linked_patch_ids'])}"
+                                  for i, c in enumerate(sites, 1))
+                      + (f"\n{', '.join(unc)} are large uncertain areas - they need a field check, not planting." if unc else "")
+                      + "\nThese are suggestions from the model; ownership, legal status, water and cost still need field assessment.",
                       "structured", "restoration_where", [run.src("restoration")], action={"label": "Open Restoration Planner", "href": "/restoration"})
     if re.search(r"\b(most critical|most important|highest criticality|top (\d+|five|three) (critical )?patch|critical patches)\b", ql):
         top = crit[:5]
-        return Answer("Most critical patches (exact leave-one-out on IIC, run " + rid + "): "
-                      + "; ".join(f"#{r['rank']} {r['patch_id']} ({_num(r['area_ha'])} ha, −{_num(r['delta_pct'])} %{', cut vertex' if r['is_cut_vertex'] else ''})" for r in top) + ".",
+        small = next((r for r in top if r["rank_by_area"] - r["rank"] >= 3), None)
+        return Answer(f"**{top[0]['patch_id']}** is the most critical patch: losing it would cut connectivity by **{_num(top[0]['delta_pct'])} %**.\n"
+                      "Top 5 by criticality:\n"
+                      + "\n".join(f"{r['rank']}. **{r['patch_id']}** - {_num(r['area_ha'])} ha · −{_num(r['delta_pct'])} % connectivity"
+                                  + (" · splits the network" if r["is_cut_vertex"] else "") for r in top)
+                      + (f"\n**{small['patch_id']}** is small (#{small['rank_by_area']} by size) but ranks #{small['rank']} because it bridges two groups."
+                         if small else ""),
                       "structured", "top_critical", [run.src("criticality")], action={"label": "Open Patch importance", "href": "/analysis"})
     if re.search(r"\b(largest|biggest) patch\b", ql):
         r = min(crit, key=lambda x: x["rank_by_area"])
-        return Answer(f"The largest patch is {r['patch_id']} ({_num(r['area_ha'])} ha, {_num(r['area_pct'])} % of habitat), criticality rank #{r['rank']}.",
+        return Answer(f"The largest patch is **{r['patch_id']}**: {_num(r['area_ha'])} ha ({_num(r['area_pct'])} % of the mapped forest). "
+                      f"It ranks #{r['rank']} by criticality.",
                       "structured", "largest", [run.src("criticality")])
     if re.search(r"\b(cut vertices|which patches (split|hold)|bridges?)\b", ql):
         cuts = [r for r in crit if r["is_cut_vertex"]]
-        return Answer((f"{len(cuts)} patch(es) hold the network together - removing any one splits it: "
-                       + "; ".join(f"{r['patch_id']} ({_num(r['area_ha'])} ha, −{_num(r['delta_pct'])} %)" for r in cuts) + ".") if cuts
+        return Answer((f"**{len(cuts)} patch(es)** hold the network together - removing any one of them splits it:\n"
+                       + "\n".join(f"- **{r['patch_id']}** - {_num(r['area_ha'])} ha · −{_num(r['delta_pct'])} % connectivity" for r in cuts)) if cuts
                       else "No single patch splits the network in this run.", "structured", "cut_vertices", [run.src("criticality")])
     if re.search(r"\b(which|what) model\b|\bmodel (are we|is) (using|used)\b|\bmodel used\b|\bcurrent model\b", ql) and not re.search(r"limitation|accura|good|reliab", ql):
         mid = Path(str(ds.get("model", ""))).parent.name or None
         mdl = db.get(Model, mid) if mid else None
         t = ((mdl.metrics or {}).get("test") or {}) if mdl else {}
-        return Answer(f"Run {rid} uses model {mid or '—'}"
-                      + (f" ({mdl.architecture}, {mdl.encoder} encoder, input {_bands(mdl.input_bands)}, status {mdl.status})" if mdl else "")
-                      + f", threshold {ds.get('threshold')}. "
-                      + (f"Test agreement with Global Mangrove Watch weak labels: IoU {t.get('iou', 0):.3f}, F1 {t.get('f1', t.get('dice', 0)):.3f} - "
-                         "agreement with a reference map, not field accuracy. " if t else "")
-                      + "It is a development model, not production-ready; the 95.56 % accuracy often quoted is the foundation study's result, not ours.",
+        return Answer(f"The {run.name} analysis uses **{mid or '—'}**"
+                      + (f", a {mdl.architecture} with an {mdl.encoder} encoder" if mdl else "") + ".\n"
+                      + (f"- Input: {_bands(mdl.input_bands)}\n" if mdl else "")
+                      + f"- Habitat threshold: {ds.get('threshold')}\n"
+                      + (f"- Test agreement with Global Mangrove Watch: IoU {t.get('iou', 0):.3f}, F1 {t.get('f1', t.get('dice', 0)):.3f}\n" if t else "")
+                      + "It is a development model, not production-ready, and its scores measure agreement with a reference map, not field "
+                        "accuracy. The 95.56 % often quoted is the foundation study's result, not ours.",
                       "structured", "model", [{"label": f"Model registry · {mid}", "type": "model", "id": mid}, run.src("manifest")])
     if re.search(r"\b(which|what|current|latest) run\b|\brun id\b", ql):
         return Answer(f"The current {run.name} run is {rid} ({m.get('result_label')}), scene year {ds.get('scene_year')}, threshold {ds.get('threshold')}, "
@@ -471,12 +492,18 @@ def app_data(run: RunData, q: str) -> str:
     return "\n".join(lines)
 
 
+def _suggest(ans: Answer, ctx: ChatContext) -> list[str]:
+    """Concrete next questions when the assistant cannot answer (or is greeting) - always answerable ones."""
+    obj = ctx.selected_patch or "P07"
+    return ["Which patch is most critical?", f"Why is {obj} important?", "Where could restoration help?", "How many study areas are there?"]
+
+
 REFUSE_UNSAFE = ("I can't help with that. I answer questions about EcoConnectAI's data and documentation, and I never "
                  "reveal configuration, credentials or internal instructions.")
-CASUAL = ("Hello. I can help you understand EcoConnectAI's data, analysis results and decision-support workflow - for example "
-          "which patches matter most, what a removal would do, where restoration could help, or how the model was built.")
-CLARIFY = ("Which object do you mean? Select a patch or restoration candidate on the map, or name it (e.g. \"Why is P07 "
-           "important?\").")
+CASUAL = ("Hi! I'm the EcoConnectAI Assistant. I can tell you which mangrove patches matter most, what would happen if one were lost, "
+          "where restoration could help, and how the analysis works. What would you like to know?")
+CLARIFY = ("Which one do you mean? Select a patch or restoration candidate on the map, or name it - for example "
+           "\"Why is P07 important?\".")
 
 
 # --------------------------------------------------------------------------- entry point
@@ -485,7 +512,8 @@ def ask(db: Session, question: str, ctx: ChatContext, *, debug: bool = False, au
     t0 = time.perf_counter()
     request_id = os.urandom(8).hex()
     q_raw = (question or "").strip()[:MAX_QUESTION_CHARS]
-    q, area = resolve(q_raw, ctx)
+    q_fixed, _typos = correct(q_raw)                    # "case stuey" -> "case study"; identifiers untouched
+    q, area = resolve(q_fixed, ctx)
     plan = classify(q, history, ctx.selected_patch or ctx.selected_candidate)
     if plan.rewritten:                                  # follow-up: the rewritten question decides area and objects
         q, area = resolve(plan.rewritten, ChatContext(**{**ctx.__dict__, "study_area": area}))
@@ -552,7 +580,8 @@ def ask(db: Session, question: str, ctx: ChatContext, *, debug: bool = False, au
     out = {"answer": ans.text, "tier": ans.tier, "intent": ans.intent, "sources": ans.sources, "action": ans.action,
            "proposed_scenario": ans.proposed_scenario, "note": ans.note, "cache_hit": ans.cache_hit, "llm_called": ans.llm_called,
            "study_area": area, "run_id": run.run_id, "resolved_question": q if q != q_raw else None, "confidence": ans.confidence,
-           "query_type": ans.query_type, "request_id": request_id, "event_id": ev.id}
+           "query_type": ans.query_type, "request_id": request_id, "event_id": ev.id,
+           "suggestions": _suggest(ans, ctx) if ans.tier in ("refused", "conversation") else []}
     if debug:
         out["debug"] = {"latency_ms": round(ms, 1), "llm_reason": ans.llm_reason, "llm_ms": ans.llm_ms, "retrieved": ans.retrieved,
                         "cache_similarity": sim, "tokens_in_est": ans.tokens_in, "tokens_out_est": ans.tokens_out, "cost_usd": ans.cost_usd,

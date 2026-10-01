@@ -1,0 +1,89 @@
+[
+ {
+  "id": "n1",
+  "scene": "coast",
+  "text": "Mangroves are forests that grow along the coast, where land meets the sea."
+ },
+ {
+  "id": "n2",
+  "scene": "coast",
+  "text": "They help protect the coast from strong waves and storms, reduce soil loss, store carbon, and provide a safe place for young fish and other sea life."
+ },
+ {
+  "id": "n3",
+  "scene": "threat",
+  "text": "But mangroves are being lost in many places. And when mangroves are lost, the remaining forests can become smaller and separated from each other."
+ },
+ {
+  "id": "n4",
+  "scene": "problem",
+  "text": "A normal map can show us where the mangroves are."
+ },
+ {
+  "id": "n5",
+  "scene": "problem",
+  "text": "But it does not tell us which areas are important for keeping the whole mangrove system connected. And it does not show us what could happen if an important area is lost."
+ },
+ {
+  "id": "n6",
+  "scene": "brand",
+  "text": "This is where EcoConnectAI comes in. It takes the mangrove map one step further and helps us understand how the different areas are connected.",
+  "say": "This is where Eco Connect A I comes in. It takes the mangrove map one step further and helps us understand how the different areas are connected."
+ },
+ {
+  "id": "n7",
+  "scene": "how1",
+  "text": "First, we use satellite images to look at the coast, even when clouds make normal images difficult to use."
+ },
+ {
+  "id": "n8",
+  "scene": "how2",
+  "text": "Then AI identifies the areas that are likely to be mangroves.",
+  "say": "Then A I identifies the areas that are likely to be mangroves."
+ },
+ {
+  "id": "n9",
+  "scene": "how3",
+  "text": "Next, we turn those areas into separate mangrove patches and connect them like a network. This helps us find which patches are especially important."
+ },
+ {
+  "id": "n10",
+  "scene": "how4",
+  "text": "We can then ask, “What happens if this patch is lost?” and simulate the result.",
+  "say": "We can then ask, What happens if this patch is lost? and simulate the result."
+ },
+ {
+  "id": "n11",
+  "scene": "how5",
+  "text": "We can also find possible places where new mangroves could help reconnect the network. These are suggestions from the system, and would need to be checked on the ground before any real action."
+ },
+ {
+  "id": "n12",
+  "scene": "product",
+  "text": "All of this comes together in one dashboard. You can explore the map, see important patches, run what-if scenarios, look at restoration options, create reports, and ask the built-in assistant about the project.",
+  "say": "All of this comes together in one dashboard. You can explore the map, see important patches, run what if scenarios, look at restoration options, create reports, and ask the built-in assistant about the project."
+ },
+ {
+  "id": "n13",
+  "scene": "who",
+  "text": "EcoConnectAI is designed to support forest officers, conservation teams, and researchers. The goal is simple: give them useful information that can help them understand the area and make better decisions.",
+  "say": "Eco Connect A I is designed to support forest officers, conservation teams, and researchers. The goal is simple: give them useful information that can help them understand the area and make better decisions."
+ },
+ {
+  "id": "n14",
+  "scene": "status",
+  "text": "Today, EcoConnectAI is a working research prototype. It has been set up for four coastal areas in India. Its results are compared with an existing global mangrove map, but the system has not yet been tested with field surveys.",
+  "say": "Today, Eco Connect A I is a working research prototype. It has been set up for four coastal areas in India. Its results are compared with an existing global mangrove map, but the system has not yet been tested with field surveys."
+ },
+ {
+  "id": "n15",
+  "scene": "future",
+  "text": "The next step is to test the system in the field with partners. We also want to track changes over time, use more satellite data, and add information such as land and cost details to make restoration planning more useful."
+ },
+ {
+  "id": "n16",
+  "scene": "close",
+  "text": "EcoConnectAI is more than a map. It helps us understand where mangroves are, how they are connected, which areas may be important, and what could happen if those connections are lost. EcoConnectAI — understand what holds the coast together.",
+  "say": "Eco Connect A I is more than a map. It helps us understand where mangroves are, how they are connected, which areas may be important, and what could happen if those connections are lost. Eco Connect A I. understand what holds the coast together."
+ }
+]
