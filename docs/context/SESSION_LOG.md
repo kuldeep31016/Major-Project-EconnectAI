@@ -14,6 +14,18 @@ Next step:
 
 ---
 
+## 2026-10-02 — hero background artwork
+
+Goal: user supplied "Neon Habitat Network Over Coastal Delta.png" as the hero background.
+Changed: frontend/public/images/hero-habitat-network.webp (1555×1011, 400 KB from the PNG); hero-section.tsx uses it
+full-bleed (position 72% center, slow zoom kept), lighter left gradient + a phone/tablet veil for text contrast; the
+drawn SVG network overlay and its timing flags removed (the artwork already shows the network). Navbar, text, CTAs,
+study-area pill ("Schematic"), legend, scale bar, stats strip and chat launcher unchanged. A Source Serif 4 / Plus
+Jakarta Sans font trial was reverted at the user's request (not committed).
+Tests: tsc ok; eslint clean; next build ok; checked at 1440, 1110×600, 390 (no horizontal scroll).
+Decisions: artwork is illustrative, not a run result (pill still says Schematic).
+Open: artwork is 1555 px wide, slightly soft on 2K+ screens; replace with a larger export if available.
+
 ## 2026-10-02 — chat polish, Watch Demo video, scroll reveal
 
 Goal: user requests — fix typo questions + clearer assistant answers, cleaner chat UI; replace "See How It Works" with a

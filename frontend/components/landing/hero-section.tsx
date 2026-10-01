@@ -26,11 +26,6 @@ export function HeroSection() {
     return () => clearInterval(timer);
   }, []);
 
-  const showHabitat = timeSec >= 0.2;
-  const showNodes = timeSec >= 0.4;
-  const showPerimeterLines = timeSec >= 0.6;
-  const showCriticalRed = timeSec >= 0.8;
-  const showRestoration = timeSec >= 1.0;
 
   return (
     <section className="relative pt-20 pb-0 lg:pt-24 bg-[#020b14] text-[#F5F7F8] overflow-hidden min-h-[92vh] flex flex-col justify-between">
@@ -38,14 +33,13 @@ export function HeroSection() {
           FULL-BLEED BACKGROUND SATELLITE IMAGE ACROSS ENTIRE PAGE
           ------------------------------------------------------------- */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Real coastal landscape on the right side */}
+        {/* Full-bleed hero artwork: coastal delta with the habitat network (illustration, not a result) */}
         <div
-          className="absolute top-0 right-0 bottom-0 w-full lg:w-[68%] bg-cover transition-transform duration-700 ease-out"
+          className="absolute inset-0 bg-cover transition-transform duration-700 ease-out"
           style={{
-            backgroundImage: "url(/hero-vembanad.jpg)",
-            backgroundPosition: "center center",
+            backgroundImage: "url(/images/hero-habitat-network.webp)",
+            backgroundPosition: "72% center",
             transform: `scale(${1 + (timeSec / 6) * 0.015 * zoomLevel})`,
-            filter: "saturate(1.4) contrast(1.15) brightness(0.92)",
           }}
         />
 
@@ -54,9 +48,12 @@ export function HeroSection() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(90deg, #020b14 0%, #020b14 34%, rgba(2, 11, 20, 0.90) 48%, rgba(2, 11, 20, 0.35) 70%, rgba(2, 11, 20, 0.05) 100%)",
+              "linear-gradient(90deg, rgba(2, 11, 20, 0.92) 0%, rgba(2, 11, 20, 0.78) 30%, rgba(2, 11, 20, 0.35) 52%, rgba(2, 11, 20, 0) 72%)",
           }}
         />
+
+        {/* On phones/tablets the text overlaps the artwork: add an even veil for readability */}
+        <div className="absolute inset-0 bg-[#020b14]/55 lg:hidden" />
 
         {/* Top and bottom subtle edge fades */}
         <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#020b14] to-transparent" />
@@ -175,192 +172,6 @@ export function HeroSection() {
                 </button>
               </div>
 
-              {/* =========================================================================
-                  SVG ANALYTICAL GIS OVERLAY:
-                  - Joined / random angular green polygons
-                  - Central red node with NO polygon
-                  - All lines from center red node are RED LINES
-                  - Outer perimeter lines are CYAN LINES
-                  - One yellow dashed restoration candidate
-                  ========================================================================= */}
-              <svg
-                className="absolute inset-0 h-full w-full z-10 pointer-events-none"
-                viewBox="0 0 1000 550"
-                preserveAspectRatio="xMidYMid slice"
-              >
-                <defs>
-                  <radialGradient id="hubRedGlow" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#ef4444" stopOpacity="0.85" />
-                    <stop offset="45%" stopColor="#ef4444" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
-
-                {/* -------------------------------------------------------------
-                    JOINED RANDOM ANGULAR GREEN HABITAT SHAPES (AS IN GPT REFERENCE)
-                    ------------------------------------------------------------- */}
-                <g
-                  className="transition-opacity duration-300 ease-out"
-                  style={{ opacity: showHabitat ? 1 : 0 }}
-                  fill="#00c896"
-                  fillOpacity="0.36"
-                  stroke="#00e599"
-                  strokeWidth="1.5"
-                >
-                  {/* Patch 1: Top-Left Stand */}
-                  <polygon points="545,145 615,128 635,182 565,202 525,170" />
-
-                  {/* Patch 2: Top-Center Stand (Joined to Patch 1) */}
-                  <polygon points="615,128 678,112 702,165 635,182" />
-
-                  {/* Patch 3: Top-Right Stand (Joined to Patch 2) */}
-                  <polygon points="678,112 752,128 768,182 702,165" />
-
-                  {/* Patch 4: Mid-Right Stand */}
-                  <polygon points="742,192 815,208 830,268 758,252" />
-
-                  {/* Patch 6: Bottom-Right Stand */}
-                  <polygon points="685,325 765,308 780,375 700,392" />
-
-                  {/* Patch 7: Bottom-Left Stand (Joined to Patch 6) */}
-                  <polygon points="612,308 685,325 700,392 628,375" />
-
-                  {/* Patch 8: Mid-Left Stand */}
-                  <polygon points="522,242 595,228 610,295 538,308" />
-                </g>
-
-                {/* -------------------------------------------------------------
-                    RESTORATION CANDIDATE PATCH (YELLOW ANGLED SHAPE WITH DASHES)
-                    ------------------------------------------------------------- */}
-                <g
-                  className="transition-opacity duration-300 ease-out"
-                  style={{ opacity: showRestoration ? 1 : 0 }}
-                >
-                  <polygon
-                    points="778,272 848,288 858,348 788,332"
-                    fill="#eab308"
-                    fillOpacity="0.32"
-                    stroke="#facc15"
-                    strokeWidth="1.8"
-                    strokeDasharray="4 3"
-                  />
-                </g>
-
-                {/* -------------------------------------------------------------
-                    OUTER PERIMETER CYAN CONNECTIVITY LINES
-                    ------------------------------------------------------------- */}
-                <g
-                  className="transition-opacity duration-300 ease-out"
-                  style={{ opacity: showPerimeterLines ? 1 : 0 }}
-                  stroke="#38bdf8"
-                  strokeWidth="1.6"
-                  opacity="0.85"
-                >
-                  {/* Patch 1 -> Patch 2 */}
-                  <line x1="575" y1="168" x2="658" y2="148" />
-                  {/* Patch 2 -> Patch 3 */}
-                  <line x1="658" y1="148" x2="725" y2="148" />
-                  {/* Patch 3 -> Patch 4 */}
-                  <line x1="725" y1="148" x2="788" y2="230" />
-                  {/* Patch 4 -> Patch 5 (Restoration) */}
-                  <line x1="788" y1="230" x2="820" y2="310" strokeDasharray={showRestoration ? "4 3" : undefined} />
-                  {/* Patch 5 -> Patch 6 */}
-                  <line x1="820" y1="310" x2="732" y2="350" strokeDasharray={showRestoration ? "4 3" : undefined} />
-                  {/* Patch 6 -> Patch 7 */}
-                  <line x1="732" y1="350" x2="656" y2="350" />
-                  {/* Patch 7 -> Patch 8 */}
-                  <line x1="656" y1="350" x2="568" y2="268" />
-                  {/* Patch 8 -> Patch 1 */}
-                  <line x1="568" y1="268" x2="575" y2="168" />
-                </g>
-
-                {/* -------------------------------------------------------------
-                    ALL LINES FROM THE CENTRAL RED HUB ARE RED LINES!
-                    (Radiating outward from Hub (680, 240) to each surrounding patch)
-                    ------------------------------------------------------------- */}
-                <g
-                  className="transition-opacity duration-300 ease-out"
-                  style={{ opacity: showCriticalRed ? 1 : 0 }}
-                  stroke="#ef4444"
-                  strokeWidth="2"
-                  opacity="0.9"
-                >
-                  {/* Hub -> Patch 1 */}
-                  <line x1="680" y1="240" x2="575" y2="168" />
-                  {/* Hub -> Patch 2 */}
-                  <line x1="680" y1="240" x2="658" y2="148" />
-                  {/* Hub -> Patch 3 */}
-                  <line x1="680" y1="240" x2="725" y2="148" />
-                  {/* Hub -> Patch 4 */}
-                  <line x1="680" y1="240" x2="788" y2="230" />
-                  {/* Hub -> Patch 5 (Restoration Corridor) */}
-                  <line
-                    x1="680"
-                    y1="240"
-                    x2="820"
-                    y2="310"
-                    stroke={showRestoration ? "#facc15" : "#ef4444"}
-                    strokeDasharray={showRestoration ? "4 3" : undefined}
-                  />
-                  {/* Hub -> Patch 6 */}
-                  <line x1="680" y1="240" x2="732" y2="350" />
-                  {/* Hub -> Patch 7 */}
-                  <line x1="680" y1="240" x2="656" y2="350" />
-                  {/* Hub -> Patch 8 */}
-                  <line x1="680" y1="240" x2="568" y2="268" />
-                </g>
-
-                {/* -------------------------------------------------------------
-                    PERIMETER CENTROID WHITE NODES
-                    ------------------------------------------------------------- */}
-                <g
-                  className="transition-opacity duration-300 ease-out"
-                  style={{ opacity: showNodes ? 1 : 0 }}
-                  fill="#ffffff"
-                  stroke="#020d18"
-                  strokeWidth="1.8"
-                >
-                  <circle cx="575" cy="168" r="3.5" />
-                  <circle cx="658" cy="148" r="3.5" />
-                  <circle cx="725" cy="148" r="3.5" />
-                  <circle cx="788" cy="230" r="3.5" />
-                  <circle cx="820" cy="310" r="3.5" />
-                  <circle cx="732" cy="350" r="3.5" />
-                  <circle cx="656" cy="350" r="3.5" />
-                  <circle cx="568" cy="268" r="3.5" />
-                </g>
-
-                {/* -------------------------------------------------------------
-                    CENTRAL RED CRITICAL HUB (NO SHAPE OF ITS OWN, JUST GLOWING NODE)
-                    ------------------------------------------------------------- */}
-                <g
-                  className="transition-opacity duration-300 ease-out"
-                  style={{ opacity: showCriticalRed ? 1 : 0 }}
-                >
-                  {/* Outer Radial Glow */}
-                  <circle cx="680" cy="240" r="28" fill="url(#hubRedGlow)" />
-                  {/* Subtle Alert Ping Ring */}
-                  <circle
-                    cx="680"
-                    cy="240"
-                    r="15"
-                    fill="#ef4444"
-                    fillOpacity="0.3"
-                    className="animate-ping"
-                    style={{ transformOrigin: "680px 240px" }}
-                  />
-                  {/* Center Red Node with White Ring */}
-                  <circle
-                    cx="680"
-                    cy="240"
-                    r="8.5"
-                    fill="#ef4444"
-                    stroke="#ffffff"
-                    strokeWidth="2.2"
-                  />
-                  <circle cx="680" cy="240" r="3" fill="#ffffff" />
-                </g>
-              </svg>
 
               {/* Bottom Compass & Scale Bar */}
               <div className="absolute bottom-3 left-4 z-20 flex items-center gap-3 text-[10px] text-slate-300 select-none">
