@@ -84,7 +84,7 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] P0 Rebuild lost model (`multi_E1_s1_b0_dev_r2`) with the original recipe; audit bugs 20/22/23 fixed
 - [x] P1 8-acquisition median default; per-area reliability; post-inference plausibility check; reports/assistant caveats
 - [x] P1 Assistant: data tools for satellite + reliability; Haiku/Opus routing; cost/ROI measured
-- [ ] P0 Back up the model checkpoint off this machine (location = user's decision)
+- [x] P0 Back up the model checkpoint: GitHub release `model-multi_E1_s1_b0_dev_r2` + SHA256SUMS, restore tested (2026-10-04)
 - [ ] P0 Leakage-free split (bug 21) + per-area held-out scores + per-area thresholds
 - [ ] P1 Train on near-real-time-style composites; evaluate S1+S2 fusion for thin fringes (Kerala, Gulf)
 - [ ] P1 Field-validation sample (accuracy vs field, not only vs GMW)
