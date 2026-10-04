@@ -1,0 +1,289 @@
+{
+ "scope": "threshold selected on val-split tiles (167 tiles pooled over 4 raster(s)); test split reported at the selected threshold",
+ "reference": "Global Mangrove Watch v3 (weak label) - agreement, not field-truth accuracy",
+ "criterion": "f1",
+ "selected_threshold": 0.96,
+ "selected_on": "val",
+ "grid_edge": false,
+ "mmu_ha": 2.0,
+ "test_at_selected": {
+  "threshold": 0.96,
+  "iou": 0.8587450684404012,
+  "dice": 0.9240052151540501,
+  "precision": 0.8984223222901254,
+  "recall": 0.9510877753914281,
+  "f1": 0.9240052151540501,
+  "tp": 1117278,
+  "fp": 126322,
+  "fn": 57459,
+  "n_components": 493,
+  "n_patches_ge_mmu": 112,
+  "habitat_area_ha": 71216.11000060139
+ },
+ "per_area": {
+  "kerala-coast": {
+   "selected_threshold": 0.96,
+   "source": "pooled threshold (only 874 mangrove px on this area's val tiles)",
+   "selection_ref_px": 874,
+   "test_ref_px": 666,
+   "selection_at_selected": {
+    "iou": 0.05650684931506849,
+    "f1": 0.10696920583468396,
+    "precision": 0.18333333333333332,
+    "recall": 0.07551487414187644
+   },
+   "test_at_selected": {
+    "iou": 0.0,
+    "f1": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "tp": 0,
+    "fp": 361,
+    "fn": 666
+   },
+   "grid_edge": false
+  },
+  "sundarbans": {
+   "selected_threshold": 0.96,
+   "source": "own validation tiles",
+   "selection_ref_px": 884431,
+   "test_ref_px": 1033684,
+   "selection_at_selected": {
+    "iou": 0.9468888655287352,
+    "f1": 0.9727199968053436,
+    "precision": 0.9677629826599429,
+    "recall": 0.9777280534038268
+   },
+   "test_at_selected": {
+    "iou": 0.9475701543550062,
+    "f1": 0.9730793545342875,
+    "precision": 0.9657074639834525,
+    "recall": 0.9805646599928024,
+    "tp": 1013594,
+    "fp": 35993,
+    "fn": 20090
+   },
+   "grid_edge": false
+  },
+  "gulf-of-mannar": {
+   "selected_threshold": 0.96,
+   "source": "pooled threshold (only 597 mangrove px on this area's val tiles)",
+   "selection_ref_px": 597,
+   "test_ref_px": 482,
+   "selection_at_selected": {
+    "iou": 0.18271954674220964,
+    "f1": 0.30898203592814366,
+    "precision": 0.542016806722689,
+    "recall": 0.21608040201005024
+   },
+   "test_at_selected": {
+    "iou": 0.001838235294117647,
+    "f1": 0.003669724770642202,
+    "precision": 0.015873015873015872,
+    "recall": 0.002074688796680498,
+    "tp": 1,
+    "fp": 62,
+    "fn": 481
+   },
+   "grid_edge": false
+  },
+  "odisha-coast": {
+   "selected_threshold": 0.94,
+   "source": "own validation tiles",
+   "selection_ref_px": 140950,
+   "test_ref_px": 139905,
+   "selection_at_selected": {
+    "iou": 0.6210443276487554,
+    "f1": 0.766227446166817,
+    "precision": 0.680360219522533,
+    "recall": 0.8768996097907059
+   },
+   "test_at_selected": {
+    "iou": 0.44081073721680036,
+    "f1": 0.6118926321555738,
+    "precision": 0.49601900575057173,
+    "recall": 0.7984060612558522,
+    "tp": 111701,
+    "fp": 113494,
+    "fn": 28204
+   },
+   "grid_edge": false
+  }
+ },
+ "probability_rasters": [
+  "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/kerala-coast_prob.tif",
+  "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/sundarbans_prob.tif",
+  "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/gulf-of-mannar_prob.tif",
+  "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/odisha-coast_prob.tif"
+ ],
+ "rows": [
+  {
+   "threshold": 0.5,
+   "iou": 0.8520066644741852,
+   "dice": 0.9200902791741129,
+   "precision": 0.8582623202052124,
+   "recall": 0.9915177649748942,
+   "f1": 0.9200902791741129,
+   "tp": 1018142,
+   "fp": 168141,
+   "fn": 8710,
+   "n_components": 594,
+   "n_patches_ge_mmu": 162,
+   "habitat_area_ha": 79986.29000092897
+  },
+  {
+   "threshold": 0.6,
+   "iou": 0.8574651090594968,
+   "dice": 0.9232637586324979,
+   "precision": 0.8650589530911437,
+   "recall": 0.9898661150779275,
+   "f1": 0.9232637586324979,
+   "tp": 1016446,
+   "fp": 158556,
+   "fn": 10406,
+   "n_components": 566,
+   "n_patches_ge_mmu": 152,
+   "habitat_area_ha": 79216.14000091984
+  },
+  {
+   "threshold": 0.7,
+   "iou": 0.863724719727744,
+   "dice": 0.9268801455334224,
+   "precision": 0.8729576158222331,
+   "recall": 0.9879028331249294,
+   "f1": 0.9268801455334224,
+   "tp": 1014430,
+   "fp": 147631,
+   "fn": 12422,
+   "n_components": 527,
+   "n_patches_ge_mmu": 152,
+   "habitat_area_ha": 78331.33000090816
+  },
+  {
+   "threshold": 0.8,
+   "iou": 0.8714100234600417,
+   "dice": 0.9312871177732559,
+   "precision": 0.8831341985596636,
+   "recall": 0.9849939426519109,
+   "f1": 0.9312871177732559,
+   "tp": 1011443,
+   "fp": 133845,
+   "fn": 15409,
+   "n_components": 489,
+   "n_patches_ge_mmu": 135,
+   "habitat_area_ha": 77126.56000089322
+  },
+  {
+   "threshold": 0.85,
+   "iou": 0.8761804088609706,
+   "dice": 0.9340044323273793,
+   "precision": 0.8901822911840676,
+   "recall": 0.9823645471791456,
+   "f1": 0.9340044323273793,
+   "tp": 1008743,
+   "fp": 124444,
+   "fn": 18109,
+   "n_components": 471,
+   "n_patches_ge_mmu": 126,
+   "habitat_area_ha": 76233.66000081679
+  },
+  {
+   "threshold": 0.9,
+   "iou": 0.8822801280022506,
+   "dice": 0.9374588987863932,
+   "precision": 0.9007111803583545,
+   "recall": 0.9773326633244128,
+   "f1": 0.9374588987863932,
+   "tp": 1003576,
+   "fp": 110628,
+   "fn": 23276,
+   "n_components": 503,
+   "n_patches_ge_mmu": 117,
+   "habitat_area_ha": 74814.43000079451
+  },
+  {
+   "threshold": 0.92,
+   "iou": 0.88486576034917,
+   "dice": 0.9389164777286307,
+   "precision": 0.9064925410345094,
+   "recall": 0.9737459731295259,
+   "f1": 0.9389164777286307,
+   "tp": 999893,
+   "fp": 103142,
+   "fn": 26959,
+   "n_components": 498,
+   "n_patches_ge_mmu": 109,
+   "habitat_area_ha": 73964.6300007585
+  },
+  {
+   "threshold": 0.94,
+   "iou": 0.887221541004264,
+   "dice": 0.9402410069271877,
+   "precision": 0.9138767064481702,
+   "recall": 0.9681716547272635,
+   "f1": 0.9402410069271877,
+   "tp": 994169,
+   "fp": 93690,
+   "fn": 32683,
+   "n_components": 480,
+   "n_patches_ge_mmu": 106,
+   "habitat_area_ha": 72832.0300006829
+  },
+  {
+   "threshold": 0.96,
+   "iou": 0.8883942476362097,
+   "dice": 0.9408991250087251,
+   "precision": 0.9241218753110837,
+   "recall": 0.9582968139517671,
+   "f1": 0.9408991250087251,
+   "tp": 984029,
+   "fp": 80797,
+   "fn": 42823,
+   "n_components": 493,
+   "n_patches_ge_mmu": 112,
+   "habitat_area_ha": 71216.11000060139
+  },
+  {
+   "threshold": 0.97,
+   "iou": 0.8878540928475226,
+   "dice": 0.9405960939580221,
+   "precision": 0.9318791792354365,
+   "recall": 0.9494776267660773,
+   "f1": 0.9405960939580221,
+   "tp": 974973,
+   "fp": 71271,
+   "fn": 51879,
+   "n_components": 485,
+   "n_patches_ge_mmu": 108,
+   "habitat_area_ha": 70047.25000053861
+  },
+  {
+   "threshold": 0.98,
+   "iou": 0.8840115973657097,
+   "dice": 0.9384354094229201,
+   "precision": 0.9427759867903759,
+   "recall": 0.9341346172574042,
+   "f1": 0.9384354094229201,
+   "tp": 959218,
+   "fp": 58222,
+   "fn": 67634,
+   "n_components": 424,
+   "n_patches_ge_mmu": 112,
+   "habitat_area_ha": 68383.95000049648
+  },
+  {
+   "threshold": 0.99,
+   "iou": 0.8662697096291132,
+   "dice": 0.9283435348701752,
+   "precision": 0.9582596472605367,
+   "recall": 0.9002387880629341,
+   "f1": 0.9283435348701752,
+   "tp": 924412,
+   "fp": 40266,
+   "fn": 102440,
+   "n_components": 402,
+   "n_patches_ge_mmu": 113,
+   "habitat_area_ha": 65377.92000036866
+  }
+ ]
+}

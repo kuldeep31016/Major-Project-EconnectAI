@@ -290,14 +290,24 @@ function ReliabilityNote({ r }: { r: NonNullable<SatelliteLatest["model_reliabil
   );
 }
 
+function monitorHint(status: SatelliteStatus | null) {
+  const m = status?.monitor;
+  if (!m) return "";
+  if (!m.enabled) return "Off: set SATELLITE_MONITOR_HOURS on the server to check for new passes automatically";
+  const last = m.last?.finished_at ?? m.last?.created_at;
+  return `Every ${m.every_hours} h · ${m.analyse && m.areas.length ? `auto-analyses ${m.areas.length} area${m.areas.length === 1 ? "" : "s"}` : "alerts only"}`
+    + (last ? ` · last check ${new Date(last).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}` : "");
+}
+
 function CapabilityStrip({ status }: { status: SatelliteStatus | null }) {
   const items = [
     { label: "Catalogue search", ok: status ? status.catalogue.available : null, hint: status ? `${status.source} · ${status.catalogue.auth}` : "" },
     { label: "Image retrieval", ok: status ? status.retrieval.configured : null, hint: status?.retrieval.configured ? status.retrieval.api : status?.retrieval.note ?? "" },
     { label: "AI inference", ok: status ? status.inference.available : null, hint: status?.inference.available ? status.inference.model_version : status?.inference.reason ?? "" },
+    { label: "Automatic monitoring", ok: status ? !!status.monitor?.enabled : null, hint: monitorHint(status) },
   ];
   return (
-    <div className="grid gap-2 sm:grid-cols-3">
+    <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((i) => (
         <div key={i.label} className="flex items-start gap-2 rounded-xl border border-black/[0.06] bg-white px-3 py-2.5">
           {i.ok === null ? <Loader2 className="mt-0.5 h-4 w-4 animate-spin text-muted-foreground" />

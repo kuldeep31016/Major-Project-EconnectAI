@@ -1,4 +1,4 @@
-import { AlertTriangle, CircleHelp, Eye, Leaf, Network, Sprout, TrendingDown, type LucideIcon } from "lucide-react";
+import { AlertTriangle, CircleHelp, Eye, Leaf, Network, Radar, Satellite, Sprout, TrendingDown, type LucideIcon } from "lucide-react";
 import type { AlertItem } from "@/lib/api";
 
 export type Severity = AlertItem["severity"];
@@ -30,6 +30,8 @@ export const TYPE_META: Record<string, { label: string; icon: LucideIcon; meanin
   low_confidence: { label: "Low map confidence", icon: Eye, meaning: "The map is not confident this patch is habitat. Confirm it in the field before relying on it." },
   habitat_change: { label: "Habitat change", icon: Leaf, meaning: "Predicted habitat area changed between two analysis runs of the same model." },
   connectivity_degradation: { label: "Connectivity change", icon: TrendingDown, meaning: "Network connectivity changed between two analysis runs of the same model." },
+  new_observation: { label: "New satellite pass", icon: Satellite, meaning: "Sentinel-1 imaged this area again; automatic monitoring found the new pass in the catalogue." },
+  satellite_update: { label: "Satellite analysis ready", icon: Radar, meaning: "An automatic analysis of the latest passes finished. Differences from the previous one are model-output differences, not verified change." },
   pending_verification: { label: "Awaiting verification", icon: AlertTriangle, meaning: "AI detections are waiting for a field check and are not confirmed observations yet." },
 };
 export const humanise = (k: string) => k.replace(/_/g, " ").replace(/\bpct\b/i, "%").replace(/\bha\b/, "(ha)").replace(/^./, (c) => c.toUpperCase());

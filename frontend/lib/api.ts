@@ -230,6 +230,14 @@ export interface SatelliteStatus {
     threshold: number | null; mmu_ha: number; reason: string | null;
     area_thresholds?: Record<string, number | null> };
   search_days: number; min_aoi_coverage: number; modes: { stored: string; nrt: string };
+  monitor?: SatelliteMonitor;
+}
+/** Automatic monitoring (backend/satellite/monitor.py): schedule and the last check's per-area report. */
+export interface SatelliteMonitor {
+  enabled: boolean; every_hours: number; analyse: boolean; areas: string[]; next_due: string | null;
+  last: { job_id: string; status: string; created_at: string | null; finished_at: string | null; error: string | null;
+    result: { checked_at: string; areas: Record<string, { status: string; latest?: string; new_pass?: boolean; message?: string;
+      analysis?: { id?: string; skipped?: string } }> } | null } | null;
 }
 export interface DistributionBand { band: string; n: number; mean_db?: number; std_db?: number; p1_db?: number; p99_db?: number;
   train_mean_db?: number; train_std_db?: number; mean_shift_sd?: number | null }

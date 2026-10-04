@@ -90,3 +90,22 @@ r2 stays selectable with `SATELLITE_MODEL_EXPERIMENT=multi_E1_s1_b0_dev_r2`. Sto
 Backup: GitHub release **`model-multi_E1_s1_b0_dev_r3`**, SHA-256
 `d79847742f0065eeed5f7aea9501c856cfb030c89be7536a51460ac8b28d9884` (restore tested 2026-10-04).
 
+## E3 — Sentinel-1 + Sentinel-2 fusion on the same leakage-free split (experiment, not deployed)
+
+`multi_E3_s1s2_b0_dev_r3` (`configs/train_dev_buf_s1s2.yaml`, `outputs/rebuild/train_e3.sh`): identical to r3 but all
+10 bands (S1 VV/VH + S2 blue, green, red, nir, swir16, swir22, NDVI, NDWI). Backup: release
+`model-multi_E3_s1s2_b0_dev_r3`, SHA-256 `4cf9f8c8a531eb447d8ffb4242c6f615177d5317c0965770a21b230c2631735b` (restore tested).
+
+| Agreement with GMW 2020 | S1-only r3 | S1+S2 E3 |
+|---|---|---|
+| held-out test 2020, pooled IoU (threshold 0.96) | 0.776 | **0.859** |
+| held-out test 2020, Sundarbans / Odisha | 0.925 / 0.318 | **0.948 / 0.441** |
+| held-out test 2020, Kerala / Gulf of Mannar | 0.000 / 0.000 | 0.000 / 0.002 |
+| **real 2026 input**, Sundarbans (S1 8-pass median + S2 Apr–Sep 2026 median, 6 least-cloudy scenes per granule, 100 % valid) | **0.876** | 0.637 (P 0.98, R 0.64) |
+| **real 2026 input**, Odisha | **0.622** | 0.577 (P 0.90, R 0.62) |
+
+Fusion is better on the 2020 test tiles but clearly worse on current imagery: it misses a third of the mangrove.
+The model learned the optical appearance of a 2020 yearly least-cloudy composite; a 2026 composite (other season,
+monsoon green-up, other year) looks different (domain shift). **Decision: the near-real-time default stays S1-only r3.**
+The fix is to train on composites built like the near-real-time input (several seasons and years), then re-test on
+current data — STATUS P1 "train for the input we actually use".

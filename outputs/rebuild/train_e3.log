@@ -1,0 +1,180 @@
+=== 08:43:04 train
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/train.py --config configs/train_dev_buf_s1s2.yaml --experiment-id multi_E3_s1s2_b0_dev_r3
+[train] multi_E3_s1s2_b0_dev_r3  mode=development  DEVELOPMENT-SUBSET RESULT - NOT FINAL
+[train] model=U-Net/efficientnet-b0 (dev or alt config)  params=6.3M  device=mps  amp=False
+[train] train=704 val=167 test=200 tiles
+[epoch   1/40] train_loss=1.9458 val_loss=0.9326 IoU=0.7902 Dice=0.8828 P=0.7972 R=0.9890 lr=3.00e-04 (36s)
+[epoch   2/40] train_loss=0.7815 val_loss=0.8761 IoU=0.8343 Dice=0.9097 P=0.8492 R=0.9795 lr=2.98e-04 (30s)
+[epoch   3/40] train_loss=0.7696 val_loss=0.7848 IoU=0.8203 Dice=0.9013 P=0.8319 R=0.9833 lr=2.96e-04 (30s)
+[epoch   4/40] train_loss=0.5127 val_loss=0.7382 IoU=0.8239 Dice=0.9035 P=0.8325 R=0.9877 lr=2.93e-04 (30s)
+[epoch   5/40] train_loss=0.8085 val_loss=0.8113 IoU=0.8198 Dice=0.9010 P=0.8355 R=0.9776 lr=2.89e-04 (33s)
+[epoch   6/40] train_loss=0.4555 val_loss=0.6664 IoU=0.8198 Dice=0.9010 P=0.8245 R=0.9931 lr=2.84e-04 (36s)
+[epoch   7/40] train_loss=0.4092 val_loss=0.6838 IoU=0.8248 Dice=0.9040 P=0.8314 R=0.9904 lr=2.78e-04 (40s)
+[epoch   8/40] train_loss=0.3635 val_loss=0.8293 IoU=0.8325 Dice=0.9086 P=0.8469 R=0.9800 lr=2.72e-04 (46s)
+[epoch   9/40] train_loss=0.3591 val_loss=0.7371 IoU=0.8268 Dice=0.9052 P=0.8363 R=0.9863 lr=2.64e-04 (43s)
+[epoch  10/40] train_loss=0.3678 val_loss=0.6489 IoU=0.8421 Dice=0.9143 P=0.8482 R=0.9915 lr=2.57e-04 (50s)
+[epoch  11/40] train_loss=0.5023 val_loss=0.6316 IoU=0.8290 Dice=0.9065 P=0.8338 R=0.9931 lr=2.48e-04 (42s)
+[epoch  12/40] train_loss=0.3821 val_loss=0.6380 IoU=0.8458 Dice=0.9165 P=0.8517 R=0.9919 lr=2.39e-04 (43s)
+[epoch  13/40] train_loss=0.3425 val_loss=0.6614 IoU=0.8334 Dice=0.9091 P=0.8390 R=0.9920 lr=2.29e-04 (50s)
+[epoch  14/40] train_loss=0.3079 val_loss=0.6451 IoU=0.8354 Dice=0.9103 P=0.8408 R=0.9924 lr=2.19e-04 (49s)
+[epoch  15/40] train_loss=0.3172 val_loss=0.9342 IoU=0.8308 Dice=0.9076 P=0.8431 R=0.9827 lr=2.08e-04 (54s)
+[epoch  16/40] train_loss=0.2926 val_loss=0.6631 IoU=0.8470 Dice=0.9172 P=0.8531 R=0.9917 lr=1.97e-04 (38s)
+[epoch  17/40] train_loss=0.2887 val_loss=0.6466 IoU=0.8426 Dice=0.9146 P=0.8487 R=0.9916 lr=1.86e-04 (43s)
+[epoch  18/40] train_loss=0.2772 val_loss=0.6830 IoU=0.8470 Dice=0.9171 P=0.8547 R=0.9894 lr=1.75e-04 (47s)
+[epoch  19/40] train_loss=0.3098 val_loss=0.6494 IoU=0.8453 Dice=0.9162 P=0.8521 R=0.9906 lr=1.63e-04 (44s)
+[epoch  20/40] train_loss=0.2797 val_loss=0.6843 IoU=0.8397 Dice=0.9129 P=0.8468 R=0.9902 lr=1.51e-04 (44s)
+[epoch  21/40] train_loss=0.2769 val_loss=0.6749 IoU=0.8512 Dice=0.9196 P=0.8587 R=0.9898 lr=1.40e-04 (44s)
+[epoch  22/40] train_loss=0.2983 val_loss=0.6962 IoU=0.8461 Dice=0.9166 P=0.8532 R=0.9903 lr=1.28e-04 (45s)
+[epoch  23/40] train_loss=0.2769 val_loss=0.6356 IoU=0.8481 Dice=0.9178 P=0.8534 R=0.9927 lr=1.17e-04 (45s)
+[epoch  24/40] train_loss=0.2609 val_loss=0.7633 IoU=0.8540 Dice=0.9212 P=0.8638 R=0.9868 lr=1.06e-04 (45s)
+[epoch  25/40] train_loss=0.2668 val_loss=0.7048 IoU=0.8428 Dice=0.9147 P=0.8500 R=0.9901 lr=9.47e-05 (46s)
+[epoch  26/40] train_loss=0.2557 val_loss=0.7974 IoU=0.8510 Dice=0.9195 P=0.8611 R=0.9865 lr=8.41e-05 (48s)
+[epoch  27/40] train_loss=0.2647 val_loss=0.7051 IoU=0.8500 Dice=0.9189 P=0.8577 R=0.9896 lr=7.39e-05 (43s)
+[epoch  28/40] train_loss=0.2817 val_loss=0.8026 IoU=0.8509 Dice=0.9195 P=0.8605 R=0.9871 lr=6.42e-05 (42s)
+[epoch  29/40] train_loss=0.2474 val_loss=0.6867 IoU=0.8514 Dice=0.9198 P=0.8589 R=0.9899 lr=5.51e-05 (42s)
+[epoch  30/40] train_loss=0.2763 val_loss=0.7653 IoU=0.8471 Dice=0.9172 P=0.8556 R=0.9884 lr=4.65e-05 (47s)
+[epoch  31/40] train_loss=0.2478 val_loss=0.8110 IoU=0.8519 Dice=0.9201 P=0.8620 R=0.9865 lr=3.86e-05 (47s)
+[epoch  32/40] train_loss=0.2446 val_loss=0.8249 IoU=0.8536 Dice=0.9210 P=0.8639 R=0.9862 lr=3.14e-05 (44s)
+[epoch  33/40] train_loss=0.2505 val_loss=0.7453 IoU=0.8473 Dice=0.9174 P=0.8556 R=0.9888 lr=2.49e-05 (44s)
+[epoch  34/40] train_loss=0.2495 val_loss=0.7667 IoU=0.8507 Dice=0.9193 P=0.8594 R=0.9881 lr=1.92e-05 (45s)
+[epoch  35/40] train_loss=0.2479 val_loss=0.7622 IoU=0.8561 Dice=0.9225 P=0.8655 R=0.9875 lr=1.43e-05 (48s)
+[epoch  36/40] train_loss=0.2416 val_loss=0.7658 IoU=0.8499 Dice=0.9188 P=0.8586 R=0.9882 lr=1.03e-05 (51s)
+[epoch  37/40] train_loss=0.2591 val_loss=0.7490 IoU=0.8513 Dice=0.9197 P=0.8599 R=0.9884 lr=7.10e-06 (49s)
+[epoch  38/40] train_loss=0.2429 val_loss=0.7746 IoU=0.8526 Dice=0.9204 P=0.8617 R=0.9878 lr=4.83e-06 (45s)
+[epoch  39/40] train_loss=0.2465 val_loss=0.7652 IoU=0.8546 Dice=0.9216 P=0.8638 R=0.9877 lr=3.46e-06 (44s)
+[epoch  40/40] train_loss=0.2603 val_loss=0.7263 IoU=0.8479 Dice=0.9177 P=0.8558 R=0.9892 lr=3.00e-06 (44s)
+[train] done. best iou=0.8561 at epoch 35. outputs: /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3
+=== 09:13:01 evaluate
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/evaluate.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth --n-panels 12 --rgb-bands 4,3,2
+[DEVELOPMENT-SUBSET RESULT - NOT FINAL] test tiles=200  IoU=0.7428 Dice=0.8524 P=0.7495 R=0.9881 F1=0.8524 OA=0.9382 kappa=0.8143
+outputs: /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/metrics.json, test_results.csv, confusion_matrix.png, sample_predictions/
+=== 09:13:25 sweep
+study areas with scene + label: ['kerala-coast', 'sundarbans', 'gulf-of-mannar', 'odisha-coast']
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/kerala-coast_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth",
+ "experiment_id": "multi_E3_s1s2_b0_dev_r3",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 10,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 0.998891446582502,
+ "habitat_fraction_at_threshold": 0.013374991288331596,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/kerala-coast_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/kerala-coast_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/kerala-coast_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/sundarbans/sundarbans_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/sundarbans_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth",
+ "experiment_id": "multi_E3_s1s2_b0_dev_r3",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 10,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/sundarbans/sundarbans_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 1.0,
+ "habitat_fraction_at_threshold": 0.6031696652928988,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/sundarbans_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/sundarbans_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/sundarbans_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/gulf-of-mannar_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth",
+ "experiment_id": "multi_E3_s1s2_b0_dev_r3",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 10,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 0.9999972898526324,
+ "habitat_fraction_at_threshold": 0.001222547477547276,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/gulf-of-mannar_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/gulf-of-mannar_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/gulf-of-mannar_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/predict.py --checkpoint /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth --input /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif --output /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/odisha-coast_prob.tif --threshold 0.5
+{
+ "checkpoint": "outputs/segmentation/multi_E3_s1s2_b0_dev_r3/best_model.pth",
+ "experiment_id": "multi_E3_s1s2_b0_dev_r3",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 10,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif",
+ "threshold": 0.5,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 0.9996003197442046,
+ "habitat_fraction_at_threshold": 0.23468641408798496,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/odisha-coast_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/odisha-coast_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/odisha-coast_binary_t0.50.tif"
+ }
+}
+$ /Users/kuldeepraj/Major-Project-EconnectAI/.venv/bin/python scripts/threshold_sweep.py --experiment /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3 --thresholds 0.5,0.6,0.7,0.8,0.85,0.9,0.92,0.94,0.96,0.97,0.98,0.99 --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/kerala-coast_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/kerala-coast/gmw_2020.tif --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/sundarbans_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/sundarbans/gmw_2020.tif --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/gulf-of-mannar_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/gulf-of-mannar/gmw_2020.tif --prob /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/predictions/odisha-coast_prob.tif --label /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/odisha-coast/gmw_2020.tif
+scope: threshold selected on val-split tiles (167 tiles pooled over 4 raster(s)); test split reported at the selected threshold
+  thr    IoU     F1      P      R  #patches>=MMU  habitat ha
+ 0.50  0.852  0.920  0.858  0.992            162       79986
+ 0.60  0.857  0.923  0.865  0.990            152       79216
+ 0.70  0.864  0.927  0.873  0.988            152       78331
+ 0.80  0.871  0.931  0.883  0.985            135       77127
+ 0.85  0.876  0.934  0.890  0.982            126       76234
+ 0.90  0.882  0.937  0.901  0.977            117       74814
+ 0.92  0.885  0.939  0.906  0.974            109       73965
+ 0.94  0.887  0.940  0.914  0.968            106       72832
+ 0.96  0.888  0.941  0.924  0.958            112       71216 <- selected
+ 0.97  0.888  0.941  0.932  0.949            108       70047
+ 0.98  0.884  0.938  0.943  0.934            112       68384
+ 0.99  0.866  0.928  0.958  0.900            113       65378
+  kerala-coast    threshold 0.96 (pooled threshold (only 874 mangrove px on this area's val tiles))  held-out test IoU 0.000 F1 0.000  [test mangrove px 666]
+  sundarbans      threshold 0.96 (own validation tiles)  held-out test IoU 0.948 F1 0.973  [test mangrove px 1033684]
+  gulf-of-mannar  threshold 0.96 (pooled threshold (only 597 mangrove px on this area's val tiles))  held-out test IoU 0.002 F1 0.004  [test mangrove px 482]
+  odisha-coast    threshold 0.94 (own validation tiles)  held-out test IoU 0.441 F1 0.612  [test mangrove px 139905]
+held-out TEST at 0.96: IoU 0.859  F1 0.924  P 0.898  R 0.951
+written: /Users/kuldeepraj/Major-Project-EconnectAI/outputs/segmentation/multi_E3_s1s2_b0_dev_r3/threshold_calibration.{json,csv,png}
+=== 09:14:16 E3 DONE

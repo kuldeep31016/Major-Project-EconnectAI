@@ -59,6 +59,9 @@ the API (a separate worker would write runs the API cannot read). For a working 
 3. Set `SATELLITE_PROVIDER=planetary` (default) and the usual production variables below; keep `ECO_DATABASE_URL`
    pointing at the same PostgreSQL.
 4. Check `GET /api/satellite/status`: `inference.available` must be `true`.
+5. Automatic monitoring: set `SATELLITE_MONITOR_HOURS=12` (new passes → alerts → automatic analyses on this host) or
+   run `python scripts/satellite_monitor.py` from cron. On the Render free API (no inference) the same setting gives
+   new-pass alerts only, and only while the instance is awake.
 
 
 

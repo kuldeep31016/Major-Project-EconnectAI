@@ -39,7 +39,9 @@ def generate_alerts(db: Session, study_area_id: str, run: AnalysisVersion, repla
     if replace_open:
         # keep alerts that a field task points at (FK); they are superseded, not erased
         referenced = select(FieldTask.alert_id).where(FieldTask.alert_id.is_not(None))
-        stale = db.query(Alert).filter(Alert.study_area_id == study_area_id, Alert.status == "OPEN")
+        # near-real-time monitoring alerts (backend/satellite/monitor.py) are about other runs: keep them
+        stale = db.query(Alert).filter(Alert.study_area_id == study_area_id, Alert.status == "OPEN",
+                                       Alert.type.not_in(("new_observation", "satellite_update")))
         stale.filter(Alert.id.in_(referenced)).update({"status": "DISMISSED"}, synchronize_session=False)
         stale.filter(Alert.id.not_in(referenced)).delete(synchronize_session=False)
     n = 0

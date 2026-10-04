@@ -15,7 +15,6 @@ from __future__ import annotations
 import io
 import json
 import re
-from dataclasses import asdict
 from pathlib import Path
 from typing import Optional
 
@@ -26,9 +25,9 @@ from sqlalchemy.orm import Session
 
 from ..auth import current_user, require
 from ..db import Job, SatelliteAnalysis, SatelliteObservation, User, get_db
-from ..jobs import enqueue
 from ..security import compute_limiter
-from . import catalog, service
+from ..jobs import enqueue
+from . import catalog, monitor, service
 from .copernicus import CATALOGUE_URL, NotConfigured, SatelliteError, credentials_configured
 
 router = APIRouter(prefix="/api/satellite", tags=["satellite"])
@@ -40,7 +39,7 @@ def _fail(e: SatelliteError) -> HTTPException:
 
 
 @router.get("/status")
-def status():
+def status(db: Session = Depends(get_db)):
     ms = service.model_status()
     pc = catalog.PROVIDER == "planetary"
     configured = pc or credentials_configured()
@@ -54,6 +53,7 @@ def status():
             "inference": {k: ms[k] for k in ("available", "model_version", "checkpoint_present", "torch_available", "threshold",
                                              "mmu_ha", "reason")}
                          | {"area_thresholds": service.area_thresholds()},
+            "monitor": monitor.status(db),
             "search_days": catalog.SEARCH_DAYS, "min_aoi_coverage": catalog.MIN_COVERAGE,
             "modes": {"stored": "Stored analyses (static data: 2020 Sentinel-1 RTC composite, Planetary Computer)",
                       "nrt": "Latest satellite observation (" + ("Microsoft Planetary Computer, Sentinel-1 RTC, about a day after each pass"
@@ -120,27 +120,33 @@ def analyze(body: AnalyzeIn, user: User = Depends(require("run_analysis")), db: 
     except SatelliteError as e:
         raise _fail(e)
     used = catalog.same_track(obs, ref, body.composite_scenes)
-    ids = [o.product_id for o in used]
-    ms = service.model_status(body.area_id)
-    for a in db.query(SatelliteAnalysis).filter(SatelliteAnalysis.study_area_id == body.area_id) \
-            .order_by(SatelliteAnalysis.created_at.desc()).all():
-        if a.product_ids != ids:
-            continue
-        if a.status in ("QUEUED", "RUNNING"):
-            return {"analysis": a.to_dict(), "job_id": a.job_id, "reused": "in_progress"}
-        if a.status == "COMPLETED" and not body.force and a.threshold == ms["threshold"] and a.model_checkpoint == ms["checkpoint"]:
-            return {"analysis": a.to_dict(), "job_id": a.job_id, "reused": "completed"}
-    if used[0].provider != "planetary" and not credentials_configured() \
-            and not service.cached_scene(service.scene_file(body.area_id, used), used):
-        raise _fail(NotConfigured())
-    a = service.new_analysis(db, body.area_id, used, user)
-    j = enqueue(db, "satellite_analyze", {"analysis_id": a.id, "study_area_id": body.area_id,
-                                          "observations": [asdict(o) for o in used]}, user, body.area_id)
-    a.job_id = j.id
-    db.commit()
-    return {"analysis": a.to_dict(), "job_id": j.id, "reused": None,
+    try:
+        res = service.start_analysis(db, body.area_id, used, user, force=body.force)
+    except SatelliteError as e:
+        raise _fail(e)
+    if res["reused"]:
+        return {"analysis": res["analysis"].to_dict(), "job_id": res["job_id"], "reused": res["reused"]}
+    a, j_id = res["analysis"], res["job_id"]
+    return {"analysis": a.to_dict(), "job_id": j_id, "reused": None,
             "note": None if len(used) == body.composite_scenes else
             f"Only {len(used)} same-track acquisition(s) available in the search window."}
+
+
+class MonitorIn(BaseModel):
+    analyse: Optional[bool] = None                   # None = SATELLITE_MONITOR_ANALYSE (default on)
+
+
+@router.get("/monitor")
+def monitor_status(_user: User = Depends(current_user), db: Session = Depends(get_db)):
+    """Automatic monitoring: schedule, monitored areas and the last check's per-area report."""
+    return monitor.status(db)
+
+
+@router.post("/monitor/run", status_code=202)
+def monitor_run(body: MonitorIn, user: User = Depends(require("run_analysis")), db: Session = Depends(get_db)):
+    """Run a monitoring check now (new passes -> alerts -> analyses where the model can run)."""
+    j = enqueue(db, "satellite_monitor", {"analyse": body.analyse}, user)
+    return {"job_id": j.id}
 
 
 @router.get("/runs")

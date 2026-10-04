@@ -14,6 +14,7 @@ import subprocess
 import sys
 import uuid
 from datetime import datetime, timezone
+from dataclasses import asdict
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
@@ -23,7 +24,7 @@ import numpy as np
 from ecoconnect.pipeline.config import OUTPUTS_DIR, REPO_ROOT
 
 from ..db import SatelliteAnalysis, SatelliteObservation, SessionLocal, User, audit, utcnow
-from ..jobs import JobContext, handler
+from ..jobs import JobContext, enqueue, handler
 from ..paths import data_root
 from . import catalog, preprocessing, processing
 from .catalog import Observation
@@ -230,6 +231,31 @@ def new_analysis(db, study_area_id: str, used: list[Observation], user: Optional
     return a
 
 
+def start_analysis(db, study_area_id: str, used: list[Observation], user: Optional[User], *, force: bool = False,
+                   trigger: str = "user") -> dict:
+    """Queue the analysis of ``used`` (newest first) unless the same acquisitions are already being analysed or were
+    analysed with the current model and threshold. ``trigger`` (user | monitor) is recorded in the analysis summary."""
+    ids = [o.product_id for o in used]
+    ms = model_status(study_area_id)
+    for a in db.query(SatelliteAnalysis).filter(SatelliteAnalysis.study_area_id == study_area_id) \
+            .order_by(SatelliteAnalysis.created_at.desc()).all():
+        if a.product_ids != ids:
+            continue
+        if a.status in ("QUEUED", "RUNNING"):
+            return {"analysis": a, "job_id": a.job_id, "reused": "in_progress"}
+        if a.status == "COMPLETED" and not force and a.threshold == ms["threshold"] and a.model_checkpoint == ms["checkpoint"]:
+            return {"analysis": a, "job_id": a.job_id, "reused": "completed"}
+    if used[0].provider != "planetary" and not credentials_configured() and not cached_scene(scene_file(study_area_id, used), used):
+        raise NotConfigured()
+    a = new_analysis(db, study_area_id, used, user)
+    a.summary = {"trigger": trigger}
+    j = enqueue(db, "satellite_analyze", {"analysis_id": a.id, "study_area_id": study_area_id,
+                                          "observations": [asdict(o) for o in used]}, user, study_area_id)
+    a.job_id = j.id
+    db.commit()
+    return {"analysis": a, "job_id": j.id, "reused": None}
+
+
 def _get_summary(aid: str) -> Optional[dict]:
     with SessionLocal() as db:
         a = db.get(SatelliteAnalysis, aid)
@@ -305,7 +331,7 @@ def satellite_analyze(ctx: JobContext, p: dict) -> dict:
         sj.update({"model_compatibility": compat, "distribution_check": dist})
         side.write_text(json.dumps(sj, indent=1, default=str))
         _update(aid, scene_path=_rel(sp), processed_at=utcnow(), status="SCENE_READY",
-                summary={"distribution_check": dist, "model_compatibility": compat})
+                summary={**(_get_summary(aid) or {}), "distribution_check": dist, "model_compatibility": compat})
         if compat.get("compatible") is False:
             raise SatelliteError(compat["reason"], user_message="The retrieved scene does not match the model's input bands: "
                                  + compat["reason"])
@@ -378,6 +404,9 @@ def _ecology(ctx: JobContext, aid: str, area: str, prob: Path, ms: dict, used: l
         a = db.get(SatelliteAnalysis, aid)
         a.status, a.stage, a.run_id, a.finished_at = "COMPLETED", "done", run_dir.name, utcnow()
         a.summary = {**(a.summary or {}), "run": summary}
+        if (a.summary or {}).get("trigger") == "monitor":     # automatic analysis: nobody is watching -> alert
+            from .monitor import result_alert
+            result_alert(db, a, summary)
         audit(db, db.get(User, ctx.user_id) if ctx.user_id else None, "satellite_analysis", "analysis_version", run_dir.name,
               new={"analysis_id": aid, "products": [o.name for o in used], "job": ctx.job_id})
         db.commit()

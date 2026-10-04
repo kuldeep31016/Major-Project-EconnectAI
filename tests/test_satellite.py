@@ -344,3 +344,62 @@ def test_area_threshold_uses_own_validation_threshold_only_when_selected_there()
     assert service.area_threshold(cal, "kerala-coast") == (0.97, "threshold_calibration.json (selected_threshold, pooled over all areas)")
     assert service.area_threshold(cal, "unknown")[0] == 0.97
     assert service.area_threshold({"selected_threshold": 0.5}, None)[0] == 0.5
+
+
+# --------------------------------------------------------------------------- automatic monitoring
+def test_monitor_alerts_new_pass_and_analyses_it_without_a_click(fake, creds, client, monkeypatch):
+    from backend.db import Alert, Job, SatelliteAnalysis, SessionLocal
+    from backend.jobs import work_once
+    from backend.satellite import monitor
+    fake.products = [_product("p-monitor-new", _now(0.2))] + list(PRODUCTS)
+    catalog.clear_cache()
+    monkeypatch.setenv("SATELLITE_MONITOR_AREAS", "kerala-coast")
+    base = {"experiment": "multi_E1_s1_b0_dev", "model_version": "U-Net/efficientnet-b0 multi_E1_s1_b0_dev",
+            "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth", "threshold": 0.7, "mmu_ha": 2.0}
+    monkeypatch.setattr(service, "model_status", lambda area=None: {
+        **base, "available": False, "reason": "no checkpoint here", "checkpoint_present": False, "torch_available": False})
+
+    def new_obs_alerts(db):
+        return db.query(Alert).filter(Alert.type == "new_observation", Alert.object_id == "p-monitor-new").count()
+
+    # 1) the model cannot run here: the new pass is still reported, the analysis is skipped with the reason
+    with SessionLocal() as db:
+        k = monitor.check(db, analyse=True)["areas"]["kerala-coast"]
+        assert k["new_pass"] is True and k["analysis"] == {"skipped": "no checkpoint here"}
+        assert new_obs_alerts(db) == 1
+        assert monitor.check(db, analyse=True)["areas"]["kerala-coast"]["new_pass"] is False   # never alerted twice
+        assert new_obs_alerts(db) == 1
+
+    # 2) the model can run: the 8-pass analysis is queued by the monitor, runs, and reports its result as an alert
+    calls: list = []
+    monkeypatch.setattr(service, "model_status", lambda area=None: {
+        **base, "available": True, "reason": None, "checkpoint_present": True, "torch_available": True})
+    monkeypatch.setattr(service, "run_predict", _fake_predict(calls))
+    with SessionLocal() as db:
+        k = monitor.check(db, analyse=True)["areas"]["kerala-coast"]
+    aid = k["analysis"]["id"]
+    assert k["analysis"]["reused"] is None and k["analysis"]["composite_scenes"] == 3
+    while work_once():
+        pass
+    with SessionLocal() as db:
+        a = db.get(SatelliteAnalysis, aid)
+        assert a.status == "COMPLETED" and a.summary["trigger"] == "monitor" and a.product_ids[0] == "p-monitor-new"
+        upd = db.query(Alert).filter(Alert.type == "satellite_update", Alert.object_id == aid).one()
+        assert upd.title.startswith("Satellite analysis ready for kerala-coast") and upd.run_id == a.run_id
+        assert "not a verified habitat change" in upd.reason or "previous_analysis" not in upd.evidence
+        # 3) scheduler: a check is enqueued only when the last one is older than SATELLITE_MONITOR_HOURS
+        monkeypatch.setenv("SATELLITE_MONITOR_HOURS", "6")
+        first = monitor.enqueue_if_due(db)
+        assert first is not None and monitor.enqueue_if_due(db) is None
+    while work_once():
+        pass
+    with SessionLocal() as db:
+        assert db.get(Job, first.id).status == "COMPLETED"
+    # 4) API: status for any signed-in user, a manual run needs the analysis permission
+    s = client.get("/api/satellite/monitor", headers=_auth(client, "gis")).json()
+    assert s["enabled"] is True and s["every_hours"] == 6 and s["areas"] == ["kerala-coast"] and s["last"]["status"] == "COMPLETED"
+    assert client.post("/api/satellite/monitor/run", json={}, headers=_auth(client, "field")).status_code == 403
+    r = client.post("/api/satellite/monitor/run", json={"analyse": False}, headers=_auth(client, "gis"))
+    assert r.status_code == 202
+    while work_once():
+        pass
