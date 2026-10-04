@@ -14,6 +14,24 @@ Next step:
 
 ---
 
+## 2026-10-04 — automatic monitoring; S1+S2 fusion experiment (not deployed)
+
+Goal: the open items after PR #22 that can be done in code: accuracy (S1+S2 fusion) and automatic monitoring.
+Changed: backend/satellite/monitor.py (check job, scheduler thread, new_observation / satellite_update alerts),
+service.start_analysis (shared by API + monitor; trigger recorded; summary no longer overwritten mid-job — that bug
+would have dropped the trigger), api /monitor + /monitor/run, status.monitor, main lifespan scheduler, worker import,
+alerts.py keeps monitoring alerts on regeneration, scripts/satellite_monitor.py, .env.example, render.yaml
+(SATELLITE_MONITOR_HOURS=12), frontend satellite page "Automatic monitoring" card + alert labels. Fusion: configs
+dataset_buffered_s1s2.yaml / train_dev_buf_s1s2.yaml, outputs/rebuild/train_e3.sh → multi_E3_s1s2_b0_dev_r3 (release,
+restore tested). Docs: MODEL_REBUILD (E3), STATUS §0, COPERNICUS_INTEGRATION (monitoring), DEPLOYMENT, FAQ.
+Tests: pytest 201 passed (new monitor end-to-end test); ruff F clean; frontend tsc/eslint/build OK.
+Decisions: fusion not deployed (2026 input: Sundarbans 0.637 vs 0.876 r3; Odisha 0.577 vs 0.622). Monitoring
+auto-analyses only areas not rated unreliable by default.
+Incident: disk filled up (my scratch rasters + old demo-video intermediates in the session scratchpad); every shell
+failed. Freed space via the terminal panel (deleted regenerable TTS voices/venv, test DBs, last_model.pth copies,
+scratch rasters); Postgres unaffected. Two possible demo videos remain in the session scratchpad (video/, story/).
+Next step: multi-season training composites; field validation; inference host.
+
 ## 2026-10-04 — leakage fix + model r3, Planetary Computer source, per-area thresholds, Interactive Map redesign
 
 Goal: fix the weaknesses in docs/STATUS_AND_NEXT_STEPS_2026-10-04.md with standard methods (no mocks): split leakage,

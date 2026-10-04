@@ -88,8 +88,9 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] P0 Leakage-free split (bug 21) + per-area held-out scores + per-area thresholds (2026-10-04, model r3, release `model-multi_E1_s1_b0_dev_r3`)
 - [x] P1 Near-real-time source = Planetary Computer Sentinel-1 RTC (training product, no account); Copernicus optional (2026-10-04)
 - [x] P1 Interactive Map redesign: scenario lab + real-time tab + patch / network / simulation cards (2026-10-04)
-- [ ] P1 Train on near-real-time-style composites; evaluate S1+S2 fusion for thin fringes (Kerala, Gulf)
+- [x] P1 Evaluate S1+S2 fusion on the leakage-free split (2026-10-04: better on 2020 test, worse on 2026 input → not deployed)
+- [ ] P1 Train on near-real-time-style (multi-season, multi-year) composites, then re-test fusion; thin fringes (Kerala, Gulf)
 - [ ] P1 Field-validation sample (accuracy vs field, not only vs GMW)
 - [ ] P2 Stable patch IDs across runs; change detection above a measured noise floor
-- [ ] P2 Automatic monitoring (scheduler / Copernicus subscription) + alerts
+- [x] P2 Automatic monitoring: scheduled check → new-pass alert → automatic analysis → result alert (2026-10-04)
 - [ ] P3 PyTorch inference worker for deployment (Render cannot run the model)

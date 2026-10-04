@@ -68,7 +68,10 @@ async def lifespan(_app: FastAPI):
                 db.commit()
     print(f"[startup] registry synced {summary}; demo users created: {created or 'none (exist)'}")
     start_inline_worker()
+    from backend.satellite import monitor as satellite_monitor
+    satellite_monitor.start_scheduler()                     # only when SATELLITE_MONITOR_HOURS > 0
     yield
+    satellite_monitor.stop_scheduler()
     stop_inline_worker()
 
 

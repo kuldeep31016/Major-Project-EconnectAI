@@ -43,3 +43,5 @@ services:
         sync: false
       - key: COPERNICUS_CLIENT_SECRET
         sync: false
+      - key: SATELLITE_MONITOR_HOURS  # new-pass alerts every 12 h while the instance is awake (free plan sleeps when idle);
+        value: "12"                   # analyses need a host that can run the model (docs/DEPLOYMENT.md §3a)

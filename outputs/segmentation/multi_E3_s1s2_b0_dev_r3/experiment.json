@@ -1,0 +1,166 @@
+{
+ "experiment_id": "multi_E3_s1s2_b0_dev_r3",
+ "timestamp_utc": "2026-10-04T03:13:12.498468+00:00",
+ "mode": "development",
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+ "ecoconnect_version": "0.1.0",
+ "dataset": {
+  "name": "ecoconnect_tiles_buf",
+  "root": "/Users/kuldeepraj/Major-Project-EconnectAI/data/ecoconnect_tiles_buf",
+  "mode": "development",
+  "in_channels": 10,
+  "image_size": 256,
+  "bands": null,
+  "num_classes": 1,
+  "ignore_index": 255,
+  "nodata": -9999.0,
+  "n_train": 704,
+  "n_val": 167,
+  "n_test": 200,
+  "normalizer": {
+   "method": "zscore",
+   "mean": [
+    -11.133599518334531,
+    -17.397081292555672,
+    0.05072557325233295,
+    0.06703648420972853,
+    0.052878866822638586,
+    0.1587597284620325,
+    0.09072600383981723,
+    0.0560230186528095,
+    0.27370121062423775,
+    -0.16391179168771405
+   ],
+   "std": [
+    4.923047357528975,
+    5.147009056698258,
+    0.024892262342966074,
+    0.0270124791534971,
+    0.03422343279917446,
+    0.11334089299810896,
+    0.08269570747045647,
+    0.05789932258701077,
+    0.5029708464497155,
+    0.5505049705938598
+   ],
+   "vmin": [
+    -20.43261823654175,
+    -26.130477714538575,
+    0.011699999682605267,
+    0.01785000041127205,
+    0.007600000128149986,
+    0.005400000140070915,
+    0.0059906248934566975,
+    0.005578124895691872,
+    -0.6616628170013428,
+    -0.7662907242774963
+   ],
+   "vmax": [
+    -3.349237644672393,
+    -9.983208656311035,
+    0.11620000004768372,
+    0.14169999957084656,
+    0.16130000352859497,
+    0.3630000054836273,
+    0.3199343681335449,
+    0.2500062584877014,
+    0.8685541749000549,
+    0.8251952528953552
+   ],
+   "clip_percentiles": [
+    1,
+    99
+   ],
+   "n_tiles": 400
+  },
+  "metadata": {
+   "bands": [
+    "s1_vv_db",
+    "s1_vh_db",
+    "s2_blue",
+    "s2_green",
+    "s2_red",
+    "s2_nir",
+    "s2_swir16",
+    "s2_swir22",
+    "s2_ndvi",
+    "s2_ndwi"
+   ],
+   "nodata": -9999.0,
+   "ignore_index": 255,
+   "classes": {
+    "0": "non-habitat",
+    "1": "habitat"
+   },
+   "tile_size": 256,
+   "stride": 128,
+   "crs": "EPSG:32645",
+   "pixel_size": [
+    10.0,
+    10.0
+   ],
+   "split_strategy": "spatial blocks of 4x4 tiles, fractions (0.7, 0.15, 0.15), seed 42 -> stratified by mangrove pixels per area + boundary buffer (resplit_buffered.py)",
+   "negative_subsampling": {
+    "max_negative_ratio": 3.0,
+    "positive_tiles": 225,
+    "negative_tiles_dropped": 0
+   },
+   "sources": [
+    {
+     "image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif",
+     "label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/kerala-coast/gmw_2020.tif",
+     "note": "kerala-coast 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label"
+    },
+    {
+     "image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/sundarbans/sundarbans_2020_s12_10m.tif",
+     "label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/sundarbans/gmw_2020.tif",
+     "note": "sundarbans 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label"
+    },
+    {
+     "image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif",
+     "label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/gulf-of-mannar/gmw_2020.tif",
+     "note": "gulf-of-mannar 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label"
+    },
+    {
+     "image": "/Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif",
+     "label": "/Users/kuldeepraj/Major-Project-EconnectAI/data/labels/odisha-coast/gmw_2020.tif",
+     "note": "odisha-coast 2020: S1 RTC median + S2 L2A median; GMW 2020 weak label"
+    }
+   ],
+   "boundary_tiles_excluded": 208,
+   "resplit_from": "data/ecoconnect_tiles"
+  }
+ },
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 10,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "parameters": 6253485,
+ "batch_size": 8,
+ "learning_rate": 0.0003,
+ "epochs_planned": 40,
+ "seed": 42,
+ "loss": "bce_dice",
+ "scheduler": "cosine",
+ "mixed_precision": false,
+ "hardware": {
+  "device": "mps",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "torch": "2.13.0",
+  "python": "3.14.3"
+ },
+ "code": {
+  "git_commit": "8f36cf728cd309c4307197d792cd48741303c866",
+  "git_dirty": false
+ },
+ "status": "completed",
+ "training_time_s": 1787.7,
+ "best_epoch": 35,
+ "best_val_iou": 0.8561282727290059,
+ "epochs_run": 40
+}

@@ -247,3 +247,23 @@ The run's `manifest.json` carries the same satellite block under `data_source.sa
 
 Say "latest available satellite observation", "model prediction", "model-output difference", "potential restoration
 candidate". Do not say live video, confirmed loss, field-validated detection or confirmed restoration feasibility.
+
+## Automatic monitoring (2026-10-04)
+
+`backend/satellite/monitor.py` turns the layer into a monitor that needs no click:
+
+1. **Check** (job `satellite_monitor`): for every study area, search the catalogue; a pass not seen before raises a
+   `new_observation` alert (once per product).
+2. **Analyse**: if this server can run the model (`/api/satellite/status` → `inference.available`), the standard 8-pass
+   same-track analysis is queued with `trigger: monitor` for the areas in `SATELLITE_MONITOR_AREAS` (default: areas where
+   the model is not rated unreliable — currently the Sundarbans; `all` or a comma list to override).
+3. **Report**: when it completes, a `satellite_update` alert gives patches, habitat area, plausibility and reliability,
+   and the change versus the previous completed analysis of the same area with the same model and threshold —
+   explicitly a model-output difference between two 3-month composites, not a verified habitat change.
+
+Schedule: `SATELLITE_MONITOR_HOURS=12` (API process; a check is enqueued when the last one is older; safe with several
+instances because the job queue claims atomically), or cron: `python scripts/satellite_monitor.py` (`--no-analyse` for
+alerts only). `SATELLITE_MONITOR_ANALYSE=0` disables automatic analyses. API: `GET /api/satellite/monitor` (schedule +
+last per-area report), `POST /api/satellite/monitor/run` (role with `run_analysis`). The Satellite Monitor page shows the
+schedule and last check; alerts appear in the Alerts module. Monitoring alerts are kept when stored-run alerts are
+regenerated.

@@ -15,10 +15,13 @@ department.
 | §4.A.5 one threshold for all areas | Per-area threshold chosen on that area's validation tiles (≥ 2,000 reference px), used by the live analysis | Odisha 0.92, others pooled 0.96 |
 | §4.B.4 / B.5 domain gap, Copernicus quota | Default near-real-time source = **Microsoft Planetary Computer Sentinel-1 RTC** (the exact training product, no account, ~1 day after a pass); Copernicus kept as an option | equal agreement within noise (Sundarbans 0.861 vs 0.884, Odisha 0.676 vs 0.651 with r2) |
 | §4.D.2 model file not backed up | GitHub releases `model-multi_E1_s1_b0_dev_r2` and `_r3` with SHA-256, restore tested | |
+| §4.A.6 radar only | S1+S2 fusion trained on the same leakage-free split (`multi_E3_s1s2_b0_dev_r3`) and tested on real 2026 input | better on 2020 test tiles (0.859 vs 0.776; Odisha 0.441) but **worse on 2026 input** (Sundarbans 0.637 vs 0.876, Odisha 0.577 vs 0.622) — optical domain shift; not deployed |
+| §4.B.2 no automatic monitoring | `backend/satellite/monitor.py`: scheduled check (`SATELLITE_MONITOR_HOURS`) or cron script → new-pass alert → automatic 8-pass analysis where the model can run → result alert with the change vs the previous comparable analysis (labelled model-output difference) | tested end to end; real check found the latest passes for all 4 areas |
 | Interactive Map page | Redesigned: scenario lab + real-time tab + map + patch / network / simulation cards on one screen | verified at 375 to 1920 px |
 
-Still open, in order: thin fringes (Kerala, Gulf) and Odisha generalisation (§4.A.1 — needs S1+S2 fusion and/or a larger
-encoder trained on GPU), field ground truth, automatic monitoring, production inference host (see docs/DEPLOYMENT.md §3a).
+Still open, in order: training composites that match the near-real-time input (multi-season, multi-year; needed before
+fusion can help live), thin fringes (Kerala, Gulf) and Odisha generalisation (larger encoder on GPU), field ground
+truth, change detection above a measured noise floor, production inference host (docs/DEPLOYMENT.md §3a).
 
 ## 1. What the system does, in plain words
 

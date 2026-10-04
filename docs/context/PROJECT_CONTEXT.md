@@ -82,6 +82,12 @@ threshold 0.5), 24 patches — the "P17 story" below refers to that run:
   Sundarbans 0.925, **Odisha 0.318 (unreliable)**, Kerala/Gulf 0.000 (too little reference to score). Per-area
   thresholds (`threshold_calibration.json` per_area; Odisha 0.92) used by the live analysis. On 2026 NRT scenes:
   r3 Sundarbans 0.902/0.876, Odisha 0.610/0.622 (Copernicus / Planetary Computer input) vs r2 0.884/0.861, 0.651/0.676.
+- **E3 S1+S2 fusion `multi_E3_s1s2_b0_dev_r3`** (same split): held-out 2020 IoU 0.859 (Sundarbans 0.948, Odisha 0.441)
+  but on real 2026 input worse than r3 (Sundarbans 0.637 vs 0.876, Odisha 0.577 vs 0.622; optical domain shift) →
+  NOT deployed; release `model-multi_E3_s1s2_b0_dev_r3`. Fix = train on NRT-like multi-season composites.
+- **Automatic monitoring** `backend/satellite/monitor.py` (SATELLITE_MONITOR_HOURS / scripts/satellite_monitor.py):
+  new pass → `new_observation` alert → auto 8-pass analysis (areas not rated unreliable) → `satellite_update` alert.
+- **Disk**: the Mac is at ~1.5 GB free (2026-10-04); a full disk stopped every shell. Clean before big jobs.
 - **NRT source default = Microsoft Planetary Computer `sentinel-1-rtc`** (backend/satellite/planetary.py,
   `SATELLITE_PROVIDER=planetary|copernicus`): the exact training product, no account, ~1 day latency.
 - Synthetic prototype maths reproduce paper Tables VI–VIII exactly; Tables VI–VII pinned by tests/test_regression.py, VIII/ρ/τ-robustness not yet pinned.
