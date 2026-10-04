@@ -33,11 +33,13 @@ from backend.paths import SEG_DIR, abs_path, data_root, patch_from_dict, resolve
 from backend.db import Job  # noqa: E402
 from backend.jobs import enqueue, start_inline_worker, stop_inline_worker  # noqa: E402
 import backend.job_handlers  # noqa: E402,F401  (registers job types)
+import backend.satellite.service  # noqa: E402,F401  (registers the satellite_analyze job type)
 from backend.jobs_api import artifacts_router, router as jobs_router  # noqa: E402
 from backend.registry_api import router as registry_router  # noqa: E402
 from backend.workflow_api import router as phase5_router  # noqa: E402
 from backend.admin_api import router as admin_router  # noqa: E402
 from backend.chat_api import rag_router, router as chat_router  # noqa: E402
+from backend.satellite.api import router as satellite_router  # noqa: E402
 from backend.observability import RequestContextMiddleware  # noqa: E402
 from backend.restoration_rules import annotate  # noqa: E402
 
@@ -82,7 +84,7 @@ _CORS_ORIGINS, _CORS_REGEX = cors_config()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_CORS_ORIGINS, allow_origin_regex=_CORS_REGEX,
-    allow_methods=["*"], allow_headers=["*"], expose_headers=["X-Request-ID"],
+    allow_methods=["*"], allow_headers=["*"], expose_headers=["X-Request-ID", "X-Bounds", "X-Scene"],   # overlay PNGs report their map bounds in X-Bounds
 )
 logging.getLogger("ecoconnect").warning(
     "CORS IS OPEN TO EVERY ORIGIN - set ECO_CORS_ORIGINS to the frontend URL" if _CORS_ORIGINS == ["*"] else "cors configured",
@@ -91,6 +93,7 @@ app.add_middleware(RequestContextMiddleware)   # outermost: request id + metrics
 app.include_router(admin_router)
 app.include_router(chat_router)
 app.include_router(rag_router)
+app.include_router(satellite_router)
 
 
 # --------------------------------------------------------------------------- helpers
@@ -187,6 +190,8 @@ def scenes():
     scenes_dir = data_root() / "scenes"
     out = []
     for p in sorted(scenes_dir.glob("*/*.json")) if scenes_dir.exists() else []:
+        if not p.with_suffix(".tif").exists():      # sidecar of a removed raster: not a usable scene
+            continue
         try:
             out.append({"studyAreaId": p.parent.name, **json.loads(p.read_text())})
         except json.JSONDecodeError:

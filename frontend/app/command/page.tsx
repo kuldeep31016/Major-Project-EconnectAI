@@ -13,13 +13,16 @@ import { AppShell } from "@/components/dashboard/app-shell";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { fetchAlerts, fetchSceneQuicklook, fetchTasks, type AlertItem, type FieldTaskItem, type QuicklookKind, type SceneQuicklook } from "@/lib/api";
 import { getConnectivity, getGraph, getHabitatMask, getHeatmap, getRestoration, getTimeline, hasLiveTimeline } from "@/lib/data";
-import { useMapFocus } from "@/lib/map-focus";
+import { requestMapFocus, useMapFocus } from "@/lib/map-focus";
+import { SelectMenu } from "@/components/ui/select-menu";
 import { cn } from "@/lib/utils";
 import { Term } from "@/components/shared/term";
 
 const GisMap = dynamic(() => import("@/components/maps/gis-map"), { ssr: false });
 
-const TABS = [["Overview", "/command"], ["Patches", "/analysis"], ["Connectivity", "/graph"], ["Restoration", "/restoration"], ["Change", "/simulation"], ["Reports", "/reports"]] as const;
+// Tabs switch the side panel in place (the map stays); each panel links to its full page for the deep view.
+const TABS = [["overview", "Overview"], ["patches", "Patches"], ["connectivity", "Connectivity"], ["restoration", "Restoration"], ["change", "Change"], ["reports", "Reports"]] as const;
+type Tab = (typeof TABS)[number][0];
 const HIGH_CONF = 0.8;
 const CRITICAL_TOP = 5;
 type Basemap = "satellite" | "rgb" | "ndvi" | "s1" | "terrain";
@@ -41,7 +44,7 @@ function delta(cur?: number | null, prev?: number | null) {
   return ((cur - prev) / Math.abs(prev)) * 100;
 }
 function Delta({ v, invert = false, suffix = "%" }: { v: number | null; invert?: boolean; suffix?: string }) {
-  if (v == null) return <span className="text-[11px] text-muted-foreground">—</span>;
+  if (v == null) return null; // no earlier run to compare with: show nothing rather than a dash
   const good = invert ? v <= 0 : v >= 0;
   const Icon = v >= 0 ? ArrowUpRight : ArrowDownRight;
   return <span className={cn("inline-flex items-center gap-0.5 text-[11.5px] font-semibold", good ? "text-[#15803d]" : "text-[#b91c1c]")}><Icon className="h-3.5 w-3.5" />{v > 0 ? "+" : ""}{v.toFixed(1)}{suffix}</span>;
@@ -68,6 +71,8 @@ export default function Dashboard() {
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [tasks, setTasks] = useState<FieldTaskItem[]>([]);
   const [metric, setMetric] = useState<"habitatAreaHa" | "patchCount" | "ecaPctOfHabitat" | "iic" | "criticalPatches">("habitatAreaHa");
+  const [tab, setTab] = useState<Tab>("overview");
+  const [removeHint, setRemoveHint] = useState(false);
 
   // ---- data of the displayed run
   const mask = getHabitatMask(sceneId);
@@ -124,6 +129,12 @@ export default function Dashboard() {
     if (p.confidence < HIGH_CONF) return { color: "#4ade80", fillColor: "#4ade80", fillOpacity: 0.22, dashArray: "3 3" };
     return { color: "#16a34a", fillColor: "#16a34a", fillOpacity: 0.42 };
   };
+  const removePatch = (p: HabitatPatch) => {
+    if (!removedPatchIds.includes(p.id)) requestMapFocus(p.center[0], p.center[1], 14);
+    togglePatchRemoved(p.id);
+    setRemoveHint(false);
+  };
+  const focusPatch = (p: HabitatPatch) => { setSelectedPatchId(p.id); requestMapFocus(p.center[0], p.center[1], 14); };
   const chartRows = years.map((y) => ({ year: y.year, v: y[metric] ?? null }));
   const metricLabel = { habitatAreaHa: "Mangrove area (ha)", patchCount: "Patch count", ecaPctOfHabitat: "ECA / habitat (%)", iic: "IIC", criticalPatches: "Critical patches" }[metric];
   const openAlerts = alerts.filter((a) => a.status === "OPEN").length;
@@ -186,6 +197,33 @@ export default function Dashboard() {
     </div>
   );
 
+  const changeCard = (
+            <section className="rounded-2xl border border-black/[0.06] bg-white p-4">
+              <div className="flex items-center justify-between gap-2">
+                <div><h2 className="text-[15px] font-semibold">Change Over Time</h2><p className="text-[12px] text-muted-foreground">One analysis per year</p></div>
+                <SelectMenu label="Metric" value={metric} onChange={(v) => setMetric(v as typeof metric)} className="w-[160px]" align="right"
+                  options={[{ value: "habitatAreaHa", label: "Mangrove area" }, { value: "patchCount", label: "Patches" }, { value: "ecaPctOfHabitat", label: "ECA / habitat" }, { value: "iic", label: "IIC" }, { value: "criticalPatches", label: "Critical patches" }]} />
+              </div>
+              {years.length >= 2 ? (
+                <div className="mt-2 h-[150px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chartRows} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#16a34a" stopOpacity={0.35} /><stop offset="100%" stopColor="#16a34a" stopOpacity={0.02} /></linearGradient></defs>
+                      <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" vertical={false} />
+                      <XAxis dataKey="year" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
+                      <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} domain={["auto", "auto"]} tickFormatter={(v: number) => (metric === "iic" ? v.toExponential(1) : String(v))} />
+                      <RTooltip formatter={(v) => [typeof v === "number" ? (metric === "iic" ? v.toExponential(3) : v.toLocaleString("en-IN")) : String(v), metricLabel]} />
+                      <Area type="monotone" dataKey="v" stroke="#15803d" strokeWidth={2} fill="url(#g)" dot={{ r: 4, fill: "#15803d" }} connectNulls />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="mt-3 rounded-lg border border-dashed border-black/[0.12] p-3 text-[12px] text-muted-foreground">{live ? "Only one year analysed so far — a second year will show the change." : "No real analysis for this landscape yet."}</div>
+              )}
+              {years.length >= 2 && <div className="mt-1 text-[10.5px] text-muted-foreground">{years.map((y) => y.year).join(" · ")} · real runs; change = binary-mask difference between consecutive years</div>}
+            </section>
+  );
+
   return (
     <AppShell title={scene.name} bleed hideTitle>
       <div className="px-4 pb-4 pt-3 sm:px-5">
@@ -198,8 +236,11 @@ export default function Dashboard() {
             </div>
             <p className="text-[12.5px] text-muted-foreground">Satellite-derived mangrove habitats, connectivity analysis and restoration opportunities</p>
           </div>
-          <nav className="flex overflow-hidden rounded-lg border border-black/[0.08] bg-white text-[13px] font-medium">
-            {TABS.map(([l, h]) => <Link key={h} href={h} className={cn("px-3.5 py-2", h === "/command" ? "bg-[#0f5132] text-white" : "text-[#334155] hover:bg-[#f4f7f5]")}>{l}</Link>)}
+          <nav role="tablist" aria-label="Dashboard views" className="flex overflow-x-auto rounded-xl border border-black/[0.08] bg-white p-1 text-[13px] font-medium">
+            {TABS.map(([id, l]) => (
+              <button key={id} role="tab" aria-selected={tab === id} onClick={() => setTab(id)}
+                className={cn("whitespace-nowrap rounded-lg px-3.5 py-1.5 transition-colors", tab === id ? "bg-[#0f5132] text-white shadow-sm" : "text-[#334155] hover:bg-[#f4f7f5]")}>{l}</button>
+            ))}
           </nav>
         </div>
 
@@ -207,16 +248,22 @@ export default function Dashboard() {
           {/* ---------------------------------------------------------- map + KPI strip */}
           <div className="flex min-w-0 flex-col gap-4">
             <div className="h-[62vh] min-h-[520px]">{mapBlock}</div>
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-              <Kpi icon={Trees} color="#16a34a" value={mask.patches.length} label="Detected Patches" d={<Delta v={delta(cur?.patchCount, prev?.patchCount)} />} />
-              <Kpi icon={Network} color="#1e5f8a" value={graph.edges.length} label="Connectivity Links" d={<Delta v={delta(cur?.nEdges, prev?.nEdges)} />} />
-              <Kpi icon={Leaf} color="#15803d" value={`${Math.round(habitatHa).toLocaleString("en-IN")} ha`} label="Mangrove Area" d={<Delta v={delta(cur?.habitatAreaHa, prev?.habitatAreaHa)} />} />
-              <Kpi icon={Sprout} color="#b45309" value={restoration.actions.length} label="Restoration Opportunities" d={<span className="text-[11px] text-muted-foreground">{restoration.rankingBasis === "gain_per_cost" ? "ranked by gain / cost" : "ranked by IIC gain"}</span>} />
+            <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+              <Kpi icon={Trees} color="#16a34a" value={mask.patches.length} label="Habitat patches" d={<Delta v={delta(cur?.patchCount, prev?.patchCount)} />} />
+              <Kpi icon={Network} color="#1e5f8a" value={graph.edges.length} label="Connections" d={<Delta v={delta(cur?.nEdges, prev?.nEdges)} />} />
+              <Kpi icon={Leaf} color="#15803d" value={`${Math.round(habitatHa).toLocaleString("en-IN")} ha`} label="Mangrove area" d={<Delta v={delta(cur?.habitatAreaHa, prev?.habitatAreaHa)} />} />
+              <Kpi icon={Sprout} color="#b45309" value={restoration.actions.length} label="Restoration options" />
             </div>
           </div>
 
-          {/* ---------------------------------------------------------- right column */}
+          {/* ---------------------------------------------------------- right column (switches with the tabs) */}
           <div className="flex min-w-0 flex-col gap-4">
+            {tab === "patches" && <PatchesPanel patches={mask.patches} selectedId={selectedPatchId} onPick={focusPatch} />}
+            {tab === "connectivity" && <ConnectivityPanel graph={graph} components={run?.nComponents ?? cur?.nComponents ?? null} eca={conn.ecaPctOfHabitat ?? null} />}
+            {tab === "restoration" && <RestorationPanel actions={restoration.actions} onPick={(a) => requestMapFocus(a.center[0], a.center[1], 14)} />}
+            {tab === "change" && changeCard}
+            {tab === "reports" && <ReportsPanel />}
+            {tab === "overview" && (<>
             {/* selected patch */}
             <section className="rounded-2xl border border-black/[0.06] bg-white p-4">
               <div className="flex items-center justify-between"><h2 className="text-[15px] font-semibold">Selected Patch</h2><span className="text-[12px] text-muted-foreground">{selected ? selected.id : "click a patch"}</span></div>
@@ -234,11 +281,11 @@ export default function Dashboard() {
                   {selected.isCutVertex && <div className="mt-2 text-[11.5px] text-[#b91c1c]">Cut vertex — removing it splits the network into {selected.componentCountAfter} components.</div>}
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     <Link href={`/analysis?scene=${sceneId}&patch=${selected.id}`} className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#0f5132] px-3 py-2.5 text-[12.5px] font-semibold text-white hover:bg-[#0b3d26]"><Info className="h-3.5 w-3.5" /> View Details</Link>
-                    <button disabled={!live} onClick={() => togglePatchRemoved(selected.id)} className={cn("inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-[12.5px] font-semibold disabled:opacity-40", removedPatchIds.includes(selected.id) ? "border-[#b91c1c] bg-[#fee2e2] text-[#b91c1c]" : "border-black/[0.1] bg-white hover:bg-[#f4f7f5]")}><Scissors className="h-3.5 w-3.5" /> {removedPatchIds.includes(selected.id) ? "Undo Removal" : "Simulate Removal"}</button>
+                    <button disabled={!live} onClick={() => removePatch(selected)} className={cn("inline-flex items-center justify-center gap-1.5 rounded-lg border px-3 py-2.5 text-[12.5px] font-semibold disabled:opacity-40", removedPatchIds.includes(selected.id) ? "border-[#b91c1c] bg-[#fee2e2] text-[#b91c1c]" : "border-black/[0.1] bg-white hover:bg-[#f4f7f5]")}><Scissors className="h-3.5 w-3.5" /> {removedPatchIds.includes(selected.id) ? "Undo Removal" : "Simulate Removal"}</button>
                   </div>
                 </>
               ) : (
-                <p className="mt-2 text-[12.5px] text-muted-foreground">Click a habitat polygon on the map (or search a patch id) to see its area, exact connectivity loss and model confidence.</p>
+                <p className="mt-2 text-[12.5px] text-muted-foreground">Click a patch on the map to see its details.</p>
               )}
             </section>
 
@@ -260,9 +307,10 @@ export default function Dashboard() {
             {/* what-if */}
             <section className="rounded-2xl border border-black/[0.06] bg-white p-4">
               <h2 className="flex items-center gap-2 text-[15px] font-semibold"><Cpu className="h-4 w-4 text-[#1e5f8a]" /> What-if Simulation</h2>
-              <p className="text-[12px] text-muted-foreground">Test interventions and see the impact — recomputed exactly on the run&apos;s graph.</p>
+              <p className="text-[12px] text-muted-foreground">Remove or restore a patch and see the effect.</p>
+              {removeHint && !selected && <p className="mt-2 rounded-lg bg-[#fff7ed] px-3 py-2 text-[12px] text-[#9a3412]">Click a patch on the map first, then press Remove Patch.</p>}
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <button disabled={!live || !selected} onClick={() => selected && togglePatchRemoved(selected.id)} className="flex items-center gap-2 rounded-lg bg-[#fee2e2] px-3 py-3 text-[12.5px] font-semibold text-[#b91c1c] hover:bg-[#fecaca] disabled:opacity-40"><Scissors className="h-4 w-4" /> Remove Patch</button>
+                <button disabled={!live} onClick={() => (selected ? removePatch(selected) : setRemoveHint(true))} className="flex items-center gap-2 rounded-lg bg-[#fee2e2] px-3 py-3 text-[12.5px] font-semibold text-[#b91c1c] hover:bg-[#fecaca] disabled:opacity-40"><Scissors className="h-4 w-4" /> {selected && removedPatchIds.includes(selected.id) ? "Undo Removal" : "Remove Patch"}</button>
                 <Link href="/restoration" className="flex items-center gap-2 rounded-lg bg-[#dcfce7] px-3 py-3 text-[12.5px] font-semibold text-[#15803d] hover:bg-[#bbf7d0]"><Sprout className="h-4 w-4" /> Restore Area</Link>
                 <Link href="/scenario?type=remove_polygon" className="flex items-center gap-2 rounded-lg bg-[#dbeafe] px-3 py-3 text-[12.5px] font-semibold text-[#1e5f8a] hover:bg-[#bfdbfe]"><Waves className="h-4 w-4" /> Draw Impact Area</Link>
                 <Link href="/scenario?type=tau" className="flex items-center gap-2 rounded-lg bg-[#ede9fe] px-3 py-3 text-[12.5px] font-semibold text-[#6d28d9] hover:bg-[#ddd6fe]"><Settings2 className="h-4 w-4" /> Scenario Lab</Link>
@@ -281,36 +329,11 @@ export default function Dashboard() {
               )}
             </section>
 
-            {/* change over time */}
-            <section className="rounded-2xl border border-black/[0.06] bg-white p-4">
-              <div className="flex items-center justify-between gap-2">
-                <div><h2 className="text-[15px] font-semibold">Change Over Time</h2><p className="text-[12px] text-muted-foreground">Mangrove extent and connectivity — one pipeline run per year</p></div>
-                <select value={metric} onChange={(e) => setMetric(e.target.value as typeof metric)} className="rounded-lg border border-black/[0.1] bg-white px-2 py-1.5 text-[12px] font-medium outline-none">
-                  <option value="habitatAreaHa">Mangrove Area</option><option value="patchCount">Patches</option><option value="ecaPctOfHabitat">ECA / habitat</option><option value="iic">IIC</option><option value="criticalPatches">Critical patches</option>
-                </select>
-              </div>
-              {years.length >= 2 ? (
-                <div className="mt-2 h-[150px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={chartRows} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
-                      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#16a34a" stopOpacity={0.35} /><stop offset="100%" stopColor="#16a34a" stopOpacity={0.02} /></linearGradient></defs>
-                      <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="year" tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-                      <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} domain={["auto", "auto"]} tickFormatter={(v: number) => (metric === "iic" ? v.toExponential(1) : String(v))} />
-                      <RTooltip formatter={(v) => [typeof v === "number" ? (metric === "iic" ? v.toExponential(3) : v.toLocaleString("en-IN")) : String(v), metricLabel]} />
-                      <Area type="monotone" dataKey="v" stroke="#15803d" strokeWidth={2} fill="url(#g)" dot={{ r: 4, fill: "#15803d" }} connectNulls />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              ) : (
-                <div className="mt-3 rounded-lg border border-dashed border-black/[0.12] p-3 text-[12px] text-muted-foreground">{live ? "Only one observation year has been analysed for this landscape. Run the pipeline on a second year to see change." : "No real analysis for this landscape yet."}</div>
-              )}
-              {years.length >= 2 && <div className="mt-1 text-[10.5px] text-muted-foreground">{years.map((y) => y.year).join(" · ")} · real runs; change = binary-mask difference between consecutive years</div>}
-            </section>
-
             {openAlerts > 0 && (
               <Link href={`/alerts?study_area=${sceneId}`} className="flex items-center justify-between rounded-2xl border border-[#fde68a] bg-[#fffbeb] px-4 py-3 text-[12.5px]"><span><span className="font-semibold">{openAlerts} open alert{openAlerts === 1 ? "" : "s"}</span> for this landscape</span><ChevronRight className="h-4 w-4" /></Link>
             )}
+            {changeCard}
+            </>)}
           </div>
         </div>
       </div>
@@ -321,11 +344,17 @@ export default function Dashboard() {
   );
 }
 
-function Kpi({ icon: Icon, color, value, label, d }: { icon: typeof Leaf; color: string; value: string | number; label: string; d: ReactNode }) {
+function Kpi({ icon: Icon, color, value, label, d }: { icon: typeof Leaf; color: string; value: string | number; label: string; d?: ReactNode }) {
+  // compact stat chip: tinted icon, value + label side by side
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-black/[0.06] bg-white p-4">
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl" style={{ background: `${color}1a`, color }}><Icon className="h-5.5 w-5.5" /></span>
-      <div className="min-w-0"><div className="text-[20px] font-bold leading-none">{value}</div><div className="mt-1 truncate text-[12px] text-muted-foreground">{label}</div><div className="mt-0.5">{d}</div></div>
+    <div className="flex items-center gap-3 rounded-2xl border border-white/70 px-3.5 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.05)] backdrop-blur"
+      style={{ background: `linear-gradient(135deg, ${color}14, rgba(255,255,255,0.92) 55%)` }}>
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-white shadow-sm" style={{ background: `linear-gradient(135deg, ${color}, ${color}cc)` }}><Icon className="h-[18px] w-[18px]" /></span>
+      <div className="min-w-0">
+        <div className="text-[19px] font-black leading-none tracking-tight text-[#0f172a]">{value}</div>
+        <div className="mt-1 text-[11.5px] font-medium leading-tight text-[#475569]">{label}</div>
+        {d && <div className="mt-0.5 truncate text-[10.5px]">{d}</div>}
+      </div>
     </div>
   );
 }
@@ -346,5 +375,85 @@ function PatchThumb({ p }: { p: HabitatPatch }) {
       <img src={src} alt={`${p.id} imagery`} className="h-full w-full object-cover" />
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full"><polygon points={pts} fill="rgba(74,222,128,0.35)" stroke="#f97316" strokeWidth={1.2} vectorEffect="non-scaling-stroke" /></svg>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ tab panels */
+function Panel({ title, href, cta, children }: { title: string; href: string; cta: string; children: ReactNode }) {
+  return (
+    <section className="rounded-2xl border border-black/[0.06] bg-white p-4">
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-[15px] font-semibold">{title}</h2>
+        <Link href={href} className="inline-flex items-center gap-1 text-[12px] font-medium text-[#0f5132] hover:underline">{cta} <ChevronRight className="h-3.5 w-3.5" /></Link>
+      </div>
+      <div className="mt-3">{children}</div>
+    </section>
+  );
+}
+
+const SENS_CLS: Record<string, string> = { critical: "bg-[#fee2e2] text-[#b91c1c]", high: "bg-[#ffedd5] text-[#c2410c]", medium: "bg-[#fef3c7] text-[#b45309]", low: "bg-[#dcfce7] text-[#15803d]" };
+
+function PatchesPanel({ patches, selectedId, onPick }: { patches: HabitatPatch[]; selectedId: string | null; onPick: (p: HabitatPatch) => void }) {
+  const rows = patches.slice().sort((a, b) => (a.criticalityRank ?? 999) - (b.criticalityRank ?? 999));
+  return (
+    <Panel title="Patches by importance" href="/analysis" cta="Full analysis">
+      <p className="mb-2 text-[12px] text-muted-foreground">Click a patch to find it on the map.</p>
+      <div className="max-h-[440px] space-y-1 overflow-y-auto pr-1">
+        {rows.map((p) => (
+          <button key={p.id} onClick={() => onPick(p)} className={cn("flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left transition-colors", selectedId === p.id ? "border-[#15803d]/40 bg-[#f0fdf4]" : "border-black/[0.06] hover:bg-[#f8faf9]")}>
+            <span className="w-7 text-[12px] font-bold tabular-nums text-muted-foreground">#{p.criticalityRank ?? "–"}</span>
+            <span className="min-w-0 flex-1">
+              <span className="flex items-center gap-1.5 text-[13px] font-semibold">{p.id}{p.isCutVertex && <span className="rounded bg-[#fee2e2] px-1.5 text-[10px] font-semibold text-[#b91c1c]">splits</span>}</span>
+              <span className="text-[11.5px] text-muted-foreground">{p.areaHa.toLocaleString("en-IN")} ha{p.deltaPct != null ? ` · −${p.deltaPct.toFixed(1)}% if lost` : ""}</span>
+            </span>
+            <span className={cn("rounded-md px-2 py-0.5 text-[11px] font-semibold capitalize", SENS_CLS[p.sensitivity] ?? SENS_CLS.low)}>{p.sensitivity}</span>
+          </button>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function ConnectivityPanel({ graph, components, eca }: { graph: ReturnType<typeof getGraph>; components: number | null; eca: number | null }) {
+  const critical = graph.edges.filter((e) => e.critical);
+  const stats: [string, string | number][] = [["Patches", graph.nodes.length], ["Links", graph.edges.length], ["Groups", components ?? "—"], ["ECA / habitat", eca != null ? `${eca.toFixed(1)}%` : "—"]];
+  return (
+    <Panel title="Connectivity" href="/graph" cta="Open network">
+      <div className="grid grid-cols-2 gap-2">
+        {stats.map(([l, v]) => <div key={l} className="rounded-xl bg-[#f8faf9] px-3 py-2.5"><div className="text-[18px] font-bold">{v}</div><div className="text-[11.5px] text-muted-foreground"><Term>{l}</Term></div></div>)}
+      </div>
+      <div className="mt-3 text-[12px] font-semibold">Critical links <span className="font-normal text-muted-foreground">— lose one and the network splits</span></div>
+      <div className="mt-1.5 space-y-1">
+        {critical.length ? critical.map((e) => (
+          <div key={e.id} className="flex items-center justify-between rounded-lg border border-[#fde68a] bg-[#fffbeb] px-3 py-1.5 text-[12.5px]"><span className="font-medium">{e.source} ↔ {e.target}</span><span className="text-muted-foreground">{e.distanceKm} km</span></div>
+        )) : <div className="text-[12px] text-muted-foreground">None — every link has an alternative route.</div>}
+      </div>
+    </Panel>
+  );
+}
+
+function RestorationPanel({ actions, onPick }: { actions: ReturnType<typeof getRestoration>["actions"]; onPick: (a: ReturnType<typeof getRestoration>["actions"][number]) => void }) {
+  return (
+    <Panel title="Restoration options" href="/restoration" cta="Restoration planner">
+      <p className="mb-2 text-[12px] text-muted-foreground">Model suggestions — each needs a field check.</p>
+      <div className="max-h-[440px] space-y-1 overflow-y-auto pr-1">
+        {actions.map((a) => (
+          <button key={a.id} onClick={() => onPick(a)} className="flex w-full items-center gap-3 rounded-xl border border-black/[0.06] px-3 py-2 text-left hover:bg-[#f8faf9]">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#fef3c7] text-[#b45309]"><Sprout className="h-4 w-4" /></span>
+            <span className="min-w-0 flex-1"><span className="block text-[13px] font-semibold">{a.id}</span><span className="text-[11.5px] text-muted-foreground">{a.areaHa} ha{a.category === "uncertain_habitat" ? " · field check first" : ""}</span></span>
+            <span className="text-[12.5px] font-semibold text-[#15803d]">+{a.connectivityGain.toFixed(1)}%</span>
+          </button>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function ReportsPanel() {
+  return (
+    <Panel title="Reports" href="/reports" cta="All reports">
+      <p className="text-[12.5px] text-muted-foreground">Printable reports for each analysis — what was found, how, and its limits.</p>
+      <Link href="/reports" className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-[#0f5132] px-3 py-2 text-[12.5px] font-semibold text-white hover:bg-[#0b3d26]">Open report for this run <ChevronRight className="h-3.5 w-3.5" /></Link>
+    </Panel>
   );
 }

@@ -215,8 +215,11 @@ def run_scenario(run_dir: Path, body: dict, other_run_dir: Optional[Path] = None
 
     if t == "threshold":
         src = m["data_source"]
-        if src.get("type") != "probability_raster" or not _abs(src.get("path")).is_file():
-            raise ValueError("threshold scenarios need the run's probability raster on disk (not available for synthetic runs)")
+        if src.get("type") != "probability_raster":
+            raise ValueError("Threshold scenarios need a probability raster; this run uses synthetic patch geometry.")
+        if not _abs(src.get("path")).is_file():
+            raise ValueError("This run's probability raster is not on this server, so patches cannot be re-drawn at other "
+                             "thresholds. Run the Thresholds scenario on a new analysis or a satellite (near-real-time) run.")
         from ecoconnect.pipeline.sources import from_probability_raster
         out = []
         for thr in _bounded(body.get("thresholds") or [0.4, 0.5, 0.6, 0.7], 0.05, 0.95, 8, "thresholds"):

@@ -204,6 +204,71 @@ export async function postSegment(body: SegmentRequest, onProgress?: (j: JobReco
   return waitForJob<SegmentResult>(job.id, onProgress);
 }
 
+/* ----------------------------------------------------------------- near-real-time satellite layer (backend/satellite) */
+
+/** One Sentinel-1 product from the Copernicus Data Space catalogue - every field is copied from the catalogue. */
+export interface SatelliteObservation {
+  product_id: string; name: string; study_area_id: string;
+  satellite: string; platform: string | null; product: string; product_type: string | null; mode: string | null;
+  polarization: string[]; polarisation: string | null; orbit_direction: string | null; relative_orbit: number | null;
+  timeliness: string | null; acquisition_time: string | null; acquisition_start: string | null; acquisition_end: string | null;
+  published_at: string | null; aoi_coverage: number; full_coverage: boolean; resolution_m: number; source: string;
+  footprint: GeoJSON.Geometry | null;
+  analysis?: { id: string; status: SatelliteAnalysisStatus; run_id: string | null; stage: string | null } | null;
+}
+export type SatelliteAnalysisStatus = "QUEUED" | "RUNNING" | "SCENE_READY" | "COMPLETED" | "FAILED";
+export interface ModelReliability { level: "reliable" | "moderate" | "unreliable"; iou: number | null; reference_habitat_ha: number;
+  experiment: string; scope: string; reference: string }
+export interface SatelliteLatest extends SatelliteObservation { area_id: string; available: boolean; previous_acquisition: string | null;
+  model_reliability: ModelReliability | null }
+export interface SatelliteStatus {
+  source: string;
+  catalogue: { available: boolean; url: string; auth: string };
+  retrieval: { configured: boolean; api: string; note: string | null };
+  inference: { available: boolean; model_version: string; checkpoint_present: boolean; torch_available: boolean;
+    threshold: number | null; mmu_ha: number; reason: string | null };
+  search_days: number; min_aoi_coverage: number; modes: { stored: string; nrt: string };
+}
+export interface DistributionBand { band: string; n: number; mean_db?: number; std_db?: number; p1_db?: number; p99_db?: number;
+  train_mean_db?: number; train_std_db?: number; mean_shift_sd?: number | null }
+export interface SatelliteAnalysis {
+  id: string; study_area_id: string; mode: "nrt" | "cached"; product_ids: string[]; product_names: string[];
+  satellite: string | null; product_type: string | null; acquisition_time: string | null; composite_scenes: number;
+  preprocessing_version: string | null; scene_path: string | null; model_version: string | null; model_checkpoint: string | null;
+  threshold: number | null; mmu_ha: number | null; tau_km: number | null; k_neighbors: number | null; software_version: string | null;
+  status: SatelliteAnalysisStatus; stage: string | null; error: string | null; job_id: string | null; run_id: string | null;
+  summary: { run?: RunSummary; distribution_check?: { valid_fraction: number; bands: DistributionBand[]; max_mean_shift_sd: number | null;
+    review_recommended: boolean; note: string }; model_compatibility?: { compatible: boolean | null; reason: string };
+    plausibility?: { ratio: number | null; reference_habitat_ha: number | null; predicted_habitat_ha?: number; review_recommended: boolean; note: string };
+    reliability?: ModelReliability | null } | null;
+  created_at: string | null; processed_at: string | null; finished_at: string | null;
+}
+export interface SatelliteAnalysisDetail extends SatelliteAnalysis {
+  job: { status: JobRecord["status"]; progress: number; stage: string | null; error: string | null } | null;
+  stages: string[];
+  scene: { available: boolean; bands: string[] | null; width: number | null; height: number | null; crs: string | null;
+    distribution_check: NonNullable<SatelliteAnalysis["summary"]>["distribution_check"] | null;
+    model_compatibility: { compatible: boolean | null; reason: string } | null; processing: Record<string, unknown> | null };
+  observations: { product_id: string; name: string; acquisition_start: string | null; timeliness: string | null; platform: string | null;
+    orbit_direction: string | null; relative_orbit: number | null; published_at: string | null }[];
+}
+
+const q = (area: string) => `area_id=${encodeURIComponent(area)}`;
+export const fetchSatelliteStatus = () => getJson<SatelliteStatus>("/api/satellite/status", undefined, 150000);
+export const fetchSatelliteLatest = (area: string) => getJson<SatelliteLatest>(`/api/satellite/latest?${q(area)}`, undefined, 30000);
+export const fetchSatelliteObservations = (area: string, days = 60) =>
+  getJson<{ area_id: string; aoi: GeoJSON.Polygon; latest_id: string | null; observations: SatelliteObservation[] }>(
+    `/api/satellite/observations?${q(area)}&days=${days}`, undefined, 30000);
+export const fetchSatelliteRuns = (area: string) => getJson<SatelliteAnalysis[]>(`/api/satellite/runs?${q(area)}`);
+export const fetchSatelliteRun = (id: string) => getJson<SatelliteAnalysisDetail>(`/api/satellite/runs/${encodeURIComponent(id)}`);
+export const postSatelliteAnalyze = (body: { area_id: string; product_id?: string; composite_scenes?: number; force?: boolean }) =>
+  getJson<{ analysis: SatelliteAnalysis; job_id: string | null; reused: "completed" | "in_progress" | null; note?: string | null }>(
+    "/api/satellite/analyze", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }, 30000);
+export const satelliteSceneUrl = (id: string) => `${API_URL}/api/satellite/runs/${encodeURIComponent(id)}/scene.png`;
+export const satelliteMaskUrl = (id: string) => `${API_URL}/api/satellite/runs/${encodeURIComponent(id)}/mask.png`;
+export const runFileUrl = (area: string, runId: string, name: string) =>
+  `${API_URL}/api/runs/${encodeURIComponent(area)}/${encodeURIComponent(runId)}/files/${encodeURIComponent(name)}`;
+
 /** Downloaded scenes (data/scenes/<area>/*.json sidecars written by the acquisition module). */
 export interface SceneRecord {
   studyAreaId: string;
@@ -275,6 +340,19 @@ export async function fetchProbabilityBounds(studyArea: string, runId: string): 
     if (!res.ok || !b) return null;
     const [minLat, minLon, maxLat, maxLon] = b.split(",").map(Number);
     return [[minLat, minLon], [maxLat, maxLon]];
+  } catch {
+    return null;
+  }
+}
+
+/** Any backend PNG overlay that reports its WGS84 bounds in X-Bounds (min_lat,min_lon,max_lat,max_lon). */
+export async function fetchOverlay(url: string): Promise<{ url: string; bounds: [[number, number], [number, number]] } | null> {
+  try {
+    const res = await fetch(url, { method: "GET", cache: "no-cache"   /* revalidate: a stale cached copy may lack the exposed X-Bounds header */ });
+    const b = res.headers.get("X-Bounds");
+    if (!res.ok || !b) return null;
+    const [minLat, minLon, maxLat, maxLon] = b.split(",").map(Number);
+    return { url, bounds: [[minLat, minLon], [maxLat, maxLon]] };
   } catch {
     return null;
   }

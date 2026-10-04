@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { setRememberSession } from "@/lib/api";
-import { displaySerif } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 
 // Public demo accounts only; a real deployment sets its own password (backend ECO_DEMO_PASSWORD).
@@ -133,7 +132,7 @@ export default function LoginPage() {
           <p className="absolute right-4 top-3 whitespace-nowrap text-[10px] text-emerald-50/50">Vembanad–Kol, Kerala · imagery © Esri</p>
         </div>
 
-        <div className="relative flex h-full w-[74%] flex-col justify-between px-[clamp(28px,3.6vw,56px)] py-[clamp(18px,3.6vh,44px)]">
+        <div className="relative flex h-full w-[90%] flex-col justify-between px-[clamp(28px,3.6vw,56px)] py-[clamp(18px,3.6vh,44px)]">
           <Link href="/" className="w-fit rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4ade80]">
             <Brand />
           </Link>
@@ -142,14 +141,14 @@ export default function LoginPage() {
             <div className="flex items-center gap-3 whitespace-nowrap text-[11px] font-medium tracking-[0.28em] text-[#4ade80]">
               ENVIRONMENTAL INTELLIGENCE PLATFORM <span className="h-px w-6 bg-[#4ade80]/70" />
             </div>
-            <h1 className={cn(displaySerif.className, "mt-[clamp(10px,2.4vh,26px)] text-[clamp(38px,6.4vh,66px)] leading-[1.02] tracking-[-0.01em] text-white")}>
+            <h1 className="mt-[clamp(10px,2.4vh,26px)] text-[clamp(34px,5.6vh,58px)] font-black leading-[1.05] tracking-tight text-white">
               Coastal habitat connectivity,<br /><span className="text-[#86efac]">made actionable.</span>
             </h1>
-            <p className="mt-[clamp(10px,2.2vh,24px)] max-w-[540px] text-[clamp(14px,1.9vh,17px)] leading-relaxed text-emerald-50/80">
+            <p className="mt-[clamp(10px,2.2vh,24px)] max-w-[640px] text-[clamp(14px,1.9vh,17px)] leading-relaxed text-emerald-50/80">
               From Sentinel satellite imagery to mapped mangrove patches, their connectivity network, and evidence for
               the decisions that protect it.
             </p>
-            <div className="mt-[clamp(12px,3vh,36px)] max-w-[560px] space-y-[clamp(8px,1.4vh,14px)]">
+            <div className="mt-[clamp(12px,3vh,36px)] max-w-[680px] space-y-[clamp(8px,1.4vh,14px)]">
               {FEATURES.map(({ icon: Icon, title, text }) => (
                 <div key={title} className="flex items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.035] px-4 py-[clamp(8px,1.5vh,16px)] backdrop-blur-sm">
                   <span className="grid h-[clamp(38px,5.4vh,54px)] w-[clamp(38px,5.4vh,54px)] shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#14532d] to-[#0b3b24] text-[#86efac]">
@@ -183,7 +182,7 @@ export default function LoginPage() {
         <div className="relative flex flex-1 items-center justify-center py-4 lg:py-0 lg:pt-[clamp(40px,6vh,64px)]">
           <div className="w-full max-w-[500px] rounded-[26px] border border-white/[0.09] bg-gradient-to-b from-[#0c2419]/95 to-[#06170f]/95 px-6 py-[clamp(16px,3vh,32px)] shadow-2xl shadow-black/40 sm:px-9">
             <div className="[@media(max-height:700px)]:hidden"><Brand size="sm" /></div>
-            <h2 className={cn(displaySerif.className, "mt-[clamp(0px,2vh,20px)] text-[clamp(30px,4.6vh,42px)] leading-none [@media(max-height:700px)]:mt-0")}>Welcome back</h2>
+            <h2 className="mt-[clamp(0px,2vh,20px)] text-[clamp(26px,4vh,36px)] font-black leading-none tracking-tight [@media(max-height:700px)]:mt-0">Welcome back</h2>
             <p className="mt-2 text-[14.5px] text-emerald-50/75 [@media(max-height:700px)]:hidden">Sign in to continue to your workspace.</p>
 
             <form className="mt-[clamp(12px,2.4vh,24px)] space-y-[clamp(8px,1.5vh,14px)]" noValidate onSubmit={(e) => { e.preventDefault(); void submit(); }}>

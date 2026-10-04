@@ -1,15 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Activity, BarChart3, CheckCircle2, ChevronRight, Cpu, Eye, FileSpreadsheet, FlaskConical, Layers, Sliders, Sparkles, TrendingUp } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Activity, AlertTriangle, ArrowUpRight, BarChart3, CheckCircle2, Eye, GitCompareArrows, ScrollText, ShieldCheck, Sparkles, X } from "lucide-react";
 import { AppShell } from "@/components/dashboard/app-shell";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CalibrationChart, ChartCard, ConfusionMatrix, LossChart, ValidationChart, parseHistory } from "@/components/models/charts";
+import { HowMeasured, MetricTiles, SplitTable, fmt } from "@/components/models/metrics";
+import { GLASS, ModelList, StatusChip } from "@/components/models/model-list";
 import { compareExperiments, fetchModels, fetchModelDetail, fetchRegistryModels, modelAssetUrl, setModelStatus, type ExperimentRow, type ModelInfo, type ModelDetail, type ModelStatus, type RegistryModel } from "@/lib/api";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 type TabKey = "metrics" | "curves" | "predictions" | "specs";
+const TABS: { key: TabKey; label: string; icon: typeof BarChart3 }[] = [
+  { key: "metrics", label: "Metrics", icon: BarChart3 },
+  { key: "curves", label: "Curves & Matrix", icon: Activity },
+  { key: "predictions", label: "Sample Predictions", icon: Eye },
+  { key: "specs", label: "Model Card", icon: ScrollText },
+];
+const LADDER: ModelStatus[] = ["DEVELOPMENT", "EXPERIMENTAL", "CANDIDATE", "VALIDATED"];
 
 export default function ExperimentsPage() {
   const [models, setModels] = useState<ModelInfo[] | null>(null);
@@ -29,7 +38,6 @@ export default function ExperimentsPage() {
 
   const toggleCompare = (id: string) => setCompareIds((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id].slice(-4)));
   const runCompare = () => compareExperiments(compareIds).then(setComparison).catch((e) => setStatusMsg(String(e)));
-  const LADDER: ModelStatus[] = ["DEVELOPMENT", "EXPERIMENTAL", "CANDIDATE", "VALIDATED"];
   const promote = async (id: string, to: ModelStatus) => {
     const reason = window.prompt(`Reason for moving ${id} to ${to}?`);
     if (!reason) return;
@@ -64,394 +72,279 @@ export default function ExperimentsPage() {
     };
   }, [active]);
 
-  const f = (v?: number) => (v == null ? "—" : v.toFixed(3));
   const ds = detail?.experiment?.dataset;
   const bands = ds?.bands;
   const input = bands == null ? "S1 + S2 (all bands)" : bands.length === 2 ? "S1 VV/VH (paper baseline)" : `${bands.length} bands (S2)`;
-
   const valMetrics = detail?.metrics?.val;
   const testMetrics = detail?.metrics?.test;
+  const history = useMemo(() => parseHistory(detail?.history), [detail?.history]);
+  const reg = active ? registry[active] : undefined;
+  const isFull = detail?.metrics.mode === "full";
+  const next = reg ? LADDER[LADDER.indexOf(reg.status) + 1] : undefined;
+  const samples = detail?.assets.filter((a) => a.startsWith("sample_predictions/")).slice(0, 8) ?? [];
 
   return (
-    <AppShell title="Models & Experiments" subtitle="AI segmentation models, validation curves & evaluation metrics">
-      <div className="grid gap-6 p-4 sm:p-6 lg:grid-cols-[280px_1fr]">
-        {/* Left: Model List */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-              <Cpu className="h-4 w-4 text-[#15803d]" />
-              <span>Trained Models ({models?.length ?? 0})</span>
-            </span>
-          </div>
-
-          <div className="space-y-1.5">
-            {(models ?? []).map((m) => {
-              const isSelected = active === m.experimentId;
-              return (
-                <button
-                  key={m.experimentId}
-                  onClick={() => setActive(m.experimentId)}
-                  className={cn(
-                    "w-full rounded-2xl border p-3 text-left transition-all duration-200",
-                    isSelected
-                      ? "border-[#15803d] bg-[#15803d]/10 shadow-sm"
-                      : "border-black/[0.08] bg-white hover:border-[#15803d]/40 hover:bg-[#15803d]/[0.02]"
-                  )}
-                >
-                  <div className="flex items-center justify-between gap-1">
-                    <div className="truncate text-xs font-bold text-foreground">{m.experimentId}</div>
-                    <Badge variant={registry[m.experimentId]?.status === "VALIDATED" ? "success" : "secondary"} className="text-[9.5px]" title="Model registry status">
-                      {registry[m.experimentId]?.status ?? (m.mode === "full" ? "full" : "dev")}
-                    </Badge>
-                  </div>
-                  <label className="mt-1 flex items-center gap-1.5 text-[10.5px] text-muted-foreground" onClick={(e) => e.stopPropagation()}>
-                    <input type="checkbox" checked={compareIds.includes(m.experimentId)} onChange={() => toggleCompare(m.experimentId)} /> compare
-                  </label>
-                  <div className="mt-1.5 flex items-center justify-between text-[11px] text-muted-foreground">
-                    <span className="font-mono">{m.encoder || "—"}</span>
-                    <span className="text-[10px] text-emerald-700 font-medium">U-Net</span>
-                  </div>
-                </button>
-              );
-            })}
-
-            {models === null && (
-              <div className="rounded-2xl border border-dashed border-black/10 bg-white p-4 text-xs text-muted-foreground text-center">
-                Loading models…
-              </div>
-            )}
-          </div>
-
-          {/* Reference Paper Benchmark Card */}
-          <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm space-y-1.5">
-            <div className="text-[10.5px] font-bold text-muted-foreground uppercase tracking-wider">Published baseline — not our result</div>
-            <div className="text-xs font-semibold text-foreground">UNB7 (Ghorbanian et al.)</div>
-            <div className="text-[11px] text-muted-foreground">U-Net + EfficientNet-B7 · OA 95.56% · κ 0.94 (their Sentinel-1 study, their data). UNB7 is not yet trained here.</div>
-          </div>
+    <AppShell title="Data & Models" subtitle="Trained habitat-segmentation models and how well they agree with GMW reference maps">
+      <div className="grid gap-6 p-4 sm:p-6 lg:grid-cols-[244px_minmax(0,1fr)] xl:grid-cols-[288px_minmax(0,1fr)]">
+        <div className="lg:sticky lg:top-4 lg:self-start">
+          <ModelList
+            models={models}
+            active={active}
+            onSelect={setActive}
+            registry={registry}
+            compareIds={compareIds}
+            onToggleCompare={toggleCompare}
+            onCompare={runCompare}
+          />
         </div>
 
-        {/* Right: Model Detail & Tabs */}
         {detail ? (
-          <div className="space-y-5">
-            {compareIds.length >= 2 && (
-              <button onClick={runCompare} className="rounded-xl border border-[#15803d]/40 px-3 py-1.5 text-xs font-semibold text-[#15803d] hover:bg-[#15803d]/5">
-                Compare {compareIds.length} experiments
-              </button>
-            )}
-            {comparison && (
-              <Card className="rounded-3xl border border-black/[0.08] shadow-sm overflow-hidden">
-                <CardHeader className="pb-2"><CardTitle className="text-sm font-bold">Experiment comparison</CardTitle><CardDescription className="text-xs">{comparison.note}</CardDescription></CardHeader>
-                <CardContent className="overflow-x-auto p-0">
-                  <table className="w-full text-xs">
-                    <thead className="bg-[#f4f7f5] text-[10px] uppercase tracking-wider text-muted-foreground"><tr><th className="px-3 py-2 text-left">Field</th>{comparison.experiments.map((e) => <th key={e.id} className="px-3 py-2 text-left">{e.id}</th>)}</tr></thead>
-                    <tbody className="divide-y divide-black/[0.06]">
-                      {[["status", (e: ExperimentRow) => e.status], ["input bands", (e: ExperimentRow) => String(e.config.input_bands)], ["encoder", (e: ExperimentRow) => String(e.config.encoder)],
-                        ["train / val / test tiles", (e: ExperimentRow) => `${e.config.n_train} / ${e.config.n_val} / ${e.config.n_test}`], ["epochs (best)", (e: ExperimentRow) => `${e.config.epochs_run ?? "—"} (${e.config.best_epoch ?? "—"})`],
-                        ["calibrated threshold", (e: ExperimentRow) => String(e.calibrated_threshold ?? "—")], ["test IoU", (e: ExperimentRow) => e.test.iou?.toFixed(3) ?? "—"], ["test F1", (e: ExperimentRow) => e.test.f1?.toFixed(3) ?? "—"],
-                        ["test precision / recall", (e: ExperimentRow) => `${e.test.precision?.toFixed(3) ?? "—"} / ${e.test.recall?.toFixed(3) ?? "—"}`], ["code commit", (e: ExperimentRow) => String(e.config.code_commit ?? "not recorded").slice(0, 12)],
-                      ].map(([label, get]) => (
-                        <tr key={label as string}><td className="px-3 py-2 font-semibold">{label as string}</td>{comparison.experiments.map((e) => <td key={e.id} className="px-3 py-2">{(get as (e: ExperimentRow) => string)(e)}</td>)}</tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </CardContent>
-              </Card>
-            )}
-            {active && registry[active] && (
-              <div className="flex flex-wrap items-center gap-2 rounded-2xl border border-black/[0.06] bg-white px-3.5 py-2.5 text-xs">
-                <span className="font-semibold">{registry[active].display_name}</span>
-                <Badge variant="secondary">{registry[active].status}</Badge>
-                <span className="text-muted-foreground">Validated only through an explicit review with independent (non-GMW) evidence.</span>
-                {(() => {
-                  const next = LADDER[LADDER.indexOf(registry[active].status) + 1];
-                  return can("manage_models") && next && next !== "VALIDATED"
-                    ? <button onClick={() => promote(active, next)} className="ml-auto rounded-lg border px-2 py-1 font-medium hover:bg-black/[0.03]">Promote to {next}</button>
-                    : null;
-                })()}
-                {statusMsg && <span className="w-full text-muted-foreground">{statusMsg}</span>}
-              </div>
-            )}
-            {/* Header Card */}
-            <div className="rounded-3xl border border-black/[0.08] bg-white p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-lg font-bold text-foreground tracking-tight">{detail.experimentId}</h2>
-                  <Badge variant={detail.metrics.mode === "full" ? "success" : "secondary"}>{detail.metrics.mode === "full" ? "Final model" : "Development model — not final"}</Badge>
-                </div>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  U-Net Architecture · {detail.metrics.encoder || "—"} encoder · Input: {input} · {ds?.n_train ?? "—"} train / {ds?.n_val ?? "—"} val tiles · metrics vs GMW weak labels
-                </p>
-              </div>
+          <div className="min-w-0 space-y-5">
+            {/* Comparison (opened from the left column) */}
+            <AnimatePresence>
+              {comparison && (
+                <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} className={cn(GLASS, "overflow-hidden")}>
+                  <div className="flex items-start justify-between gap-3 border-b border-black/[0.05] px-5 py-4">
+                    <div className="flex items-center gap-2.5">
+                      <span className="grid h-8 w-8 place-items-center rounded-xl bg-[#dcfce7] text-[#15803d]"><GitCompareArrows className="h-4 w-4" /></span>
+                      <div>
+                        <div className="text-[14px] font-semibold">Experiment comparison</div>
+                        <div className="text-[11.5px] text-muted-foreground">{comparison.note}</div>
+                      </div>
+                    </div>
+                    <button onClick={() => setComparison(null)} aria-label="Close comparison" className="rounded-lg p-1.5 text-muted-foreground hover:bg-black/[0.04] hover:text-foreground"><X className="h-4 w-4" /></button>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-[12px]">
+                      <thead className="text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
+                        <tr><th className="px-5 py-2.5 text-left">Field</th>{comparison.experiments.map((e) => <th key={e.id} className="px-3 py-2.5 text-left font-mono normal-case tracking-normal text-[#0f5132]">{e.id}</th>)}</tr>
+                      </thead>
+                      <tbody>
+                        {([
+                          ["status", (e: ExperimentRow) => e.status], ["input bands", (e: ExperimentRow) => String(e.config.input_bands)], ["encoder", (e: ExperimentRow) => String(e.config.encoder)],
+                          ["train / val / test tiles", (e: ExperimentRow) => `${e.config.n_train} / ${e.config.n_val} / ${e.config.n_test}`], ["epochs (best)", (e: ExperimentRow) => `${e.config.epochs_run ?? "—"} (${e.config.best_epoch ?? "—"})`],
+                          ["calibrated threshold", (e: ExperimentRow) => String(e.calibrated_threshold ?? "—")], ["test IoU", (e: ExperimentRow) => e.test.iou?.toFixed(3) ?? "—"], ["test F1", (e: ExperimentRow) => e.test.f1?.toFixed(3) ?? "—"],
+                          ["test precision / recall", (e: ExperimentRow) => `${e.test.precision?.toFixed(3) ?? "—"} / ${e.test.recall?.toFixed(3) ?? "—"}`], ["code commit", (e: ExperimentRow) => String(e.config.code_commit ?? "not recorded").slice(0, 12)],
+                        ] as [string, (e: ExperimentRow) => string][]).map(([label, get]) => (
+                          <tr key={label} className="border-t border-black/[0.05] hover:bg-[#f0fdf4]/60">
+                            <td className="px-5 py-2 font-semibold text-[#334155]">{label}</td>
+                            {comparison.experiments.map((e) => <td key={e.id} className="px-3 py-2 tabular-nums">{get(e)}</td>)}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-              {/* Tab Switcher */}
-              <div className="flex rounded-xl bg-[#f4f7f5] p-1 border border-black/[0.06]">
-                <button
-                  onClick={() => setTab("metrics")}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all",
-                    tab === "metrics" ? "bg-white text-[#15803d] shadow-sm" : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <BarChart3 className="h-3.5 w-3.5" />
-                  <span>Metrics</span>
-                </button>
-                <button
-                  onClick={() => setTab("curves")}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all",
-                    tab === "curves" ? "bg-white text-[#15803d] shadow-sm" : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Activity className="h-3.5 w-3.5" />
-                  <span>Curves & Matrix</span>
-                </button>
-                <button
-                  onClick={() => setTab("predictions")}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all",
-                    tab === "predictions" ? "bg-white text-[#15803d] shadow-sm" : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Eye className="h-3.5 w-3.5" />
-                  <span>Sample Predictions</span>
-                </button>
-                <button
-                  onClick={() => setTab("specs")}
-                  className={cn(
-                    "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all",
-                    tab === "specs" ? "bg-white text-[#15803d] shadow-sm" : "text-muted-foreground hover:text-foreground"
-                  )}
-                >
-                  <Sliders className="h-3.5 w-3.5" />
-                  <span>Model Card</span>
-                </button>
+            {/* Registry status + promote workflow */}
+            <div className={cn(GLASS, "p-4 sm:p-5")}>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#16a34a] to-[#0f5132] text-white shadow-sm"><ShieldCheck className="h-5 w-5" /></span>
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="truncate text-[14px] font-semibold text-foreground">{reg?.display_name ?? detail.experimentId}</span>
+                      <StatusChip status={reg?.status} />
+                    </div>
+                    <div className="truncate font-mono text-[10.5px] text-muted-foreground">{detail.experimentId}{reg?.version ? ` · v${reg.version}` : ""}</div>
+                  </div>
+                </div>
+                {reg && can("manage_models") && next && next !== "VALIDATED" && (
+                  <button
+                    onClick={() => promote(detail.experimentId, next)}
+                    className="ml-auto flex items-center gap-1.5 rounded-xl border border-[#15803d]/30 bg-white px-3.5 py-2 text-[12px] font-semibold text-[#15803d] shadow-sm transition hover:bg-[#f0fdf4]"
+                  >
+                    Promote to {next} <ArrowUpRight className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+              {reg && (
+                <ol className="mt-4 flex items-center gap-1.5" aria-label="Model status ladder">
+                  {LADDER.map((s, i) => {
+                    const at = LADDER.indexOf(reg.status);
+                    const done = i <= at;
+                    return (
+                      <li key={s} className="flex flex-1 items-center gap-1.5">
+                        <span className={cn("flex min-w-0 items-center gap-1 text-[10px] font-bold uppercase tracking-wider", i === at ? "text-[#0f5132]" : done ? "text-[#15803d]/70" : "text-muted-foreground/60")}>
+                          <span className={cn("grid h-4 w-4 shrink-0 place-items-center rounded-full border text-[8px]", i === at ? "border-[#15803d] bg-[#15803d] text-white" : done ? "border-[#15803d]/50 bg-[#dcfce7] text-[#15803d]" : "border-black/15 bg-white")}>
+                            {done && <CheckCircle2 className="h-3 w-3" />}
+                          </span>
+                          <span className="hidden truncate sm:inline">{s.toLowerCase()}</span>
+                        </span>
+                        {i < LADDER.length - 1 && <span className={cn("h-[2px] flex-1 rounded-full", i < at ? "bg-[#15803d]/50" : "bg-black/[0.08]")} />}
+                      </li>
+                    );
+                  })}
+                </ol>
+              )}
+              <p className="mt-3 text-[11.5px] text-muted-foreground">
+                {reg ? "Validated only through an explicit review with independent (non-GMW) evidence." : "This run is not in the model registry, so it has no status."}
+              </p>
+              {statusMsg && <p className="mt-1.5 rounded-lg bg-[#f0fdf4] px-2.5 py-1.5 text-[11.5px] text-[#0f5132]">{statusMsg}</p>}
+            </div>
+
+            {/* Model header + tabs */}
+            <div className={cn(GLASS, "p-5")}>
+              <div className="flex flex-wrap items-center gap-2">
+                <h2 className="text-[19px] font-bold tracking-tight text-foreground">{detail.experimentId}</h2>
+                <span className={cn("rounded-full border px-2.5 py-0.5 text-[10.5px] font-semibold", isFull ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-amber-200 bg-amber-50 text-amber-800")}>
+                  {isFull ? "Final model" : "Development model — not final"}
+                </span>
+              </div>
+              <p className="mt-1 text-[12px] text-muted-foreground">
+                U-Net · <span className="font-mono">{detail.metrics.encoder || "—"}</span> encoder · Input: {input} · {ds?.n_train ?? "—"} train / {ds?.n_val ?? "—"} val tiles · metrics vs GMW weak labels
+              </p>
+              <div role="tablist" className="mt-4 flex gap-1 overflow-x-auto rounded-2xl border border-black/[0.05] bg-[#f3f7f4] p-1">
+                {TABS.map((t) => {
+                  const on = tab === t.key;
+                  return (
+                    <button
+                      key={t.key}
+                      role="tab"
+                      aria-selected={on}
+                      onClick={() => setTab(t.key)}
+                      className={cn("relative flex shrink-0 items-center gap-1.5 rounded-xl px-3.5 py-2 text-[12.5px] font-semibold transition-colors", on ? "text-white" : "text-[#475569] hover:text-foreground")}
+                    >
+                      {on && <motion.span layoutId="models-tab" className="absolute inset-0 rounded-xl bg-[#15803d] shadow-[0_6px_16px_-8px_rgba(21,128,61,0.7)]" transition={{ type: "spring", stiffness: 400, damping: 34 }} />}
+                      <t.icon className="relative h-3.5 w-3.5" />
+                      <span className="relative">{t.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* TAB 1: Metrics & Performance */}
-            {tab === "metrics" && (
-              <div className="space-y-5">
-                {/* 6 Key Stat KPI Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                  <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
-                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Val IoU</div>
-                    <div className="mt-1 text-xl font-black text-emerald-700">{f(valMetrics?.iou)}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">Intersection over Union</div>
-                  </div>
-                  <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
-                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Val Dice / F1</div>
-                    <div className="mt-1 text-xl font-black text-emerald-700">{f(valMetrics?.dice ?? valMetrics?.f1)}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">Harmonic Mean</div>
-                  </div>
-                  <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
-                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Precision</div>
-                    <div className="mt-1 text-xl font-black text-blue-700">{f(valMetrics?.precision)}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">True Positives</div>
-                  </div>
-                  <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
-                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Recall</div>
-                    <div className="mt-1 text-xl font-black text-amber-700">{f(valMetrics?.recall)}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">Sensitivity</div>
-                  </div>
-                  <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
-                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Accuracy</div>
-                    <div className="mt-1 text-xl font-black text-foreground">{valMetrics?.accuracy != null ? `${(valMetrics.accuracy * 100).toFixed(1)}%` : "—"}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">Pixel agreement vs GMW labels</div>
-                  </div>
-                  <div className="rounded-2xl border border-black/[0.06] bg-white p-3.5 shadow-sm text-center">
-                    <div className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">Cohen&apos;s κ</div>
-                    <div className="mt-1 text-xl font-black text-foreground">{f(valMetrics?.kappa)}</div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5">Agreement vs GMW labels</div>
-                  </div>
-                </div>
-
-                {/* Validation vs Test Summary Table */}
-                <Card className="rounded-3xl border border-black/[0.08] shadow-sm overflow-hidden">
-                  <CardHeader className="pb-3 border-b border-black/[0.06] bg-[#fafcfb]">
-                    <CardTitle className="text-sm font-bold flex items-center gap-2">
-                      <FileSpreadsheet className="h-4 w-4 text-[#15803d]" />
-                      <span>Dataset Split Evaluation</span>
-                    </CardTitle>
-                    <CardDescription className="text-xs">Evaluated across spatial-block held-out validation and test tiles</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-xs">
-                        <thead className="bg-[#f4f7f5] text-[10px] uppercase tracking-wider text-muted-foreground border-b border-black/[0.06]">
-                          <tr>
-                            <th className="py-2.5 px-4 text-left font-bold">Split</th>
-                            <th className="py-2.5 px-3 text-center">IoU</th>
-                            <th className="py-2.5 px-3 text-center">Dice</th>
-                            <th className="py-2.5 px-3 text-center">Precision</th>
-                            <th className="py-2.5 px-3 text-center">Recall</th>
-                            <th className="py-2.5 px-3 text-center">F1 Score</th>
-                            <th className="py-2.5 px-3 text-center">Overall Acc</th>
-                            <th className="py-2.5 px-3 text-center">Kappa (κ)</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-black/[0.06]">
-                          <tr className="hover:bg-[#f4f7f5]/50">
-                            <td className="py-3 px-4 font-semibold text-foreground">Validation (Best Epoch {detail.metrics.best_epoch ?? "—"})</td>
-                            <td className="py-3 px-3 text-center font-bold text-emerald-700">{f(valMetrics?.iou)}</td>
-                            <td className="py-3 px-3 text-center font-semibold">{f(valMetrics?.dice)}</td>
-                            <td className="py-3 px-3 text-center text-muted-foreground">{f(valMetrics?.precision)}</td>
-                            <td className="py-3 px-3 text-center text-muted-foreground">{f(valMetrics?.recall)}</td>
-                            <td className="py-3 px-3 text-center font-semibold">{f(valMetrics?.f1)}</td>
-                            <td className="py-3 px-3 text-center text-muted-foreground">{f(valMetrics?.accuracy)}</td>
-                            <td className="py-3 px-3 text-center text-muted-foreground">{f(valMetrics?.kappa)}</td>
-                          </tr>
-                          {testMetrics && (
-                            <tr className="hover:bg-[#f4f7f5]/50">
-                              <td className="py-3 px-4 font-semibold text-foreground">Held-out Test (@ threshold {detail.metrics.test_threshold ?? 0.5})</td>
-                              <td className="py-3 px-3 text-center font-bold text-emerald-700">{f(testMetrics.iou)}</td>
-                              <td className="py-3 px-3 text-center font-semibold">{f(testMetrics.dice)}</td>
-                              <td className="py-3 px-3 text-center text-muted-foreground">{f(testMetrics.precision)}</td>
-                              <td className="py-3 px-3 text-center text-muted-foreground">{f(testMetrics.recall)}</td>
-                              <td className="py-3 px-3 text-center font-semibold">{f(testMetrics.f1)}</td>
-                              <td className="py-3 px-3 text-center text-muted-foreground">{f(testMetrics.accuracy)}</td>
-                              <td className="py-3 px-3 text-center text-muted-foreground">{f(testMetrics.kappa)}</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Threshold Calibration Card */}
-                {detail.calibration && (
-                  <Card className="rounded-3xl border border-black/[0.08] shadow-sm overflow-hidden">
-                    <CardHeader className="pb-3 border-b border-black/[0.06] bg-[#fafcfb]">
-                      <CardTitle className="text-sm font-bold flex items-center gap-2">
-                        <Sliders className="h-4 w-4 text-[#15803d]" />
-                        <span>Probability Threshold Calibration</span>
-                      </CardTitle>
-                      <CardDescription className="text-xs">
-                        Optimized threshold: <b className="text-emerald-700">{detail.calibration.selected_threshold}</b> ({detail.calibration.criterion})
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4 grid gap-5 lg:grid-cols-[1fr_340px] items-center">
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-xs">
-                          <thead className="text-[10px] uppercase text-muted-foreground border-b border-black/[0.06]">
-                            <tr>
-                              <th className="py-2 text-left">Threshold</th>
-                              <th className="py-2 text-center">IoU</th>
-                              <th className="py-2 text-center">F1</th>
-                              <th className="py-2 text-center">Precision</th>
-                              <th className="py-2 text-center">Recall</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-black/[0.06]">
-                            {detail.calibration.rows.map((r) => {
-                              const isSelected = r.threshold === detail.calibration?.selected_threshold;
-                              return (
-                                <tr key={r.threshold} className={cn("transition", isSelected ? "bg-emerald-50 font-bold text-emerald-900" : "hover:bg-slate-50")}>
-                                  <td className="py-2 text-left">{r.threshold.toFixed(2)}</td>
-                                  <td className="py-2 text-center">{f(r.iou)}</td>
-                                  <td className="py-2 text-center">{f(r.f1)}</td>
-                                  <td className="py-2 text-center">{f(r.precision)}</td>
-                                  <td className="py-2 text-center">{f(r.recall)}</td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                      {detail.assets.includes("threshold_calibration.png") && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={modelAssetUrl(detail.experimentId, "threshold_calibration.png")}
-                          alt="threshold calibration"
-                          className="rounded-2xl border border-black/[0.08] shadow-sm w-full bg-white"
-                        />
-                      )}
-                    </CardContent>
-                  </Card>
+            <AnimatePresence mode="wait">
+              <motion.div key={tab} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.18 }} className="space-y-5">
+                {tab === "metrics" && (
+                  <>
+                    <MetricTiles val={valMetrics} bestEpoch={detail.metrics.best_epoch} />
+                    <SplitTable
+                      val={valMetrics}
+                      test={testMetrics}
+                      bestEpoch={detail.metrics.best_epoch}
+                      testThreshold={detail.metrics.test_threshold}
+                      nTestTiles={(detail.metrics as { n_test_tiles?: number }).n_test_tiles}
+                    />
+                    <HowMeasured />
+                  </>
                 )}
-              </div>
-            )}
 
-            {/* TAB 2: Training & Validation Curves */}
-            {tab === "curves" && (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {["training_curve.png", "validation_curve.png", "confusion_matrix.png"]
-                  .filter((a) => detail.assets.includes(a))
-                  .map((a) => {
-                    const title = a === "training_curve.png" ? "Training Loss Curve" : a === "validation_curve.png" ? "Validation Metrics" : "Confusion Matrix (Pixels)";
-                    return (
-                      <Card key={a} className="rounded-3xl border border-black/[0.08] shadow-sm overflow-hidden bg-white">
-                        <CardHeader className="p-4 pb-2 border-b border-black/[0.06] bg-[#fafcfb]">
-                          <CardTitle className="text-xs font-bold text-foreground">{title}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="p-3">
+                {tab === "curves" && (
+                  <div className="grid gap-5 xl:grid-cols-2">
+                    {history.length > 0 ? (
+                      <>
+                        <LossChart rows={history} bestEpoch={detail.metrics.best_epoch} />
+                        <ValidationChart rows={history} bestEpoch={detail.metrics.best_epoch} />
+                      </>
+                    ) : (
+                      ["training_curve.png", "validation_curve.png"].filter((a) => detail.assets.includes(a)).map((a) => (
+                        <ChartCard key={a} icon={Activity} title={a === "training_curve.png" ? "Training loss" : "Validation scores"} caption="Saved plot (per-epoch log not available)">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={modelAssetUrl(detail.experimentId, a)} alt={a} className="w-full rounded-xl bg-white" />
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-              </div>
-            )}
+                        </ChartCard>
+                      ))
+                    )}
+                    <ConfusionMatrix
+                      key={detail.experimentId}
+                      val={valMetrics?.confusion_matrix as unknown as number[][] | undefined}
+                      test={testMetrics?.confusion_matrix as unknown as number[][] | undefined}
+                      aside={
+                        <div className="space-y-3 rounded-xl bg-[#f6faf7] p-4 text-[12px] leading-relaxed text-muted-foreground">
+                          <div className="flex items-center gap-2 text-[13px] font-semibold text-foreground"><AlertTriangle className="h-4 w-4 text-amber-600" /> Reading these charts</div>
+                          <p><span className="font-semibold text-[#15803d]">Green</span> cells agree with GMW, <span className="font-semibold text-amber-700">amber</span> cells disagree. Habitat is a tiny share of pixels, so the bottom row matters most.</p>
+                          <p>The dashed <span className="font-semibold text-[#15803d]">best</span> line on the curves marks the epoch kept (best validation score). Test scores are computed once, after training.</p>
+                          {history.length === 0 && <p>No per-epoch log for this run.</p>}
+                        </div>
+                      }
+                    />
+                    {detail.calibration ? (
+                      <CalibrationChart cal={detail.calibration} />
+                    ) : (
+                      <p className="px-1 text-[11.5px] text-muted-foreground xl:col-span-2">No threshold calibration recorded for this run — test scores use threshold {detail.metrics.test_threshold ?? 0.5}.</p>
+                    )}
+                  </div>
+                )}
 
-            {/* TAB 3: Qualitative Test Predictions */}
-            {tab === "predictions" && (
-              <Card className="rounded-3xl border border-black/[0.08] shadow-sm overflow-hidden bg-white">
-                <CardHeader className="p-5 pb-3 border-b border-black/[0.06] bg-[#fafcfb]">
-                  <CardTitle className="text-sm font-bold">Held-Out Test Tile Predictions</CardTitle>
-                  <CardDescription className="text-xs">Left-to-right: Sensor Input · Weak Reference · Probability Map P(habitat) · Final Thresholded Output</CardDescription>
-                </CardHeader>
-                <CardContent className="p-4 grid gap-4 sm:grid-cols-2">
-                  {detail.assets.filter((a) => a.startsWith("sample_predictions/")).slice(0, 8).map((a) => (
-                    <div key={a} className="rounded-2xl border border-black/[0.08] p-2 bg-slate-50 shadow-sm">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={modelAssetUrl(detail.experimentId, a)} alt={a} className="w-full rounded-xl bg-white" loading="lazy" />
+                {tab === "predictions" && (
+                  <div className={cn(GLASS, "p-5")}>
+                    <div className="mb-1 text-[14px] font-semibold">Held-out test tiles</div>
+                    <div className="mb-4 flex flex-wrap gap-1.5 text-[11px]">
+                      {["Sensor input", "GMW weak reference", "Probability P(habitat)", "Final mask"].map((l, i) => (
+                        <span key={l} className="flex items-center gap-1 rounded-full border border-black/[0.06] bg-[#f6faf7] px-2.5 py-1 text-[#334155]">
+                          <span className="grid h-4 w-4 place-items-center rounded-full bg-[#15803d] text-[9px] font-bold text-white">{i + 1}</span>{l}
+                        </span>
+                      ))}
                     </div>
-                  ))}
-                  {!detail.assets.some((a) => a.startsWith("sample_predictions/")) && (
-                    <div className="col-span-2 p-8 text-center text-xs text-muted-foreground">
-                      Sample predictions rendered during pipeline evaluation.
+                    {samples.length ? (
+                      <div className="grid gap-4">
+                        {samples.map((a) => (
+                          <figure key={a} className="overflow-hidden rounded-2xl border border-black/[0.06] bg-white p-2 shadow-sm">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={modelAssetUrl(detail.experimentId, a)} alt={`Prediction for ${a.split("/").pop()}`} className="w-full rounded-xl bg-white" loading="lazy" />
+                            <figcaption className="mt-1.5 truncate px-1 font-mono text-[10px] text-muted-foreground">{a.split("/").pop()}</figcaption>
+                          </figure>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="py-10 text-center text-[12px] text-muted-foreground">No sample predictions were saved for this run.</p>
+                    )}
+                  </div>
+                )}
+
+                {tab === "specs" && (
+                  <div className="grid gap-5 xl:grid-cols-2">
+                    <div className={cn(GLASS, "p-5")}>
+                      <div className="mb-3 flex items-center gap-2 text-[13px] font-semibold"><Sparkles className="h-4 w-4 text-[#15803d]" /> Architecture & training</div>
+                      <dl className="text-[12.5px]">
+                        {([
+                          ["Architecture", "U-Net"],
+                          ["Encoder", detail.metrics.encoder || "—"],
+                          ["Input", input],
+                          ["Tiles (train / val / test)", `${ds?.n_train ?? "—"} / ${ds?.n_val ?? "—"} / ${ds?.n_test ?? "—"}`],
+                          ["Parameters", detail.experiment?.parameters ? Number(detail.experiment.parameters).toLocaleString() : "—"],
+                          ["Epochs run (best)", `${detail.experiment?.epochs_run ?? "—"} (${detail.metrics.best_epoch ?? "—"})`],
+                          ["Batch size · learning rate", `${detail.experiment?.batch_size ?? "—"} · ${detail.experiment?.learning_rate ?? "—"}`],
+                          ["Compute device", String(detail.experiment?.hardware?.device ?? "—")],
+                          ["Training time", detail.experiment?.training_time_s ? `${Math.round(Number(detail.experiment.training_time_s))} s` : "—"],
+                          ["Test threshold", fmt(detail.metrics.test_threshold ?? undefined, 2)],
+                        ] as [string, string][]).map(([k, v]) => (
+                          <div key={k} className="flex items-center justify-between gap-4 border-b border-black/[0.05] py-2 last:border-0">
+                            <dt className="text-muted-foreground">{k}</dt>
+                            <dd className="text-right font-semibold text-foreground">{v}</dd>
+                          </div>
+                        ))}
+                      </dl>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
-
-            {/* TAB 4: Model Specifications & Card */}
-            {tab === "specs" && (
-              <div className="grid gap-4 sm:grid-cols-2">
-                <Card className="rounded-3xl border border-black/[0.08] shadow-sm p-5 space-y-4 bg-white">
-                  <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                    <Sparkles className="h-4 w-4 text-[#15803d]" />
-                    <span>Architecture & Training Setup</span>
+                    <div className="space-y-5">
+                      <div className={cn(GLASS, "space-y-2.5 p-5 text-[12.5px] leading-relaxed text-muted-foreground")}>
+                        <div className="mb-1 flex items-center gap-2 text-[13px] font-semibold text-foreground"><CheckCircle2 className="h-4 w-4 text-[#15803d]" /> Scope & governance</div>
+                        <p><b className="text-foreground">Labels:</b> trained and scored against Global Mangrove Watch (GMW) maps — weak labels, not field surveys.</p>
+                        <p><b className="text-foreground">Splits:</b> spatial blocks, so test tiles come from different places than training tiles.</p>
+                        <p><b className="text-foreground">Use:</b> a first-pass habitat map, to be checked with connectivity analysis and field verification.</p>
+                      </div>
+                      {(() => {
+                        const lim = (reg as (RegistryModel & { limitations?: string[] }) | undefined)?.limitations;
+                        return lim?.length ? (
+                          <div className={cn(GLASS, "p-5")}>
+                            <div className="mb-2.5 flex items-center gap-2 text-[13px] font-semibold"><AlertTriangle className="h-4 w-4 text-amber-600" /> Known limitations</div>
+                            <ul className="flex flex-wrap gap-1.5">
+                              {lim.map((l) => <li key={l} className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11.5px] text-amber-900">{l}</li>)}
+                            </ul>
+                          </div>
+                        ) : null;
+                      })()}
+                    </div>
                   </div>
-                  <div className="space-y-2 text-xs">
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Model Architecture</span><span className="font-semibold">U-Net</span></div>
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Backbone Encoder</span><span className="font-semibold">{detail.metrics.encoder || "—"}</span></div>
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Input Sensors</span><span className="font-semibold">{input}</span></div>
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Training Dataset</span><span className="font-semibold">{ds?.n_train ?? "—"} train / {ds?.n_val ?? "—"} val / {ds?.n_test ?? "—"} test</span></div>
-                    <div className="flex justify-between py-1 border-b border-black/[0.06]"><span className="text-muted-foreground">Compute Device</span><span className="font-semibold">{String(detail.experiment?.hardware?.device ?? "—")}</span></div>
-                    <div className="flex justify-between py-1"><span className="text-muted-foreground">Training Duration</span><span className="font-semibold">{detail.experiment?.training_time_s ? `${Math.round(Number(detail.experiment.training_time_s))} s` : "—"}</span></div>
-                  </div>
-                </Card>
-
-                <Card className="rounded-3xl border border-black/[0.08] shadow-sm p-5 space-y-4 bg-white">
-                  <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#15803d]" />
-                    <span>Operational Scope & Governance</span>
-                  </div>
-                  <div className="space-y-2.5 text-xs text-muted-foreground leading-relaxed">
-                    <p><b className="text-foreground">Weak Label Supervision:</b> Ground truth derived from Global Mangrove Watch (GMW) baseline raster maps.</p>
-                    <p><b className="text-foreground">Validation Strategy:</b> Spatial-block partition to eliminate spatial autocorrelation between training and evaluation tiles.</p>
-                    <p><b className="text-foreground">Decision Support Role:</b> Automated segmentation serves as an initial spatial prior, contextualised by network connectivity and field verification.</p>
-                  </div>
-                </Card>
-              </div>
-            )}
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
         ) : (
-          <div className="grid place-items-center rounded-3xl border border-black/[0.08] bg-white p-12 text-center text-xs text-muted-foreground">
-            Select a model from the left to view metrics, curves, and predictions.
+          <div className={cn(GLASS, "grid place-items-center p-12 text-center text-[12.5px] text-muted-foreground")}>
+            {models?.length === 0 ? "No trained models yet." : "Select a model on the left to see its metrics, curves and predictions."}
           </div>
         )}
       </div>

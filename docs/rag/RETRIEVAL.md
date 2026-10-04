@@ -25,16 +25,45 @@ never overrides stored data (the prompt prefers `<app_data>`).
 2. **Lexical**: BM25 (k1 1.4, b 0.75) over word tokens with light stemming and query-side synonym expansion → `LEXICAL_TOP_K`.
 3. **Dense**: cosine over embeddings of the *current* model version → `DENSE_TOP_K`; pgvector HNSW
    (`ORDER BY embedding_vec <=> q`, same ACL/scope filters in SQL) when available, else numpy.
-4. **RRF** (k = 60) + small priors: the record of an object named in the question (+0.08), glossary term match, FAQ
+4. **Weighted RRF** (k = `RAG_RRF_K` = 20, lexical weight 1.0, vector weight 1.5) + small priors: the record of an object named in the question (+0.08), glossary term match, FAQ
    question match, definitional questions prefer docs over run records, page help only for UI questions → `FUSED_TOP_K`.
 
-Failure of the dense side (model missing, vector query error) is recorded and retrieval continues lexically.
+Failure of the dense side (model missing, vector query error) is recorded and retrieval continues lexically; failure of
+the lexical side continues on vectors only (method label "dense/pgvector only (bm25 unavailable)"). Developer documents
+get a ×0.6 prior unless the question is technical. `RAG_RETRIEVAL_MODE=bm25|vector|hybrid` switches modes for ablation.
+
+### RRF tuning (fastembed, golden set, LLM off)
+
+| k / vector weight | nDCG@5 | Note |
+|---|---|---|
+| 60 / 1.0 | 0.818 | previous default |
+| 60 / 1.3 | 0.846 | |
+| 20 / 1.0 | 0.829 | |
+| **20 / 1.5** | **0.855 → 0.883** after FAQ/expectation fixes | chosen |
+
+### Ablation (53 retrieval questions, same reranker)
+
+| Mode | Recall@5 | MRR | nDCG@5 |
+|---|---|---|---|
+| BM25 only | 1.00 | 0.959 | 0.786 |
+| Vector only | 1.00 | 0.943 | 0.886 |
+| Hybrid | 1.00 | 0.964 | 0.883 |
+
+Hybrid keeps BM25's exact-identifier strength (P07, UNB7) and the vector side's ordering; vector-only is marginally
+higher on nDCG@5 on this small set but loses exact-term matches when the embedder is unavailable or a term is rare.
+The cross-encoder reranker was measured and not adopted: same accuracy, ~100× p95 latency.
 
 ## Reranking (`backend/rag/rerank.py`)
 
 Heuristic features: coverage of the question's content words, exact bigram phrases, identifier match, heading match,
 dense similarity, curated-source flag. Skipped when retrieval is decisive (top fused score ≥ 1.35 × runner-up and
 coverage ≥ 0.75). Optional cross-encoder (`RERANKER_PROVIDER=cross-encoder`); any error falls back to the heuristic.
+
+Priors added 2026-10-02: developer documents (API, architecture, audit, RAG internals …) are down-weighted ×0.6 unless
+the question is technical, so user questions land on the FAQ, glossary and workflow text. The grounding check matches
+word variants and procedural synonyms ("calculated" ~ computed/measured, "found" ~ generated/identified); comparison
+questions are grounded when every named patch's stored record was retrieved. Answers made without the LLM are cached
+under a separate key, so they never replace LLM answers.
 Top `RAG_RERANK_TOP_K` passages continue.
 
 ## Confidence and abstention

@@ -27,9 +27,18 @@ from sqlalchemy.orm import Session
 from ..db import RagChunk, RagDocument
 from .config import S
 from .embeddings import embed_query_cached, get_embedder
+from .sources import NOT_KNOWLEDGE
 from .text import DEFINE, expand, object_ids, tokens
 
 RUN_TYPES = {"RUN_RESULTS"}
+# developer-facing documents: kept searchable, but a user question should land on FAQ / glossary / workflow text first
+DEV_DOCS = ("doc:docs/API.md", "doc:docs/ARCHITECTURE.md", "doc:docs/AUDIT.md", "doc:docs/IP_READINESS.md",
+            "doc:docs/DEPLOYMENT.md", "doc:docs/REPRODUCIBILITY.md", "doc:docs/IMPLEMENTATION_STATUS.md",
+            "doc:docs/PAPER_IMPLEMENTATION_MATRIX.md", "doc:docs/DEMO_VIDEO.md", "doc:docs/rag/")
+TECH_Q = __import__("re").compile(r"\b(api|endpoint|route|http|json|sql|database|schema|table|code|function|python|fastapi|"
+                                  r"backend|frontend|deploy\w*|docker|migration|token|implementation|implemented|architecture|"
+                                  r"rag|retrieval|embedding|vector|pgvector|chunk\w*|audit|ip|patent\w*|reproduc\w*)\b",
+                                  __import__("re").I)
 UI_Q = __import__("re").compile(r"\b(page|screen|button|tab|where (do|can) i|how (do|can) i|open|navigate|menu)\b", __import__("re").I)
 VISIBILITY_FOR_ROLE = {"public": {"public"}, "field": {"public"}, "staff": {"public", "staff"}, "admin": {"public", "staff", "admin"}}
 
@@ -75,6 +84,7 @@ class RetrievalResult:
     dense_used: bool
     errors: list[str] = field(default_factory=list)
     index_version: str = ""
+    timings: dict = field(default_factory=dict)       # per-stage ms: lexical, embed, dense, fusion
 
 
 class _MemIndex:
@@ -106,6 +116,7 @@ class _MemIndex:
 _lock = threading.Lock()
 _mem: Optional[_MemIndex] = None
 _version_cache: tuple[float, str] = (0.0, "")
+_LEX_FAIL = False      # test hook: simulate a lexical-index outage
 _rcache: "OrderedDict[str, list[tuple[int, float, float, float]]]" = OrderedDict()
 
 
@@ -165,6 +176,7 @@ def _pg_dense(db: Session, qv: list[float], allowed: set, area: Optional[str], m
                   FROM rag_chunks c JOIN rag_documents d ON d.id = c.document_id
                   WHERE d.status IN ('INDEXED','STALE') AND c.embedding_model = :mv AND c.visibility = ANY(:vis)
                     AND (d.source_type <> 'RUN_RESULTS' OR c.study_area_id = :area)
+                    AND COALESCE(c.meta->>'content_type', '') NOT IN ('evaluation_artifact', 'test_data', 'planning')
                   ORDER BY c.embedding_vec <=> CAST(:q AS vector) LIMIT :k""")
     res = db.execute(sql, {"q": "[" + ",".join(f"{x:.6f}" for x in qv) + "]", "mv": mv, "vis": list(allowed), "area": area or "", "k": k})
     return {int(r[0]): float(r[1]) for r in res}
@@ -175,7 +187,8 @@ def retrieve(db: Session, query: str, *, scope: str, study_area: Optional[str], 
     errors: list[str] = []
     mem = _load(db)
     allowed = VISIBILITY_FOR_ROLE.get(scope, {"public"})
-    key = hashlib.sha256(f"{mem.version}|{scope}|{study_area}|{selected}|{' '.join(sorted(tokens(query)))}".encode()).hexdigest()
+    mode = S.retrieval_mode
+    key = hashlib.sha256(f"{mem.version}|{mode}|{scope}|{study_area}|{selected}|{' '.join(sorted(tokens(query)))}".encode()).hexdigest()
     pos = {r.chunk_id: i for i, r in enumerate(mem.rows)}
 
     cached = _rcache.get(key)
@@ -189,20 +202,35 @@ def retrieve(db: Session, query: str, *, scope: str, study_area: Optional[str], 
 
     # 1. authorisation + scope BEFORE scoring
     idx = [i for i, r in enumerate(mem.rows)
-           if r.visibility in allowed and (r.source_type not in RUN_TYPES or r.study_area == study_area)]
+           if r.visibility in allowed and (r.source_type not in RUN_TYPES or r.study_area == study_area)
+           and (r.meta or {}).get("content_type") not in NOT_KNOWLEDGE]     # defence in depth: ingest already skips these
     q = expand(tokens(query))
 
-    # 2. lexical
-    lex = sorted(((mem.bm25(q, i), i) for i in idx), reverse=True)[:S.lexical_top_k]
-    lex = [(s, i) for s, i in lex if s > 0]
+    # 2. lexical (BM25) - a failure here degrades to vector-only search, never fails the question
+    timings: dict = {}
+    t1 = time.perf_counter()
+    try:
+        if _LEX_FAIL:
+            raise RuntimeError("lexical index unavailable (test hook)")
+        if mode == "vector":
+            raise LookupError("lexical disabled (RAG_RETRIEVAL_MODE=vector)")
+        lex = sorted(((mem.bm25(q, i), i) for i in idx), reverse=True)[:S.lexical_top_k]
+        lex = [(s, i) for s, i in lex if s > 0]
+    except Exception as e:  # noqa: BLE001
+        lex = []
+        errors.append(f"lexical retrieval unavailable: {type(e).__name__}")
+    timings["lexical_ms"] = round((time.perf_counter() - t1) * 1000, 2)
 
     # 3. dense
     dense: list[tuple[float, int]] = []
     dense_used = False
     emb = get_embedder()
-    if emb is not None and mem.has_vec.any():
+    if emb is not None and mem.has_vec.any() and mode != "bm25":
         try:
+            t2 = time.perf_counter()
             qv = embed_query_cached(query)
+            timings["embed_ms"] = round((time.perf_counter() - t2) * 1000, 2)
+            t3 = time.perf_counter()
             if S.vector_store in ("auto", "pgvector") and _pgvector(db):
                 sims = _pg_dense(db, qv, allowed, study_area, mem.model, S.dense_top_k)
                 dense = sorted(((s, pos[c]) for c, s in sims.items() if c in pos), reverse=True)
@@ -214,6 +242,7 @@ def retrieve(db: Session, query: str, *, scope: str, study_area: Optional[str], 
                     top = np.argsort(-sims)[:S.dense_top_k]
                     dense = [(float(sims[j]), int(sub[j])) for j in top]
             dense_used = bool(dense)
+            timings["dense_ms"] = round((time.perf_counter() - t3) * 1000, 2)
         except Exception as e:  # noqa: BLE001 - vector side down: continue lexically, never fail the question
             errors.append(f"dense retrieval unavailable: {type(e).__name__}")
     elif emb is None:
@@ -222,13 +251,15 @@ def retrieve(db: Session, query: str, *, scope: str, study_area: Optional[str], 
     # 4. reciprocal-rank fusion + structural priors
     fused: dict[int, float] = {}
     lex_s, den_s = {i: s for s, i in lex}, {i: s for s, i in dense}
+    k_rrf, w_lex, w_vec = S.rrf_k, S.rrf_lexical_weight, S.rrf_vector_weight
     for rank, (_, i) in enumerate(lex):
-        fused[i] = fused.get(i, 0) + 1 / (60 + rank)
+        fused[i] = fused.get(i, 0) + w_lex / (k_rrf + rank)
     for rank, (_, i) in enumerate(dense):
-        fused[i] = fused.get(i, 0) + 1 / (60 + rank)
+        fused[i] = fused.get(i, 0) + w_vec / (k_rrf + rank)
     ids_q = set(object_ids(query))
     qset = set(q)
     definitional = not ids_q and bool(DEFINE.search(query))
+    technical = bool(TECH_Q.search(query))
     for i in list(fused):
         r = mem.rows[i]
         sec = r.section or ""
@@ -241,6 +272,8 @@ def retrieve(db: Session, query: str, *, scope: str, study_area: Optional[str], 
                 fused[i] += 0.05
         if r.source_key == "help:pages" and not UI_Q.search(query):
             fused[i] *= 0.5                                     # page help answers "how do I use this page", not analysis
+        if not technical and r.source_key.startswith(DEV_DOCS):
+            fused[i] *= 0.6                                     # developer docs only lead for technical questions
         if definitional and r.source_type in RUN_TYPES:
             fused[i] *= 0.4
         if r.object_id and r.object_id in ids_q:
@@ -254,11 +287,13 @@ def retrieve(db: Session, query: str, *, scope: str, study_area: Optional[str], 
     _rcache[key] = [(c.chunk_id, c.lexical, c.dense, c.fused) for c in cands]
     if len(_rcache) > 256:
         _rcache.popitem(last=False)
-    method = ("hybrid(bm25+dense" + ("/pgvector" if dense_used and _pgvector(db) else "") + ")") if dense_used else "lexical(bm25)"
+    lex_ok = not any(e.startswith("lexical") for e in errors)
+    vec = "dense/pgvector" if dense_used and _pgvector(db) else "dense"
+    method = (f"hybrid(bm25+{vec})" if lex_ok else f"{vec} only (bm25 unavailable)") if dense_used else "lexical(bm25)"
     if any(r.meta.get("ephemeral") for r in mem.rows[:1]):
         method += "+unindexed"
     return RetrievalResult(cands, method, len(set(i for _, i in lex) | set(i for _, i in dense)), (time.perf_counter() - t0) * 1000,
-                           dense_used, errors, mem.version)
+                           dense_used, errors, mem.version, timings)
 
 
 def _pgvector(db: Session) -> bool:

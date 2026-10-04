@@ -20,7 +20,7 @@ import platform
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 from ecoconnect import __version__
 from ecoconnect.graph import (
@@ -61,6 +61,7 @@ def run_graph_analysis(
     out_root: Path = OUTPUTS_DIR,
     write_latest_pointer: bool = True,
     extra_files: Optional[dict[str, Path]] = None,
+    progress: Optional[Callable[[str], None]] = None,
 ) -> Path:
     """Execute the full graph-analysis chain and export.  Returns the run directory."""
     if result_kind not in RESULT_LABELS:
@@ -78,7 +79,10 @@ def run_graph_analysis(
     run_dir = out_root / "runs" / study_area_id / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
+    step = progress or (lambda _stage: None)           # optional stage callback (near-real-time job progress)
+
     # 1. graph  (Eqs. 3-6)
+    step("connectivity")
     graph = build_graph(patches, k=gcfg["k_neighbors"], tau_km=gcfg["tau_km"], distance_mode=gcfg["distance_mode"])
 
     # 2. connectivity  (research metrics + labelled interface score)
@@ -87,6 +91,7 @@ def run_graph_analysis(
                                          iic_value=summary.iic, pc_value=summary.pc)
 
     # 3. criticality  (Eqs. 8-9)
+    step("criticality")
     rows, c_base = compute_criticality(graph, landscape_area_ha, metric, **metric_kw)
     rho = area_vs_criticality_rho(rows)
 
@@ -97,6 +102,7 @@ def run_graph_analysis(
     what_if = simulate_removal(graph, [rows[0].patch_id], landscape_area_ha, metric, **metric_kw)
 
     # 6. restoration  (Eqs. 11-12) - costs only if the user supplied them
+    step("restoration")
     costs = load_costs_csv(rcfg["cost_csv"]) if rcfg.get("cost_csv") else {}
     rest_rows, _ = evaluate_candidates(
         graph, candidates or [], landscape_area_ha, metric,

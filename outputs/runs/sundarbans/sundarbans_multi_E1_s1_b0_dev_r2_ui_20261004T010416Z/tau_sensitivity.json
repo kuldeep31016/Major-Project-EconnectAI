@@ -1,0 +1,44 @@
+{
+ "reference_tau_km": 5.0,
+ "results": {
+  "tau_3km": {
+   "tau_km": 3.0,
+   "edges": 64,
+   "components": 29,
+   "top5": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P05"
+   ],
+   "spearman_vs_reference": 0.7655049923195084
+  },
+  "tau_5km": {
+   "tau_km": 5.0,
+   "edges": 85,
+   "components": 13,
+   "top5": [
+    "P01",
+    "P03",
+    "P02",
+    "P04",
+    "P09"
+   ],
+   "spearman_vs_reference": 1.0
+  },
+  "tau_8km": {
+   "tau_km": 8.0,
+   "edges": 112,
+   "components": 4,
+   "top5": [
+    "P01",
+    "P02",
+    "P03",
+    "P04",
+    "P07"
+   ],
+   "spearman_vs_reference": 0.8864727342549923
+  }
+ }
+}

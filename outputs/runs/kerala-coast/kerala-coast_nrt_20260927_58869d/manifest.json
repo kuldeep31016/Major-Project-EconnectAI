@@ -1,0 +1,189 @@
+{
+ "run_id": "kerala-coast_nrt_20260927_58869d",
+ "study_area_id": "kerala-coast",
+ "study_area": {
+  "name": "Kerala Coast \u2014 Vembanad\u2013Kol Wetland",
+  "short_name": "Kerala Coast",
+  "state": "Kerala",
+  "protection": "Ramsar Site",
+  "center": [
+   9.878,
+   76.372
+  ],
+  "bbox": [
+   9.778,
+   76.272,
+   9.978,
+   76.472
+  ],
+  "footprint_km2": 486,
+  "primary_habitat": "mangrove"
+ },
+ "timestamp_utc": "2026-10-03T23:16:31.200803+00:00",
+ "ecoconnect_version": "0.1.0",
+ "result_kind": "development",
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+ "data_source": {
+  "type": "probability_raster",
+  "path": "outputs/satellite/EC-kerala-coast-2026-09-27-58869d/kerala-coast_prob.tif",
+  "scene_year": 2026,
+  "crs": "EPSG:32643",
+  "width": 2203,
+  "height": 2221,
+  "pixel_size": [
+   10.0,
+   10.0
+  ],
+  "threshold": 0.97,
+  "mmu_ha": 2.0,
+  "connectivity": 8,
+  "candidate_threshold": 0.3,
+  "candidate_min_area_ha": 1.0,
+  "extraction_report": {
+   "threshold": 0.97,
+   "mmu_ha": 2.0,
+   "connectivity": 8,
+   "n_components_total": 30,
+   "n_patches_kept": 7,
+   "n_dropped_below_mmu": 23,
+   "habitat_pixels": 10217,
+   "valid_pixels": 4892863,
+   "habitat_coverage_pct": 0.20881434857260464,
+   "habitat_area_ha": 96.42000000000078,
+   "landscape_area_ha": 48928.63,
+   "mean_confidence_habitat": 0.988645613193512,
+   "crs": "EPSG:32643"
+  },
+  "model": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth",
+  "model_info": {
+   "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth"
+  },
+  "satellite": {
+   "analysis_id": "EC-kerala-coast-2026-09-27-58869d",
+   "source": "Copernicus Data Space Ecosystem",
+   "collection": "sentinel-1-grd",
+   "product_ids": [
+    "503012d5-8d03-4c79-b8b1-61018f8cee80",
+    "cda5e998-d56a-4723-a1a4-22734779a994",
+    "e685c24e-b4d8-40d2-9b3a-094039f00450",
+    "c46f64ac-8617-4ec3-b3fd-0668b99658e5",
+    "503fe1a8-92c7-4fda-a163-69b1c831ca97",
+    "30fb32db-79cb-4de9-83d8-0f9a172eeff6",
+    "54ab16a4-a4a4-41e7-ae1e-8f6fee280b98",
+    "53a73088-7979-4f3b-889c-beb296361cde"
+   ],
+   "products": [
+    "S1D_IW_GRDH_1SDV_20260927T004022_20260927T004047_004756_008E87_6A7F.SAFE",
+    "S1D_IW_GRDH_1SDV_20260915T004022_20260915T004047_004581_008881_7641.SAFE",
+    "S1D_IW_GRDH_1SDV_20260903T004022_20260903T004047_004406_008273_FC45.SAFE",
+    "S1D_IW_GRDH_1SDV_20260822T004021_20260822T004046_004231_007C51_B670.SAFE",
+    "S1D_IW_GRDH_1SDV_20260810T004021_20260810T004046_004056_007638_43EB.SAFE",
+    "S1D_IW_GRDH_1SDV_20260729T004020_20260729T004045_003881_00701D_210B.SAFE",
+    "S1D_IW_GRDH_1SDV_20260717T004020_20260717T004045_003706_006A22_0ECC.SAFE",
+    "S1A_IW_GRDH_1SDV_20260628T004058_20260628T004123_065162_0836D9_CA35.SAFE"
+   ],
+   "acquisition_time": "2026-09-27T00:40:22.877826Z",
+   "timeliness": "Fast-24h",
+   "platform": "Sentinel-1D",
+   "preprocessing_version": "s1grd-gamma0terrain-db-median-v1",
+   "composite_scenes": 8,
+   "first_acquisition": "2026-06-28",
+   "reliability": {
+    "level": "unreliable",
+    "iou": 0.0,
+    "reference_habitat_ha": 102.1,
+    "experiment": "multi_E1_s1_b0_dev_r2",
+    "scope": "whole study area incl. training tiles (optimistic); not field accuracy",
+    "reference": "Global Mangrove Watch v3 2020 (weak label)"
+   },
+   "plausibility": {
+    "ratio": 0.94,
+    "reference_habitat_ha": 102.1,
+    "predicted_habitat_ha": 96.4,
+    "review_recommended": false,
+    "note": "Predicted habitat is 0.94x the 2020 reference area (within the plausible range)."
+   }
+  }
+ },
+ "landscape_area_ha": 48928.63,
+ "aoi_area_km2": 489.29,
+ "valid_area_km2": 489.29,
+ "habitat_area_ha": 96.42,
+ "comparability_note": "IIC and PC scale with the analysis extent A_L; do not compare raw values between study areas of different AOI size - use ECA as % of habitat area instead.",
+ "n_patches": 7,
+ "n_candidates": 12,
+ "config": {
+  "graph": {
+   "k_neighbors": 3,
+   "tau_km": 5.0,
+   "distance_mode": "haversine",
+   "tau_sensitivity_km": [
+    3.0,
+    5.0,
+    8.0
+   ]
+  },
+  "connectivity": {
+   "research_metric": "iic",
+   "pc_probability_at_tau": 0.5,
+   "interface_score_weights": {
+    "structural": 0.3,
+    "functional": 0.28,
+    "quality": 0.22,
+    "redundancy": 0.12,
+    "protection": 0.08
+   }
+  },
+  "criticality": {
+   "level_thresholds": [
+    0.25,
+    0.1,
+    0.03
+   ]
+  },
+  "restoration": {
+   "candidate_source": "sub_threshold",
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "candidate_max_count": 12,
+   "candidate_geojson": null,
+   "cost_csv": null,
+   "cost_unit": null,
+   "rebuild_edges_on_insert": false
+  },
+  "export": {
+   "heatmap_cell_m": 300,
+   "polygon_simplify_m": 15
+  }
+ },
+ "config_sha256": "a5065fa1656bc361a8682baf9a747bc749a855ca63e47a027932c3a7c6021c7e",
+ "code": {
+  "git_commit": "72f1adce7e2be4273d1092753f139df26bbbc175",
+  "git_dirty": true
+ },
+ "input_sha256": {
+  "path": "d62b165311eb693f943db86cc55b1d0a228d2e1781ce5c4e126536ea130daf52",
+  "model": "ed97c3612a94b293207c2473e1d648d0d5d25df6ca4076388d6563b01621a2b8"
+ },
+ "hardware": {
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.3"
+ },
+ "elapsed_s": 0.059,
+ "files": [
+  "criticality.csv",
+  "criticality.json",
+  "explanations.json",
+  "frontend_bundle.json",
+  "graph.json",
+  "manifest.json",
+  "metrics.json",
+  "patches.geojson",
+  "patches_input.json",
+  "restoration.csv",
+  "restoration.json",
+  "tau_sensitivity.json",
+  "what_if_top1.json"
+ ]
+}

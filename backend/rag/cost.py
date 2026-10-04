@@ -9,6 +9,7 @@ import os
 
 # Anthropic list prices per 1M tokens (verify against the provider's pricing page before relying on them).
 DEFAULT_PRICING = {
+    "claude-haiku-4-5": {"in": 1.0, "out": 5.0, "cache_write": 1.25, "cache_read": 0.10},
     "claude-haiku-4-5-20251001": {"in": 1.0, "out": 5.0, "cache_write": 1.25, "cache_read": 0.10},
     "claude-sonnet-5-5": {"in": 2.0, "out": 10.0, "cache_write": 2.50, "cache_read": 0.20},
     "claude-opus-5-5": {"in": 4.0, "out": 20.0, "cache_write": 5.0, "cache_read": 0.20},

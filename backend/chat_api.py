@@ -196,6 +196,24 @@ def diagnostics(limit: int = 50, user: User = Depends(require("view_audit")), db
     prov = get_provider()
     recent = db.query(ChatEvent).order_by(ChatEvent.ts.desc()).limit(min(limit, 200)).all()
     lat = [e.latency_ms for e in evs if e.latency_ms is not None]
+
+    def group_cost(key) -> dict:
+        out: dict[str, float] = {}
+        for e in evs:
+            if e.cost_usd:
+                k = key(e) or "?"
+                out[k] = round(out.get(k, 0) + e.cost_usd, 5)
+        return out
+
+    def stage(vals) -> dict:
+        v = [x for x in vals if x is not None]
+        return {"p50": _pct(v, 0.5), "p95": _pct(v, 0.95), "p99": _pct(v, 0.99), "n": len(v)}
+
+    week = db.query(ChatEvent.ts, ChatEvent.cost_usd).filter(ChatEvent.ts >= utcnow() - timedelta(days=7)).all()
+    per_day: dict[str, float] = {}
+    for ts, c in week:
+        if c and ts:
+            per_day[ts.date().isoformat()] = round(per_day.get(ts.date().isoformat(), 0) + c, 5)
     return {
         "config": {"llm_enabled": llm_enabled(), "provider": prov.name, "provider_available": prov.available(),
                    "max_output_tokens": max_output_tokens()},
@@ -206,8 +224,13 @@ def diagnostics(limit: int = 50, user: User = Depends(require("view_audit")), db
                      "llm_share": round(llm_calls / total, 3) if total else 0.0,
                      "tokens_in_est": sum(e.tokens_in_est or 0 for e in evs), "tokens_out_est": sum(e.tokens_out_est or 0 for e in evs),
                      "cost_usd": cost, "cost_per_answer_usd": round(cost / len(answered), 5) if answered else 0.0,
-                     "cost_by_user_usd": per_user, "latency_p50_ms": _pct(lat, 0.5), "latency_p95_ms": _pct(lat, 0.95),
+                     "cost_by_user_usd": per_user, "cost_by_model_usd": group_cost(lambda e: e.model),
+                     "cost_by_query_type_usd": group_cost(lambda e: e.query_type), "cost_by_route_usd": group_cost(lambda e: e.tier),
+                     "latency_p50_ms": _pct(lat, 0.5), "latency_p95_ms": _pct(lat, 0.95), "latency_p99_ms": _pct(lat, 0.99),
+                     "stage_latency_ms": {"total": stage(lat), "retrieval": stage([e.retrieval_ms for e in evs]),
+                                          "rerank": stage([e.rerank_ms for e in evs]), "llm": stage([e.llm_latency_ms for e in evs])},
                      "feedback": {"up": sum(1 for e in evs if e.feedback == 1), "down": sum(1 for e in evs if e.feedback == -1)}},
+        "cost_per_day_usd_7d": per_day,
         "recent": [{"ts": e.ts.isoformat() if e.ts else None, "role": e.role, "question": e.question, "tier": e.tier, "intent": e.intent,
                     "query_type": e.query_type, "cache_hit": e.cache_hit, "llm_called": e.llm_called, "llm_reason": e.llm_reason,
                     "retrieval_count": e.retrieval_count, "reranker": e.reranker, "confidence": e.confidence, "model": e.model,

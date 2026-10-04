@@ -66,9 +66,15 @@ def fit_normalizer(paths, train_ids: list[str], *, bands: Optional[list[int]], m
                    max_tiles: int = 400, seed: int = 42) -> Normalizer:
     """Per-band statistics on the TRAIN split only (never val/test -> no leakage).
     Uses a seeded sample of at most ``max_tiles`` tiles so this stays cheap on large datasets."""
+    # the cache is only valid for the exact training split it was fitted on (audit bug 20: a rebuilt / different
+    # tile set used to silently reuse stale statistics from another dataset)
+    import hashlib
+    fp = hashlib.sha256(("\n".join(sorted(train_ids)) + f"|{bands}|{max_tiles}|{seed}").encode()).hexdigest()[:16]
     if cache is not None and cache.exists():
         d = json.loads(cache.read_text())
-        if d.get("method") == method and tuple(d.get("clip_percentiles", ())) == tuple(clip_percentiles):
+        if d.get("method") == method and tuple(d.get("clip_percentiles", ())) == tuple(clip_percentiles) \
+                and d.get("train_fingerprint") == fp:
+            d.pop("train_fingerprint", None)
             return Normalizer.from_dict(d)
     rng = random.Random(seed)
     ids = list(train_ids)
@@ -98,7 +104,7 @@ def fit_normalizer(paths, train_ids: list[str], *, bands: Optional[list[int]], m
     norm = Normalizer(method, mean, std, vmin, vmax, tuple(clip_percentiles), len(ids))
     if cache is not None:
         cache.parent.mkdir(parents=True, exist_ok=True)
-        cache.write_text(json.dumps(norm.to_dict(), indent=1))
+        cache.write_text(json.dumps({**norm.to_dict(), "train_fingerprint": fp}, indent=1))
     return norm
 
 

@@ -59,7 +59,10 @@ class FastEmbedder:
         return f"fastembed:{self.model}"
 
     def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        return [v.tolist() for v in self._m.embed(texts, batch_size=64)]
+        # batch 1: onnxruntime keeps its peak activation memory, and a padded batch of 512-token chunks is huge
+        # (measured, 633 chunks: batch 64 peaks at 2.4 GB, batch 1 at model + 42 MB and runs 2x faster - no padding).
+        # Vectors are identical across batch sizes (min cosine 0.9999996), so no re-embedding is needed.
+        return [v.tolist() for v in self._m.embed(texts, batch_size=S.embedding_batch_size)]
 
     def embed_query(self, text: str) -> list[float]:
         return next(iter(self._m.query_embed([text]))).tolist()

@@ -1,6 +1,6 @@
 # EcoConnectAI — Project Context (single source of truth)
 
-_Last updated: 2026-09-30 (all 8 phases implemented; deployment pending user credentials)._
+_Last updated: 2026-10-04 (near-real-time Copernicus layer, rebuilt model r2, production RAG; status + next-phase plan in docs/STATUS_AND_NEXT_STEPS_2026-10-04.md)._
 
 ## 1. What this is
 
@@ -13,7 +13,7 @@ connectivity graph → IIC/PC/ECA → leave-one-out patch criticality → what-i
 field verification → reports → audit trail.
 
 **Status: development / research prototype.** No field validation, no government deployment, no validated
-restoration costs. Assistant = production RAG (backend/rag/, docs/rag/): structured tools → cache → hybrid BM25 + local bge-small embeddings → routed Claude (Haiku 4.5 / Sonnet 5.5) only for signed-in users with validated citations, extractive fallback; 64/64 golden eval with LLM off. Learning guide for the owner: docs/BASIC_UNDERSTANDING.md. Owner: GitHub `kuldeep31016`,
+restoration costs. Assistant = production RAG (backend/rag/, docs/rag/): structured data tools (incl. satellite_latest, model_reliability) → cache → hybrid BM25 + pgvector (bge-small) RRF → Claude only for signed-in users (Haiku 4.5 knowledge, Opus 5.5 analytical; Sonnet 5.5 fallback) with validated citations, extractive fallback; 105/105 golden eval (LLM off). Near-real-time layer = backend/satellite/ + /satellite page (docs/satellite/COPERNICUS_INTEGRATION.md). Learning guide for the owner: docs/BASIC_UNDERSTANDING.md. Owner: GitHub `kuldeep31016`,
 repo `kuldeep31016/Major-Project-EconnectAI`, default branch `main`.
 
 **Long-term goal (user's spec, 2026-09-27):** evolve into a cloud-native, provenance-aware, honest,
@@ -70,6 +70,12 @@ threshold 0.5), 24 patches — the "P17 story" below refers to that run:
   (synthetic prototype, rank 7, S 0.194) is a different object.
 - Other runs: `<area>_multi_E1_s1_b0_dev_t0.70` for all four areas (Sundarbans 54 patches, Odisha 21,
   Gulf of Mannar 16, Kerala 12).
+- **2026-10-04: the original multi_E1_s1_b0_dev checkpoint is LOST** (stored runs/metrics remain). Rebuilt as
+  `multi_E1_s1_b0_dev_r2` (same recipe; docs/MODEL_REBUILD_2026-10-04.md): held-out test IoU 0.873 / F1 0.932 at
+  threshold 0.97 (validation-selected); 0.788 @0.5 (original 0.842). Per-area IoU vs GMW 2020 (incl. training tiles):
+  Sundarbans 0.913, Odisha 0.724, Kerala 0.000, Gulf of Mannar 0.008 → Kerala/Gulf are demonstration-only for this model.
+- Near-real-time (Copernicus S1, median of 8 same-orbit passes, Jul–Oct 2026) vs GMW 2020: Sundarbans IoU 0.884,
+  Odisha 0.651; a single date over-predicts 30–100× (Kerala). NRT runs `<area>_nrt_<date>_<id>` never move LATEST.
 - Synthetic prototype maths reproduce paper Tables VI–VIII exactly; Tables VI–VII pinned by tests/test_regression.py, VIII/ρ/τ-robustness not yet pinned.
 - P07 'small but critical' holds only for k ≥ 3, τ ≥ 5 km (top-5 in 4/9 τ×k variants) — say so when presenting.
 - Paper ↔ code: 18 disagreements listed in docs/PAPER_IMPLEMENTATION_MATRIX.md (real runs do NOT reproduce the paper's synthetic headline findings).
@@ -135,7 +141,12 @@ outputs/        runs/<area>/<run_id>/ (manifest, patches.geojson, graph, metrics
                 restoration, what_if_top1, tau_sensitivity, patches_input, frontend_bundle) + LATEST
                 segmentation/<exp>/ (metrics, experiment, history, plots, samples) + experiments.csv
                 quicklooks/  (rasters, .pth, .db, .jwt_secret are gitignored)
-tests/          test_graph, test_regression (pins stored P17/C1 + synthetic paper tables), test_patch_extraction,
+backend/satellite/  copernicus (OAuth, retries), catalog (public OData), processing (Process API on the training grid),
+                preprocessing (dB, median, distribution check), service (job satellite_analyze, reliability, plausibility),
+                api (/api/satellite/*); migration 0009; frontend app/satellite + components/satellite
+scripts/        + check_all_flows.py (every page's API × 4 areas), check_copernicus.py, area_reliability.py
+outputs/rebuild/   acquire_all.sh + train_all.sh (model rebuild recipe)
+tests/          test_satellite (mocked Copernicus, end-to-end job), test_graph, test_regression (pins stored P17/C1 + synthetic paper tables), test_patch_extraction,
                 test_ml_pipeline (needs torch), test_acquisition, test_backend (+security), test_workflow
 docs/           context/ (THIS), ARCHITECTURE, API, DATA_PROVENANCE, RESULTS_PROVENANCE, MODEL_CARD,
                 EXPERIMENTS, SECURITY, DEPLOYMENT, FIELD_WORKFLOW, PRODUCT_*, PAPER_*, IMPLEMENTATION_AUDIT…
@@ -156,7 +167,7 @@ bundle state `frontend/hooks/use-analysis.tsx`, getters `frontend/lib/data.ts`.
 ```bash
 python3 -m venv .venv && .venv/bin/pip install -r requirements-api.txt pytest pandas   # API + tests (no torch)
 # full research stack incl. torch: .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pytest -q          # 2026-09-30: 93 passed, 1 skipped (ML needs torch); also passes with ECO_DATABASE_URL=postgresql+psycopg://…
+.venv/bin/python -m pytest -q          # 2026-10-04: 197 passed, 0 skipped (torch 2.13 now in .venv); tests always use a temp DB
 # tests set ECO_INLINE_WORKER=0 and drive jobs with backend.jobs.work_once()
 .venv/bin/ruff check backend ecoconnect scripts tests --select F   # CI lint scope
 .venv/bin/python -m uvicorn backend.main:app --port 8000
@@ -170,7 +181,7 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
 ## 7. Key known problems (details + file:line in the audit §I; bugs 1–19 FIXED 2026-09-28)
 
 1. Most read + compute endpoints are still unauthenticated; heavy work is synchronous (no jobs yet — Phase 2).
-2. ML methodology bugs 20–28 OPEN (normaliser cache, 128 px split leakage, threshold picked on test split,
+2. ML methodology bugs 20, 22, 23 FIXED 2026-10-04; 21, 24–28 OPEN (normaliser cache, 128 px split leakage, threshold picked on test split,
    Kerala LATEST model trained on 2025 imagery vs 2020 labels, no git commit/hash in manifests) — need re-runs.
 3. `/simulation` duplicates `/scenario` + `/restoration`; `main.py` still large; ~57 eslint warnings (unused imports).
 4. Docker images not built locally yet (daemon was off). **GitHub Actions cannot run: account locked for billing**
@@ -196,6 +207,10 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
 
 ## 10. Secrets & deployment state (2026-09-30)
 
+- Local `.env` also holds COPERNICUS_CLIENT_ID / COPERNICUS_CLIENT_SECRET (Copernicus Data Space OAuth client; the
+  secret was pasted in chat on 2026-10-04 → rotate it). Render needs them too (dashboard, not render.yaml) and cannot
+  run NRT inference anyway (512 MB, no torch) — a PyTorch worker is required for that in deployment.
+- Model checkpoint `outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth` (72 MB) is git-ignored and NOT backed up.
 - Local `.env` (gitignored, chmod 600) holds ANTHROPIC_API_KEY (user-provided; user asked not to spend it — no test
   calls made). Never commit it; in deployment it goes into the Render dashboard (render.yaml `sync: false`).
 - Local dev DB: PostgreSQL 18 cluster in data/postgres (gitignored) on 127.0.0.1:5433, db `ecoconnect`, user `eco`

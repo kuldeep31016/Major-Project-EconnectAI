@@ -5,6 +5,7 @@ import signal
 import threading
 
 from . import job_handlers  # noqa: F401  (registers job types)
+from .satellite import service as _satellite  # noqa: F401  (registers satellite_analyze)
 from .db import init_db
 from .jobs import worker_loop
 

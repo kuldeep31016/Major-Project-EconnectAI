@@ -5,7 +5,7 @@ PY      ?= .venv/bin/python
 PIP     ?= .venv/bin/pip
 NPM     ?= npm --prefix frontend
 
-.PHONY: help setup setup-ml test acceptance rag-ingest rag-status rag-eval lint typecheck build run api web docker docker-postgres deploy-check clean
+.PHONY: help setup setup-ml test acceptance rag-ingest rag-status rag-eval rag-eval-live lint typecheck build run api web docker docker-postgres deploy-check clean
 
 help:            ## list commands
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-16s %s\n", $$1, $$2}'
@@ -30,8 +30,11 @@ rag-ingest:      ## incremental RAG ingestion (FORCE=1 re-indexes everything)
 rag-status:      ## RAG index status (documents by status, chunks, embedder, stale sources)
 	$(PY) scripts/rag_ingest.py --status
 
-rag-eval:        ## RAG golden-set evaluation with the real local embedding model -> docs/rag/EVAL_RESULTS.md
-	$(PY) scripts/rag_eval.py
+rag-eval:        ## RAG golden-set evaluation (real local embeddings, bm25/vector/hybrid ablation) -> docs/rag/EVAL_RESULTS.md
+	$(PY) scripts/rag_eval.py --ablation --record
+
+rag-eval-live:   ## + live Claude answers graded by an LLM judge on N questions (spends API credit: ~3-4 US cents each)
+	$(PY) scripts/rag_eval.py --llm live --judge $${N:-12} --record --out docs/rag/EVAL_RESULTS_LIVE.md --json docs/rag/eval_live_transcript.json
 
 lint:            ## ruff (CI rule set) + eslint
 	$(PY) -m ruff check backend ecoconnect scripts tests --select F

@@ -447,6 +447,75 @@ class RagEmbeddingCache(Base):
     created_at = Column(DateTime, default=utcnow)
 
 
+class SatelliteObservation(Base):
+    """A Sentinel-1 product seen in the Copernicus Data Space catalogue for a study area (catalogue cache + history).
+    Values are copied from the catalogue response; nothing here is measured or estimated by EcoConnectAI."""
+    __tablename__ = "satellite_observations"
+    id = Column(String(64), primary_key=True)                  # Copernicus product UUID
+    study_area_id = Column(String(64), index=True, nullable=False)
+    name = Column(String(200), nullable=False)                 # e.g. S1D_IW_GRDH_1SDV_20260927T004022_...SAFE
+    platform = Column(String(32))                              # Sentinel-1A / 1C / 1D
+    product_type = Column(String(32))                          # IW_GRDH_1S
+    mode = Column(String(8))                                   # IW
+    polarisation = Column(String(16))                          # VV&VH
+    orbit_direction = Column(String(16))
+    relative_orbit = Column(Integer)
+    timeliness = Column(String(32))                            # NRT-10m / NRT-3h / Fast-24h / ...
+    acquisition_start = Column(DateTime, index=True)
+    acquisition_end = Column(DateTime)
+    published_at = Column(DateTime)
+    aoi_coverage = Column(Float)                               # share of the study-area bbox inside the footprint
+    footprint = Column(JSON)                                   # GeoJSON geometry (WGS84)
+    first_seen_at = Column(DateTime, default=utcnow)
+    last_seen_at = Column(DateTime, default=utcnow)
+
+
+class SatelliteAnalysis(Base):
+    """Provenance record of one near-real-time analysis: which observation(s), which processing, which model and
+    configuration produced which run. Created when the analysis is requested; updated as the job advances."""
+    __tablename__ = "satellite_analyses"
+    id = Column(String(64), primary_key=True)                  # EC-<area>-<acq date>-<hex>
+    study_area_id = Column(String(64), index=True, nullable=False)
+    mode = Column(String(8), nullable=False, default="nrt")    # nrt (Copernicus) | cached (re-analysis of a stored scene)
+    product_ids = Column(JSON)                                 # Copernicus product UUIDs used (newest first)
+    product_names = Column(JSON)
+    satellite = Column(String(32))
+    product_type = Column(String(32))
+    acquisition_time = Column(DateTime)                        # newest acquisition used
+    composite_scenes = Column(Integer, default=1)
+    preprocessing_version = Column(String(64))
+    scene_path = Column(String(500))                           # data-root-relative GeoTIFF (same format as acquisition)
+    model_version = Column(String(120))
+    model_checkpoint = Column(String(500))
+    threshold = Column(Float)
+    mmu_ha = Column(Float)
+    tau_km = Column(Float)
+    k_neighbors = Column(Integer)
+    software_version = Column(String(80))
+    status = Column(String(24), index=True, default="QUEUED")  # QUEUED RUNNING SCENE_READY COMPLETED FAILED
+    stage = Column(String(40))
+    error = Column(Text)
+    job_id = Column(String, index=True)
+    run_id = Column(String(200))                               # outputs/runs/<area>/<run_id> when COMPLETED
+    summary = Column(JSON)
+    created_by = Column(Integer, ForeignKey("users.id"))
+    created_at = Column(DateTime, default=utcnow, index=True)
+    processed_at = Column(DateTime)                            # when the scene was retrieved + preprocessed
+    finished_at = Column(DateTime)
+
+    def to_dict(self) -> dict:
+        iso = lambda d: d.isoformat() + "Z" if d else None  # noqa: E731
+        return {"id": self.id, "study_area_id": self.study_area_id, "mode": self.mode, "product_ids": self.product_ids or [],
+                "product_names": self.product_names or [], "satellite": self.satellite, "product_type": self.product_type,
+                "acquisition_time": iso(self.acquisition_time), "composite_scenes": self.composite_scenes,
+                "preprocessing_version": self.preprocessing_version, "scene_path": self.scene_path,
+                "model_version": self.model_version, "model_checkpoint": self.model_checkpoint, "threshold": self.threshold,
+                "mmu_ha": self.mmu_ha, "tau_km": self.tau_km, "k_neighbors": self.k_neighbors,
+                "software_version": self.software_version, "status": self.status, "stage": self.stage, "error": self.error,
+                "job_id": self.job_id, "run_id": self.run_id, "summary": self.summary, "created_at": iso(self.created_at),
+                "processed_at": iso(self.processed_at), "finished_at": iso(self.finished_at)}
+
+
 class RefreshToken(Base):
     """Rotating refresh tokens. Only a sha256 of the token is stored; reuse of a rotated token revokes its family."""
     __tablename__ = "refresh_tokens"

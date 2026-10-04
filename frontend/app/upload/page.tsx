@@ -51,7 +51,10 @@ export default function NewAnalysisPage() {
     return () => window.clearInterval(t);
   }, [running]);
 
-  const areaScenes = useMemo(() => (scenes ?? []).filter((s) => s.studyAreaId === sceneId).sort((a, b) => b.scene_id.localeCompare(a.scene_id)), [scenes, sceneId]);
+  // stored acquisition composites first (the existing default), then near-real-time Copernicus scenes (Satellite Monitor)
+  const isNrt = (s: SceneRecord) => s.scene_id.includes("_s1nrt_");
+  const areaScenes = useMemo(() => (scenes ?? []).filter((s) => s.studyAreaId === sceneId)
+    .sort((a, b) => Number(isNrt(a)) - Number(isNrt(b)) || b.scene_id.localeCompare(a.scene_id)), [scenes, sceneId]);
   const scene = areaScenes.find((s) => s.scene_id === sceneFile) ?? areaScenes[0] ?? null;
   // A checkpoint is usable only if the scene carries every band index it was trained on.
   const usable = (m: ModelInfo) => !scene || !m.bands || m.bands.every((b) => b < scene.bands.length);
@@ -189,7 +192,7 @@ export default function NewAnalysisPage() {
             <CardContent className="space-y-1 text-[11.5px] text-muted-foreground">
               <div>• Scenes: Copernicus Sentinel-1 RTC (Planetary Computer) and Sentinel-2 L2A (Earth Search), temporal medians for the year.</div>
               <div>• Labels used for training: Global Mangrove Watch v3 2020 (weak labels) — the model learns a reference map, not field truth.</div>
-              <div>• Development checkpoints (B0) were trained on the Kerala subset; applying them elsewhere is transfer without retraining and is labelled as such.</div>
+              <div>• Development checkpoints (B0): <code>multi_*</code> models were trained on all four study areas (pooled 2020 tiles); <code>kerala_*</code> models on Kerala only. The 4-area model maps Sundarbans and Bhitarkanika well and Kerala / Gulf of Mannar poorly (thin mangrove fringes).</div>
               <div>• Graph, indices and criticality follow the paper exactly (Eqs. 3–11); costs are never invented, so restoration is ranked by connectivity gain unless you upload costs.</div>
             </CardContent>
           </Card>
