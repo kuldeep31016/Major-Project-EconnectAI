@@ -6,6 +6,20 @@ EcoConnectAI should not add modules. It should make the existing chain — *sate
 connectivity → critical patches → restoration → report* — accurate, current and trustworthy enough to hand to a forest
 department.
 
+## 0. Update — fixes applied later on 2026-10-04 (read this first)
+
+| Weakness (below) | What was done | Result |
+|---|---|---|
+| §4.A.4 split leakage (audit bug 21) | Stratified, buffered spatial split (standard spatial cross-validation): whole blocks per split, each area's mangrove shared 70/15/15, tiles crossing into another split's block excluded. Model retrained → `multi_E1_s1_b0_dev_r3` | honest held-out test IoU **0.776** / F1 0.874 (pooled); per area Sundarbans **0.925**, Odisha **0.318**, Kerala / Gulf 0.000 |
+| §4.A.4 per-area reliability on training tiles | Reliability level now from each area's held-out test tiles (whole scene only when too little reference, flagged) | Odisha downgraded to **unreliable** (its 0.724 was optimistic) |
+| §4.A.5 one threshold for all areas | Per-area threshold chosen on that area's validation tiles (≥ 2,000 reference px), used by the live analysis | Odisha 0.92, others pooled 0.96 |
+| §4.B.4 / B.5 domain gap, Copernicus quota | Default near-real-time source = **Microsoft Planetary Computer Sentinel-1 RTC** (the exact training product, no account, ~1 day after a pass); Copernicus kept as an option | equal agreement within noise (Sundarbans 0.861 vs 0.884, Odisha 0.676 vs 0.651 with r2) |
+| §4.D.2 model file not backed up | GitHub releases `model-multi_E1_s1_b0_dev_r2` and `_r3` with SHA-256, restore tested | |
+| Interactive Map page | Redesigned: scenario lab + real-time tab + map + patch / network / simulation cards on one screen | verified at 375 to 1920 px |
+
+Still open, in order: thin fringes (Kerala, Gulf) and Odisha generalisation (§4.A.1 — needs S1+S2 fusion and/or a larger
+encoder trained on GPU), field ground truth, automatic monitoring, production inference host (see docs/DEPLOYMENT.md §3a).
+
 ## 1. What the system does, in plain words
 
 | Term | Plain meaning |
@@ -51,9 +65,8 @@ department.
 2. **Trained on weak labels.** The "truth" is Global Mangrove Watch 2020, itself a model output. All scores are
    agreement with that map, not field accuracy. Nothing is field-validated.
 3. **Development-scale training.** 800 training tiles, B0 encoder, one seed; the larger B7 model was never trained.
-4. **Optimistic metrics.** Overlapping tiles leak between train and test (audit bug 21, open); per-area reliability is
-   computed on 2020 scenes that include training tiles.
-5. **One threshold for all areas** (0.97, dominated by the Sundarbans). Kerala's best threshold is far lower.
+4. ~~**Optimistic metrics.**~~ **Fixed 2026-10-04 (§0):** leakage-free split; per-area reliability from held-out tiles.
+5. ~~**One threshold for all areas.**~~ **Fixed 2026-10-04 (§0):** per-area thresholds where the validation tiles allow.
 6. **Radar only.** Sentinel-2 optical (which helps with thin, green fringes) is downloaded but not used by this model.
 
 ### B. "Real-time" — what is and is not possible
@@ -88,8 +101,8 @@ department.
 
 | Priority | Goal | Done when |
 |---|---|---|
-| P0 | **Protect the model** | checkpoint + calibration in object storage / release; checksum recorded; restore tested |
-| P0 | **Honest accuracy baseline** | leakage-free split (buffered spatial blocks); per-area held-out IoU reported; per-area thresholds chosen on validation |
+| P0 ✅ | **Protect the model** | checkpoint + calibration in object storage / release; checksum recorded; restore tested |
+| P0 ✅ | **Honest accuracy baseline** | leakage-free split (buffered spatial blocks); per-area held-out IoU reported; per-area thresholds chosen on validation |
 | P1 | **Train for the input we actually use** | training composites built exactly like near-real-time input (3-month, 8-pass medians, several seasons and years); single-date gap measured |
 | P1 | **Map thin fringes** | S1+S2 fusion and/or larger encoder evaluated; Kerala and Gulf IoU > 0.5 vs GMW **or** formally declared out of scope |
 | P1 | **Ground truth** | a field-verified sample (forest department / published survey) for at least one area; accuracy vs field, not just vs GMW |

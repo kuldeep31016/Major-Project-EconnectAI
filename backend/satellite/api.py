@@ -42,14 +42,22 @@ def _fail(e: SatelliteError) -> HTTPException:
 @router.get("/status")
 def status():
     ms = service.model_status()
-    return {"source": catalog.SOURCE, "catalogue": {"available": True, "url": CATALOGUE_URL.split("/odata")[0], "auth": "none (public)"},
-            "retrieval": {"configured": credentials_configured(), "api": "Processing API (Sentinel Hub on CDSE)",
-                          "note": None if credentials_configured() else NotConfigured.user_message},
+    pc = catalog.PROVIDER == "planetary"
+    configured = pc or credentials_configured()
+    return {"source": catalog.SOURCES.get(catalog.PROVIDER, catalog.SOURCE), "provider": catalog.PROVIDER,
+            "catalogue": {"available": True, "auth": "none (public)",
+                          "url": "https://planetarycomputer.microsoft.com" if pc else CATALOGUE_URL.split("/odata")[0]},
+            "retrieval": {"configured": configured,
+                          "api": "Planetary Computer STAC (anonymous signed URLs; same RTC product as training)" if pc
+                          else "Processing API (Sentinel Hub on CDSE)",
+                          "note": None if configured else NotConfigured.user_message},
             "inference": {k: ms[k] for k in ("available", "model_version", "checkpoint_present", "torch_available", "threshold",
-                                             "mmu_ha", "reason")},
+                                             "mmu_ha", "reason")}
+                         | {"area_thresholds": service.area_thresholds()},
             "search_days": catalog.SEARCH_DAYS, "min_aoi_coverage": catalog.MIN_COVERAGE,
             "modes": {"stored": "Stored analyses (static data: 2020 Sentinel-1 RTC composite, Planetary Computer)",
-                      "nrt": "Latest satellite observation (Copernicus Data Space, near-real-time Sentinel-1 GRD)"}}
+                      "nrt": "Latest satellite observation (" + ("Microsoft Planetary Computer, Sentinel-1 RTC, about a day after each pass"
+                                                                 if pc else "Copernicus Data Space, near-real-time Sentinel-1 GRD") + ")"}}
 
 
 @router.get("/latest")
@@ -113,7 +121,7 @@ def analyze(body: AnalyzeIn, user: User = Depends(require("run_analysis")), db: 
         raise _fail(e)
     used = catalog.same_track(obs, ref, body.composite_scenes)
     ids = [o.product_id for o in used]
-    ms = service.model_status()
+    ms = service.model_status(body.area_id)
     for a in db.query(SatelliteAnalysis).filter(SatelliteAnalysis.study_area_id == body.area_id) \
             .order_by(SatelliteAnalysis.created_at.desc()).all():
         if a.product_ids != ids:
@@ -122,7 +130,8 @@ def analyze(body: AnalyzeIn, user: User = Depends(require("run_analysis")), db: 
             return {"analysis": a.to_dict(), "job_id": a.job_id, "reused": "in_progress"}
         if a.status == "COMPLETED" and not body.force and a.threshold == ms["threshold"] and a.model_checkpoint == ms["checkpoint"]:
             return {"analysis": a.to_dict(), "job_id": a.job_id, "reused": "completed"}
-    if not credentials_configured() and not service.cached_scene(service.scene_file(body.area_id, used), used):
+    if used[0].provider != "planetary" and not credentials_configured() \
+            and not service.cached_scene(service.scene_file(body.area_id, used), used):
         raise _fail(NotConfigured())
     a = service.new_analysis(db, body.area_id, used, user)
     j = enqueue(db, "satellite_analyze", {"analysis_id": a.id, "study_area_id": body.area_id,

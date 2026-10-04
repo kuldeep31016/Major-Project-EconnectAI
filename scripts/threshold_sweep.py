@@ -82,6 +82,7 @@ def main() -> int:
     def blank():
         return {t: {"tp": 0, "fp": 0, "fn": 0, "n_components": 0, "n_patches_ge_mmu": 0, "habitat_area_ha": 0.0} for t in thresholds}
     aggs = {"select": blank(), "test": blank()}
+    per_area: dict[str, dict] = {}            # the same tables for each raster (= study area) on its own tiles
     for prob_path, label_path in zip(a.prob, a.label):
         with rasterio.open(prob_path) as s:
             prob = s.read(1).astype(np.float32)
@@ -99,14 +100,18 @@ def main() -> int:
             binary = np.isfinite(prob) & (prob >= t)
             lab, n = ndimage.label(binary, structure=np.ones((3, 3)))
             areas = ndimage.sum(area, lab, np.arange(1, n + 1)) if n else np.array([])
+            area_id = Path(prob_path).stem.replace("_prob", "")
+            pa = per_area.setdefault(area_id, {"select": blank(), "test": blank(), "ref_px": {"select": 0, "test": 0}})
             for key, valid in masks.items():
                 if valid is None:
                     continue
                 ref, pred = label[valid] == 1, prob[valid] >= t
-                g = aggs[key][t]
-                g["tp"] += int((pred & ref).sum()); g["fp"] += int((pred & ~ref).sum()); g["fn"] += int((~pred & ref).sum())
-                g["n_components"] += int(n); g["n_patches_ge_mmu"] += int((areas >= a.mmu_ha).sum())
-                g["habitat_area_ha"] += float(areas.sum())
+                if t == thresholds[0]:
+                    pa["ref_px"][key] += int(ref.sum())
+                for g in (aggs[key][t], pa[key][t]):
+                    g["tp"] += int((pred & ref).sum()); g["fp"] += int((pred & ~ref).sum()); g["fn"] += int((~pred & ref).sum())
+                    g["n_components"] += int(n); g["n_patches_ge_mmu"] += int((areas >= a.mmu_ha).sum())
+                    g["habitat_area_ha"] += float(areas.sum())
 
     def table(agg):
         out = []
@@ -121,11 +126,27 @@ def main() -> int:
         return out
     rows = table(aggs["select"])
     test_rows = table(aggs["test"]) if split_ids.get("test") else []
+    best_pooled = max(rows, key=lambda r: r[a.criterion])
+    MIN_REF_PX = 2000          # < 2,000 mangrove pixels (20 ha) on the selection tiles: too few to choose a threshold
+    per_area_out = {}
+    for area_id, pa in per_area.items():
+        prow, ptest = table(pa["select"]), table(pa["test"])
+        enough = pa["ref_px"]["select"] >= MIN_REF_PX
+        pb = max(prow, key=lambda r: r[a.criterion]) if enough else next(r for r in prow if r["threshold"] == best_pooled["threshold"])
+        per_area_out[area_id] = {
+            "selected_threshold": pb["threshold"], "source": "own validation tiles" if enough else
+            f"pooled threshold (only {pa['ref_px']['select']} mangrove px on this area's {sel or 'selection'} tiles)",
+            "selection_ref_px": pa["ref_px"]["select"], "test_ref_px": pa["ref_px"]["test"],
+            "selection_at_selected": {k: pb[k] for k in ("iou", "f1", "precision", "recall")},
+            "test_at_selected": next(({k: r[k] for k in ("iou", "f1", "precision", "recall", "tp", "fp", "fn")}
+                                      for r in ptest if r["threshold"] == pb["threshold"]), None),
+            "grid_edge": enough and pb["threshold"] in (thresholds[0], thresholds[-1])}
     best = max(rows, key=lambda r: r[a.criterion])
     out = {"scope": scope, "reference": "Global Mangrove Watch v3 (weak label) - agreement, not field-truth accuracy",
            "criterion": a.criterion, "selected_threshold": best["threshold"], "selected_on": sel or "all",
            "grid_edge": best["threshold"] in (thresholds[0], thresholds[-1]), "mmu_ha": a.mmu_ha,
            "test_at_selected": next((r for r in test_rows if r["threshold"] == best["threshold"]), None),
+           "per_area": per_area_out,
            "probability_rasters": [str(Path(p).resolve()) for p in a.prob], "rows": rows}
     (exp / "threshold_calibration.json").write_text(json.dumps(out, indent=1))
     with (exp / "threshold_calibration.csv").open("w", newline="") as f:
@@ -146,6 +167,10 @@ def main() -> int:
         flag = " <- selected" if r is best else ""
         print(f"{r['threshold']:5.2f} {r['iou']:6.3f} {r['f1']:6.3f} {r['precision']:6.3f} {r['recall']:6.3f} "
               f"{r['n_patches_ge_mmu']:14d} {r['habitat_area_ha']:11.0f}{flag}")
+    for area_id, v in per_area_out.items():
+        t = v["test_at_selected"] or {}
+        print(f"  {area_id:15} threshold {v['selected_threshold']:.2f} ({v['source']})  held-out test IoU "
+              f"{t.get('iou', float('nan')):.3f} F1 {t.get('f1', float('nan')):.3f}  [test mangrove px {v['test_ref_px']}]")
     tsel = out["test_at_selected"]
     if tsel:
         print(f"held-out TEST at {best['threshold']:.2f}: IoU {tsel['iou']:.3f}  F1 {tsel['f1']:.3f}  P {tsel['precision']:.3f}  R {tsel['recall']:.3f}")

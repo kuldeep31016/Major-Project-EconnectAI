@@ -45,6 +45,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--stage", required=True, choices=["tiles", "train", "evaluate", "sweep", "analyse"])
     ap.add_argument("--dataset-name", default="ecoconnect_tiles")
+    ap.add_argument("--sweep-thresholds", default="0.5,0.6,0.7,0.8,0.85,0.9,0.92,0.94,0.96,0.97,0.98,0.99",
+                    help="threshold grid for --stage sweep (extends to 0.99: pos_weight pushes probabilities up)")
     ap.add_argument("--year", default="2020")
     ap.add_argument("--config", default="configs/train_dev.yaml")
     ap.add_argument("--experiment-id", default=None)
@@ -91,7 +93,7 @@ def main() -> int:
                 sh([PY, "scripts/predict.py", "--checkpoint", ck, "--input", scene, "--output", prob, "--threshold", "0.5"])
             probs[sid] = (prob, label)
         if a.stage == "sweep":
-            cmd = [PY, "scripts/threshold_sweep.py", "--experiment", exp_dir]
+            cmd = [PY, "scripts/threshold_sweep.py", "--experiment", exp_dir, "--thresholds", a.sweep_thresholds]
             for prob, label in probs.values():
                 cmd += ["--prob", prob, "--label", label]
             sh(cmd)

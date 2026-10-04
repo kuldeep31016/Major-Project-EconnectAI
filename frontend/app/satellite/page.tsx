@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 const SatelliteMap = dynamic(() => import("@/components/satellite/satellite-map"), { ssr: false });
 
 const STAGE_LABEL: Record<string, string> = {
-  observation: "Satellite observation found", retrieval: "Data retrieved (Copernicus Processing API)",
+  observation: "Satellite observation found", retrieval: "Data retrieved (Sentinel-1 VV/VH backscatter)",
   preprocessing: "Preprocessing (gamma0 → dB, training grid)", inference: "AI inference (U-Net, EfficientNet-B0)",
   habitat: "Habitat extraction (threshold → mask)", patches: "Patch extraction (≥ minimum mapping unit)",
   connectivity: "Connectivity analysis (graph, IIC)", criticality: "Criticality analysis (leave-one-out)",
@@ -179,7 +179,7 @@ export default function SatelliteMonitorPage() {
           <SelectMenu value={sceneId} onChange={setSceneId} label="Study area" icon={Satellite} className="w-[260px]"
             options={areas.map((a) => ({ value: a.id, label: a.region, hint: a.state }))} />
           <div role="tablist" aria-label="Data source" className="inline-flex rounded-xl border border-black/[0.08] bg-white p-1">
-            {([["stored", "Stored analysis (static data)"], ["nrt", "Latest observation (Copernicus NRT)"]] as const).map(([k, label]) => (
+            {([["stored", "Stored analysis (static data)"], ["nrt", "Latest observation (near-real-time)"]] as const).map(([k, label]) => (
               <button key={k} role="tab" aria-selected={mode === k} onClick={() => setMode(k)}
                 className={cn("rounded-lg px-3 py-1.5 text-[12.5px] font-semibold transition-colors",
                   mode === k ? "bg-[#15803d] text-white" : "text-[#334155] hover:bg-[#f0fdf4]")}>{label}</button>
@@ -281,7 +281,7 @@ function ReliabilityNote({ r }: { r: NonNullable<SatelliteLatest["model_reliabil
   const ok = r.level !== "unreliable";
   return (
     <div className={cn("rounded-xl border px-3 py-2.5 text-[12.5px]", ok ? "border-green-200 bg-green-50 text-green-900" : "border-amber-200 bg-amber-50 text-amber-900")}>
-      <p className="font-semibold">Model reliability in this area: {r.level}{r.iou != null ? ` (IoU ${r.iou.toFixed(2)} vs GMW 2020)` : ""}</p>
+      <p className="font-semibold">Model reliability in this area: {r.level}{r.iou != null ? ` (IoU ${r.iou.toFixed(2)} vs GMW 2020${r.held_out_iou != null ? ", held-out tiles" : ", whole scene incl. training tiles"})` : ""}</p>
       <p className="mt-0.5 text-[12px]">
         {ok ? "The model reproduces the 2020 reference map well here, so near-real-time maps of this area are meaningful."
           : `Mangroves here are too small or too few (${Math.round(r.reference_habitat_ha)} ha in the 2020 reference) for this 10 m radar model to map; treat any result as a demonstration only.`}
@@ -292,8 +292,8 @@ function ReliabilityNote({ r }: { r: NonNullable<SatelliteLatest["model_reliabil
 
 function CapabilityStrip({ status }: { status: SatelliteStatus | null }) {
   const items = [
-    { label: "Catalogue search", ok: status ? status.catalogue.available : null, hint: "Copernicus Data Space · public" },
-    { label: "Image retrieval", ok: status ? status.retrieval.configured : null, hint: status?.retrieval.configured ? "Processing API configured" : "needs Copernicus OAuth client" },
+    { label: "Catalogue search", ok: status ? status.catalogue.available : null, hint: status ? `${status.source} · ${status.catalogue.auth}` : "" },
+    { label: "Image retrieval", ok: status ? status.retrieval.configured : null, hint: status?.retrieval.configured ? status.retrieval.api : status?.retrieval.note ?? "" },
     { label: "AI inference", ok: status ? status.inference.available : null, hint: status?.inference.available ? status.inference.model_version : status?.inference.reason ?? "" },
   ];
   return (
@@ -341,7 +341,7 @@ function ObservationCard({ o, isLatest, prevDays, loading, analysisStatus, onVie
             {isLatest ? "Latest satellite observation" : "Selected observation"}</CardTitle>
           {o && <span className={cn("shrink-0 whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] font-semibold", STATUS_STYLE[st])}>● {st}</span>}
         </div>
-        <CardDescription>Copernicus Data Space Ecosystem · Sentinel-1 IW GRD · metadata as published in the catalogue</CardDescription>
+        <CardDescription>{o?.source ?? "Sentinel-1"} · metadata as published in the catalogue</CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
         {loading && !o ? <p className="flex items-center gap-2 text-[12.5px] text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Searching the satellite catalogue…</p>
@@ -423,7 +423,7 @@ function Provenance({ detail, onOpen }: { detail: SatelliteAnalysisDetail; onOpe
           </div>
         )}
         <div>
-          <Row k="Source" v="Copernicus Data Space · Sentinel-1 GRD" />
+          <Row k="Source" v={detail.product_type === "S1_RTC_IW" ? "Microsoft Planetary Computer · Sentinel-1 RTC" : "Copernicus Data Space · Sentinel-1 GRD"} />
           <Row k="Acquisition" v={utc(detail.acquisition_time)} />
           <Row k="Scenes used" v={`${detail.product_ids.length} (${detail.composite_scenes > 1 ? "temporal median" : "single acquisition"})`} />
           <Row k="Processed" v={utc(detail.processed_at)} />
@@ -473,7 +473,7 @@ function History({ obs, selectedId, latestId, onPick }: {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-[15px]">Observation history</CardTitle>
-        <CardDescription>Sentinel-1 IW GRD acquisitions over the study area (catalogue). Click a row to inspect it.</CardDescription>
+        <CardDescription>Sentinel-1 IW acquisitions over the study area ({obs[0]?.source ?? "catalogue"}). Click a row to inspect it.</CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <div className="max-h-[320px] overflow-auto">
@@ -496,7 +496,7 @@ function History({ obs, selectedId, latestId, onPick }: {
                         {o.product_id === latestId && <span className="ml-1.5 rounded bg-[#15803d] px-1.5 py-px text-[9.5px] font-semibold text-white">LATEST</span>}
                       </span>
                     </td>
-                    <td className="px-1.5 py-2 sm:px-2"><span className="whitespace-nowrap">{o.satellite}</span><span className="block text-[11px] text-muted-foreground">GRD · {o.polarisation}</span></td>
+                    <td className="px-1.5 py-2 sm:px-2"><span className="whitespace-nowrap">{o.satellite}</span><span className="block text-[11px] text-muted-foreground">{o.product} · {o.polarisation}</span></td>
                     <td className="px-1.5 py-2 sm:px-2">{Math.round(o.aoi_coverage * 100)} %</td>
                     <td className="hidden px-1.5 py-2 sm:table-cell sm:px-2">{usable ? <span className="text-[#15803d]">yes</span> : <span className="text-muted-foreground">{o.full_coverage ? "single-pol" : "partial"}</span>}</td>
                     <td className="px-2 py-2 sm:px-3">{!o.analysis ? "—" : o.analysis.status === "FAILED" && o.analysis.stage === "inference" ? "scene ready"

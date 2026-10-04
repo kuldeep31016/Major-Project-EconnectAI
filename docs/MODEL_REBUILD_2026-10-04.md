@@ -56,3 +56,37 @@ gh release download model-multi_E1_s1_b0_dev_r2 -R kuldeep31016/Major-Project-Ec
 shasum -a 256 outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth
 ```
 Back up every future checkpoint the same way before deleting or retraining anything.
+
+## r3 — leakage-free split (audit bug 21), now the near-real-time default
+
+**Problem.** Tiles are 256 px placed every 128 px, and the split assigned whole 4x4-stride blocks: a tile at the edge of a
+training block overlapped the neighbouring validation/test block by 128 px, so some test pixels were seen in training.
+A plain random block split also left almost no mangrove in the validation/test tiles outside the Sundarbans (Gulf of
+Mannar validation: 0 mangrove pixels), so per-area accuracy could not be measured at all.
+
+**Fix (standard spatial cross-validation practice).** `scripts/resplit_buffered.py --stratify --strat-block-tiles 6`
+(no re-tiling; same tile files): blocks of 6x6 strides; per study area, blocks sorted by GMW mangrove pixels are dealt
+greedily so train/val/test each get ~70/15/15 % of that area's mangrove; every tile that reaches into a block of a
+different split is excluded (`tiling.boundary_crossing`; `build_tiles(..., buffer_split_boundaries=True)` does the same
+for new datasets). Result `data/ecoconnect_tiles_buf`: train/val/test 704/167/294 tiles (208 boundary tiles excluded).
+Training: `outputs/rebuild/train_r3.sh` (`configs/train_dev_buf.yaml`, otherwise identical to r2; best epoch 36).
+`scripts/threshold_sweep.py` now also selects a threshold per study area on that area's validation tiles when they hold
+>= 2,000 mangrove pixels (else the pooled threshold) and reports each area's held-out test score.
+
+| `multi_E1_s1_b0_dev_r3` (agreement with GMW 2020) | value |
+|---|---|
+| held-out test @0.5: IoU / F1 / P / R | 0.670 / 0.802 / 0.673 / 0.992 |
+| threshold (pooled, validation split) | 0.96 (Odisha 0.92 on its own validation tiles) |
+| held-out test @0.96, pooled: IoU / F1 / P / R | **0.776 / 0.874 / 0.806 / 0.956** |
+| held-out test per area | Sundarbans **0.925**, Odisha **0.318**, Kerala 0.000, Gulf of Mannar 0.000 (666 / 482 reference px on test tiles: too few to score) |
+| real 2026 NRT scenes (8-pass median) vs GMW 2020 | Sundarbans 0.902 (Copernicus input) / 0.876 (Planetary Computer); Odisha 0.610 / 0.622 |
+| r2 on the same 2026 scenes (for comparison) | Sundarbans 0.884 / 0.861; Odisha 0.651 / 0.676 |
+
+The r3 pooled score is lower than r2's 0.873 because r2's test tiles overlapped its training tiles; r3's is the honest
+number. Odisha is the clearest case: r2's 0.724 included training tiles; on Odisha blocks it never saw, r3 scores 0.318
+(it over-predicts there), so Odisha is now labelled unreliable. **Decision:** r3 is the near-real-time default
+(`backend/satellite/preprocessing.MODEL_EXPERIMENTS`), because it is the only model with a leakage-free evaluation;
+r2 stays selectable with `SATELLITE_MODEL_EXPERIMENT=multi_E1_s1_b0_dev_r2`. Stored dashboard runs are unchanged.
+Backup: GitHub release **`model-multi_E1_s1_b0_dev_r3`**, SHA-256
+`d79847742f0065eeed5f7aea9501c856cfb030c89be7536a51460ac8b28d9884` (restore tested 2026-10-04).
+

@@ -1,0 +1,24 @@
+{
+ "removed_patch_ids": [
+  "P01"
+ ],
+ "metric": "iic",
+ "c_before": 0.02699781774697117,
+ "c_after": 0.01933949142127431,
+ "delta_connectivity": 0.007658326325696858,
+ "loss_fraction": 0.28366464273046776,
+ "loss_pct": 28.366464273046773,
+ "habitat_area_before_ha": 56189.98000053217,
+ "habitat_area_removed_ha": 9218.540000154799,
+ "habitat_area_removed_pct": 16.406021144815305,
+ "components_before": 11,
+ "components_after": 10,
+ "edges_before": 26,
+ "edges_after": 26,
+ "severed_edges": [],
+ "newly_isolated_patch_ids": [],
+ "affected_patch_ids": [],
+ "interface_score_before": 37.81926320397497,
+ "interface_score_after": 37.482778575823936,
+ "notes": []
+}

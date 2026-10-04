@@ -37,3 +37,9 @@ services:
         sync: false
       - key: AWS_DEFAULT_REGION       # R2 uses "auto"
         value: auto
+      - key: SATELLITE_PROVIDER       # near-real-time Sentinel-1 source: planetary (no account) | copernicus (needs the two below)
+        value: planetary
+      - key: COPERNICUS_CLIENT_ID     # only when SATELLITE_PROVIDER=copernicus
+        sync: false
+      - key: COPERNICUS_CLIENT_SECRET
+        sync: false

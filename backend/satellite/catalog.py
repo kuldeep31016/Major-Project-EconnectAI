@@ -24,11 +24,16 @@ from ecoconnect.pipeline.config import load_study_areas
 
 from .copernicus import CATALOGUE_URL, InvalidArea, InvalidProduct, NoObservation, request
 
-PRODUCT_TYPE = "IW_GRDH_1S"
+PRODUCT_TYPE = "IW_GRDH_1S"                  # Copernicus GRD-H
+VALID_TYPES = {PRODUCT_TYPE, "S1_RTC_IW"}    # + Planetary Computer RTC (derived from IW GRD-H)
+# planetary (default): Microsoft Planetary Computer sentinel-1-rtc - the product the model was trained on, no account.
+# copernicus: Copernicus Data Space GRD + Processing API (needs COPERNICUS_CLIENT_ID / _SECRET for retrieval).
+PROVIDER = os.environ.get("SATELLITE_PROVIDER", "planetary").strip().lower()
 MIN_COVERAGE = float(os.environ.get("SATELLITE_MIN_AOI_COVERAGE", "0.9"))
 SEARCH_DAYS = int(os.environ.get("SATELLITE_SEARCH_DAYS", "120"))
 CACHE_TTL_S = float(os.environ.get("SATELLITE_CATALOGUE_TTL_S", "600"))
 SOURCE = "Copernicus Data Space Ecosystem"
+SOURCES = {"copernicus": SOURCE, "planetary": "Microsoft Planetary Computer (Sentinel-1 RTC)"}
 
 
 @dataclass
@@ -48,6 +53,7 @@ class Observation:
     published_at: Optional[str]
     aoi_coverage: float
     footprint: Optional[dict] = field(default=None, repr=False)
+    provider: str = "copernicus"
 
     @property
     def has_vv_vh(self) -> bool:
@@ -56,9 +62,9 @@ class Observation:
 
     def to_api(self) -> dict:
         d = asdict(self)
-        d.update({"satellite": self.platform or "Sentinel-1", "product": "GRD", "polarization": ["VV", "VH"] if self.has_vv_vh
+        d.update({"satellite": self.platform or "Sentinel-1", "product": "RTC" if self.provider == "planetary" else "GRD", "polarization": ["VV", "VH"] if self.has_vv_vh
                   else [x for x in re.split(r"[&+,\s]+", self.polarisation or "") if x],
-                  "resolution_m": 10, "source": SOURCE, "acquisition_time": self.acquisition_start,
+                  "resolution_m": 10, "source": SOURCES.get(self.provider, SOURCE), "acquisition_time": self.acquisition_start,
                   "full_coverage": self.aoi_coverage >= MIN_COVERAGE})
         return d
 
@@ -113,13 +119,13 @@ def parse_product(p: dict, study_area_id: str, aoi) -> Observation:
 
 
 def validate_product(o: Observation) -> None:
-    if o.product_type != PRODUCT_TYPE or (o.mode and o.mode != "IW") or not o.has_vv_vh:
+    if o.product_type not in VALID_TYPES or (o.mode and o.mode != "IW") or not o.has_vv_vh:
         raise InvalidProduct(f"{o.name}: type={o.product_type} mode={o.mode} pol={o.polarisation}")
 
 
 def pick_latest(obs: list[Observation]) -> Observation:
     """Newest VV+VH IW GRD acquisition covering >= MIN_COVERAGE of the AOI."""
-    ok = [o for o in obs if o.product_type == PRODUCT_TYPE and o.has_vv_vh and o.aoi_coverage >= MIN_COVERAGE]
+    ok = [o for o in obs if o.product_type in VALID_TYPES and o.has_vv_vh and o.aoi_coverage >= MIN_COVERAGE]
     if not ok:
         raise NoObservation(f"{len(obs)} products, none VV+VH with coverage >= {MIN_COVERAGE}")
     return max(ok, key=lambda o: o.acquisition_start or "")
@@ -132,11 +138,16 @@ _lock = threading.Lock()
 def clear_cache() -> None:
     with _lock:
         _cache.clear()
+    from . import planetary
+    planetary.clear_cache()
 
 
 def search(study_area_id: str, *, days: int = SEARCH_DAYS, top: int = 40, now: Optional[datetime] = None,
            client=None) -> list[Observation]:
-    """Sentinel-1 IW GRD products intersecting the study area in the last ``days`` days, newest first (cached)."""
+    """Sentinel-1 IW products intersecting the study area in the last ``days`` days, newest first (cached)."""
+    if PROVIDER == "planetary" and client is None:
+        from . import planetary
+        return planetary.search(study_area_id, days=days, now=now)
     _, aoi = area_aoi(study_area_id)
     key = (study_area_id, days, top)
     with _lock:

@@ -1,17 +1,19 @@
 "use client";
 
-import { GROUPS, KINDS, type Kind } from "@/components/simulation/scenario-kinds";
+import { GROUPS, KINDS, type Kind, type KindGroup } from "@/components/simulation/scenario-kinds";
 import { cn } from "@/lib/utils";
 
 /** A–K scenario picker: three groups of small icon tiles; the chosen one is described below the grid by the page. */
-export function ScenarioChooser({ value, onChange, disabled = {} }: {
+export function ScenarioChooser({ value, onChange, disabled = {}, groups }: {
   value: Kind; onChange: (k: Kind) => void;
   /** kinds that cannot run on the current run, with the reason shown as the tile's tooltip */
   disabled?: Partial<Record<Kind, string>>;
+  /** Only these groups (default: all three). */
+  groups?: KindGroup[];
 }) {
   return (
     <div className="space-y-3">
-      {GROUPS.map((g) => (
+      {GROUPS.filter((g) => !groups || groups.includes(g.id)).map((g) => (
         <div key={g.id}>
           <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.08em] text-[#475569]">
             <span className="h-1.5 w-1.5 rounded-full" style={{ background: g.tone }} />{g.label}
