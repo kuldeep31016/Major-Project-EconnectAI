@@ -206,7 +206,7 @@ export async function postSegment(body: SegmentRequest, onProgress?: (j: JobReco
 
 /* ----------------------------------------------------------------- near-real-time satellite layer (backend/satellite) */
 
-/** One Sentinel-1 product from the Copernicus Data Space catalogue - every field is copied from the catalogue. */
+/** One Sentinel-1 product from the provider catalogue (Planetary Computer RTC or Copernicus GRD) - every field is copied from the catalogue. */
 export interface SatelliteObservation {
   product_id: string; name: string; study_area_id: string;
   satellite: string; platform: string | null; product: string; product_type: string | null; mode: string | null;
@@ -218,15 +218,17 @@ export interface SatelliteObservation {
 }
 export type SatelliteAnalysisStatus = "QUEUED" | "RUNNING" | "SCENE_READY" | "COMPLETED" | "FAILED";
 export interface ModelReliability { level: "reliable" | "moderate" | "unreliable"; iou: number | null; reference_habitat_ha: number;
+  held_out_iou?: number | null; whole_scene_iou?: number | null; level_basis?: string; threshold?: number;
   experiment: string; scope: string; reference: string }
 export interface SatelliteLatest extends SatelliteObservation { area_id: string; available: boolean; previous_acquisition: string | null;
   model_reliability: ModelReliability | null }
 export interface SatelliteStatus {
-  source: string;
+  source: string; provider?: string;
   catalogue: { available: boolean; url: string; auth: string };
   retrieval: { configured: boolean; api: string; note: string | null };
   inference: { available: boolean; model_version: string; checkpoint_present: boolean; torch_available: boolean;
-    threshold: number | null; mmu_ha: number; reason: string | null };
+    threshold: number | null; mmu_ha: number; reason: string | null;
+    area_thresholds?: Record<string, number | null> };
   search_days: number; min_aoi_coverage: number; modes: { stored: string; nrt: string };
 }
 export interface DistributionBand { band: string; n: number; mean_db?: number; std_db?: number; p1_db?: number; p99_db?: number;

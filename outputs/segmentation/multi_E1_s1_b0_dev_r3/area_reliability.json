@@ -1,0 +1,142 @@
+{
+ "experiment": "multi_E1_s1_b0_dev_r3",
+ "threshold": 0.96,
+ "reference": "Global Mangrove Watch v3 2020 (weak label)",
+ "scope": "level from the area's held-out test tiles when they hold >= 2,000 reference pixels, else from the whole scene incl. training tiles (optimistic); not field accuracy",
+ "areas": {
+  "kerala-coast": {
+   "reference_habitat_ha": 102.1,
+   "threshold": 0.96,
+   "threshold_source": "pooled",
+   "t0.50": {
+    "iou": 0.09,
+    "precision": 0.092,
+    "recall": 0.792,
+    "predicted_ha": 875.7
+   },
+   "t0.96": {
+    "iou": 0.085,
+    "precision": 0.628,
+    "recall": 0.089,
+    "predicted_ha": 14.5
+   },
+   "whole_scene": {
+    "iou": 0.085,
+    "precision": 0.628,
+    "recall": 0.089,
+    "predicted_ha": 14.5
+   },
+   "held_out": {
+    "iou": 0.0,
+    "f1": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "test_ref_px": 666
+   },
+   "level": "unreliable",
+   "level_basis": "whole scene incl. training tiles (only 666 reference px on held-out tiles)"
+  },
+  "sundarbans": {
+   "reference_habitat_ha": 58903.4,
+   "threshold": 0.96,
+   "threshold_source": "own validation tiles",
+   "t0.50": {
+    "iou": 0.903,
+    "precision": 0.906,
+    "recall": 0.997,
+    "predicted_ha": 64882.8
+   },
+   "t0.96": {
+    "iou": 0.933,
+    "precision": 0.955,
+    "recall": 0.976,
+    "predicted_ha": 60179.4
+   },
+   "whole_scene": {
+    "iou": 0.933,
+    "precision": 0.955,
+    "recall": 0.976,
+    "predicted_ha": 60179.4
+   },
+   "held_out": {
+    "iou": 0.9245066993039481,
+    "f1": 0.9607726485320336,
+    "precision": 0.9477973491569393,
+    "recall": 0.9741081413662203,
+    "test_ref_px": 1033684
+   },
+   "level": "reliable",
+   "level_basis": "held-out test tiles"
+  },
+  "gulf-of-mannar": {
+   "reference_habitat_ha": 44.0,
+   "threshold": 0.96,
+   "threshold_source": "pooled",
+   "t0.50": {
+    "iou": 0.159,
+    "precision": 0.167,
+    "recall": 0.76,
+    "predicted_ha": 199.9
+   },
+   "t0.96": {
+    "iou": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "predicted_ha": 0.0
+   },
+   "whole_scene": {
+    "iou": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "predicted_ha": 0.0
+   },
+   "held_out": {
+    "iou": 0.0,
+    "f1": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "test_ref_px": 482
+   },
+   "level": "unreliable",
+   "level_basis": "whole scene incl. training tiles (only 482 reference px on held-out tiles)"
+  },
+  "odisha-coast": {
+   "reference_habitat_ha": 10793.2,
+   "threshold": 0.92,
+   "threshold_source": "own validation tiles",
+   "t0.50": {
+    "iou": 0.607,
+    "precision": 0.613,
+    "recall": 0.982,
+    "predicted_ha": 17280.4
+   },
+   "t0.92": {
+    "iou": 0.659,
+    "precision": 0.686,
+    "recall": 0.944,
+    "predicted_ha": 14856.6
+   },
+   "t0.96": {
+    "iou": 0.665,
+    "precision": 0.724,
+    "recall": 0.891,
+    "predicted_ha": 13280.0
+   },
+   "whole_scene": {
+    "iou": 0.659,
+    "precision": 0.686,
+    "recall": 0.944,
+    "predicted_ha": 14856.6
+   },
+   "held_out": {
+    "iou": 0.3175517511019031,
+    "f1": 0.4820330599330558,
+    "precision": 0.3288016807554027,
+    "recall": 0.902733998070119,
+    "test_ref_px": 139905
+   },
+   "level": "unreliable",
+   "level_basis": "held-out test tiles"
+  }
+ }
+}

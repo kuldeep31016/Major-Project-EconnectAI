@@ -38,7 +38,29 @@ and `ECO_DATABASE_URL=$(scripts/local_postgres.sh url)` in `.env`.
 | `ANTHROPIC_API_KEY` (optional) | enables the evidence-grounded assistant; unset = template answers |
 | `ECO_ASSISTANT_PER_HOUR` | per-user assistant limit (cost control) |
 
-## 4. Health, readiness, observability
+## 3a. Near-real-time satellite layer (`/satellite`)
+
+| Part | Where it runs | Needs |
+|---|---|---|
+| Catalogue search, latest-pass card, observation history, status | the API (Render free tier is enough) | `pystac-client`, `planetary-computer` (in `requirements-api.txt`); `SATELLITE_PROVIDER=planetary` needs no account |
+| Scene retrieval + preprocessing | the host that runs the analysis job | network access to Planetary Computer (or the Copernicus OAuth client) |
+| AI inference (U-Net) + graph analysis | the host that runs the analysis job | `requirements.txt` (torch, segmentation-models-pytorch), the checkpoint `outputs/segmentation/<experiment>/best_model.pth` (git-ignored; download from the GitHub release `model-<experiment>`), RAM: inference peaked at 2.5 GB (CPU, Sundarbans scene, 23 s on an Apple M3; measured 2026-10-04) on top of the API process |
+
+The Render free instance (512 MB, image without torch, no checkpoint) **cannot run inference**: an analysis there stops
+after preprocessing with a clear "AI inference cannot run on this server" message and stored runs keep working.
+Run outputs are written to the local `outputs/` directory, so the inference host must be the same host that serves
+the API (a separate worker would write runs the API cannot read). For a working near-real-time analysis in production:
+
+1. Use one VM or container with at least 4 GB RAM (8 GB comfortable) (e.g. Render Standard, a 2 vCPU / 8 GB cloud VM, or an on-premise
+   server), built from `requirements.txt` instead of `requirements-api.txt`.
+2. Put the checkpoint in place and verify it:
+   `gh release download model-<experiment> -R kuldeep31016/Major-Project-EconnectAI -p best_model.pth -D outputs/segmentation/<experiment>`
+   then `shasum -a 256` against `SHA256SUMS.txt` in the release.
+3. Set `SATELLITE_PROVIDER=planetary` (default) and the usual production variables below; keep `ECO_DATABASE_URL`
+   pointing at the same PostgreSQL.
+4. Check `GET /api/satellite/status`: `inference.available` must be `true`.
+
+
 
 - `GET /api/health` — liveness (process answers, uptime). Use for container health checks.
 - `GET /api/ready` — 503 unless the database is reachable **and** the schema is at the latest migration. Use for

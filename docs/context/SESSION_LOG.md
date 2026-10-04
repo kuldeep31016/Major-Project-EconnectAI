@@ -14,6 +14,36 @@ Next step:
 
 ---
 
+## 2026-10-04 — leakage fix + model r3, Planetary Computer source, per-area thresholds, Interactive Map redesign
+
+Goal: fix the weaknesses in docs/STATUS_AND_NEXT_STEPS_2026-10-04.md with standard methods (no mocks): split leakage,
+honest per-area accuracy, near-real-time source; redesign the Interactive Map to the user's mock-up.
+Changed:
+- ML: `tiling.boundary_crossing` + `build_tiles(buffer_split_boundaries=True)`; scripts/resplit_buffered.py
+  (`--stratify --strat-block-tiles 6`: per-area mangrove-stratified blocks + boundary buffer) → data/ecoconnect_tiles_buf
+  (configs/dataset_buffered.yaml, train_dev_buf.yaml); threshold_sweep.py per-area selection (≥ 2,000 ref px on the
+  area's val tiles) + per-area held-out test; run_all_areas --sweep-thresholds (grid to 0.99); area_reliability.py levels
+  from held-out tiles. Model `multi_E1_s1_b0_dev_r3` (outputs/rebuild/train_r3.sh) = NRT default; release
+  `model-multi_E1_s1_b0_dev_r3` (sha256 d7984774…9884, restore tested).
+- Satellite: backend/satellite/planetary.py (Planetary Computer sentinel-1-rtc, default; SATELLITE_PROVIDER), catalog
+  dispatch, provider-aware service/api/status, `_pc` scene files, per-area thresholds (`service.area_threshold`,
+  `model_status(area)`, status `area_thresholds`); requirements-api.txt + pystac-client, planetary-computer; render.yaml.
+- Frontend: /analysis rebuilt as "Interactive Map" (components/analysis/interactive-map-panels.tsx; shared
+  components/simulation/use-scenario-setup.ts + scenario-setup.tsx now also used by /scenario); provider-neutral
+  satellite page text; LayerControl `buttonLabel`, GisMap `scalePosition`, ScenarioChooser `groups`; `wd` (1400 px)
+  breakpoint in globals.css.
+- Docs: MODEL_REBUILD (r3), COPERNICUS_INTEGRATION (providers, r3 validation), DEPLOYMENT §3a (measured 2.5 GB CPU
+  inference), STATUS §0, ASSISTANT_FAQ (provider, r3, leakage entry), .env.example.
+Tests: `.venv/bin/python -m pytest -q` → 200 passed; ruff F clean; frontend tsc / eslint (0 errors) / build OK. UI
+checked at 375, 1110×600, 1280, 1440, 1555, 1920 px; scenario run on Odisha (P02 −35.0 % IIC) and /scenario regression.
+Decisions: r3 default because it is the only leakage-free evaluation (it is better in Sundarbans, worse in Odisha on
+2026 scenes; r2 selectable via SATELLITE_MODEL_EXPERIMENT). Odisha now labelled unreliable (held-out 0.318).
+Planetary Computer default (equal agreement within noise, no credentials, identical to training input).
+Open: thin fringes + Odisha generalisation (S1+S2 / bigger encoder on GPU), field validation, scheduler, production
+inference host (Render cannot run torch).
+Next step: deployment per docs/DEPLOYMENT.md §3a; then P1 accuracy work (S1+S2 fusion experiment).
+
+
 ## 2026-10-04 — model checkpoint backed up
 
 Goal: protect the rebuilt model (the original was lost with no backup).

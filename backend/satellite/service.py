@@ -58,10 +58,27 @@ def _torch_ok(py: str) -> bool:
         return False
 
 
-def model_status() -> dict:
-    """Can this server run the trained U-Net? (checkpoint file present + a Python with torch/smp)."""
+def area_threshold(cal: dict, area: Optional[str]) -> tuple[Optional[float], str]:
+    """The study area's own threshold when the sweep could select one on that area's validation tiles
+    (threshold_calibration.json ``per_area``), otherwise the pooled ``selected_threshold``."""
+    pa = ((cal.get("per_area") or {}).get(area) or {}) if area else {}
+    if pa.get("source") == "own validation tiles" and pa.get("selected_threshold") is not None:
+        return float(pa["selected_threshold"]), f"threshold_calibration.json (per_area.{area}: own validation tiles)"
+    return cal.get("selected_threshold"), "threshold_calibration.json (selected_threshold, pooled over all areas)"
+
+
+def area_thresholds() -> dict:
+    from ecoconnect.pipeline.config import load_study_areas
+    cal = _calibration()
+    return {a: area_threshold(cal, a)[0] for a in load_study_areas()}
+
+
+def model_status(area: Optional[str] = None) -> dict:
+    """Can this server run the trained U-Net? (checkpoint file present + a Python with torch/smp).
+    With ``area`` the threshold is that study area's calibrated one when available."""
     ck, py, exp = checkpoint_path(), inference_python(), preprocessing.model_experiment(REPO_ROOT)
     cal = _calibration()
+    thr, thr_src = area_threshold(cal, area)
     present, torch_ok = ck.is_file(), _torch_ok(py)
     reason = None
     if not present:
@@ -75,7 +92,7 @@ def model_status() -> dict:
         ck_rel = ck.name
     return {"experiment": exp, "model_version": f"U-Net/efficientnet-b0 {exp}",
             "checkpoint": ck_rel, "checkpoint_present": present, "torch_available": torch_ok, "available": present and torch_ok,
-            "threshold": cal.get("selected_threshold"), "threshold_source": "threshold_calibration.json (selected_threshold)",
+            "threshold": thr, "threshold_source": thr_src,
             "mmu_ha": cal.get("mmu_ha", 2.0), "reason": reason}
 
 
@@ -88,8 +105,11 @@ def area_reliability(area: str) -> Optional[dict]:
     row = (d.get("areas") or {}).get(area)
     if not row:
         return None
-    t = row.get(f"t{d['threshold']:.2f}") or {}
-    return {"level": row["level"], "iou": t.get("iou"), "reference_habitat_ha": row["reference_habitat_ha"],
+    t = row.get("whole_scene") or row.get(f"t{d['threshold']:.2f}") or {}
+    ho = row.get("held_out") or {}
+    return {"level": row["level"], "iou": ho.get("iou", t.get("iou")), "held_out_iou": ho.get("iou"),
+            "whole_scene_iou": t.get("iou"), "level_basis": row.get("level_basis", d["scope"]),
+            "threshold": row.get("threshold", d["threshold"]), "reference_habitat_ha": row["reference_habitat_ha"],
             "experiment": d["experiment"], "scope": d["scope"], "reference": d["reference"]}
 
 
@@ -162,7 +182,8 @@ def analyses_by_product(db, study_area_id: str) -> dict[str, dict]:
 def scene_file(study_area_id: str, used: list[Observation]) -> Path:
     ref = used[0]
     stamp = (ref.acquisition_start or "")[:19].replace("-", "").replace(":", "")
-    return data_root() / "scenes" / study_area_id / f"{study_area_id}_s1nrt_{stamp}_r{ref.relative_orbit}_n{len(used)}.tif"
+    tag = "_pc" if ref.provider == "planetary" else ""     # never overwrite another source's scene of the same pass
+    return data_root() / "scenes" / study_area_id / f"{study_area_id}_s1nrt_{stamp}_r{ref.relative_orbit}_n{len(used)}{tag}.tif"
 
 
 def cached_scene(path: Path, used: list[Observation]) -> bool:
@@ -191,7 +212,7 @@ def scene_abs(rel: Optional[str]) -> Optional[Path]:
 
 # --------------------------------------------------------------------------- analysis request
 def new_analysis(db, study_area_id: str, used: list[Observation], user: Optional[User]) -> SatelliteAnalysis:
-    ref, ms, g = used[0], model_status(), graph_config()["graph"]
+    ref, ms, g = used[0], model_status(study_area_id), graph_config()["graph"]
     aid = f"EC-{study_area_id}-{(ref.acquisition_start or '')[:10]}-{uuid.uuid4().hex[:6]}"
     a = SatelliteAnalysis(
         id=aid, study_area_id=study_area_id, mode="nrt", product_ids=[o.product_id for o in used],
@@ -250,25 +271,32 @@ def satellite_analyze(ctx: JobContext, p: dict) -> dict:
             bands[bands == -9999.0] = np.nan
             stage("preprocessing", 0.30, "cached scene already preprocessed")
         else:
-            if not credentials_configured():
+            pc = used[0].provider == "planetary"
+            if not pc and not credentials_configured():
                 raise NotConfigured()
             stage("retrieval", 0.05, f"grid {grid.width}x{grid.height} px @ 10 m, EPSG:{grid.crs.to_epsg()}, "
-                                     f"~{processing.processing_units_estimate(grid, len(used))} processing units")
+                  + ("Planetary Computer sentinel-1-rtc (no account)" if pc
+                     else f"~{processing.processing_units_estimate(grid, len(used))} Copernicus processing units"))
+            from . import planetary
             stack = []
             for k, o in enumerate(used):
-                lin = processing.retrieve_linear(o, grid, on_tile=lambda i, n, k=k: ctx.progress(
-                    0.05 + 0.2 * (k + i / n) / len(used), "retrieval", f"{o.name}: tile {i}/{n}"))
+                fetch = planetary.retrieve_linear if o.provider == "planetary" else processing.retrieve_linear
+                lin = fetch(o, grid, on_tile=lambda i, n, k=k: ctx.progress(
+                    0.05 + 0.2 * (k + i / n) / len(used), "retrieval", f"{o.name}: part {i}/{n}"))
                 stage("preprocessing", 0.25 + 0.05 * k / len(used), f"{o.name}: linear gamma0 -> dB")
                 stack.append(preprocessing.to_db(lin))
             bands = preprocessing.composite(np.stack(stack))
-            info = {"study_area": area, "scene_id": sp.stem, "provider": "copernicus-dataspace-process-api",
+            info = {"study_area": area, "scene_id": sp.stem,
+                    "provider": "planetary-computer-stac" if pc else "copernicus-dataspace-process-api",
                     "date_range": [used[-1].acquisition_start, used[0].acquisition_start],
                     "sources": {"sentinel1": {
                         "scenes": [{"product_id": o.product_id, "id": o.name, "datetime": o.acquisition_start,
                                     "orbit": o.orbit_direction, "relative_orbit": o.relative_orbit, "timeliness": o.timeliness,
                                     "platform": o.platform} for o in used],
                         "composite": "temporal median (gamma0 terrain, dB)" if len(used) > 1 else "single acquisition (gamma0 terrain, dB)",
-                        "processing": processing.PROCESSING, "collection": "sentinel-1-grd"}}}
+                        "processing": ({"product": "Planetary Computer RTC gamma0 (as training)", "resampling": "bilinear"} if pc
+                                       else processing.PROCESSING),
+                        "collection": "sentinel-1-rtc" if pc else "sentinel-1-grd"}}}
             preprocessing.write_nrt_scene(sp, bands, grid, info)
         compat = preprocessing.check_compatibility(preprocessing.BAND_NAMES, ref)
         dist = preprocessing.distribution_check(bands, ref)
@@ -283,7 +311,7 @@ def satellite_analyze(ctx: JobContext, p: dict) -> dict:
                                  + compat["reason"])
 
         stage("inference", 0.35, "checking the trained model")
-        ms = model_status()
+        ms = model_status(area)
         if not ms["available"]:
             raise SatelliteError(ms["reason"], user_message="Scene retrieved and preprocessed, but AI inference cannot run on "
                                  "this server: " + ms["reason"])
@@ -331,7 +359,8 @@ def _ecology(ctx: JobContext, aid: str, area: str, prob: Path, ms: dict, used: l
         raise SatelliteError("no patches", user_message="The model found no habitat patches above the minimum mapping unit "
                              "in this observation, so no connectivity network can be built.")
     ref = used[0]
-    src = {**src, "satellite": {"analysis_id": aid, "source": catalog.SOURCE, "collection": "sentinel-1-grd",
+    src = {**src, "satellite": {"analysis_id": aid, "source": catalog.SOURCES.get(ref.provider, catalog.SOURCE),
+                                "collection": "sentinel-1-rtc" if ref.provider == "planetary" else "sentinel-1-grd",
                                 "product_ids": [o.product_id for o in used], "products": [o.name for o in used],
                                 "acquisition_time": ref.acquisition_start, "timeliness": ref.timeliness,
                                 "platform": ref.platform, "preprocessing_version": preprocessing.PREPROCESSING_VERSION,

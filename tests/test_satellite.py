@@ -85,6 +85,7 @@ def fake(monkeypatch, tmp_path):
     copernicus.TOKENS.invalidate()
     catalog.clear_cache()
     monkeypatch.setattr(copernicus.time, "sleep", lambda s: None)
+    monkeypatch.setattr(catalog, "PROVIDER", "copernicus")        # these tests mock the Copernicus HTTP API
     monkeypatch.setenv("DATA_ROOT", str(tmp_path / "data"))
     from ecoconnect.pipeline import config as pcfg
     real = pcfg.load_study_areas()
@@ -246,7 +247,7 @@ def test_end_to_end_latest_observation_to_connectivity_run(fake, creds, client, 
     latest_ptr.parent.mkdir(parents=True, exist_ok=True)
     latest_ptr.write_text("kerala-coast_stored_run")
     calls: list = []
-    monkeypatch.setattr(service, "model_status", lambda: {
+    monkeypatch.setattr(service, "model_status", lambda area=None: {
         "available": True, "reason": None, "experiment": "multi_E1_s1_b0_dev", "model_version": "U-Net/efficientnet-b0 multi_E1_s1_b0_dev",
         "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev/best_model.pth", "checkpoint_present": True, "torch_available": True,
         "threshold": 0.7, "mmu_ha": 2.0})
@@ -299,7 +300,7 @@ def test_end_to_end_latest_observation_to_connectivity_run(fake, creds, client, 
 
 def test_model_unavailable_keeps_the_scene_and_explains(fake, creds, client, monkeypatch):
     from backend.jobs import work_once
-    monkeypatch.setattr(service, "model_status", lambda: {
+    monkeypatch.setattr(service, "model_status", lambda area=None: {
         "available": False, "reason": "The trained checkpoint is not on this server.", "experiment": "x", "model_version": "m",
         "checkpoint": "c", "checkpoint_present": False, "torch_available": False, "threshold": 0.7, "mmu_ha": 2.0})
     h = _auth(client, "gis")
@@ -315,3 +316,31 @@ def test_model_unavailable_keeps_the_scene_and_explains(fake, creds, client, mon
     while work_once():
         pass
     assert fake.calls["process"] == n                          # the stored scene is reused, no second retrieval
+
+
+def test_planetary_computer_items_map_to_observations():
+    """Planetary Computer sentinel-1-rtc (the training product) is the default near-real-time source."""
+    from backend.satellite import planetary
+    _, aoi = catalog.area_aoi("kerala-coast")
+    lo0, la0, lo1, la1 = aoi.bounds
+    item = {"id": "S1D_IW_GRDH_1SDV_20261003T121933_20261003T122002_004851_0091DF_rtc",
+            "geometry": {"type": "Polygon", "coordinates": [[[lo0 - 1, la0 - 1], [lo1 + 1, la0 - 1], [lo1 + 1, la1 + 1], [lo0 - 1, la1 + 1], [lo0 - 1, la0 - 1]]]},
+            "properties": {"platform": "sentinel-1d", "sar:instrument_mode": "IW", "sar:polarizations": ["VV", "VH"],
+                           "sat:orbit_state": "ascending", "sat:relative_orbit": 85, "s1:product_timeliness": "Fast-24h",
+                           "start_datetime": "2026-10-03T12:19:33Z", "end_datetime": "2026-10-03T12:20:02Z",
+                           "s1:processing_datetime": "2026-10-03T15:00:26Z"}}
+    o = planetary.parse_item(item, "kerala-coast", aoi)
+    assert o.provider == "planetary" and o.platform == "Sentinel-1D" and o.has_vv_vh and o.aoi_coverage == 1.0
+    assert o.relative_orbit == 85 and o.orbit_direction == "ASCENDING" and len(o.product_id) <= 64
+    catalog.validate_product(o)                                    # RTC products are valid model input
+    assert catalog.pick_latest([o]).name == item["id"] and o.to_api()["product"] == "RTC"
+
+
+def test_area_threshold_uses_own_validation_threshold_only_when_selected_there():
+    cal = {"selected_threshold": 0.97, "per_area": {
+        "sundarbans": {"selected_threshold": 0.98, "source": "own validation tiles"},
+        "kerala-coast": {"selected_threshold": 0.97, "source": "pooled threshold (only 120 mangrove px on this area's val tiles)"}}}
+    assert service.area_threshold(cal, "sundarbans")[0] == 0.98
+    assert service.area_threshold(cal, "kerala-coast") == (0.97, "threshold_calibration.json (selected_threshold, pooled over all areas)")
+    assert service.area_threshold(cal, "unknown")[0] == 0.97
+    assert service.area_threshold({"selected_threshold": 0.5}, None)[0] == 0.5

@@ -109,3 +109,23 @@ def test_ml_stage_end_to_end(synthetic_aoi, tmp_path, monkeypatch):
     g = build_graph(patches, k=3, tau_km=5.0)
     rows, c = compute_criticality(g, a_l)
     assert len(rows) == len(patches) and c > 0
+
+
+def test_boundary_buffer_leaves_no_pixel_shared_between_splits():
+    """Audit bug 21: with 256 px tiles every 128 px, tiles at a block edge overlapped tiles of the next block's split."""
+    from ecoconnect.geospatial.preprocessing.tiling import boundary_crossing
+    block, span, n = 3, 2, 12                                   # 12x12 tile origins, 3x3-origin blocks, tile = 2 strides
+    tiles = [(f"t{r}_{c}", r, c) for r in range(n) for c in range(n)]
+    names = ("train", "val", "test")
+    assign = {(br, bc): names[(br * 7 + bc * 3) % 3] for br in range(n // block) for bc in range(n // block)}
+    cross = boundary_crossing(tiles, assign, block, span)
+    kept = [(t, r, c, assign[(r // block, c // block)]) for t, r, c in tiles if t not in cross]
+    assert 0 < len(cross) < len(tiles)
+    pixels: dict[tuple[int, int], str] = {}
+    for _, r, c, s in kept:                                     # every stride cell a kept tile covers -> its split
+        for dr in range(span):
+            for dc in range(span):
+                assert pixels.setdefault((r + dr, c + dc), s) == s, "a cell is shared by two splits"
+    # a tile whose neighbours are all in its own split is kept
+    inner = next(t for t, r, c in tiles if r % block == 0 and c % block == 0 and r // block == 1 and c // block == 1)
+    assert inner not in cross

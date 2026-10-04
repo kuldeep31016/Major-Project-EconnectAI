@@ -1,4 +1,4 @@
-# Near-real-time satellite layer — Copernicus Data Space integration
+# Near-real-time satellite layer — Sentinel-1 providers (Planetary Computer default, Copernicus Data Space)
 
 EcoConnectAI can find the **latest available Sentinel-1 observation** of a study area and run the existing pipeline on
 it. This is *near-real-time satellite imagery*: Sentinel-1 images an area on each pass (every ~12 days over our Indian
@@ -7,6 +7,31 @@ is not live video and nothing streams continuously.
 
 The existing flow is unchanged. Stored analyses (the 2020 composite the model was trained on) stay the dashboard
 default; near-real-time analyses are stored as additional runs and are only shown when a user opens them.
+
+## Data providers (2026-10-04)
+
+`SATELLITE_PROVIDER` selects where the latest Sentinel-1 observations come from. Both serve real ESA Copernicus
+Sentinel-1 data; nothing is simulated.
+
+| | `planetary` (**default**) | `copernicus` |
+|---|---|---|
+| Service | Microsoft Planetary Computer STAC, collection `sentinel-1-rtc` | Copernicus Data Space Ecosystem OData + Processing API |
+| Product | Radiometrically terrain-corrected gamma0 (RTC) — **the exact product the model was trained on** | GRD processed on the fly to gamma0 terrain (`backCoeff` GAMMA0_TERRAIN) |
+| Account | none (anonymous signed URLs) | OAuth client (`COPERNICUS_CLIENT_ID/SECRET`) for retrieval; catalogue is public |
+| Latency after a pass | about 1 day (the 2026-10-03 12:19 UTC Odisha pass was listed on 2026-10-04) | about 3 h (NRT GRD) |
+| Retrieval code | `backend/satellite/planetary.py` -> the training reader `stac_acquire._read_asset_to_grid` | `backend/satellite/processing.py` |
+
+Same-model comparison (`multi_E1_s1_b0_dev_r2`, median of the latest 8 same-orbit passes, IoU vs GMW 2020 weak label):
+Sundarbans **0.861** (Planetary Computer) vs 0.884 (Copernicus); Odisha **0.676** vs 0.651. The two are equivalent
+within the noise of a weak label; Planetary Computer is the default because it needs no credentials and removes any
+processing difference between training and near-real-time input. Scene files carry a `_pc` tag so the two providers
+never overwrite each other.
+
+Other free sources assessed (not integrated): **NASA/ASF OPERA RTC-S1** (30 m, within ~12 h; coarser than the 10 m
+training data), **NISAR L-band** (public since 2026-07-20 via ASF; L-band penetrates canopy and could help mangroves,
+but a new model would have to be trained), **Sentinel-2** optical (10 m, 5-day revisit, but monsoon cloud makes it
+unreliable as the only source). Since mid-2026 Sentinel-1C and 1D give a 6-day revisit; no free source provides
+continuous video of an area.
 
 ## Architecture
 
@@ -140,13 +165,22 @@ the GMW 2020 reference map (weak label; mangroves change slowly, but 2026 vs 202
 | Kerala (Vembanad-Kol) | 1 date (27 Sep 2026) | 3,550 ha | 102 ha | 0.005 |
 | Kerala (Vembanad-Kol) | median of 8 | 102 ha | 102 ha | 0.003 (area matches, locations do not) |
 
+The same 8-pass medians with the **default model since 2026-10-04, `multi_E1_s1_b0_dev_r3`** (leakage-free split,
+per-area thresholds; docs/MODEL_REBUILD_2026-10-04.md): Sundarbans IoU 0.902 (Copernicus input) / 0.876 (Planetary
+Computer input), 59,138 / 58,712 ha mapped; Odisha 0.610 / 0.622, 16,725 / 15,825 ha mapped (over-predicts ~50 %);
+Kerala 0.013 and Gulf of Mannar 0.011.
+
 Conclusions, applied in the code:
 - **Default input = median of the latest 8 same-orbit acquisitions** (`composite_scenes = 8`, 120-day search window) -
   the same temporal-median convention as the training scenes. A single date over-predicts strongly (speckle, season).
-- **Per-area reliability** (`scripts/area_reliability.py` -> `<experiment>/area_reliability.json`): agreement of the
-  model's 2020 prediction with GMW 2020 - Sundarbans 0.913 and Odisha 0.724 (reliable), Kerala 0.000 and Gulf of
-  Mannar 0.008 (unreliable: 102 ha / 44 ha of thin mangrove fringes are below what this 10 m radar model can map). The
-  Satellite Monitor shows this before an analysis is run.
+- **Per-area reliability** (`scripts/area_reliability.py` -> `<experiment>/area_reliability.json`): the level comes
+  from the area's **held-out test tiles** when they hold >= 2,000 reference pixels, else from the whole 2020 scene
+  (incl. training tiles, flagged). r3: Sundarbans 0.925 held-out (reliable); Odisha 0.318 held-out (unreliable; the
+  whole-scene score 0.659 was optimistic); Kerala and Gulf of Mannar unreliable (102 ha / 44 ha of thin mangrove
+  fringes are below what this 10 m radar model can map). The Satellite Monitor and Interactive Map show this before
+  an analysis is run.
+- **Per-area threshold**: `threshold_calibration.json` `per_area` (chosen on that area's validation tiles; Odisha 0.92,
+  else the pooled 0.96) is used by `service.model_status(area)` and reported in `/api/satellite/status`.
 - **Post-inference check**: predicted habitat area vs the reference area; outside 1/3x - 3x is flagged for manual
   review (the earlier single-date Kerala run was 35x).
 - These scores include training-tile pixels for 2020 and use a weak label; they are not field accuracy.

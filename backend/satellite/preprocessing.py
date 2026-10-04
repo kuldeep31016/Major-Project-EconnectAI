@@ -23,7 +23,7 @@ import numpy as np
 
 PREPROCESSING_VERSION = "s1grd-gamma0terrain-db-median-v1"
 BAND_NAMES = ["s1_vv_db", "s1_vh_db"]            # = configs/acquisition.yaml sentinel1.bands + "_db", same order
-MODEL_EXPERIMENTS = ["multi_E1_s1_b0_dev_r2", "multi_E1_s1_b0_dev"]   # rebuilt (2026-10-04) first, then the original
+MODEL_EXPERIMENTS = ["multi_E1_s1_b0_dev_r3", "multi_E1_s1_b0_dev_r2", "multi_E1_s1_b0_dev"]  # leakage-free r3, rebuilt r2, original
 MODEL_EXPERIMENT = MODEL_EXPERIMENTS[-1]                               # reference statistics when no checkpoint exists
 
 

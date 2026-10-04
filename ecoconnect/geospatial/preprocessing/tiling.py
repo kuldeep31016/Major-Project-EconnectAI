@@ -62,6 +62,22 @@ def align_label_to_image(label_path: Path, image_path: Path, out_path: Path, nod
     return out_path
 
 
+def boundary_crossing(tiles: list[tuple[str, int, int]], assign: dict, block_tiles: int, span: int) -> set[str]:
+    """Ids of tiles whose footprint (``span`` stride steps per side) reaches into a block assigned to ANOTHER split.
+    With overlapping tiles (stride < tile size) those tiles share pixels with tiles of the other split - train/test
+    leakage (audit bug 21). Dropping them leaves a one-stride buffer between splits; tiles next to a block of the
+    same split are kept."""
+    out = set()
+    for tid, ri, ci in tiles:
+        own = assign[(ri // block_tiles, ci // block_tiles)]
+        for br in {ri // block_tiles, (ri + span - 1) // block_tiles}:
+            for bc in {ci // block_tiles, (ci + span - 1) // block_tiles}:
+                other = assign.get((br, bc))
+                if other is not None and other != own:
+                    out.add(tid)
+    return out
+
+
 def build_tiles(
     image_path: str | Path,
     label_path: str | Path,
@@ -82,6 +98,7 @@ def build_tiles(
     append: bool = False,
     max_negative_ratio: Optional[float] = None,
     min_positive_pixels: int = 1,
+    buffer_split_boundaries: bool = True,
 ) -> TilingReport:
     """``max_negative_ratio``: keep at most ratio x (#tiles with >= min_positive_pixels habitat pixels)
     all-negative tiles (seeded), to tame extreme class imbalance. None = keep every tile. The counts of
@@ -164,7 +181,12 @@ def build_tiles(
         assign[b] = "train" if i < n_tr else "val" if i < n_tr + n_va else "test"
     split_ids: dict[str, list[str]] = {"train": [], "val": [], "test": []}
     pos_train = []
+    span = -(-tile_size // stride)
+    crossing = boundary_crossing([(t, ri, ci) for t, ri, ci, _ in written], assign, block_tiles, span) \
+        if buffer_split_boundaries and span > 1 else set()
     for tid, ri, ci, pos in written:
+        if tid in crossing:
+            continue                            # overlaps a tile of another split: kept on disk, in no split
         s = assign[(ri // block_tiles, ci // block_tiles)]
         split_ids[s].append(tid)
         if s == "train":
@@ -181,7 +203,9 @@ def build_tiles(
         "nodata": nodata, "ignore_index": label_ignore,
         "classes": {"0": "non-habitat", "1": "habitat"},
         "tile_size": tile_size, "stride": stride, "crs": crs, "pixel_size": px,
-        "split_strategy": f"spatial blocks of {block_tiles}x{block_tiles} tiles, fractions {split_fracs}, seed {seed}",
+        "split_strategy": f"spatial blocks of {block_tiles}x{block_tiles} tiles, fractions {split_fracs}, seed {seed}"
+                          + (" + boundary buffer (tiles overlapping another split excluded)" if crossing or buffer_split_boundaries else ""),
+        "boundary_tiles_excluded": meta.get("boundary_tiles_excluded", 0) + len(crossing),
         "negative_subsampling": {"max_negative_ratio": max_negative_ratio, "positive_tiles": n_pos,
                                  "negative_tiles_dropped": n_neg_dropped},
     })

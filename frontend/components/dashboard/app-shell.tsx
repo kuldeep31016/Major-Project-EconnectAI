@@ -277,7 +277,7 @@ function PeriodSelect() {
     ...runs.map((r) => ({
       value: r.runId,
       label: r.satellite ? `${r.sceneYear ?? "—"} · satellite NRT${r.satellite.reviewRecommended ? " (review)" : ""}` : `${r.sceneYear ?? "—"} · ${kind(r.resultKind)}`,
-      hint: r.satellite ? `${r.satellite.compositeScenes ?? 1} Copernicus acquisitions · model ${r.satellite.reliability ?? "?"} here · ${r.runId}` : r.runId,
+      hint: r.satellite ? `${r.satellite.compositeScenes ?? 1} Sentinel-1 acquisitions · model ${r.satellite.reliability ?? "?"} here · ${r.runId}` : r.runId,
     })),
   ];
   return (

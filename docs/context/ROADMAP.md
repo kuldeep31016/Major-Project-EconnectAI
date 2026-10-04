@@ -76,7 +76,7 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] Production RAG assistant (2026-10-02): versioned ingestion, hybrid retrieval, ACL, rerank, abstention, streaming, fallback, cost tracking, 64-question golden eval
 - [ ] Live-LLM answer evaluation (needs API spend); verify pgvector on Neon and Docker image build
 - [ ] Demo admin account exposed via public demo password (user decision); restoration review can approve with all factors "Not assessed"
-- [ ] Threshold chosen on test split (bug 22); tiling leakage; LICENSE/CITATION (owner's choice)
+- [ ] LICENSE/CITATION (owner's choice)  (bug 22 threshold and bug 21 tiling leakage fixed 2026-10-04)
 
 
 ## Phase 9 — Near-real-time satellite intelligence + accuracy (started 2026-10-04)
@@ -85,7 +85,9 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [x] P1 8-acquisition median default; per-area reliability; post-inference plausibility check; reports/assistant caveats
 - [x] P1 Assistant: data tools for satellite + reliability; Haiku/Opus routing; cost/ROI measured
 - [x] P0 Back up the model checkpoint: GitHub release `model-multi_E1_s1_b0_dev_r2` + SHA256SUMS, restore tested (2026-10-04)
-- [ ] P0 Leakage-free split (bug 21) + per-area held-out scores + per-area thresholds
+- [x] P0 Leakage-free split (bug 21) + per-area held-out scores + per-area thresholds (2026-10-04, model r3, release `model-multi_E1_s1_b0_dev_r3`)
+- [x] P1 Near-real-time source = Planetary Computer Sentinel-1 RTC (training product, no account); Copernicus optional (2026-10-04)
+- [x] P1 Interactive Map redesign: scenario lab + real-time tab + patch / network / simulation cards (2026-10-04)
 - [ ] P1 Train on near-real-time-style composites; evaluate S1+S2 fusion for thin fringes (Kerala, Gulf)
 - [ ] P1 Field-validation sample (accuracy vs field, not only vs GMW)
 - [ ] P2 Stable patch IDs across runs; change detection above a measured noise floor

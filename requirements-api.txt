@@ -30,3 +30,6 @@ anthropic>=1.0
 fpdf2>=2.7
 fastembed>=0.5        # local ONNX embeddings for RAG (no API key); falls back to lexical search if unavailable
 pypdf>=4              # PDF parsing for RAG uploads
+# near-real-time satellite layer, default provider (backend/satellite/planetary.py): public STAC + anonymous signing
+pystac-client>=0.8
+planetary-computer>=1.0

@@ -76,6 +76,14 @@ threshold 0.5), 24 patches — the "P17 story" below refers to that run:
   Sundarbans 0.913, Odisha 0.724, Kerala 0.000, Gulf of Mannar 0.008 → Kerala/Gulf are demonstration-only for this model.
 - Near-real-time (Copernicus S1, median of 8 same-orbit passes, Jul–Oct 2026) vs GMW 2020: Sundarbans IoU 0.884,
   Odisha 0.651; a single date over-predicts 30–100× (Kerala). NRT runs `<area>_nrt_<date>_<id>` never move LATEST.
+- **2026-10-04 (later): leakage-free model `multi_E1_s1_b0_dev_r3` is the NRT default** (audit bug 21 fixed:
+  stratified + buffered spatial split, `data/ecoconnect_tiles_buf` via scripts/resplit_buffered.py --stratify
+  --strat-block-tiles 6; 704/167/294 tiles). Held-out test IoU 0.776 / F1 0.874 @0.96 (pooled); per area held-out
+  Sundarbans 0.925, **Odisha 0.318 (unreliable)**, Kerala/Gulf 0.000 (too little reference to score). Per-area
+  thresholds (`threshold_calibration.json` per_area; Odisha 0.92) used by the live analysis. On 2026 NRT scenes:
+  r3 Sundarbans 0.902/0.876, Odisha 0.610/0.622 (Copernicus / Planetary Computer input) vs r2 0.884/0.861, 0.651/0.676.
+- **NRT source default = Microsoft Planetary Computer `sentinel-1-rtc`** (backend/satellite/planetary.py,
+  `SATELLITE_PROVIDER=planetary|copernicus`): the exact training product, no account, ~1 day latency.
 - Synthetic prototype maths reproduce paper Tables VI–VIII exactly; Tables VI–VII pinned by tests/test_regression.py, VIII/ρ/τ-robustness not yet pinned.
 - P07 'small but critical' holds only for k ≥ 3, τ ≥ 5 km (top-5 in 4/9 τ×k variants) — say so when presenting.
 - Paper ↔ code: 18 disagreements listed in docs/PAPER_IMPLEMENTATION_MATRIX.md (real runs do NOT reproduce the paper's synthetic headline findings).
@@ -208,11 +216,12 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
 ## 10. Secrets & deployment state (2026-09-30)
 
 - Local `.env` also holds COPERNICUS_CLIENT_ID / COPERNICUS_CLIENT_SECRET (Copernicus Data Space OAuth client; the
-  secret was pasted in chat on 2026-10-04 → rotate it). Render needs them too (dashboard, not render.yaml) and cannot
-  run NRT inference anyway (512 MB, no torch) — a PyTorch worker is required for that in deployment.
-- Model checkpoint `outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth` (72 MB) is git-ignored; backed up as GitHub
-  release `model-multi_E1_s1_b0_dev_r2` (sha256 ed97c361…a2b8, restore tested). Fresh clone: `gh release download` it
-  (docs/MODEL_REBUILD_2026-10-04.md). Back up every new checkpoint before retraining/deleting.
+  secret was pasted in chat on 2026-10-04; the user chose not to rotate it). Only needed when
+  SATELLITE_PROVIDER=copernicus. Render (512 MB, no torch, no checkpoint) cannot run NRT inference: one host with
+  requirements.txt + the checkpoint + ≥ 4 GB RAM must serve the API (docs/DEPLOYMENT.md §3a; run outputs are local).
+- Model checkpoints (72 MB, git-ignored) are backed up as GitHub releases `model-multi_E1_s1_b0_dev_r2` (sha256
+  ed97c361…a2b8) and `model-multi_E1_s1_b0_dev_r3` (sha256 d7984774…9884), restore tested. Fresh clone:
+  `gh release download` (docs/MODEL_REBUILD_2026-10-04.md). Back up every new checkpoint before retraining/deleting.
 - Local `.env` (gitignored, chmod 600) holds ANTHROPIC_API_KEY (user-provided; user asked not to spend it — no test
   calls made). Never commit it; in deployment it goes into the Render dashboard (render.yaml `sync: false`).
 - Local dev DB: PostgreSQL 18 cluster in data/postgres (gitignored) on 127.0.0.1:5433, db `ecoconnect`, user `eco`

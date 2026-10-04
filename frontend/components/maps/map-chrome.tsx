@@ -50,6 +50,8 @@ export function LayerControl({
   onHeatOpacityChange,
   open,
   onOpenChange,
+  buttonLabel,
+  className,
 }: {
   layers: LayerState;
   onChange: (next: LayerState) => void;
@@ -59,9 +61,12 @@ export function LayerControl({
   onHeatOpacityChange: (v: number) => void;
   open: boolean;
   onOpenChange: (v: boolean) => void;
+  /** Closed state as a labelled pill ("Map Layers") instead of an icon button. */
+  buttonLabel?: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="absolute right-3 top-3 z-[1000]">
+    <div className={cn("absolute right-3 top-3 z-[1000]", className)}>
       <AnimatePresence mode="wait">
         {open ? (
           <motion.div
@@ -160,14 +165,26 @@ export function LayerControl({
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.18 }}
           >
-            <Button
-              size="icon"
-              onClick={() => onOpenChange(true)}
-              className="rounded-xl glass-strong text-foreground shadow-xl hover:bg-foreground/10"
-              aria-label="Open layer panel"
-            >
-              <LayersIcon className="h-4 w-4" />
-            </Button>
+            {buttonLabel ? (
+              <button
+                onClick={() => onOpenChange(true)}
+                className="flex h-10 items-center gap-2 rounded-xl border border-black/[0.06] bg-white px-3.5 text-[13px] font-semibold text-[#0f172a] shadow-lg hover:bg-[#f8faf9]"
+                aria-label="Open layer panel"
+              >
+                <LayersIcon className="h-4 w-4" />
+                {buttonLabel}
+                <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              </button>
+            ) : (
+              <Button
+                size="icon"
+                onClick={() => onOpenChange(true)}
+                className="rounded-xl glass-strong text-foreground shadow-xl hover:bg-foreground/10"
+                aria-label="Open layer panel"
+              >
+                <LayersIcon className="h-4 w-4" />
+              </Button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

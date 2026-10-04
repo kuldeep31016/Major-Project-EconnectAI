@@ -74,6 +74,8 @@ interface Props {
   showBoundary?: boolean;
   /** Hide Leaflet's default zoom control (the page draws its own). */
   zoomControl?: boolean;
+  /** Corner of the metric scale bar. */
+  scalePosition?: "bottomleft" | "bottomright";
   /** Programmatic focus: fly to a point (search box, alert click). */
   focus?: { lat: number; lon: number; zoom?: number; nonce: number } | null;
 }
@@ -165,15 +167,15 @@ function Focuser({ focus }: { focus: Props["focus"] }) {
 }
 
 /** Adds the metric scale bar once per map instance. */
-function ScaleBar() {
+function ScaleBar({ position = "bottomleft" }: { position?: "bottomleft" | "bottomright" }) {
   const map = useMap();
   useEffect(() => {
-    const ctrl = control.scale({ position: "bottomleft", imperial: false, maxWidth: 130 });
+    const ctrl = control.scale({ position, imperial: false, maxWidth: 130 });
     ctrl.addTo(map);
     return () => {
       ctrl.remove();
     };
-  }, [map]);
+  }, [map, position]);
   return null;
 }
 
@@ -209,6 +211,7 @@ export default function GisMap({
   hiddenPatchIds = NO_IDS,
   showBoundary = false,
   zoomControl = true,
+  scalePosition = "bottomleft",
   focus = null,
 }: Props) {
   const measureKm = measurePoints.reduce((acc, p, i) => (i ? acc + haversineKm(measurePoints[i - 1], p) : 0), 0);
@@ -453,7 +456,7 @@ export default function GisMap({
           />
         )}
 
-        <ScaleBar />
+        <ScaleBar position={scalePosition} />
       </MapContainer>
     </div>
   );

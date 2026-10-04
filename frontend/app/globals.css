@@ -7,6 +7,8 @@
 @custom-variant short (@media (max-height: 1000px));
 
 @theme inline {
+  /* 1400px: three-column map workspace (Interactive Map) */
+  --breakpoint-wd: 87.5rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
