@@ -2,25 +2,34 @@
 
 import type { ScenarioSummary } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { fmtIndex } from "@/utils/format";
+import { sci } from "@/components/simulation/sci";
 
-/** Headline before → after for one-change scenarios (all values exact recomputations). */
+/**
+ * Headline before → after for one-change scenarios (all values exact recomputations).
+ * Props unchanged — also used by the graph page and the chat assistant.
+ */
 export function BeforeAfter({ b, s }: { b: ScenarioSummary; s: ScenarioSummary }) {
-  const items: [string, string, string, number][] = [
-    ["Connectivity (IIC)", fmtIndex(b.iic), fmtIndex(s.iic), b.iic ? (100 * (s.iic - b.iic)) / b.iic : 0],
-    ["Components", String(b.n_components), String(s.n_components), s.n_components - b.n_components],
-    ["Habitat (ha)", b.habitat_area_ha.toFixed(1), s.habitat_area_ha.toFixed(1), s.habitat_area_ha - b.habitat_area_ha],
-    ["Links", String(b.n_edges), String(s.n_edges), s.n_edges - b.n_edges],
+  const iicPct = b.iic ? (100 * (s.iic - b.iic)) / b.iic : 0;
+  const items: { label: string; big: string; sub: string; d: number; good: boolean }[] = [
+    { label: "Connectivity (IIC)", big: iicPct === 0 ? "0 %" : `${iicPct > 0 ? "+" : "−"}${Math.abs(iicPct).toFixed(1)} %`, sub: `${sci(b.iic)} → ${sci(s.iic)}`, d: iicPct, good: iicPct > 0 },
+    { label: "Separate groups", big: String(s.n_components), sub: `was ${b.n_components}`, d: s.n_components - b.n_components, good: s.n_components < b.n_components },
+    { label: "Habitat", big: `${s.habitat_area_ha.toFixed(1)} ha`, sub: `was ${b.habitat_area_ha.toFixed(1)} ha`, d: s.habitat_area_ha - b.habitat_area_ha, good: s.habitat_area_ha > b.habitat_area_ha },
+    { label: "Links", big: String(s.n_edges), sub: `was ${b.n_edges}`, d: s.n_edges - b.n_edges, good: s.n_edges > b.n_edges },
   ];
   return (
     <div className="grid grid-cols-2 gap-2">
-      {items.map(([label, x, y, d], i) => (
-        <div key={label} className="rounded-xl border border-foreground/[0.08] bg-card p-2.5">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
-          <div className="mt-0.5 text-[14px] font-semibold tabular">{x} <span className="text-muted-foreground">→</span> {y}</div>
-          <div className={cn("text-[11px] tabular", (i === 1 ? -d : d) < 0 ? "text-[#b91c1c]" : d !== 0 ? "text-[#15803d]" : "text-muted-foreground")}>
-            {d === 0 ? "no change" : i === 0 ? `${d > 0 ? "+" : ""}${d.toFixed(1)} %` : `${d > 0 ? "+" : ""}${Number.isInteger(d) ? d : d.toFixed(1)}`}
+      {items.map((x, i) => (
+        <div key={x.label} className="min-w-0 rounded-xl border border-black/[0.07] bg-white px-2.5 py-2">
+          <div className="truncate text-[10.5px] font-medium text-muted-foreground">{x.label}</div>
+          <div className="mt-0.5 flex items-baseline gap-1.5">
+            <span className={cn("text-[16px] font-bold leading-tight tabular", i === 0 && (x.d === 0 ? "text-muted-foreground" : x.good ? "text-[#15803d]" : "text-[#b91c1c]"))}>{x.big}</span>
+            {i > 0 && (
+              <span className={cn("text-[11px] font-semibold tabular", x.d === 0 ? "text-muted-foreground" : x.good ? "text-[#15803d]" : "text-[#b91c1c]")}>
+                {x.d === 0 ? "same" : `${x.d > 0 ? "+" : "−"}${Number.isInteger(x.d) ? Math.abs(x.d) : Math.abs(x.d).toFixed(1)}`}
+              </span>
+            )}
           </div>
+          <div className="truncate text-[10.5px] tabular text-muted-foreground" title={x.sub}>{x.sub}</div>
         </div>
       ))}
     </div>

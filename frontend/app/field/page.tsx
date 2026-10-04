@@ -3,7 +3,8 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Camera, CheckCircle2, ClipboardCheck, MapPin, Plus, ShieldCheck, XCircle } from "lucide-react";
+import { BadgeCheck, Bot, Camera, CheckCircle2, ClipboardCheck, Eye, FlaskConical, Gauge, MapPin, Plus, ShieldCheck, UserCheck, XCircle } from "lucide-react";
+import { FlowSteps } from "@/components/shared/flow-steps";
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -160,10 +161,19 @@ function FieldView() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-[13px]"><ShieldCheck className="h-4 w-4 text-[#0f5132]" />Verification queue — {detections.length} detection{detections.length === 1 ? "" : "s"}</CardTitle>
-              <CardDescription>AI DETECTED → UNDER REVIEW → FIELD ASSIGNED → FIELD VERIFIED → CONFIRMED / REJECTED. A detection can only be verified or confirmed when a field task holds ACCEPTED evidence — AI output never self-verifies.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-1.5">
-              {detections.length === 0 && <div className="text-[12px] text-muted-foreground">No detections registered for this landscape. Register one from a patch (Interactive Map → patch → &quot;Send to review&quot;) or create a field task from an alert.</div>}
+              <FlowSteps
+                steps={[
+                  { label: "AI detected", icon: Bot, tone: "violet" },
+                  { label: "Under review", icon: Eye, tone: "blue" },
+                  { label: "Field assigned", icon: MapPin, tone: "amber" },
+                  { label: "Field verified", icon: Camera, tone: "green" },
+                  { label: "Confirmed / rejected", icon: BadgeCheck, tone: "green" },
+                ]}
+                note="Only accepted field evidence can confirm a detection — the AI never verifies itself."
+              />
+              {detections.length === 0 && <div className="pt-1 text-[12px] text-muted-foreground">No detections yet. Send one from a patch on the Interactive Map, or create a task from an alert.</div>}
               {detections.map((d) => {
                 const idx = DET_FLOW.indexOf(d.status as (typeof DET_FLOW)[number]);
                 const taskFor = tasks.find((t) => t.detection_id === d.id);
@@ -216,9 +226,19 @@ function Disagreements({ sceneId }: { sceneId: string }) {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between text-[13px]">Model disagreements (human-in-the-loop)
           <Button size="sm" variant="outline" onClick={download}>Export included (GeoJSON)</Button></CardTitle>
-        <CardDescription>Accepted field evidence that contradicts the model. Included points form a dataset for a future experiment — review → approval → new experiment → evaluation. The model is never retrained automatically.</CardDescription>
+        <CardDescription>Field evidence that disagrees with the model.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2 text-[12px]">
+        <FlowSteps
+          steps={[
+            { label: "Field evidence", icon: Camera, tone: "green" },
+            { label: "Review", icon: Eye, tone: "blue" },
+            { label: "Approval", icon: UserCheck, tone: "amber" },
+            { label: "New experiment", icon: FlaskConical, tone: "violet" },
+            { label: "Evaluation", icon: Gauge, tone: "slate" },
+          ]}
+          note="The model is never retrained automatically."
+        />
         {rows === null ? <div className="text-muted-foreground">Loading…</div> : rows.length === 0 ? <div className="text-muted-foreground">No disagreements recorded for this landscape.</div> : rows.map((d) => (
           <div key={d.id} className="rounded-lg border border-foreground/10 p-2">
             <div className="flex flex-wrap items-center gap-2"><b>{d.object_type} {d.object_id}</b><Badge variant={d.kind === "false_positive" ? "danger" : "warning"}>{d.kind.replace("_", " ")}</Badge><Badge variant="secondary">{d.status}</Badge><span className="text-muted-foreground">{d.observed_at} · {d.lat.toFixed(5)}, {d.lon.toFixed(5)}</span></div>

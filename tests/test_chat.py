@@ -114,6 +114,29 @@ def test_this_resolves_to_the_selected_patch(client):
     assert "P07" in r["answer"] and r["resolved_question"].endswith("(P07)")
 
 
+def test_questions_about_the_app_ignore_the_selected_patch(client):
+    # regression: "this app" used to be read as "this (selected) patch" and refused with P04's record
+    generation.set_llm(StubLLM())
+    r = ask(client, "who are goig to use this app ?", selected_patch="P04")
+    assert "(P04)" not in (r.get("resolved_question") or "")
+    assert "do not include that information" not in r["answer"]
+    assert r["tier"] == "retrieval" and re.search(r"forest|officer|research", r["answer"], re.I)
+
+
+def test_extractive_cache_never_replaces_an_llm_answer(client, monkeypatch):
+    # regression: an answer cached while the LLM was off was later served to signed-in users with the LLM on
+    q = "Explain how the travel distance assumption changes which patches matter"
+    monkeypatch.setenv("LLM_ENABLED", "0")
+    generation.set_llm(StubLLM())
+    r = ask(client, q, headers=_auth(client, "gis"), session="s-cache-a")
+    assert r["tier"] == "retrieval" and not r["llm_called"]
+    monkeypatch.setenv("LLM_ENABLED", "1")
+    stub = StubLLM()
+    generation.set_llm(stub)
+    r = ask(client, q, headers=_auth(client, "gis"), session="s-cache-b")
+    assert r["llm_called"] and not r["cache_hit"] and stub.calls
+
+
 def test_retrieval_answers_docs_questions_without_llm(client):
     generation.set_llm(StubLLM())
     r = ask(client, "What are the limitations of the current model?")

@@ -26,14 +26,16 @@ All optional; defaults shown. Secrets only in the server environment — never i
 | `LLM_ENABLED` | 1 | 0 = no LLM calls at all (structured + retrieval answers only) |
 | `LLM_PROVIDER` | anthropic | provider in `backend/rag/generation.py` |
 | `ANTHROPIC_API_KEY` | — | server-side only |
-| `LLM_MODEL_FAST` | claude-haiku-4-5-20251001 | knowledge / follow-up questions |
-| `LLM_MODEL` | claude-haiku-4-5-20251001 | default |
-| `LLM_MODEL_STRONG` | claude-sonnet-5-5 | analytical / multi-step questions |
+| `ANTHROPIC_WORKSPACE_ID` | — | only for keys not scoped to a workspace; sent as the `anthropic-workspace-id` header |
+| `LLM_MODEL_FAST` | claude-haiku-4-5 | knowledge / follow-up questions (Haiku takes no effort parameter) |
+| `LLM_MODEL` | claude-haiku-4-5 | default |
+| `LLM_MODEL_STRONG` | claude-opus-5-5 | analytical / multi-step questions (effort `LLM_EFFORT_STRONG`=medium) |
+| `LLM_SERVER_FALLBACK` | 1 | server-side refusal fallback (`fallbacks: "default"`) on Opus 5.x / Sonnet 5.5 |
 | `LLM_FALLBACK_MODEL` | claude-sonnet-5-5 | used once if the routed model fails (a different model is always chosen) |
-| `LLM_TIMEOUT_S` | 30 | per call |
+| `LLM_TIMEOUT_S` | 60 | per call |
 | `LLM_MAX_RETRIES` | 2 | retryable errors only (429, 529, 5xx, timeout, connection) |
 | `LLM_PRICING_JSON` | built-in table | override prices, USD per 1M tokens |
-| `MAX_OUTPUT_TOKENS` | 700 | LLM output cap |
+| `MAX_OUTPUT_TOKENS` | 4000 | LLM output cap, including the model's thinking tokens |
 | `MAX_LLM_CALLS_PER_SESSION` | 20 | per browser session per 24 h |
 | `ECO_ASSISTANT_PER_HOUR` | 30 | LLM calls per user per hour |
 | `ECO_ANON_ASK_PER_HOUR` | 20 | public questions per client per hour |

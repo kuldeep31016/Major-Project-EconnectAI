@@ -1,0 +1,25 @@
+{
+ "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth",
+ "experiment_id": "multi_E1_s1_b0_dev_r2",
+ "mode": "development",
+ "model": {
+  "architecture": "U-Net",
+  "encoder": "efficientnet-b0",
+  "in_channels": 2,
+  "num_classes": 1,
+  "encoder_weights": "imagenet",
+  "paper_name": "U-Net/efficientnet-b0 (dev or alt config)"
+ },
+ "scene": "data/scenes/odisha-coast/odisha-coast_s1nrt_20261003T121933_r85_n8.tif",
+ "threshold": 0.97,
+ "tta": false,
+ "tile": 256,
+ "overlap": 64,
+ "valid_fraction": 1.0,
+ "habitat_fraction_at_threshold": 0.19095998116888213,
+ "outputs": {
+  "probability": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/satellite/EC-odisha-coast-2026-10-03-039020/odisha-coast_prob.tif",
+  "confidence": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/satellite/EC-odisha-coast-2026-10-03-039020/odisha-coast_confidence.tif",
+  "binary": "/Users/kuldeepraj/Major-Project-EconnectAI/outputs/satellite/EC-odisha-coast-2026-10-03-039020/odisha-coast_binary_t0.97.tif"
+ }
+}

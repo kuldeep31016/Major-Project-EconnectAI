@@ -74,7 +74,22 @@ def run_summary(run_dir: Path) -> dict:
         "sceneYear": m["data_source"].get("scene_year"), "model": m["data_source"].get("model"),
         "threshold": m["data_source"].get("threshold"),
         "criticalPatches": count_critical(run_dir),
+        "satellite": _satellite_summary(m["data_source"].get("satellite")),
+        # the threshold scenario re-draws patches from this raster; stored runs whose raster is gone cannot
+        "probabilityRaster": m["data_source"].get("type") == "probability_raster"
+                             and bool(abs_path(m["data_source"].get("path"))) and abs_path(m["data_source"].get("path")).is_file(),
     }
+
+
+def _satellite_summary(sat: Optional[dict]) -> Optional[dict]:
+    """Near-real-time runs (backend/satellite): source + reliability, so lists can label them; None for stored runs."""
+    if not sat:
+        return None
+    rel, pl = sat.get("reliability") or {}, sat.get("plausibility") or {}
+    return {"source": sat.get("source"), "acquisitionTime": sat.get("acquisition_time"),
+            "compositeScenes": sat.get("composite_scenes") or len(sat.get("products") or []) or None,
+            "analysisId": sat.get("analysis_id"), "reliability": rel.get("level"), "reliabilityIou": rel.get("iou"),
+            "reviewRecommended": bool(pl.get("review_recommended")) or rel.get("level") == "unreliable"}
 
 
 def count_critical(run_dir: Path, s_threshold: float = 0.10) -> Optional[int]:

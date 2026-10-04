@@ -3,7 +3,7 @@ import json, os, sys, wave
 from piper import PiperVoice, SynthesisConfig
 voice_name, out = sys.argv[1], sys.argv[2]
 os.makedirs(out, exist_ok=True)
-import piper as _p  # espeak expects the PARENT of espeak-ng-data (packaged default path is wrong on macOS)
+import piper as _p  # noqa: F401 - espeak expects the PARENT of espeak-ng-data (packaged default path is wrong on macOS)
 voice = PiperVoice.load(os.path.join(os.environ.get("VOICES", "voices"), voice_name + ".onnx"), espeak_data_dir=os.path.expanduser("~/.cache/piper/espeak-ng-data"))  # short path: espeak truncates long data paths
 cfg = SynthesisConfig(length_scale=1.03, noise_scale=0.6, noise_w_scale=0.75)
 lines = json.load(open("narration.json")); total = 0

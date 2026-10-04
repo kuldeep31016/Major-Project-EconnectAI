@@ -1,0 +1,192 @@
+=== 02:02:23 acquire kerala-coast
+[acquire] kerala-coast  bbox=(9.778, 76.272, 9.978, 76.472)  grid=2203x2221 @ 10 m  EPSG:32643
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1B_IW_GRDH_1SDV_20200101T004013_20200101T004038_019616_02512D_rtc  2020-01-01  descending
+  S1 S1A_IW_GRDH_1SDV_20200131T004048_20200131T004113_031037_0390C4_rtc  2020-01-31  descending
+  S1 S1A_IW_GRDH_1SDV_20200319T004051_20200319T004116_031737_03A905_rtc  2020-03-19  descending
+  S1 S1A_IW_GRDH_1SDV_20200518T004056_20200518T004121_032612_03C6FC_rtc  2020-05-18  descending
+  S1 S1A_IW_GRDH_1SDV_20200705T004058_20200705T004123_033312_03DC0E_rtc  2020-07-05  descending
+  S1 S1A_IW_GRDH_1SDV_20200822T004101_20200822T004126_034012_03F294_rtc  2020-08-22  descending
+  S1 S1A_IW_GRDH_1SDV_20201009T004103_20201009T004128_034712_040B2C_rtc  2020-10-09  descending
+  S1 S1A_IW_GRDH_1SDV_20201126T004102_20201126T004127_035412_04236E_rtc  2020-11-26  descending
+[acquire] Sentinel-2 L2A (Earth Search) ...
+  S2 granules covering the AOI: MGRS-43PFL (85%), MGRS-43PFM (59%)
+  S2 S2B_43PFL_20200124_1_L2A  cloud=0.0%  AOI overlap=85%
+  S2 S2B_43PFL_20200213_1_L2A  cloud=0.0%  AOI overlap=85%
+  S2 S2A_43PFL_20200218_1_L2A  cloud=0.3%  AOI overlap=85%
+  S2 S2A_43PFL_20201224_1_L2A  cloud=1.0%  AOI overlap=85%
+  S2 S2B_43PFL_20201109_1_L2A  cloud=1.6%  AOI overlap=85%
+  S2 S2A_43PFL_20200109_1_L2A  cloud=2.6%  AOI overlap=85%
+  S2 S2B_43PFM_20200203_1_L2A  cloud=0.0%  AOI overlap=59%
+  S2 S2A_43PFM_20200218_1_L2A  cloud=0.1%  AOI overlap=59%
+  S2 S2A_43PFM_20200129_1_L2A  cloud=0.3%  AOI overlap=59%
+  S2 S2B_43PFM_20200124_1_L2A  cloud=1.4%  AOI overlap=59%
+  S2 S2A_43PFM_20200109_1_L2A  cloud=1.8%  AOI overlap=59%
+  S2 S2B_43PFM_20200314_1_L2A  cloud=3.0%  AOI overlap=59%
+wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi'] (157.9 MB)
+[acquire] scene /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/kerala-coast/kerala-coast_2020_s12_10m.tif (157.9 MB) bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi']
+[acquire] GMW weak labels (Zenodo) ...
+  downloading https://zenodo.org/api/records/6894273/files/gmw_v3_2020_gtiff.zip/content -> /Users/kuldeepraj/Major-Project-EconnectAI/data/raw/gmw/gmw_v3_2020_gtiff.zip
+     1.0/66.1 MB     2.1/66.1 MB     3.1/66.1 MB     4.2/66.1 MB     5.2/66.1 MB     6.3/66.1 MB     7.3/66.1 MB     8.4/66.1 MB     9.4/66.1 MB    10.5/66.1 MB    11.5/66.1 MB    12.6/66.1 MB    13.6/66.1 MB    14.7/66.1 MB    15.7/66.1 MB    16.8/66.1 MB    17.8/66.1 MB    18.9/66.1 MB    19.9/66.1 MB    21.0/66.1 MB    22.0/66.1 MB    23.1/66.1 MB    24.1/66.1 MB    25.2/66.1 MB    26.2/66.1 MB    27.3/66.1 MB    28.3/66.1 MB    29.4/66.1 MB    30.4/66.1 MB    31.5/66.1 MB    32.5/66.1 MB    33.6/66.1 MB    34.6/66.1 MB    35.7/66.1 MB    36.7/66.1 MB    37.7/66.1 MB    38.8/66.1 MB    39.8/66.1 MB    40.9/66.1 MB    41.9/66.1 MB    43.0/66.1 MB    44.0/66.1 MB    45.1/66.1 MB    46.1/66.1 MB    47.2/66.1 MB    48.2/66.1 MB    49.3/66.1 MB    50.3/66.1 MB    51.4/66.1 MB    52.4/66.1 MB    53.5/66.1 MB    54.5/66.1 MB    55.6/66.1 MB    56.6/66.1 MB    57.7/66.1 MB    58.7/66.1 MB    59.8/66.1 MB    60.8/66.1 MB    61.9/66.1 MB    62.9/66.1 MB    64.0/66.1 MB    65.0/66.1 MB    66.1/66.1 MB    66.1/66.1 MB
+  GMW tiles for ['N10E076']: ['GMW_N10E076_2020_v3.tif']
+[acquire] wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/kerala-coast/gmw_2020.tif  mangrove fraction of labelled pixels = 0.002  labelled fraction = 1.000
+=== 02:29:16 acquire sundarbans
+[acquire] sundarbans  bbox=(21.8, 88.6, 22.1, 88.9)  grid=3137x3358 @ 10 m  EPSG:32645
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1B_IW_GRDH_1SDV_20200105T000353_20200105T000418_019674_0252FB_rtc  2020-01-05  descending
+  S1 S1A_IW_GRDH_1SDV_20200213T121203_20200213T121228_031234_039785_rtc  2020-02-13  ascending
+  S1 S1A_IW_GRDH_1SDV_20200329T235634_20200329T235659_031897_03AE9C_rtc  2020-03-29  descending
+  S1 S1B_IW_GRDH_1SDV_20200516T000357_20200516T000422_021599_029010_rtc  2020-05-16  descending
+  S1 S1A_IW_GRDH_1SDV_20200615T000445_20200615T000510_033020_03D320_rtc  2020-06-15  descending
+  S1 S1A_IW_GRDH_1SDV_20200727T235641_20200727T235706_033647_03E64C_rtc  2020-07-27  descending
+  S1 S1A_IW_GRDH_1SDV_20200907T000450_20200907T000515_034245_03FABD_rtc  2020-09-07  descending
+  S1 S1A_IW_GRDH_1SDV_20201022T121237_20201022T121302_034909_0411FF_rtc  2020-10-22  ascending
+[acquire] Sentinel-2 L2A (Earth Search) ...
+  S2 granules covering the AOI: MGRS-45QXE (100%)
+  S2 S2A_45QXE_20201115_1_L2A  cloud=0.0%  AOI overlap=100%
+  S2 S2B_45QXE_20201130_1_L2A  cloud=0.0%  AOI overlap=100%
+  S2 S2B_45QXE_20200125_1_L2A  cloud=0.0%  AOI overlap=100%
+  S2 S2B_45QXE_20200204_1_L2A  cloud=0.0%  AOI overlap=100%
+  S2 S2B_45QXE_20201230_1_L2A  cloud=0.0%  AOI overlap=100%
+  S2 S2A_45QXE_20200229_1_L2A  cloud=0.0%  AOI overlap=100%
+wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/sundarbans/sundarbans_2020_s12_10m.tif bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi'] (333.8 MB)
+[acquire] scene /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/sundarbans/sundarbans_2020_s12_10m.tif (333.8 MB) bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi']
+[acquire] GMW weak labels (Zenodo) ...
+  GMW tiles for ['N22E088', 'N23E088']: ['GMW_N22E088_2020_v3.tif', 'GMW_N23E088_2020_v3.tif']
+[acquire] wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/sundarbans/gmw_2020.tif  mangrove fraction of labelled pixels = 0.559  labelled fraction = 1.000
+=== 02:45:24 acquire gulf-of-mannar
+[acquire] gulf-of-mannar  bbox=(9.0, 78.9, 9.3, 79.3)  grid=4415x3343 @ 10 m  EPSG:32644
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1A_IW_GRDH_1SDV_20200102T003240_20200102T003305_030614_0381E6_rtc  2020-01-02  descending
+  S1 S1A_IW_GRDH_1SDV_20200126T003239_20200126T003304_030964_038E30_rtc  2020-01-26  descending
+ERROR 1: Request for https://sentinel1euwestrtc.blob.core.windows.net/sentinel1-grd-rtc/GRD/2020/1/26/IW/DV/S1A_IW_GRDH_1SDV_20200126T003239_20200126T003304_030964_038E30_DE8E/measurement/iw-vh.rtc.tiff?st=2026-10-02T21%3A15%3A26Z&se=2026-10-03T22%3A00%3A26Z&sp=rl&sv=2025-07-05&sr=c&skoid=9c8ff44a-6a2c-4dfb-b298-1c9212f64d9a&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-10-03T20%3A48%3A37Z&ske=2026-10-10T20%3A48%3A37Z&sks=b&skv=2025-07-05&sig=gglHwrQt2HR36puobwX5avP95AL2%2B71JwySHnrA6j3g%3D range 1778540497-1786887243 failed with response_code=206
+  read failed (RasterioIOError); retry 1/4 in 2s: 5-07-05&sig=gglHwrQt2HR36puobwX5avP95AL2%2B71JwySHnrA6j3g%3D
+  S1 S1A_IW_GRDH_1SDV_20200219T003239_20200219T003304_031314_039A56_rtc  2020-02-19  descending
+  S1 S1A_IW_GRDH_1SDV_20200314T003242_20200314T003307_031664_03A66E_rtc  2020-03-14  descending
+  S1 S1A_IW_GRDH_1SDV_20200419T003248_20200419T003313_032189_03B8EB_rtc  2020-04-19  descending
+  S1 S1A_IW_GRDH_1SDV_20200606T003250_20200606T003315_032889_03CF43_rtc  2020-06-06  descending
+  S1 S1A_IW_GRDH_1SDV_20200724T003253_20200724T003318_033589_03E48B_rtc  2020-07-24  descending
+  S1 S1A_IW_GRDH_1SDV_20200910T003256_20200910T003321_034289_03FC44_rtc  2020-09-10  descending
+[acquire] Sentinel-2 L2A (Earth Search) ...
+  S2 granules covering the AOI: MGRS-44PKR (92%), MGRS-44PLR (30%)
+  S2 S2A_44PKR_20200614_1_L2A  cloud=0.4%  AOI overlap=92%
+  S2 S2B_44PKR_20200111_1_L2A  cloud=1.4%  AOI overlap=92%
+  S2 S2A_44PKR_20200215_1_L2A  cloud=3.3%  AOI overlap=92%
+  S2 S2A_44PKR_20200116_1_L2A  cloud=5.6%  AOI overlap=92%
+  S2 S2A_44PKR_20200126_1_L2A  cloud=6.0%  AOI overlap=92%
+  S2 S2A_44PKR_20201121_1_L2A  cloud=6.0%  AOI overlap=92%
+  S2 S2A_44PLR_20200614_1_L2A  cloud=0.6%  AOI overlap=30%
+  S2 S2B_44PLR_20200321_1_L2A  cloud=4.4%  AOI overlap=30%
+  S2 S2A_44PLR_20200215_1_L2A  cloud=4.6%  AOI overlap=30%
+ERROR 1: Request for https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/44/P/LR/2020/2/S2A_44PLR_20200215_1_L2A/B11.tif range 26755118-27889608 failed with response_code=0
+  read failed (RasterioIOError); retry 1/4 in 2s: -s2-l2a-cogs/44/P/LR/2020/2/S2A_44PLR_20200215_1_L2A/B11.tif
+  S2 S2B_44PLR_20200331_1_L2A  cloud=5.2%  AOI overlap=30%
+  S2 S2B_44PLR_20200220_1_L2A  cloud=6.3%  AOI overlap=30%
+  S2 S2B_44PLR_20200311_1_L2A  cloud=7.1%  AOI overlap=30%
+wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi'] (421.9 MB)
+[acquire] scene /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/gulf-of-mannar/gulf-of-mannar_2020_s12_10m.tif (421.9 MB) bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi']
+[acquire] GMW weak labels (Zenodo) ...
+  GMW tiles for ['N10E078', 'N10E079']: ['GMW_N10E078_2020_v3.tif', 'GMW_N10E079_2020_v3.tif']
+[acquire] wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/gulf-of-mannar/gmw_2020.tif  mangrove fraction of labelled pixels = 0.000  labelled fraction = 0.997
+=== 03:19:21 acquire odisha-coast
+[acquire] odisha-coast  bbox=(20.6, 86.78, 20.84, 87.02)  grid=2502x2659 @ 10 m  EPSG:32645
+[acquire] date range ['2020-01-01', '2020-12-31']  provider=stac (no credentials)
+[acquire] Sentinel-1 RTC (Planetary Computer) ...
+  S1 S1A_IW_GRDH_1SDV_20200101T122010_20200101T122035_030607_0381AA_rtc  2020-01-01  ascending
+  S1 S1A_IW_GRDH_1SDV_20200206T122009_20200206T122034_031132_039403_rtc  2020-02-06  ascending
+  S1 S1A_IW_GRDH_1SDV_20200325T122009_20200325T122034_031832_03AC55_rtc  2020-03-25  ascending
+  S1 S1B_IW_GRDH_1SDV_20200516T000422_20200516T000455_021599_029010_rtc  2020-05-16  descending
+  S1 S1A_IW_GRDH_1SDV_20200617T122013_20200617T122038_033057_03D449_rtc  2020-06-17  ascending
+  S1 S1A_IW_GRDH_1SDV_20200804T122016_20200804T122041_033757_03E9A2_rtc  2020-08-04  ascending
+  S1 S1A_IW_GRDH_1SDV_20200921T122018_20200921T122043_034457_040244_rtc  2020-09-21  ascending
+  S1 S1A_IW_GRDH_1SDV_20201108T122018_20201108T122043_035157_041A8A_rtc  2020-11-08  ascending
+[acquire] Sentinel-2 L2A (Earth Search) ...
+  S2 granules covering the AOI: MGRS-45QVC (83%), MGRS-45QVD (54%)
+  S2 S2B_45QVC_20200214_1_L2A  cloud=0.0%  AOI overlap=83%
+  S2 S2B_45QVC_20201130_1_L2A  cloud=0.0%  AOI overlap=83%
+  S2 S2A_45QVC_20201115_1_L2A  cloud=0.0%  AOI overlap=83%
+  S2 S2B_45QVC_20201220_1_L2A  cloud=0.0%  AOI overlap=83%
+  S2 S2B_45QVC_20201230_1_L2A  cloud=0.0%  AOI overlap=83%
+  S2 S2A_45QVC_20200320_1_L2A  cloud=0.1%  AOI overlap=83%
+  S2 S2B_45QVD_20200214_1_L2A  cloud=0.0%  AOI overlap=54%
+  S2 S2B_45QVD_20201130_1_L2A  cloud=0.0%  AOI overlap=54%
+  S2 S2A_45QVD_20201115_2_L2A  cloud=0.0%  AOI overlap=54%
+  S2 S2B_45QVD_20201220_3_L2A  cloud=0.0%  AOI overlap=54%
+  S2 S2B_45QVD_20201210_1_L2A  cloud=0.0%  AOI overlap=54%
+  S2 S2B_45QVD_20201230_1_L2A  cloud=0.0%  AOI overlap=54%
+wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi'] (209.9 MB)
+[acquire] scene /Users/kuldeepraj/Major-Project-EconnectAI/data/scenes/odisha-coast/odisha-coast_2020_s12_10m.tif (209.9 MB) bands=['s1_vv_db', 's1_vh_db', 's2_blue', 's2_green', 's2_red', 's2_nir', 's2_swir16', 's2_swir22', 's2_ndvi', 's2_ndwi']
+[acquire] GMW weak labels (Zenodo) ...
+  GMW tiles for ['N21E086', 'N21E087']: ['GMW_N21E086_2020_v3.tif', 'GMW_N21E087_2020_v3.tif']
+[acquire] wrote /Users/kuldeepraj/Major-Project-EconnectAI/data/labels/odisha-coast/gmw_2020.tif  mangrove fraction of labelled pixels = 0.162  labelled fraction = 1.000
+=== 03:42:16 ACQUIRE DONE
+data/labels/gulf-of-mannar/:
+total 64
+drwxr-xr-x@ 4 kuldeepraj  staff    128 Oct  4 03:19 .
+drwxr-xr-x@ 6 kuldeepraj  staff    192 Oct  4 03:42 ..
+-rw-r--r--@ 1 kuldeepraj  staff    574 Oct  4 03:19 gmw_2020.json
+-rw-r--r--@ 1 kuldeepraj  staff  25494 Oct  4 03:19 gmw_2020.tif
+
+data/labels/kerala-coast/:
+total 32
+drwxr-xr-x@ 4 kuldeepraj  staff    128 Oct  4 02:29 .
+drwxr-xr-x@ 6 kuldeepraj  staff    192 Oct  4 03:42 ..
+-rw-r--r--@ 1 kuldeepraj  staff    525 Oct  4 02:29 gmw_2020.json
+-rw-r--r--@ 1 kuldeepraj  staff  11740 Oct  4 02:29 gmw_2020.tif
+
+data/labels/odisha-coast/:
+total 112
+drwxr-xr-x@ 4 kuldeepraj  staff    128 Oct  4 03:42 .
+drwxr-xr-x@ 6 kuldeepraj  staff    192 Oct  4 03:42 ..
+-rw-r--r--@ 1 kuldeepraj  staff    552 Oct  4 03:42 gmw_2020.json
+-rw-r--r--@ 1 kuldeepraj  staff  50605 Oct  4 03:42 gmw_2020.tif
+
+data/labels/sundarbans/:
+total 240
+drwxr-xr-x@ 4 kuldeepraj  staff     128 Oct  4 02:45 .
+drwxr-xr-x@ 6 kuldeepraj  staff     192 Oct  4 03:42 ..
+-rw-r--r--@ 1 kuldeepraj  staff     547 Oct  4 02:45 gmw_2020.json
+-rw-r--r--@ 1 kuldeepraj  staff  114996 Oct  4 02:45 gmw_2020.tif
+
+data/scenes/gulf-of-mannar/:
+total 1017176
+drwxr-xr-x@ 6 kuldeepraj  staff        192 Oct  4 03:31 .
+drwxr-xr-x@ 6 kuldeepraj  staff        192 Oct  4 00:25 ..
+-rw-r--r--@ 1 kuldeepraj  staff       7155 Oct  4 03:19 gulf-of-mannar_2020_s12_10m.json
+-rw-r--r--@ 1 kuldeepraj  staff  421936353 Oct  4 03:19 gulf-of-mannar_2020_s12_10m.tif
+-rw-r--r--@ 1 kuldeepraj  staff       2008 Oct  4 00:24 gulf-of-mannar_s1nrt_20260922T003216_r92_n1.json
+-rw-r--r--@ 1 kuldeepraj  staff   98841242 Oct  4 00:24 gulf-of-mannar_s1nrt_20260922T003216_r92_n1.tif
+
+data/scenes/kerala-coast/:
+total 376256
+drwxr-xr-x@ 6 kuldeepraj  staff        192 Oct  4 03:31 .
+drwxr-xr-x@ 6 kuldeepraj  staff        192 Oct  4 00:25 ..
+-rw-r--r--@ 1 kuldeepraj  staff       7142 Oct  4 02:28 kerala-coast_2020_s12_10m.json
+-rw-r--r--@ 1 kuldeepraj  staff  157939167 Oct  4 02:28 kerala-coast_2020_s12_10m.tif
+-rw-r--r--@ 1 kuldeepraj  staff       1946 Oct  4 00:16 kerala-coast_s1nrt_20260927T004022_r165_n1.json
+-rw-r--r--@ 1 kuldeepraj  staff   34688610 Oct  4 00:16 kerala-coast_s1nrt_20260927T004022_r165_n1.tif
+
+data/scenes/odisha-coast/:
+total 893840
+drwxr-xr-x@ 10 kuldeepraj  staff        320 Oct  4 03:42 .
+drwxr-xr-x@  6 kuldeepraj  staff        192 Oct  4 00:25 ..
+-rw-r--r--@  1 kuldeepraj  staff       7140 Oct  4 03:42 odisha-coast_2020_s12_10m.json
+-rw-r--r--@  1 kuldeepraj  staff  209917701 Oct  4 03:42 odisha-coast_2020_s12_10m.tif
+-rw-r--r--@  1 kuldeepraj  staff       1852 Oct  4 03:21 odisha-coast_2020_s1_10m.json
+-rw-r--r--@  1 kuldeepraj  staff   45723242 Oct  4 03:21 odisha-coast_2020_s1_10m.tif
+-rw-r--r--@  1 kuldeepraj  staff       5241 Oct  4 03:42 odisha-coast_2020_s2_10m.json
+-rw-r--r--@  1 kuldeepraj  staff  155462753 Oct  4 03:42 odisha-coast_2020_s2_10m.tif
+-rw-r--r--@  1 kuldeepraj  staff       1949 Oct  4 00:25 odisha-coast_s1nrt_20261003T121933_r85_n1.json
+-rw-r--r--@  1 kuldeepraj  staff   46512390 Oct  4 00:25 odisha-coast_s1nrt_20261003T121933_r85_n1.tif
+
+data/scenes/sundarbans/:
+total 796720
+drwxr-xr-x@ 6 kuldeepraj  staff        192 Oct  4 03:31 .
+drwxr-xr-x@ 6 kuldeepraj  staff        192 Oct  4 00:25 ..
+-rw-r--r--@ 1 kuldeepraj  staff       4705 Oct  4 02:45 sundarbans_2020_s12_10m.json
+-rw-r--r--@ 1 kuldeepraj  staff  333797539 Oct  4 02:45 sundarbans_2020_s12_10m.tif
+-rw-r--r--@ 1 kuldeepraj  staff       1962 Oct  4 00:23 sundarbans_s1nrt_20260928T121129_r12_n1.json
+-rw-r--r--@ 1 kuldeepraj  staff   74107926 Oct  4 00:23 sundarbans_s1nrt_20260928T121129_r12_n1.tif

@@ -116,6 +116,22 @@ function CursorTracker({
   return null;
 }
 
+/** Keep Leaflet's size in sync with its container (full screen, panel toggles, window resizes). */
+function AutoResize() {
+  const map = useMap();
+  useEffect(() => {
+    const el = map.getContainer();
+    let raf = 0;
+    const ro = new ResizeObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => map.invalidateSize({ pan: false }));
+    });
+    ro.observe(el);
+    return () => { ro.disconnect(); cancelAnimationFrame(raf); };
+  }, [map]);
+  return null;
+}
+
 /** Re-fit the viewport when the scene changes. */
 function SceneFitter({ bounds, sceneId }: { bounds: LatLngBoundsExpression; sceneId: string }) {
   const map = useMap();
@@ -221,6 +237,7 @@ export default function GisMap({
         className="h-full w-full"
         attributionControl
       >
+        <AutoResize />
         <SceneFitter bounds={bounds} sceneId={scene.id} />
         <Focuser focus={focus} />
         <CursorTracker
@@ -314,9 +331,10 @@ export default function GisMap({
 
             return (
               <Polyline
-                key={e.id}
+                key={`${e.id}-${severed ? "x" : "o"}`}
                 positions={[a.center as [number, number], b.center as [number, number]]}
                 pathOptions={{
+                  className: severed ? "eco-edge-severed" : undefined,
                   color: severed ? "#ef4444" : e.critical ? "#f59e0b" : "#1e5f8a",
                   weight: severed ? 1.2 : 1 + e.strength * 2.6,
                   opacity: severed ? 0.4 : 0.32 + e.strength * 0.5,
@@ -352,9 +370,10 @@ export default function GisMap({
 
             return (
               <Polygon
-                key={p.id}
+                key={`${p.id}-${removed ? "removed" : "kept"}`}
                 positions={p.polygon as [number, number][]}
                 pathOptions={{
+                  className: removed ? "eco-patch-removed" : undefined,
                   color: removed ? "#ef4444" : selected ? "#f8fafc" : ov?.color ?? meta.color,
                   weight: selected ? 2.6 : removed ? 1.6 : 1.4,
                   opacity: removed ? 0.85 : 0.9,

@@ -15,7 +15,7 @@ from typing import Optional
 
 from .config import S
 from .retrieval import UI_Q, Cand
-from .text import expand, object_ids, tokens
+from .text import expand, object_ids, stem, tokens
 
 _INTERROGATIVE = frozenset({"why", "when", "where", "whom", "whose", "much", "many", "any", "some", "there", "here"})
 
@@ -29,7 +29,8 @@ def coverage(query: str, c: Cand) -> float:
     if not terms:
         return 1.0
     have = set(tokens(f"{c.title} {c.section or ''} {c.text}"))
-    hit = sum(1 for t in terms if t in have or any(e in have for e in expand([t])[1:]))
+    stems = {stem(h) for h in have}
+    hit = sum(1 for t in terms if t in have or stem(t) in stems or any(e in have or stem(e) in stems for e in expand([t])[1:]))
     return hit / len(terms)
 
 
@@ -115,8 +116,11 @@ def confidence(query: str, top: list[Cand]) -> tuple[float, Optional[str]]:
     if not top:
         return 0.0, "no relevant passages retrieved"
     best = max(coverage(query, c) for c in top[:3])
-    if any(c.object_id and c.object_id in object_ids(query) and coverage(query, c) >= 0.5 for c in top[:3]):
+    named = object_ids(query)
+    if any(c.object_id and c.object_id in named and coverage(query, c) >= 0.5 for c in top[:3]):
         best = max(best, 0.8)                     # the named object's record answers the question (not just mentions it)
+    elif len(named) >= 2 and set(named) <= {c.object_id for c in top if c.object_id}:
+        best = max(best, 0.75)                    # comparison: every named object's stored record was retrieved
     support = len({c.source_key for c in top if coverage(query, c) >= 0.5})
     dense = max((c.dense for c in top), default=0.0)
     conf = round(0.6 * best + 0.25 * min(1.0, support / 2) + 0.15 * max(0.0, min(1.0, dense)), 3)

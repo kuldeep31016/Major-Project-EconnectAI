@@ -78,3 +78,16 @@ P1 high value, P2 research extension, P3 optional. Bug numbers refer to `AUDIT_2
 - [ ] Demo admin account exposed via public demo password (user decision); restoration review can approve with all factors "Not assessed"
 - [ ] Threshold chosen on test split (bug 22); tiling leakage; LICENSE/CITATION (owner's choice)
 
+
+## Phase 9 — Near-real-time satellite intelligence + accuracy (started 2026-10-04)
+- [x] P0 Copernicus Data Space layer: catalogue, OAuth retrieval, training-grid preprocessing, provenance, Satellite Monitor
+- [x] P0 Rebuild lost model (`multi_E1_s1_b0_dev_r2`) with the original recipe; audit bugs 20/22/23 fixed
+- [x] P1 8-acquisition median default; per-area reliability; post-inference plausibility check; reports/assistant caveats
+- [x] P1 Assistant: data tools for satellite + reliability; Haiku/Opus routing; cost/ROI measured
+- [ ] P0 Back up the model checkpoint off this machine (location = user's decision)
+- [ ] P0 Leakage-free split (bug 21) + per-area held-out scores + per-area thresholds
+- [ ] P1 Train on near-real-time-style composites; evaluate S1+S2 fusion for thin fringes (Kerala, Gulf)
+- [ ] P1 Field-validation sample (accuracy vs field, not only vs GMW)
+- [ ] P2 Stable patch IDs across runs; change detection above a measured noise floor
+- [ ] P2 Automatic monitoring (scheduler / Copernicus subscription) + alerts
+- [ ] P3 PyTorch inference worker for deployment (Render cannot run the model)

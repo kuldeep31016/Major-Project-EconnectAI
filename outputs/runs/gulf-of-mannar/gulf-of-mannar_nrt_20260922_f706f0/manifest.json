@@ -1,0 +1,188 @@
+{
+ "run_id": "gulf-of-mannar_nrt_20260922_f706f0",
+ "study_area_id": "gulf-of-mannar",
+ "study_area": {
+  "name": "Gulf of Mannar \u2014 Island Reef Chain",
+  "short_name": "Gulf of Mannar",
+  "state": "Tamil Nadu",
+  "protection": "Marine National Park / Biosphere Reserve",
+  "center": [
+   9.15,
+   79.1
+  ],
+  "bbox": [
+   9.0,
+   78.9,
+   9.3,
+   79.3
+  ],
+  "footprint_km2": 826,
+  "primary_habitat": "mangrove"
+ },
+ "timestamp_utc": "2026-10-04T01:31:02.770448+00:00",
+ "ecoconnect_version": "0.1.0",
+ "result_kind": "development",
+ "result_label": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+ "data_source": {
+  "type": "probability_raster",
+  "path": "outputs/satellite/EC-gulf-of-mannar-2026-09-22-f706f0/gulf-of-mannar_prob.tif",
+  "scene_year": 2026,
+  "crs": "EPSG:32644",
+  "width": 4415,
+  "height": 3343,
+  "pixel_size": [
+   10.0,
+   10.0
+  ],
+  "threshold": 0.97,
+  "mmu_ha": 2.0,
+  "connectivity": 8,
+  "candidate_threshold": 0.3,
+  "candidate_min_area_ha": 1.0,
+  "extraction_report": {
+   "threshold": 0.97,
+   "mmu_ha": 2.0,
+   "connectivity": 8,
+   "n_components_total": 100,
+   "n_patches_kept": 12,
+   "n_dropped_below_mmu": 88,
+   "habitat_pixels": 27212,
+   "valid_pixels": 14759333,
+   "habitat_coverage_pct": 0.1843714753234445,
+   "habitat_area_ha": 253.21999999998238,
+   "landscape_area_ha": 147593.33,
+   "mean_confidence_habitat": 0.989608645439148,
+   "crs": "EPSG:32644"
+  },
+  "model": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth",
+  "model_info": {
+   "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth"
+  },
+  "satellite": {
+   "analysis_id": "EC-gulf-of-mannar-2026-09-22-f706f0",
+   "source": "Copernicus Data Space Ecosystem",
+   "collection": "sentinel-1-grd",
+   "product_ids": [
+    "c305a055-f192-4be6-8157-daf042a12dda",
+    "608f81a7-5c6e-4240-b614-654a387bb7e3",
+    "22ff8788-b3c6-4e60-8389-42241c3c7774",
+    "e639ffef-3e99-4152-8a68-6d4eac6d8320",
+    "892f6633-9d66-458d-9dc0-987d9544e46c",
+    "7df3b1cc-022c-4dd8-8ab3-9a0004853f48",
+    "10ced2d9-80c1-448c-a425-e9ab1600d0d5",
+    "0891b48a-5dd1-4c2f-8790-0ea6e1556408"
+   ],
+   "products": [
+    "S1D_IW_GRDH_1SDV_20260922T003216_20260922T003241_004683_008C06_606A.SAFE",
+    "S1D_IW_GRDH_1SDV_20260910T003216_20260910T003241_004508_008604_F69D.SAFE",
+    "S1D_IW_GRDH_1SDV_20260829T003216_20260829T003241_004333_007FEA_2F9B.SAFE",
+    "S1D_IW_GRDH_1SDV_20260817T003215_20260817T003240_004158_0079BF_80C9.SAFE",
+    "S1D_IW_GRDH_1SDV_20260805T003214_20260805T003239_003983_0073B9_E327.SAFE",
+    "S1D_IW_GRDH_1SDV_20260724T003214_20260724T003239_003808_006DA0_2C31.SAFE",
+    "S1D_IW_GRDH_1SDV_20260712T003213_20260712T003238_003633_00679E_60E3.SAFE",
+    "S1D_IW_GRDH_1SDV_20260630T003212_20260630T003237_003458_0061B5_9E98.SAFE"
+   ],
+   "acquisition_time": "2026-09-22T00:32:16.645318Z",
+   "timeliness": "Fast-24h",
+   "platform": "Sentinel-1D",
+   "preprocessing_version": "s1grd-gamma0terrain-db-median-v1",
+   "composite_scenes": 8,
+   "first_acquisition": "2026-06-30T00:32:12.767894Z",
+   "reliability": {
+    "level": "unreliable",
+    "iou": 0.008,
+    "reference_habitat_ha": 44.0,
+    "experiment": "multi_E1_s1_b0_dev_r2",
+    "scope": "whole study area incl. training tiles (optimistic); not field accuracy",
+    "reference": "Global Mangrove Watch v3 2020 (weak label)"
+   },
+   "plausibility": {
+    "ratio": null,
+    "reference_habitat_ha": 44.0,
+    "review_recommended": true,
+    "note": "No usable reference area for this study area; the result needs manual review."
+   }
+  }
+ },
+ "landscape_area_ha": 147593.33,
+ "aoi_area_km2": 1475.93,
+ "valid_area_km2": 1475.93,
+ "habitat_area_ha": 253.22,
+ "comparability_note": "IIC and PC scale with the analysis extent A_L; do not compare raw values between study areas of different AOI size - use ECA as % of habitat area instead.",
+ "n_patches": 12,
+ "n_candidates": 12,
+ "config": {
+  "graph": {
+   "k_neighbors": 3,
+   "tau_km": 5.0,
+   "distance_mode": "haversine",
+   "tau_sensitivity_km": [
+    3.0,
+    5.0,
+    8.0
+   ]
+  },
+  "connectivity": {
+   "research_metric": "iic",
+   "pc_probability_at_tau": 0.5,
+   "interface_score_weights": {
+    "structural": 0.3,
+    "functional": 0.28,
+    "quality": 0.22,
+    "redundancy": 0.12,
+    "protection": 0.08
+   }
+  },
+  "criticality": {
+   "level_thresholds": [
+    0.25,
+    0.1,
+    0.03
+   ]
+  },
+  "restoration": {
+   "candidate_source": "sub_threshold",
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "candidate_max_count": 12,
+   "candidate_geojson": null,
+   "cost_csv": null,
+   "cost_unit": null,
+   "rebuild_edges_on_insert": false
+  },
+  "export": {
+   "heatmap_cell_m": 300,
+   "polygon_simplify_m": 15
+  }
+ },
+ "config_sha256": "a5065fa1656bc361a8682baf9a747bc749a855ca63e47a027932c3a7c6021c7e",
+ "code": {
+  "git_commit": "72f1adce7e2be4273d1092753f139df26bbbc175",
+  "git_dirty": true
+ },
+ "input_sha256": {
+  "path": "3fedc11d6c9f474058ad717d53f97f85c47891f6bf29ccdf735134b892a5ec5c",
+  "model": "ed97c3612a94b293207c2473e1d648d0d5d25df6ca4076388d6563b01621a2b8"
+ },
+ "hardware": {
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "python": "3.14.3"
+ },
+ "elapsed_s": 0.109,
+ "files": [
+  "criticality.csv",
+  "criticality.json",
+  "explanations.json",
+  "frontend_bundle.json",
+  "graph.json",
+  "manifest.json",
+  "metrics.json",
+  "patches.geojson",
+  "patches_input.json",
+  "restoration.csv",
+  "restoration.json",
+  "tau_sensitivity.json",
+  "what_if_top1.json"
+ ]
+}

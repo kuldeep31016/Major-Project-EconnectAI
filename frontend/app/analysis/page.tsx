@@ -8,9 +8,7 @@ import {
   AlertTriangle,
   ArrowRight,
   Columns2,
-  Download,
   Flame,
-  Layers,
   ListOrdered,
   Loader2,
   Map as MapIcon,
@@ -22,9 +20,7 @@ import {
 import { AppShell } from "@/components/dashboard/app-shell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   CoordinateReadout,
   LayerControl,
@@ -35,7 +31,7 @@ import {
 } from "@/components/maps/map-chrome";
 import { PixelInspector } from "@/components/maps/pixel-inspector";
 import type { LayerState } from "@/components/maps/gis-map";
-import { ScoreGauge, CompositionChart, ConnectivityTrendChart } from "@/components/charts";
+import { ScoreGauge } from "@/components/charts";
 import { EASE } from "@/components/shared/motion";
 import { useAnalysis } from "@/hooks/use-analysis";
 import { getConnectivity, getGraph, getHabitatMask, getHeatmap } from "@/lib/data";
@@ -47,7 +43,7 @@ import { SensitivityExplorer } from "@/components/analysis/sensitivity-explorer"
 import { EvidenceDrawer } from "@/components/analysis/evidence-drawer";
 import { PatchImportance } from "@/components/analysis/patch-importance";
 import { SENSITIVITY_META, type BasemapId } from "@/lib/constants";
-import { fmtArea, fmtDate, fmtRatio, fmtIndex } from "@/utils/format";
+import { fmtArea, fmtRatio, fmtIndex } from "@/utils/format";
 import { cn } from "@/lib/utils";
 
 // Leaflet touches window on import — must not run during SSR.
@@ -140,9 +136,23 @@ function AnalysisView() {
     return () => window.clearTimeout(t);
   }, []);
 
+  // The patch card opens only after a click on THIS page (or an explicit ?patch= deep link) — a patch picked
+  // elsewhere in the app (shared selection) must not cover the maps when the page opens.
+  const [pickedHere, setPickedHere] = useState(false);
+  const cardPatchId = pickedHere || wantPatch ? selectedPatchId : null;
+  const pickPatch = (id: string | null) => {
+    setPickedHere(true);
+    setSelectedPatchId(id);
+    setSelectedCellId(null);
+  };
+  const pickCell = (id: string | null) => {
+    setPickedHere(true);
+    setSelectedCellId(id);
+    setSelectedPatchId(null);
+  };
   const selectedPatch = useMemo(
-    () => mask.patches.find((p) => p.id === selectedPatchId) ?? null,
-    [mask.patches, selectedPatchId],
+    () => mask.patches.find((p) => p.id === cardPatchId) ?? null,
+    [mask.patches, cardPatchId],
   );
   const selectedCell = useMemo(
     () => heatmap.cells.find((c) => c.id === selectedCellId) ?? null,
@@ -150,12 +160,24 @@ function AnalysisView() {
   );
 
   const critical = mask.patches.filter((p) => p.sensitivity === "critical");
-  const high = mask.patches.filter((p) => p.sensitivity === "high");
 
   const bandCounts = (["critical", "high", "medium", "low"] as const).map((band) => ({
     band,
     count: mask.patches.filter((p) => p.sensitivity === band).length,
   }));
+
+  const cardOpen = !!selectedPatch || !!selectedCell;
+  const inspector = (
+    <PixelInspector
+      patch={selectedPatch}
+      cell={selectedCell}
+      graph={graph}
+      onClose={() => {
+        setSelectedPatchId(null);
+        setSelectedCellId(null);
+      }}
+    />
+  );
 
   const mapPane = (
     <div className="relative h-full w-full overflow-hidden">
@@ -169,17 +191,11 @@ function AnalysisView() {
         basemap={basemap}
         heatOpacity={heatOpacity}
         probabilityOverlay={probOverlay}
-        selectedPatchId={selectedPatchId}
-        onSelectPatch={(id) => {
-          setSelectedPatchId(id);
-          setSelectedCellId(null);
-        }}
+        selectedPatchId={cardPatchId}
+        onSelectPatch={pickPatch}
         focus={focus}
         onCursorMove={setCursor}
-        onCellClick={(id) => {
-          setSelectedCellId(id);
-          setSelectedPatchId(null);
-        }}
+        onCellClick={pickCell}
         className="h-full w-full"
       />
 
@@ -215,21 +231,13 @@ function AnalysisView() {
         <CoordinateReadout cursor={cursor} zoom={scene.zoom} epsg="EPSG:4326" />
       </div>
 
-      <PixelInspector
-        patch={selectedPatch}
-        cell={selectedCell}
-        graph={graph}
-        onClose={() => {
-          setSelectedPatchId(null);
-          setSelectedCellId(null);
-        }}
-      />
+      {view !== "split" && inspector}
 
       {/* evidence chain for the selected patch */}
-      {selectedPatchId && dataSource.mode === "live" && !evidenceFor && (
+      {cardPatchId && dataSource.mode === "live" && !evidenceFor && (
         <div className="absolute bottom-16 right-3 z-[940] flex flex-col items-end gap-1.5">
-          <button onClick={() => setEvidenceFor(selectedPatchId)} className="rounded-full bg-[#0f5132] px-3 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-[#0b3d26]">
-            Why is {selectedPatchId} ranked here? · Evidence
+          <button onClick={() => setEvidenceFor(cardPatchId)} className="rounded-full bg-[#0f5132] px-3 py-1.5 text-[11px] font-semibold text-white shadow hover:bg-[#0b3d26]">
+            Why is {cardPatchId} ranked here? · Evidence
           </button>
           {can("review_detections") && dataSource.provenance && (
             <button
@@ -243,7 +251,7 @@ function AnalysisView() {
               }}
               className="rounded-full border border-[#0f5132]/40 bg-white px-3 py-1.5 text-[11px] font-semibold text-[#0f5132] shadow hover:bg-[#f0fdf4]"
             >
-              Send {selectedPatchId} to verification
+              Send {cardPatchId} to verification
             </button>
           )}
           {reviewMsg && <div className="max-w-[260px] rounded-lg bg-white/95 px-2 py-1 text-[10.5px] shadow">{reviewMsg}</div>}
@@ -311,13 +319,18 @@ function AnalysisView() {
         <div className="relative min-h-0 flex-1">
           {view === "importance" ? (
             <>
-              <PatchImportance onExplain={(id) => setEvidenceFor(id)} onShowOnMap={(id) => { setSelectedPatchId(id); setView("map"); }} />
+              <PatchImportance onExplain={(id) => setEvidenceFor(id)} onShowOnMap={(id) => { pickPatch(id); setView("map"); }} />
               {evidenceFor && <EvidenceDrawer objectType="patch" objectId={evidenceFor} onClose={() => setEvidenceFor(null)} />}
             </>
           ) : view === "map" ? (
             mapPane
           ) : (
-            <div className="grid h-full grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
+            <div
+              className={cn(
+                "relative grid h-full grid-rows-2 lg:grid-rows-1",
+                cardOpen ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_356px]" : "lg:grid-cols-2",
+              )}
+            >
               {/* left — satellite + habitat */}
               <div className="relative min-h-0 border-b border-foreground/[0.08] lg:border-b-0 lg:border-r">
                 <div className="pointer-events-none absolute right-14 top-3 z-[999]">
@@ -354,15 +367,9 @@ function AnalysisView() {
                   }}
                   basemap="dark"
                   heatOpacity={heatOpacity}
-                  selectedPatchId={selectedPatchId}
-                  onSelectPatch={(id) => {
-                    setSelectedPatchId(id);
-                    setSelectedCellId(null);
-                  }}
-                  onCellClick={(id) => {
-                    setSelectedCellId(id);
-                    setSelectedPatchId(null);
-                  }}
+                  selectedPatchId={cardPatchId}
+                  onSelectPatch={pickPatch}
+                  onCellClick={pickCell}
                   onCursorMove={setCursor}
                   className="h-full w-full"
                 />
@@ -380,6 +387,13 @@ function AnalysisView() {
                   </div>
                 </div>
               </div>
+
+              {/* patch / cell card — its own column on wide screens so it never covers a map */}
+              {cardOpen && (
+                <div className="absolute inset-y-0 right-0 z-[1001] w-full sm:w-[356px] lg:relative lg:inset-auto lg:z-auto lg:w-auto">
+                  {inspector}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -423,10 +437,7 @@ function AnalysisView() {
                       key={band}
                       onClick={() => {
                         const first = mask.patches.find((p) => p.sensitivity === band);
-                        if (first) {
-                          setSelectedPatchId(first.id);
-                          setSelectedCellId(null);
-                        }
+                        if (first) pickPatch(first.id);
                       }}
                       className="min-w-[68px] rounded-xl border border-black/[0.08] bg-[#f8faf9] px-3 py-1.5 text-left transition-all hover:bg-white hover:shadow-sm hover:border-[#15803d]/40"
                     >
@@ -491,10 +502,7 @@ function AnalysisView() {
                     {critical.slice(0, 2).map((p) => (
                       <button
                         key={p.id}
-                        onClick={() => {
-                          setSelectedPatchId(p.id);
-                          setSelectedCellId(null);
-                        }}
+                        onClick={() => pickPatch(p.id)}
                         className="flex w-full items-center gap-2 rounded-lg border border-[#ef4444]/20 bg-[#ef4444]/5 px-2.5 py-1.5 text-left transition-colors hover:bg-[#ef4444]/15"
                       >
                         <span className="h-2 w-2 shrink-0 rounded-full bg-[#ef4444]" />

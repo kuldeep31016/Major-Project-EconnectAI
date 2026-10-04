@@ -1,0 +1,8694 @@
+{
+ "provenance": {
+  "runId": "kerala-coast_nrt_20260927_58869d",
+  "studyAreaId": "kerala-coast",
+  "resultKind": "development",
+  "resultLabel": "DEVELOPMENT-SUBSET RESULT - NOT FINAL",
+  "dataSource": {
+   "type": "probability_raster",
+   "path": "outputs/satellite/EC-kerala-coast-2026-09-27-58869d/kerala-coast_prob.tif",
+   "scene_year": 2026,
+   "crs": "EPSG:32643",
+   "width": 2203,
+   "height": 2221,
+   "pixel_size": [
+    10.0,
+    10.0
+   ],
+   "threshold": 0.97,
+   "mmu_ha": 2.0,
+   "connectivity": 8,
+   "candidate_threshold": 0.3,
+   "candidate_min_area_ha": 1.0,
+   "extraction_report": {
+    "threshold": 0.97,
+    "mmu_ha": 2.0,
+    "connectivity": 8,
+    "n_components_total": 30,
+    "n_patches_kept": 7,
+    "n_dropped_below_mmu": 23,
+    "habitat_pixels": 10217,
+    "valid_pixels": 4892863,
+    "habitat_coverage_pct": 0.20881434857260464,
+    "habitat_area_ha": 96.42000000000078,
+    "landscape_area_ha": 48928.63,
+    "mean_confidence_habitat": 0.988645613193512,
+    "crs": "EPSG:32643"
+   },
+   "model": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth",
+   "model_info": {
+    "checkpoint": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth"
+   },
+   "satellite": {
+    "analysis_id": "EC-kerala-coast-2026-09-27-58869d",
+    "source": "Copernicus Data Space Ecosystem",
+    "collection": "sentinel-1-grd",
+    "product_ids": [
+     "503012d5-8d03-4c79-b8b1-61018f8cee80",
+     "cda5e998-d56a-4723-a1a4-22734779a994",
+     "e685c24e-b4d8-40d2-9b3a-094039f00450",
+     "c46f64ac-8617-4ec3-b3fd-0668b99658e5",
+     "503fe1a8-92c7-4fda-a163-69b1c831ca97",
+     "30fb32db-79cb-4de9-83d8-0f9a172eeff6",
+     "54ab16a4-a4a4-41e7-ae1e-8f6fee280b98",
+     "53a73088-7979-4f3b-889c-beb296361cde"
+    ],
+    "products": [
+     "S1D_IW_GRDH_1SDV_20260927T004022_20260927T004047_004756_008E87_6A7F.SAFE",
+     "S1D_IW_GRDH_1SDV_20260915T004022_20260915T004047_004581_008881_7641.SAFE",
+     "S1D_IW_GRDH_1SDV_20260903T004022_20260903T004047_004406_008273_FC45.SAFE",
+     "S1D_IW_GRDH_1SDV_20260822T004021_20260822T004046_004231_007C51_B670.SAFE",
+     "S1D_IW_GRDH_1SDV_20260810T004021_20260810T004046_004056_007638_43EB.SAFE",
+     "S1D_IW_GRDH_1SDV_20260729T004020_20260729T004045_003881_00701D_210B.SAFE",
+     "S1D_IW_GRDH_1SDV_20260717T004020_20260717T004045_003706_006A22_0ECC.SAFE",
+     "S1A_IW_GRDH_1SDV_20260628T004058_20260628T004123_065162_0836D9_CA35.SAFE"
+    ],
+    "acquisition_time": "2026-09-27T00:40:22.877826Z",
+    "timeliness": "Fast-24h",
+    "platform": "Sentinel-1D",
+    "preprocessing_version": "s1grd-gamma0terrain-db-median-v1"
+   }
+  },
+  "timestamp": "2026-10-03T23:16:31.200803+00:00",
+  "landscapeAreaHa": 48928.63,
+  "parameters": {
+   "k": 3,
+   "tauKm": 5.0,
+   "metric": "iic",
+   "threshold": 0.97,
+   "mmuHa": 2.0
+  }
+ },
+ "habitatMask": {
+  "sceneId": "kerala-coast",
+  "generatedAt": "2026-10-03T23:16:31.200803+00:00",
+  "modelVersion": "outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth",
+  "classes": [
+   {
+    "habitatClass": "mangrove",
+    "label": "Mangrove",
+    "color": "#00c896",
+    "areaHa": 96.42,
+    "coveragePct": 0.2,
+    "meanConfidence": 0.9892
+   }
+  ],
+  "patches": [
+   {
+    "id": "P1",
+    "name": "P1",
+    "habitatClass": "mangrove",
+    "areaHa": 39.04,
+    "center": [
+     9.860596,
+     76.353699
+    ],
+    "polygon": [
+     [
+      9.865131,
+      76.35057
+     ],
+     [
+      9.864951,
+      76.350204
+     ],
+     [
+      9.864049,
+      76.349836
+     ],
+     [
+      9.86197,
+      76.349554
+     ],
+     [
+      9.861515,
+      76.350281
+     ],
+     [
+      9.86079,
+      76.350552
+     ],
+     [
+      9.860336,
+      76.351097
+     ],
+     [
+      9.860513,
+      76.35201
+     ],
+     [
+      9.860332,
+      76.3521
+     ],
+     [
+      9.860239,
+      76.352829
+     ],
+     [
+      9.86069,
+      76.353014
+     ],
+     [
+      9.860417,
+      76.35356
+     ],
+     [
+      9.859874,
+      76.353557
+     ],
+     [
+      9.859515,
+      76.352826
+     ],
+     [
+      9.858973,
+      76.352824
+     ],
+     [
+      9.85698,
+      76.353728
+     ],
+     [
+      9.856959,
+      76.359016
+     ],
+     [
+      9.858044,
+      76.359021
+     ],
+     [
+      9.858319,
+      76.35811
+     ],
+     [
+      9.859406,
+      76.357476
+     ],
+     [
+      9.859413,
+      76.355926
+     ],
+     [
+      9.859775,
+      76.355654
+     ],
+     [
+      9.859598,
+      76.354833
+     ],
+     [
+      9.861045,
+      76.354747
+     ],
+     [
+      9.861408,
+      76.354475
+     ],
+     [
+      9.862312,
+      76.354388
+     ],
+     [
+      9.863487,
+      76.354575
+     ],
+     [
+      9.863395,
+      76.355031
+     ],
+     [
+      9.863938,
+      76.354759
+     ],
+     [
+      9.863939,
+      76.354577
+     ],
+     [
+      9.863577,
+      76.354667
+     ],
+     [
+      9.863579,
+      76.354302
+     ],
+     [
+      9.864033,
+      76.353757
+     ],
+     [
+      9.864035,
+      76.35321
+     ],
+     [
+      9.863676,
+      76.35257
+     ],
+     [
+      9.864222,
+      76.351751
+     ],
+     [
+      9.864766,
+      76.351389
+     ],
+     [
+      9.865131,
+      76.35057
+     ]
+    ],
+    "confidence": 0.9905,
+    "quality": 0.9905,
+    "connectivityContribution": 0.7004,
+    "bridgeScore": 0.0,
+    "sensitivity": "critical",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P1 ranks #1 of 7 by criticality (S = 0.700): removing it lowers IIC by 70.0%. It holds 39.0 ha, 40.5% of mapped habitat (#1 by area). It maintains 1 link to P2 (5.0 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 99%.",
+    "criticalityRank": 1,
+    "criticalityScore": 0.700372,
+    "deltaConnectivity": 9.663742400224778e-07,
+    "deltaPct": 70.037,
+    "degree": 1,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 1,
+    "perimeterKm": 3.9826079965494814,
+    "neighbourIds": [
+     "P2"
+    ],
+    "neighbourDistancesKm": [
+     4.957
+    ]
+   },
+   {
+    "id": "P2",
+    "name": "P2",
+    "habitatClass": "mangrove",
+    "areaHa": 20.22,
+    "center": [
+     9.817986,
+     76.366986
+    ],
+    "polygon": [
+     [
+      9.820668,
+      76.3668
+     ],
+     [
+      9.819947,
+      76.366159
+     ],
+     [
+      9.819225,
+      76.365973
+     ],
+     [
+      9.819229,
+      76.364788
+     ],
+     [
+      9.819049,
+      76.364696
+     ],
+     [
+      9.816427,
+      76.364685
+     ],
+     [
+      9.816787,
+      76.36496
+     ],
+     [
+      9.816786,
+      76.365234
+     ],
+     [
+      9.816333,
+      76.365506
+     ],
+     [
+      9.81561,
+      76.365411
+     ],
+     [
+      9.815968,
+      76.366416
+     ],
+     [
+      9.815869,
+      76.368512
+     ],
+     [
+      9.81632,
+      76.368788
+     ],
+     [
+      9.817856,
+      76.369067
+     ],
+     [
+      9.818216,
+      76.369342
+     ],
+     [
+      9.81894,
+      76.369163
+     ],
+     [
+      9.819213,
+      76.368891
+     ],
+     [
+      9.819936,
+      76.368894
+     ],
+     [
+      9.81967,
+      76.367707
+     ],
+     [
+      9.820391,
+      76.368257
+     ],
+     [
+      9.820303,
+      76.367528
+     ],
+     [
+      9.820668,
+      76.3668
+     ]
+    ],
+    "confidence": 0.987,
+    "quality": 0.987,
+    "connectivityContribution": 0.3627,
+    "bridgeScore": 0.0,
+    "sensitivity": "critical",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P2 ranks #2 of 7 by criticality (S = 0.363): removing it lowers IIC by 36.3%. It holds 20.2 ha, 21.0% of mapped habitat (#2 by area). It maintains 1 link to P1 (5.0 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 99%.",
+    "criticalityRank": 2,
+    "criticalityScore": 0.362744,
+    "deltaConnectivity": 5.005145269788537e-07,
+    "deltaPct": 36.274,
+    "degree": 1,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 2,
+    "perimeterKm": 2.1807131677118847,
+    "neighbourIds": [
+     "P1"
+    ],
+    "neighbourDistancesKm": [
+     4.957
+    ]
+   },
+   {
+    "id": "P3",
+    "name": "P3",
+    "habitatClass": "mangrove",
+    "areaHa": 17.07,
+    "center": [
+     9.902116,
+     76.274067
+    ],
+    "polygon": [
+     [
+      9.903597,
+      76.27166
+     ],
+     [
+      9.901064,
+      76.271833
+     ],
+     [
+      9.900521,
+      76.272105
+     ],
+     [
+      9.900244,
+      76.273563
+     ],
+     [
+      9.900693,
+      76.274294
+     ],
+     [
+      9.900958,
+      76.275937
+     ],
+     [
+      9.901588,
+      76.27676
+     ],
+     [
+      9.902764,
+      76.276764
+     ],
+     [
+      9.90358,
+      76.276038
+     ],
+     [
+      9.903597,
+      76.27166
+     ]
+    ],
+    "confidence": 0.9955,
+    "quality": 0.9955,
+    "connectivityContribution": 0.1236,
+    "bridgeScore": 0.0,
+    "sensitivity": "high",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P3 ranks #3 of 7 by criticality (S = 0.124): removing it lowers IIC by 12.4%. It holds 17.1 ha, 17.7% of mapped habitat (#3 by area). It maintains 1 link to P5 (1.2 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 100%.",
+    "criticalityRank": 3,
+    "criticalityScore": 0.123575,
+    "deltaConnectivity": 1.7050908636576558e-07,
+    "deltaPct": 12.358,
+    "degree": 1,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 3,
+    "perimeterKm": 1.6646613673399877,
+    "neighbourIds": [
+     "P5"
+    ],
+    "neighbourDistancesKm": [
+     1.242
+    ]
+   },
+   {
+    "id": "P4",
+    "name": "P4",
+    "habitatClass": "mangrove",
+    "areaHa": 9.58,
+    "center": [
+     9.78284,
+     76.281057
+    ],
+    "polygon": [
+     [
+      9.785199,
+      76.279868
+     ],
+     [
+      9.784477,
+      76.279501
+     ],
+     [
+      9.783663,
+      76.279497
+     ],
+     [
+      9.781944,
+      76.279764
+     ],
+     [
+      9.7814,
+      76.280218
+     ],
+     [
+      9.781578,
+      76.281039
+     ],
+     [
+      9.781481,
+      76.28268
+     ],
+     [
+      9.781752,
+      76.282772
+     ],
+     [
+      9.781751,
+      76.283137
+     ],
+     [
+      9.781479,
+      76.283318
+     ],
+     [
+      9.781568,
+      76.283683
+     ],
+     [
+      9.781929,
+      76.283775
+     ],
+     [
+      9.782567,
+      76.282593
+     ],
+     [
+      9.782838,
+      76.282503
+     ],
+     [
+      9.783018,
+      76.282686
+     ],
+     [
+      9.783021,
+      76.281956
+     ],
+     [
+      9.783474,
+      76.281867
+     ],
+     [
+      9.783566,
+      76.28132
+     ],
+     [
+      9.784019,
+      76.28114
+     ],
+     [
+      9.784383,
+      76.280503
+     ],
+     [
+      9.784564,
+      76.280595
+     ],
+     [
+      9.784745,
+      76.280322
+     ],
+     [
+      9.785017,
+      76.280323
+     ],
+     [
+      9.785199,
+      76.279868
+     ]
+    ],
+    "confidence": 0.9849,
+    "quality": 0.9849,
+    "connectivityContribution": 0.0359,
+    "bridgeScore": 0.0,
+    "sensitivity": "medium",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P4 ranks #5 of 7 by criticality (S = 0.036): removing it lowers IIC by 3.6%. It holds 9.6 ha, 9.9% of mapped habitat (#4 by area). It maintains 1 link to P6 (0.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 5,
+    "criticalityScore": 0.035933,
+    "deltaConnectivity": 4.9580477385599184e-08,
+    "deltaPct": 3.593,
+    "degree": 1,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 4,
+    "perimeterKm": 1.5997376466780775,
+    "neighbourIds": [
+     "P6"
+    ],
+    "neighbourDistancesKm": [
+     0.583
+    ]
+   },
+   {
+    "id": "P5",
+    "name": "P5",
+    "habitatClass": "mangrove",
+    "areaHa": 5.13,
+    "center": [
+     9.898278,
+     76.284712
+    ],
+    "polygon": [
+     [
+      9.89957,
+      76.284321
+     ],
+     [
+      9.89921,
+      76.283955
+     ],
+     [
+      9.898035,
+      76.283768
+     ],
+     [
+      9.897765,
+      76.283493
+     ],
+     [
+      9.897312,
+      76.283583
+     ],
+     [
+      9.897221,
+      76.283947
+     ],
+     [
+      9.89704,
+      76.283946
+     ],
+     [
+      9.897309,
+      76.284495
+     ],
+     [
+      9.897305,
+      76.285498
+     ],
+     [
+      9.898479,
+      76.285958
+     ],
+     [
+      9.899113,
+      76.285687
+     ],
+     [
+      9.89957,
+      76.284321
+     ]
+    ],
+    "confidence": 0.9844,
+    "quality": 0.9844,
+    "connectivityContribution": 0.0473,
+    "bridgeScore": 0.0667,
+    "sensitivity": "medium",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P5 ranks #4 of 7 by criticality (S = 0.047): removing it lowers IIC by 4.7%. It holds 5.1 ha, 5.3% of mapped habitat (#5 by area). Its structural importance exceeds what its size alone would suggest. It maintains 2 links to P3 (1.2 km), P7 (4.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 4,
+    "criticalityScore": 0.047322,
+    "deltaConnectivity": 6.529490084216268e-08,
+    "deltaPct": 4.732,
+    "degree": 2,
+    "isCutVertex": true,
+    "componentCountAfter": 4,
+    "rankByArea": 5,
+    "perimeterKm": 0.9210038813199632,
+    "neighbourIds": [
+     "P3",
+     "P7"
+    ],
+    "neighbourDistancesKm": [
+     1.242,
+     4.626
+    ]
+   },
+   {
+    "id": "P6",
+    "name": "P6",
+    "habitatClass": "mangrove",
+    "areaHa": 2.81,
+    "center": [
+     9.781516,
+     76.286209
+    ],
+    "polygon": [
+     [
+      9.782825,
+      76.286058
+     ],
+     [
+      9.782464,
+      76.285783
+     ],
+     [
+      9.782012,
+      76.285873
+     ],
+     [
+      9.782014,
+      76.285234
+     ],
+     [
+      9.781289,
+      76.285596
+     ],
+     [
+      9.780566,
+      76.285502
+     ],
+     [
+      9.780474,
+      76.285867
+     ],
+     [
+      9.781199,
+      76.285687
+     ],
+     [
+      9.781378,
+      76.285961
+     ],
+     [
+      9.780563,
+      76.286323
+     ],
+     [
+      9.78029,
+      76.286778
+     ],
+     [
+      9.781646,
+      76.286965
+     ],
+     [
+      9.782825,
+      76.286058
+     ]
+    ],
+    "confidence": 0.9802,
+    "quality": 0.9802,
+    "connectivityContribution": 0.0105,
+    "bridgeScore": 0.0,
+    "sensitivity": "low",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P6 ranks #7 of 7 by criticality (S = 0.011): removing it lowers IIC by 1.1%. It holds 2.8 ha, 2.9% of mapped habitat (#6 by area). It maintains 1 link to P4 (0.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 7,
+    "criticalityScore": 0.01054,
+    "deltaConnectivity": 1.4542916644419132e-08,
+    "deltaPct": 1.054,
+    "degree": 1,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 6,
+    "perimeterKm": 1.0122926778804968,
+    "neighbourIds": [
+     "P4"
+    ],
+    "neighbourDistancesKm": [
+     0.583
+    ]
+   },
+   {
+    "id": "P7",
+    "name": "P7",
+    "habitatClass": "mangrove",
+    "areaHa": 2.57,
+    "center": [
+     9.856758,
+     76.282029
+    ],
+    "polygon": [
+     [
+      9.858709,
+      76.281336
+     ],
+     [
+      9.856719,
+      76.281602
+     ],
+     [
+      9.856266,
+      76.281874
+     ],
+     [
+      9.855814,
+      76.281781
+     ],
+     [
+      9.855361,
+      76.281961
+     ],
+     [
+      9.854998,
+      76.282507
+     ],
+     [
+      9.856806,
+      76.282423
+     ],
+     [
+      9.857438,
+      76.28279
+     ],
+     [
+      9.85753,
+      76.282426
+     ],
+     [
+      9.85735,
+      76.282151
+     ],
+     [
+      9.857622,
+      76.282061
+     ],
+     [
+      9.857713,
+      76.281697
+     ],
+     [
+      9.858618,
+      76.281609
+     ],
+     [
+      9.858709,
+      76.281336
+     ]
+    ],
+    "confidence": 0.9824,
+    "quality": 0.9824,
+    "connectivityContribution": 0.0148,
+    "bridgeScore": 0.0,
+    "sensitivity": "low",
+    "protected": false,
+    "protectedAreaName": null,
+    "carbonStockTonnes": null,
+    "speciesSupported": null,
+    "degradationRisk": null,
+    "notes": "P7 ranks #6 of 7 by criticality (S = 0.015): removing it lowers IIC by 1.5%. It holds 2.6 ha, 2.7% of mapped habitat (#7 by area). Its structural importance exceeds what its size alone would suggest. It maintains 1 link to P5 (4.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 6,
+    "criticalityScore": 0.014845,
+    "deltaConnectivity": 2.0482614076013254e-08,
+    "deltaPct": 1.484,
+    "degree": 1,
+    "isCutVertex": false,
+    "componentCountAfter": 3,
+    "rankByArea": 7,
+    "perimeterKm": 1.10622224183543,
+    "neighbourIds": [
+     "P5"
+    ],
+    "neighbourDistancesKm": [
+     4.626
+    ]
+   }
+  ],
+  "totals": {
+   "habitatAreaHa": 96.42,
+   "patchCount": 7,
+   "meanPatchSizeHa": 13.77,
+   "largestPatchIndex": 40.49,
+   "edgeDensity": 12.93,
+   "meanConfidence": 0.9892
+  }
+ },
+ "graph": {
+  "sceneId": "kerala-coast",
+  "nodes": [
+   {
+    "id": "P1",
+    "patchId": "P1",
+    "label": "P1",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 403,
+     "y": 239
+    },
+    "areaHa": 39.04,
+    "quality": 0.9905,
+    "connectivity": 1.0,
+    "sensitivity": "critical",
+    "bridgeScore": 0.0,
+    "importance": 0.7004,
+    "degree": 1,
+    "isHub": false,
+    "explanation": "P1 ranks #1 of 7 by criticality (S = 0.700): removing it lowers IIC by 70.0%. It holds 39.0 ha, 40.5% of mapped habitat (#1 by area). It maintains 1 link to P2 (5.0 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 99%.",
+    "criticalityRank": 1,
+    "isCutVertex": false
+   },
+   {
+    "id": "P2",
+    "patchId": "P2",
+    "label": "P2",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 461,
+     "y": 423
+    },
+    "areaHa": 20.22,
+    "quality": 0.987,
+    "connectivity": 0.5179,
+    "sensitivity": "critical",
+    "bridgeScore": 0.0,
+    "importance": 0.3627,
+    "degree": 1,
+    "isHub": false,
+    "explanation": "P2 ranks #2 of 7 by criticality (S = 0.363): removing it lowers IIC by 36.3%. It holds 20.2 ha, 21.0% of mapped habitat (#2 by area). It maintains 1 link to P1 (5.0 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 99%.",
+    "criticalityRank": 2,
+    "isCutVertex": false
+   },
+   {
+    "id": "P3",
+    "patchId": "P3",
+    "label": "P3",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 60,
+     "y": 60
+    },
+    "areaHa": 17.07,
+    "quality": 0.9955,
+    "connectivity": 0.1764,
+    "sensitivity": "high",
+    "bridgeScore": 0.0,
+    "importance": 0.1236,
+    "degree": 1,
+    "isHub": false,
+    "explanation": "P3 ranks #3 of 7 by criticality (S = 0.124): removing it lowers IIC by 12.4%. It holds 17.1 ha, 17.7% of mapped habitat (#3 by area). It maintains 1 link to P5 (1.2 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 100%.",
+    "criticalityRank": 3,
+    "isCutVertex": false
+   },
+   {
+    "id": "P4",
+    "patchId": "P4",
+    "label": "P4",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 90,
+     "y": 574
+    },
+    "areaHa": 9.58,
+    "quality": 0.9849,
+    "connectivity": 0.0513,
+    "sensitivity": "medium",
+    "bridgeScore": 0.0,
+    "importance": 0.0359,
+    "degree": 1,
+    "isHub": false,
+    "explanation": "P4 ranks #5 of 7 by criticality (S = 0.036): removing it lowers IIC by 3.6%. It holds 9.6 ha, 9.9% of mapped habitat (#4 by area). It maintains 1 link to P6 (0.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 5,
+    "isCutVertex": false
+   },
+   {
+    "id": "P5",
+    "patchId": "P5",
+    "label": "P5",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 106,
+     "y": 77
+    },
+    "areaHa": 5.13,
+    "quality": 0.9844,
+    "connectivity": 0.0676,
+    "sensitivity": "medium",
+    "bridgeScore": 0.0667,
+    "importance": 0.0473,
+    "degree": 2,
+    "isHub": true,
+    "explanation": "P5 ranks #4 of 7 by criticality (S = 0.047): removing it lowers IIC by 4.7%. It holds 5.1 ha, 5.3% of mapped habitat (#5 by area). Its structural importance exceeds what its size alone would suggest. It maintains 2 links to P3 (1.2 km), P7 (4.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 4,
+    "isCutVertex": true
+   },
+   {
+    "id": "P6",
+    "patchId": "P6",
+    "label": "P6",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 112,
+     "y": 580
+    },
+    "areaHa": 2.81,
+    "quality": 0.9802,
+    "connectivity": 0.015,
+    "sensitivity": "low",
+    "bridgeScore": 0.0,
+    "importance": 0.0105,
+    "degree": 1,
+    "isHub": false,
+    "explanation": "P6 ranks #7 of 7 by criticality (S = 0.011): removing it lowers IIC by 1.1%. It holds 2.8 ha, 2.9% of mapped habitat (#6 by area). It maintains 1 link to P4 (0.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 7,
+    "isCutVertex": false
+   },
+   {
+    "id": "P7",
+    "patchId": "P7",
+    "label": "P7",
+    "habitatClass": "mangrove",
+    "position": {
+     "x": 94,
+     "y": 256
+    },
+    "areaHa": 2.57,
+    "quality": 0.9824,
+    "connectivity": 0.0212,
+    "sensitivity": "low",
+    "bridgeScore": 0.0,
+    "importance": 0.0148,
+    "degree": 1,
+    "isHub": false,
+    "explanation": "P7 ranks #6 of 7 by criticality (S = 0.015): removing it lowers IIC by 1.5%. It holds 2.6 ha, 2.7% of mapped habitat (#7 by area). Its structural importance exceeds what its size alone would suggest. It maintains 1 link to P5 (4.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+    "criticalityRank": 6,
+    "isCutVertex": false
+   }
+  ],
+  "edges": [
+   {
+    "id": "kerala-coast-e1",
+    "source": "P1",
+    "target": "P2",
+    "strength": 0.3669,
+    "distanceKm": 4.957,
+    "resistance": 0.6331,
+    "critical": true,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e2",
+    "source": "P3",
+    "target": "P5",
+    "strength": 0.7722,
+    "distanceKm": 1.242,
+    "resistance": 0.2278,
+    "critical": true,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e3",
+    "source": "P4",
+    "target": "P6",
+    "strength": 0.8743,
+    "distanceKm": 0.583,
+    "resistance": 0.1257,
+    "critical": true,
+    "speciesFlow": []
+   },
+   {
+    "id": "kerala-coast-e4",
+    "source": "P5",
+    "target": "P7",
+    "strength": 0.3899,
+    "distanceKm": 4.626,
+    "resistance": 0.6101,
+    "critical": true,
+    "speciesFlow": []
+   }
+  ],
+  "clusters": [
+   {
+    "id": "c1",
+    "label": "Component 1",
+    "nodeIds": [
+     "P1",
+     "P2"
+    ],
+    "color": "#00c896"
+   },
+   {
+    "id": "c2",
+    "label": "Component 2",
+    "nodeIds": [
+     "P3",
+     "P5",
+     "P7"
+    ],
+    "color": "#38bdf8"
+   },
+   {
+    "id": "c3",
+    "label": "Component 3",
+    "nodeIds": [
+     "P4",
+     "P6"
+    ],
+    "color": "#a78bfa"
+   }
+  ]
+ },
+ "connectivity": {
+  "sceneId": "kerala-coast",
+  "score": 56.3,
+  "previousScore": null,
+  "pcIndex": 1.8874476565433649e-06,
+  "iicIndex": 1.379800606385188e-06,
+  "equivalentConnectedArea": 67.2,
+  "ecaPctOfHabitat": 69.7,
+  "meanPatchIsolationM": 2599.0,
+  "linkDensity": 0.1905,
+  "networkDiameterKm": 5.87,
+  "fragmentationIndex": 0.4286,
+  "resilienceIndex": 0.8571,
+  "confidence": 0.9892,
+  "grade": null,
+  "interpretation": null,
+  "components": [
+   {
+    "label": "Structural",
+    "value": 35.5,
+    "weight": 0.3,
+    "delta": null
+   },
+   {
+    "label": "Functional",
+    "value": 48.6,
+    "weight": 0.28,
+    "delta": null
+   },
+   {
+    "label": "Quality",
+    "value": 98.9,
+    "weight": 0.22,
+    "delta": null
+   },
+   {
+    "label": "Redundancy",
+    "value": 85.7,
+    "weight": 0.12,
+    "delta": null
+   },
+   {
+    "label": "Protection",
+    "value": 0.0,
+    "weight": 0.08,
+    "delta": null
+   }
+  ],
+  "composition": [
+   {
+    "name": "Mangrove",
+    "value": 96.42,
+    "color": "#00c896"
+   }
+  ],
+  "health": [],
+  "trend": [],
+  "research": {
+   "iic": 1.379800606385188e-06,
+   "pc": 1.8874476565433649e-06,
+   "ecaHa": 67.22031045571637,
+   "nPatches": 7,
+   "nEdges": 4,
+   "nComponents": 3,
+   "meanDegree": 1.1428571428571428,
+   "tauKm": 5.0,
+   "k": 3,
+   "spearmanAreaVsCriticality": 0.9285714285714286,
+   "labels": {
+    "iic": "RESEARCH METRIC - Integral Index of Connectivity (Pascual-Hortal & Saura 2006)",
+    "pc": "RESEARCH METRIC - Probability of Connectivity (Saura & Pascual-Hortal 2007), p(tau)=0.5",
+    "eca_ha": "RESEARCH METRIC - Equivalent Connected Area = sqrt(PC)*A_L"
+   },
+   "interfaceScoreLabel": "INTERFACE SCORE (Eq. 7) - design choice, not a research metric"
+  }
+ },
+ "heatmap": {
+  "sceneId": "kerala-coast",
+  "resolutionM": 300,
+  "generatedAt": "2026-10-03T23:16:31.200803+00:00",
+  "cells": [
+   {
+    "id": "P1-0",
+    "bounds": [
+     [
+      9.856959,
+      76.352289
+     ],
+     [
+      9.859672,
+      76.355025
+     ]
+    ],
+    "sensitivity": 0.7004,
+    "band": "critical",
+    "habitatProbability": 0.9905,
+    "connectivityContribution": 0.7004,
+    "confidence": 0.9905,
+    "patchId": "P1"
+   },
+   {
+    "id": "P1-1",
+    "bounds": [
+     [
+      9.856959,
+      76.355025
+     ],
+     [
+      9.859672,
+      76.35776
+     ]
+    ],
+    "sensitivity": 0.7004,
+    "band": "critical",
+    "habitatProbability": 0.9905,
+    "connectivityContribution": 0.7004,
+    "confidence": 0.9905,
+    "patchId": "P1"
+   },
+   {
+    "id": "P1-2",
+    "bounds": [
+     [
+      9.859672,
+      76.349554
+     ],
+     [
+      9.862385,
+      76.352289
+     ]
+    ],
+    "sensitivity": 0.7004,
+    "band": "critical",
+    "habitatProbability": 0.9905,
+    "connectivityContribution": 0.7004,
+    "confidence": 0.9905,
+    "patchId": "P1"
+   },
+   {
+    "id": "P1-3",
+    "bounds": [
+     [
+      9.859672,
+      76.352289
+     ],
+     [
+      9.862385,
+      76.355025
+     ]
+    ],
+    "sensitivity": 0.7004,
+    "band": "critical",
+    "habitatProbability": 0.9905,
+    "connectivityContribution": 0.7004,
+    "confidence": 0.9905,
+    "patchId": "P1"
+   },
+   {
+    "id": "P1-4",
+    "bounds": [
+     [
+      9.862385,
+      76.349554
+     ],
+     [
+      9.865098,
+      76.352289
+     ]
+    ],
+    "sensitivity": 0.7004,
+    "band": "critical",
+    "habitatProbability": 0.9905,
+    "connectivityContribution": 0.7004,
+    "confidence": 0.9905,
+    "patchId": "P1"
+   },
+   {
+    "id": "P2-5",
+    "bounds": [
+     [
+      9.81561,
+      76.364685
+     ],
+     [
+      9.818323,
+      76.36742
+     ]
+    ],
+    "sensitivity": 0.3627,
+    "band": "critical",
+    "habitatProbability": 0.987,
+    "connectivityContribution": 0.3627,
+    "confidence": 0.987,
+    "patchId": "P2"
+   },
+   {
+    "id": "P2-6",
+    "bounds": [
+     [
+      9.818323,
+      76.364685
+     ],
+     [
+      9.821036,
+      76.36742
+     ]
+    ],
+    "sensitivity": 0.3627,
+    "band": "critical",
+    "habitatProbability": 0.987,
+    "connectivityContribution": 0.3627,
+    "confidence": 0.987,
+    "patchId": "P2"
+   },
+   {
+    "id": "P3-7",
+    "bounds": [
+     [
+      9.900244,
+      76.27166
+     ],
+     [
+      9.902957,
+      76.274396
+     ]
+    ],
+    "sensitivity": 0.1236,
+    "band": "high",
+    "habitatProbability": 0.9955,
+    "connectivityContribution": 0.1236,
+    "confidence": 0.9955,
+    "patchId": "P3"
+   },
+   {
+    "id": "P3-8",
+    "bounds": [
+     [
+      9.900244,
+      76.274396
+     ],
+     [
+      9.902957,
+      76.277132
+     ]
+    ],
+    "sensitivity": 0.1236,
+    "band": "high",
+    "habitatProbability": 0.9955,
+    "connectivityContribution": 0.1236,
+    "confidence": 0.9955,
+    "patchId": "P3"
+   },
+   {
+    "id": "P4-9",
+    "bounds": [
+     [
+      9.7814,
+      76.279497
+     ],
+     [
+      9.784113,
+      76.282232
+     ]
+    ],
+    "sensitivity": 0.0359,
+    "band": "medium",
+    "habitatProbability": 0.9849,
+    "connectivityContribution": 0.0359,
+    "confidence": 0.9849,
+    "patchId": "P4"
+   },
+   {
+    "id": "P5-10",
+    "bounds": [
+     [
+      9.897039,
+      76.283493
+     ],
+     [
+      9.899752,
+      76.286229
+     ]
+    ],
+    "sensitivity": 0.0473,
+    "band": "medium",
+    "habitatProbability": 0.9844,
+    "connectivityContribution": 0.0473,
+    "confidence": 0.9844,
+    "patchId": "P5"
+   }
+  ],
+  "legend": [
+   {
+    "band": "critical",
+    "label": "Critical",
+    "color": "#ef4444",
+    "range": [
+     0.25,
+     1.0
+    ],
+    "description": "S_i >= 0.25"
+   },
+   {
+    "band": "high",
+    "label": "High",
+    "color": "#f97316",
+    "range": [
+     0.1,
+     0.25
+    ],
+    "description": "S_i >= 0.1"
+   },
+   {
+    "band": "medium",
+    "label": "Medium",
+    "color": "#f59e0b",
+    "range": [
+     0.03,
+     0.1
+    ],
+    "description": "S_i >= 0.03"
+   },
+   {
+    "band": "low",
+    "label": "Low",
+    "color": "#22c55e",
+    "range": [
+     0.0,
+     0.03
+    ],
+    "description": "S_i < 0.03"
+   }
+  ]
+ },
+ "restoration": {
+  "sceneId": "kerala-coast",
+  "currency": null,
+  "baselineScore": 56.3,
+  "budgetBands": [],
+  "actions": [
+   {
+    "id": "C01",
+    "rank": 1,
+    "name": "C01",
+    "patchId": "P7",
+    "location": "C01",
+    "center": [
+     9.82968256931438,
+     76.2798689109562
+    ],
+    "polygon": [
+     [
+      9.850203,
+      76.282944
+     ],
+     [
+      9.849661,
+      76.282851
+     ],
+     [
+      9.848846,
+      76.283213
+     ],
+     [
+      9.848032,
+      76.283209
+     ],
+     [
+      9.848031,
+      76.283392
+     ],
+     [
+      9.847489,
+      76.28339
+     ],
+     [
+      9.847035,
+      76.283753
+     ],
+     [
+      9.845588,
+      76.283838
+     ],
+     [
+      9.845499,
+      76.283656
+     ],
+     [
+      9.844685,
+      76.283561
+     ],
+     [
+      9.844503,
+      76.284016
+     ],
+     [
+      9.84414,
+      76.284197
+     ],
+     [
+      9.843689,
+      76.283831
+     ],
+     [
+      9.843603,
+      76.282736
+     ],
+     [
+      9.844057,
+      76.282282
+     ],
+     [
+      9.844059,
+      76.281644
+     ],
+     [
+      9.84379,
+      76.281096
+     ],
+     [
+      9.843429,
+      76.280912
+     ],
+     [
+      9.843704,
+      76.280093
+     ],
+     [
+      9.843432,
+      76.280092
+     ],
+     [
+      9.843615,
+      76.279545
+     ],
+     [
+      9.843435,
+      76.279362
+     ],
+     [
+      9.84344,
+      76.277995
+     ],
+     [
+      9.843171,
+      76.277538
+     ],
+     [
+      9.843354,
+      76.276809
+     ],
+     [
+      9.843717,
+      76.276628
+     ],
+     [
+      9.843987,
+      76.276902
+     ],
+     [
+      9.844079,
+      76.276538
+     ],
+     [
+      9.843719,
+      76.276081
+     ],
+     [
+      9.843726,
+      76.274257
+     ],
+     [
+      9.844089,
+      76.273894
+     ],
+     [
+      9.843999,
+      76.27362
+     ],
+     [
+      9.844543,
+      76.27344
+     ],
+     [
+      9.844543,
+      76.273257
+     ],
+     [
+      9.844994,
+      76.273533
+     ],
+     [
+      9.845267,
+      76.273078
+     ],
+     [
+      9.845539,
+      76.273079
+     ],
+     [
+      9.84617,
+      76.273446
+     ],
+     [
+      9.846355,
+      76.272444
+     ],
+     [
+      9.846897,
+      76.272537
+     ],
+     [
+      9.84726,
+      76.272082
+     ],
+     [
+      9.847082,
+      76.271535
+     ],
+     [
+      9.847353,
+      76.271445
+     ],
+     [
+      9.844912,
+      76.271435
+     ],
+     [
+      9.846087,
+      76.271622
+     ],
+     [
+      9.845363,
+      76.271619
+     ],
+     [
+      9.845272,
+      76.271892
+     ],
+     [
+      9.844729,
+      76.272073
+     ],
+     [
+      9.844188,
+      76.271615
+     ],
+     [
+      9.844279,
+      76.271433
+     ],
+     [
+      9.842199,
+      76.271425
+     ],
+     [
+      9.842651,
+      76.271518
+     ],
+     [
+      9.842379,
+      76.271699
+     ],
+     [
+      9.841656,
+      76.271605
+     ],
+     [
+      9.841928,
+      76.271424
+     ],
+     [
+      9.841114,
+      76.271421
+     ],
+     [
+      9.841204,
+      76.271603
+     ],
+     [
+      9.840842,
+      76.271693
+     ],
+     [
+      9.840478,
+      76.272239
+     ],
+     [
+      9.839392,
+      76.272417
+     ],
+     [
+      9.838938,
+      76.272871
+     ],
+     [
+      9.838396,
+      76.272778
+     ],
+     [
+      9.838489,
+      76.27214
+     ],
+     [
+      9.838218,
+      76.272048
+     ],
+     [
+      9.838762,
+      76.271776
+     ],
+     [
+      9.838763,
+      76.271412
+     ],
+     [
+      9.837316,
+      76.271406
+     ],
+     [
+      9.837224,
+      76.271953
+     ],
+     [
+      9.837584,
+      76.272319
+     ],
+     [
+      9.837583,
+      76.272684
+     ],
+     [
+      9.837855,
+      76.27232
+     ],
+     [
+      9.837676,
+      76.271955
+     ],
+     [
+      9.837947,
+      76.271956
+     ],
+     [
+      9.838035,
+      76.272685
+     ],
+     [
+      9.837762,
+      76.273049
+     ],
+     [
+      9.837492,
+      76.272683
+     ],
+     [
+      9.83704,
+      76.272773
+     ],
+     [
+      9.836948,
+      76.273228
+     ],
+     [
+      9.835769,
+      76.274136
+     ],
+     [
+      9.835497,
+      76.274135
+     ],
+     [
+      9.835318,
+      76.273769
+     ],
+     [
+      9.834774,
+      76.274041
+     ],
+     [
+      9.834505,
+      76.273584
+     ],
+     [
+      9.834507,
+      76.272945
+     ],
+     [
+      9.834869,
+      76.272856
+     ],
+     [
+      9.835142,
+      76.272492
+     ],
+     [
+      9.835684,
+      76.272585
+     ],
+     [
+      9.835956,
+      76.272313
+     ],
+     [
+      9.836861,
+      76.272225
+     ],
+     [
+      9.837043,
+      76.271861
+     ],
+     [
+      9.836864,
+      76.271496
+     ],
+     [
+      9.837045,
+      76.271405
+     ],
+     [
+      9.833247,
+      76.271391
+     ],
+     [
+      9.833246,
+      76.271755
+     ],
+     [
+      9.832704,
+      76.271662
+     ],
+     [
+      9.832885,
+      76.271389
+     ],
+     [
+      9.832162,
+      76.271386
+     ],
+     [
+      9.832523,
+      76.271479
+     ],
+     [
+      9.832341,
+      76.271752
+     ],
+     [
+      9.830805,
+      76.271564
+     ],
+     [
+      9.831981,
+      76.271386
+     ],
+     [
+      9.824928,
+      76.271359
+     ],
+     [
+      9.825285,
+      76.272545
+     ],
+     [
+      9.825104,
+      76.272727
+     ],
+     [
+      9.825192,
+      76.273366
+     ],
+     [
+      9.82501,
+      76.273638
+     ],
+     [
+      9.824287,
+      76.273453
+     ],
+     [
+      9.823652,
+      76.273998
+     ],
+     [
+      9.823921,
+      76.274728
+     ],
+     [
+      9.823914,
+      76.276552
+     ],
+     [
+      9.823643,
+      76.276551
+     ],
+     [
+      9.823642,
+      76.276733
+     ],
+     [
+      9.824092,
+      76.277373
+     ],
+     [
+      9.823458,
+      76.277462
+     ],
+     [
+      9.823186,
+      76.277826
+     ],
+     [
+      9.822914,
+      76.277824
+     ],
+     [
+      9.822827,
+      76.276912
+     ],
+     [
+      9.822466,
+      76.276911
+     ],
+     [
+      9.822202,
+      76.274995
+     ],
+     [
+      9.821751,
+      76.274629
+     ],
+     [
+      9.821753,
+      76.273991
+     ],
+     [
+      9.821482,
+      76.273899
+     ],
+     [
+      9.821483,
+      76.273625
+     ],
+     [
+      9.822297,
+      76.273628
+     ],
+     [
+      9.82266,
+      76.273265
+     ],
+     [
+      9.823384,
+      76.273176
+     ],
+     [
+      9.823475,
+      76.272994
+     ],
+     [
+      9.82239,
+      76.272899
+     ],
+     [
+      9.822301,
+      76.272716
+     ],
+     [
+      9.821848,
+      76.272897
+     ],
+     [
+      9.821669,
+      76.272258
+     ],
+     [
+      9.822032,
+      76.271895
+     ],
+     [
+      9.821944,
+      76.271347
+     ],
+     [
+      9.817061,
+      76.271329
+     ],
+     [
+      9.817694,
+      76.271422
+     ],
+     [
+      9.817693,
+      76.271605
+     ],
+     [
+      9.816246,
+      76.271599
+     ],
+     [
+      9.816155,
+      76.271781
+     ],
+     [
+      9.815522,
+      76.271779
+     ],
+     [
+      9.814888,
+      76.272232
+     ],
+     [
+      9.813802,
+      76.272228
+     ],
+     [
+      9.813621,
+      76.272501
+     ],
+     [
+      9.812807,
+      76.272315
+     ],
+     [
+      9.81154,
+      76.272584
+     ],
+     [
+      9.811268,
+      76.272857
+     ],
+     [
+      9.80973,
+      76.273033
+     ],
+     [
+      9.809908,
+      76.273763
+     ],
+     [
+      9.810359,
+      76.27413
+     ],
+     [
+      9.810993,
+      76.273858
+     ],
+     [
+      9.81271,
+      76.274047
+     ],
+     [
+      9.813164,
+      76.273593
+     ],
+     [
+      9.813257,
+      76.272864
+     ],
+     [
+      9.813439,
+      76.272774
+     ],
+     [
+      9.814977,
+      76.272506
+     ],
+     [
+      9.815517,
+      76.273055
+     ],
+     [
+      9.815879,
+      76.272965
+     ],
+     [
+      9.816421,
+      76.273332
+     ],
+     [
+      9.817234,
+      76.273518
+     ],
+     [
+      9.817146,
+      76.272788
+     ],
+     [
+      9.817418,
+      76.272698
+     ],
+     [
+      9.817688,
+      76.273063
+     ],
+     [
+      9.818771,
+      76.273615
+     ],
+     [
+      9.819039,
+      76.274436
+     ],
+     [
+      9.818763,
+      76.275529
+     ],
+     [
+      9.818941,
+      76.27635
+     ],
+     [
+      9.818666,
+      76.277261
+     ],
+     [
+      9.818124,
+      76.277259
+     ],
+     [
+      9.818126,
+      76.276621
+     ],
+     [
+      9.817315,
+      76.276071
+     ],
+     [
+      9.817043,
+      76.276161
+     ],
+     [
+      9.817222,
+      76.276617
+     ],
+     [
+      9.816768,
+      76.277254
+     ],
+     [
+      9.816498,
+      76.276706
+     ],
+     [
+      9.816227,
+      76.276796
+     ],
+     [
+      9.815687,
+      76.276156
+     ],
+     [
+      9.815325,
+      76.276154
+     ],
+     [
+      9.814689,
+      76.277064
+     ],
+     [
+      9.814777,
+      76.27752
+     ],
+     [
+      9.814597,
+      76.277246
+     ],
+     [
+      9.814506,
+      76.277428
+     ],
+     [
+      9.814055,
+      76.277243
+     ],
+     [
+      9.813783,
+      76.277516
+     ],
+     [
+      9.81378,
+      76.278245
+     ],
+     [
+      9.812966,
+      76.278151
+     ],
+     [
+      9.812962,
+      76.279336
+     ],
+     [
+      9.81278,
+      76.2797
+     ],
+     [
+      9.812779,
+      76.279974
+     ],
+     [
+      9.812959,
+      76.279974
+     ],
+     [
+      9.812777,
+      76.280521
+     ],
+     [
+      9.813319,
+      76.280432
+     ],
+     [
+      9.813498,
+      76.280979
+     ],
+     [
+      9.814132,
+      76.280708
+     ],
+     [
+      9.815217,
+      76.280804
+     ],
+     [
+      9.815309,
+      76.280439
+     ],
+     [
+      9.815942,
+      76.280442
+     ],
+     [
+      9.81594,
+      76.280989
+     ],
+     [
+      9.81612,
+      76.281081
+     ],
+     [
+      9.816123,
+      76.28026
+     ],
+     [
+      9.815852,
+      76.280259
+     ],
+     [
+      9.815582,
+      76.279802
+     ],
+     [
+      9.81513,
+      76.279983
+     ],
+     [
+      9.814771,
+      76.279252
+     ],
+     [
+      9.814137,
+      76.279341
+     ],
+     [
+      9.814138,
+      76.279067
+     ],
+     [
+      9.814772,
+      76.278887
+     ],
+     [
+      9.815046,
+      76.27825
+     ],
+     [
+      9.815407,
+      76.278343
+     ],
+     [
+      9.815499,
+      76.27807
+     ],
+     [
+      9.816313,
+      76.277799
+     ],
+     [
+      9.816314,
+      76.277526
+     ],
+     [
+      9.816947,
+      76.277619
+     ],
+     [
+      9.816855,
+      76.278166
+     ],
+     [
+      9.817125,
+      76.27844
+     ],
+     [
+      9.817123,
+      76.278896
+     ],
+     [
+      9.817574,
+      76.279263
+     ],
+     [
+      9.818207,
+      76.279174
+     ],
+     [
+      9.818929,
+      76.279633
+     ],
+     [
+      9.819107,
+      76.280454
+     ],
+     [
+      9.819468,
+      76.280638
+     ],
+     [
+      9.819556,
+      76.281276
+     ],
+     [
+      9.819827,
+      76.281186
+     ],
+     [
+      9.819825,
+      76.281642
+     ],
+     [
+      9.819188,
+      76.282916
+     ],
+     [
+      9.819187,
+      76.283189
+     ],
+     [
+      9.819638,
+      76.283373
+     ],
+     [
+      9.819455,
+      76.283829
+     ],
+     [
+      9.819004,
+      76.283736
+     ],
+     [
+      9.818822,
+      76.283917
+     ],
+     [
+      9.819005,
+      76.28328
+     ],
+     [
+      9.818553,
+      76.283278
+     ],
+     [
+      9.818462,
+      76.28346
+     ],
+     [
+      9.818101,
+      76.283276
+     ],
+     [
+      9.818281,
+      76.283642
+     ],
+     [
+      9.818187,
+      76.284371
+     ],
+     [
+      9.818549,
+      76.284463
+     ],
+     [
+      9.818547,
+      76.284828
+     ],
+     [
+      9.818275,
+      76.285009
+     ],
+     [
+      9.818273,
+      76.285739
+     ],
+     [
+      9.818633,
+      76.286014
+     ],
+     [
+      9.818539,
+      76.287016
+     ],
+     [
+      9.818358,
+      76.287198
+     ],
+     [
+      9.817635,
+      76.287104
+     ],
+     [
+      9.816909,
+      76.287648
+     ],
+     [
+      9.815733,
+      76.287826
+     ],
+     [
+      9.81374,
+      76.288639
+     ],
+     [
+      9.813198,
+      76.288637
+     ],
+     [
+      9.812652,
+      76.289455
+     ],
+     [
+      9.814373,
+      76.288824
+     ],
+     [
+      9.815819,
+      76.28892
+     ],
+     [
+      9.816635,
+      76.288285
+     ],
+     [
+      9.81799,
+      76.288655
+     ],
+     [
+      9.818262,
+      76.288565
+     ],
+     [
+      9.818627,
+      76.287564
+     ],
+     [
+      9.819169,
+      76.287748
+     ],
+     [
+      9.819257,
+      76.288569
+     ],
+     [
+      9.819798,
+      76.288753
+     ],
+     [
+      9.819707,
+      76.288935
+     ],
+     [
+      9.820158,
+      76.289302
+     ],
+     [
+      9.820157,
+      76.289575
+     ],
+     [
+      9.820609,
+      76.289577
+     ],
+     [
+      9.820702,
+      76.28903
+     ],
+     [
+      9.820973,
+      76.28894
+     ],
+     [
+      9.821242,
+      76.289488
+     ],
+     [
+      9.820698,
+      76.290033
+     ],
+     [
+      9.821784,
+      76.289764
+     ],
+     [
+      9.821695,
+      76.28949
+     ],
+     [
+      9.821333,
+      76.289489
+     ],
+     [
+      9.821697,
+      76.288852
+     ],
+     [
+      9.821968,
+      76.288853
+     ],
+     [
+      9.822056,
+      76.289491
+     ],
+     [
+      9.823141,
+      76.289678
+     ],
+     [
+      9.823233,
+      76.289131
+     ],
+     [
+      9.824048,
+      76.28877
+     ],
+     [
+      9.824862,
+      76.288864
+     ],
+     [
+      9.825043,
+      76.288682
+     ],
+     [
+      9.825676,
+      76.288776
+     ],
+     [
+      9.826943,
+      76.288416
+     ],
+     [
+      9.827938,
+      76.28842
+     ],
+     [
+      9.828751,
+      76.288606
+     ],
+     [
+      9.829201,
+      76.289154
+     ],
+     [
+      9.829468,
+      76.290432
+     ],
+     [
+      9.829193,
+      76.291343
+     ],
+     [
+      9.829915,
+      76.291528
+     ],
+     [
+      9.830183,
+      76.292441
+     ],
+     [
+      9.830635,
+      76.292533
+     ],
+     [
+      9.830908,
+      76.29217
+     ],
+     [
+      9.83082,
+      76.29144
+     ],
+     [
+      9.831092,
+      76.291168
+     ],
+     [
+      9.831545,
+      76.291169
+     ],
+     [
+      9.831457,
+      76.290348
+     ],
+     [
+      9.831096,
+      76.290256
+     ],
+     [
+      9.830647,
+      76.289342
+     ],
+     [
+      9.830651,
+      76.288431
+     ],
+     [
+      9.831466,
+      76.288069
+     ],
+     [
+      9.832099,
+      76.288072
+     ],
+     [
+      9.832821,
+      76.288348
+     ],
+     [
+      9.83282,
+      76.288621
+     ],
+     [
+      9.833993,
+      76.289355
+     ],
+     [
+      9.833989,
+      76.290267
+     ],
+     [
+      9.833175,
+      76.290537
+     ],
+     [
+      9.833173,
+      76.290993
+     ],
+     [
+      9.832811,
+      76.290901
+     ],
+     [
+      9.832632,
+      76.290535
+     ],
+     [
+      9.83227,
+      76.290534
+     ],
+     [
+      9.831998,
+      76.290806
+     ],
+     [
+      9.832264,
+      76.292175
+     ],
+     [
+      9.832717,
+      76.291995
+     ],
+     [
+      9.833077,
+      76.292361
+     ],
+     [
+      9.83353,
+      76.292271
+     ],
+     [
+      9.835065,
+      76.292642
+     ],
+     [
+      9.83588,
+      76.292372
+     ],
+     [
+      9.836335,
+      76.291644
+     ],
+     [
+      9.836604,
+      76.292283
+     ],
+     [
+      9.837056,
+      76.292376
+     ],
+     [
+      9.83706,
+      76.291191
+     ],
+     [
+      9.836881,
+      76.290825
+     ],
+     [
+      9.836248,
+      76.290914
+     ],
+     [
+      9.836524,
+      76.289639
+     ],
+     [
+      9.835982,
+      76.289363
+     ],
+     [
+      9.835258,
+      76.289451
+     ],
+     [
+      9.834718,
+      76.288811
+     ],
+     [
+      9.834627,
+      76.288993
+     ],
+     [
+      9.834357,
+      76.28881
+     ],
+     [
+      9.834539,
+      76.288355
+     ],
+     [
+      9.834992,
+      76.288174
+     ],
+     [
+      9.835265,
+      76.287719
+     ],
+     [
+      9.835269,
+      76.286807
+     ],
+     [
+      9.834909,
+      76.28635
+     ],
+     [
+      9.834367,
+      76.286166
+     ],
+     [
+      9.834368,
+      76.28571
+     ],
+     [
+      9.833919,
+      76.284979
+     ],
+     [
+      9.834191,
+      76.284706
+     ],
+     [
+      9.834371,
+      76.285163
+     ],
+     [
+      9.834732,
+      76.285164
+     ],
+     [
+      9.834914,
+      76.284891
+     ],
+     [
+      9.835819,
+      76.284712
+     ],
+     [
+      9.836092,
+      76.284258
+     ],
+     [
+      9.836815,
+      76.28426
+     ],
+     [
+      9.836907,
+      76.283987
+     ],
+     [
+      9.837903,
+      76.283626
+     ],
+     [
+      9.837906,
+      76.282897
+     ],
+     [
+      9.836459,
+      76.2828
+     ],
+     [
+      9.83637,
+      76.282526
+     ],
+     [
+      9.835828,
+      76.282251
+     ],
+     [
+      9.83547,
+      76.281337
+     ],
+     [
+      9.834116,
+      76.280876
+     ],
+     [
+      9.834119,
+      76.279873
+     ],
+     [
+      9.833579,
+      76.279324
+     ],
+     [
+      9.833127,
+      76.279231
+     ],
+     [
+      9.833128,
+      76.278958
+     ],
+     [
+      9.833312,
+      76.278229
+     ],
+     [
+      9.833854,
+      76.278414
+     ],
+     [
+      9.834126,
+      76.278141
+     ],
+     [
+      9.834036,
+      76.277958
+     ],
+     [
+      9.834489,
+      76.277687
+     ],
+     [
+      9.835212,
+      76.277872
+     ],
+     [
+      9.835029,
+      76.278418
+     ],
+     [
+      9.835116,
+      76.279239
+     ],
+     [
+      9.835478,
+      76.279332
+     ],
+     [
+      9.83566,
+      76.279059
+     ],
+     [
+      9.835839,
+      76.279424
+     ],
+     [
+      9.8362,
+      76.279517
+     ],
+     [
+      9.836017,
+      76.280154
+     ],
+     [
+      9.836105,
+      76.280884
+     ],
+     [
+      9.836286,
+      76.280885
+     ],
+     [
+      9.836287,
+      76.280611
+     ],
+     [
+      9.836919,
+      76.280887
+     ],
+     [
+      9.837371,
+      76.280798
+     ],
+     [
+      9.837372,
+      76.280615
+     ],
+     [
+      9.838366,
+      76.280802
+     ],
+     [
+      9.838548,
+      76.280346
+     ],
+     [
+      9.838819,
+      76.280439
+     ],
+     [
+      9.839089,
+      76.280804
+     ],
+     [
+      9.839087,
+      76.28126
+     ],
+     [
+      9.838542,
+      76.282079
+     ],
+     [
+      9.839356,
+      76.282082
+     ],
+     [
+      9.83881,
+      76.282992
+     ],
+     [
+      9.83926,
+      76.283358
+     ],
+     [
+      9.840616,
+      76.283637
+     ],
+     [
+      9.840705,
+      76.283911
+     ],
+     [
+      9.841518,
+      76.284096
+     ],
+     [
+      9.841608,
+      76.284279
+     ],
+     [
+      9.842061,
+      76.284098
+     ],
+     [
+      9.84224,
+      76.284555
+     ],
+     [
+      9.842057,
+      76.285101
+     ],
+     [
+      9.842418,
+      76.285376
+     ],
+     [
+      9.843142,
+      76.285197
+     ],
+     [
+      9.843592,
+      76.285654
+     ],
+     [
+      9.843956,
+      76.285017
+     ],
+     [
+      9.84486,
+      76.285021
+     ],
+     [
+      9.846128,
+      76.284479
+     ],
+     [
+      9.846851,
+      76.284573
+     ],
+     [
+      9.847035,
+      76.283844
+     ],
+     [
+      9.848301,
+      76.283849
+     ],
+     [
+      9.848846,
+      76.283304
+     ],
+     [
+      9.849931,
+      76.283126
+     ],
+     [
+      9.850021,
+      76.283308
+     ],
+     [
+      9.850203,
+      76.282944
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 450.57,
+    "costLakh": null,
+    "connectivityGain": 6343.9755,
+    "connectivityGainAbs": 8.753421296256331e-05,
+    "scoreAfter": null,
+    "confidence": 0.6265,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P7"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P7; recomputed IIC rises by 6343.98%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C02",
+    "rank": 2,
+    "name": "C02",
+    "patchId": null,
+    "location": "C02",
+    "center": [
+     9.921537152592135,
+     76.33940951148185
+    ],
+    "polygon": [
+     [
+      9.935537,
+      76.336174
+     ],
+     [
+      9.935085,
+      76.336172
+     ],
+     [
+      9.934903,
+      76.336536
+     ],
+     [
+      9.933636,
+      76.336622
+     ],
+     [
+      9.93337,
+      76.335527
+     ],
+     [
+      9.933098,
+      76.335526
+     ],
+     [
+      9.932468,
+      76.334976
+     ],
+     [
+      9.932015,
+      76.334974
+     ],
+     [
+      9.931471,
+      76.335337
+     ],
+     [
+      9.93147,
+      76.33561
+     ],
+     [
+      9.931199,
+      76.335609
+     ],
+     [
+      9.930925,
+      76.336338
+     ],
+     [
+      9.93137,
+      76.338072
+     ],
+     [
+      9.930735,
+      76.338526
+     ],
+     [
+      9.930643,
+      76.339073
+     ],
+     [
+      9.929918,
+      76.339526
+     ],
+     [
+      9.929466,
+      76.339341
+     ],
+     [
+      9.928922,
+      76.339704
+     ],
+     [
+      9.92829,
+      76.33961
+     ],
+     [
+      9.928198,
+      76.339792
+     ],
+     [
+      9.927293,
+      76.339971
+     ],
+     [
+      9.92693,
+      76.340517
+     ],
+     [
+      9.926568,
+      76.340606
+     ],
+     [
+      9.926657,
+      76.340789
+     ],
+     [
+      9.926295,
+      76.340879
+     ],
+     [
+      9.926111,
+      76.341699
+     ],
+     [
+      9.925571,
+      76.341058
+     ],
+     [
+      9.925573,
+      76.340511
+     ],
+     [
+      9.925212,
+      76.34051
+     ],
+     [
+      9.924938,
+      76.341056
+     ],
+     [
+      9.925114,
+      76.342333
+     ],
+     [
+      9.926015,
+      76.343158
+     ],
+     [
+      9.926376,
+      76.343159
+     ],
+     [
+      9.927098,
+      76.343618
+     ],
+     [
+      9.92755,
+      76.343529
+     ],
+     [
+      9.927907,
+      76.344716
+     ],
+     [
+      9.926822,
+      76.344894
+     ],
+     [
+      9.926461,
+      76.344619
+     ],
+     [
+      9.925467,
+      76.344523
+     ],
+     [
+      9.925107,
+      76.344157
+     ],
+     [
+      9.925109,
+      76.343428
+     ],
+     [
+      9.92466,
+      76.342696
+     ],
+     [
+      9.923216,
+      76.342052
+     ],
+     [
+      9.923217,
+      76.341778
+     ],
+     [
+      9.92349,
+      76.341506
+     ],
+     [
+      9.923766,
+      76.340321
+     ],
+     [
+      9.924399,
+      76.340142
+     ],
+     [
+      9.924491,
+      76.339868
+     ],
+     [
+      9.925304,
+      76.340054
+     ],
+     [
+      9.925576,
+      76.339782
+     ],
+     [
+      9.925669,
+      76.339143
+     ],
+     [
+      9.925308,
+      76.339051
+     ],
+     [
+      9.925307,
+      76.339233
+     ],
+     [
+      9.924945,
+      76.339232
+     ],
+     [
+      9.925037,
+      76.338867
+     ],
+     [
+      9.925581,
+      76.338687
+     ],
+     [
+      9.925582,
+      76.338414
+     ],
+     [
+      9.924772,
+      76.337498
+     ],
+     [
+      9.923418,
+      76.336763
+     ],
+     [
+      9.92324,
+      76.336033
+     ],
+     [
+      9.924867,
+      76.336131
+     ],
+     [
+      9.925318,
+      76.336406
+     ],
+     [
+      9.92758,
+      76.336233
+     ],
+     [
+      9.927943,
+      76.335869
+     ],
+     [
+      9.928214,
+      76.335962
+     ],
+     [
+      9.928306,
+      76.335506
+     ],
+     [
+      9.927584,
+      76.33523
+     ],
+     [
+      9.927495,
+      76.334864
+     ],
+     [
+      9.926499,
+      76.335134
+     ],
+     [
+      9.926502,
+      76.334496
+     ],
+     [
+      9.926955,
+      76.334133
+     ],
+     [
+      9.926956,
+      76.33395
+     ],
+     [
+      9.926594,
+      76.333949
+     ],
+     [
+      9.926777,
+      76.333494
+     ],
+     [
+      9.92741,
+      76.333496
+     ],
+     [
+      9.927589,
+      76.33377
+     ],
+     [
+      9.927407,
+      76.334226
+     ],
+     [
+      9.927768,
+      76.33441
+     ],
+     [
+      9.927856,
+      76.334866
+     ],
+     [
+      9.928219,
+      76.334685
+     ],
+     [
+      9.927949,
+      76.33441
+     ],
+     [
+      9.92804,
+      76.334228
+     ],
+     [
+      9.92831,
+      76.334503
+     ],
+     [
+      9.928672,
+      76.334504
+     ],
+     [
+      9.928577,
+      76.335598
+     ],
+     [
+      9.928848,
+      76.335508
+     ],
+     [
+      9.92885,
+      76.335235
+     ],
+     [
+      9.929576,
+      76.334508
+     ],
+     [
+      9.929759,
+      76.33387
+     ],
+     [
+      9.930031,
+      76.33378
+     ],
+     [
+      9.929942,
+      76.333506
+     ],
+     [
+      9.92985,
+      76.333688
+     ],
+     [
+      9.929309,
+      76.333504
+     ],
+     [
+      9.929216,
+      76.333959
+     ],
+     [
+      9.928675,
+      76.333684
+     ],
+     [
+      9.928673,
+      76.334048
+     ],
+     [
+      9.928221,
+      76.334138
+     ],
+     [
+      9.928132,
+      76.333773
+     ],
+     [
+      9.927771,
+      76.333589
+     ],
+     [
+      9.927772,
+      76.333224
+     ],
+     [
+      9.927501,
+      76.333223
+     ],
+     [
+      9.927503,
+      76.332676
+     ],
+     [
+      9.927323,
+      76.332584
+     ],
+     [
+      9.927686,
+      76.332129
+     ],
+     [
+      9.927688,
+      76.331764
+     ],
+     [
+      9.927508,
+      76.331581
+     ],
+     [
+      9.9276,
+      76.331034
+     ],
+     [
+      9.926968,
+      76.330849
+     ],
+     [
+      9.927064,
+      76.329482
+     ],
+     [
+      9.927517,
+      76.329301
+     ],
+     [
+      9.927338,
+      76.328845
+     ],
+     [
+      9.927431,
+      76.328207
+     ],
+     [
+      9.927884,
+      76.327844
+     ],
+     [
+      9.927976,
+      76.327479
+     ],
+     [
+      9.928429,
+      76.327299
+     ],
+     [
+      9.927255,
+      76.326838
+     ],
+     [
+      9.926891,
+      76.327566
+     ],
+     [
+      9.926349,
+      76.32729
+     ],
+     [
+      9.924902,
+      76.327467
+     ],
+     [
+      9.924904,
+      76.32692
+     ],
+     [
+      9.925448,
+      76.326466
+     ],
+     [
+      9.92509,
+      76.325643
+     ],
+     [
+      9.924546,
+      76.325915
+     ],
+     [
+      9.924182,
+      76.326552
+     ],
+     [
+      9.923549,
+      76.326549
+     ],
+     [
+      9.92257,
+      76.322715
+     ],
+     [
+      9.921397,
+      76.322072
+     ],
+     [
+      9.920764,
+      76.322069
+     ],
+     [
+      9.92031,
+      76.322523
+     ],
+     [
+      9.92013,
+      76.32234
+     ],
+     [
+      9.919858,
+      76.32243
+     ],
+     [
+      9.919855,
+      76.32316
+     ],
+     [
+      9.919309,
+      76.323979
+     ],
+     [
+      9.918224,
+      76.324157
+     ],
+     [
+      9.917498,
+      76.324792
+     ],
+     [
+      9.916049,
+      76.325242
+     ],
+     [
+      9.915686,
+      76.325697
+     ],
+     [
+      9.915591,
+      76.3267
+     ],
+     [
+      9.915227,
+      76.327245
+     ],
+     [
+      9.914957,
+      76.327153
+     ],
+     [
+      9.914962,
+      76.325785
+     ],
+     [
+      9.914423,
+      76.324871
+     ],
+     [
+      9.914062,
+      76.324596
+     ],
+     [
+      9.91352,
+      76.324594
+     ],
+     [
+      9.912795,
+      76.324956
+     ],
+     [
+      9.912702,
+      76.325594
+     ],
+     [
+      9.913423,
+      76.326326
+     ],
+     [
+      9.913784,
+      76.326419
+     ],
+     [
+      9.913963,
+      76.326784
+     ],
+     [
+      9.913691,
+      76.326966
+     ],
+     [
+      9.914052,
+      76.327332
+     ],
+     [
+      9.913959,
+      76.327787
+     ],
+     [
+      9.91432,
+      76.327971
+     ],
+     [
+      9.914863,
+      76.327882
+     ],
+     [
+      9.91477,
+      76.328703
+     ],
+     [
+      9.914316,
+      76.329157
+     ],
+     [
+      9.914133,
+      76.329703
+     ],
+     [
+      9.91413,
+      76.33025
+     ],
+     [
+      9.914851,
+      76.330892
+     ],
+     [
+      9.915299,
+      76.331988
+     ],
+     [
+      9.916111,
+      76.332538
+     ],
+     [
+      9.916289,
+      76.333086
+     ],
+     [
+      9.916107,
+      76.33345
+     ],
+     [
+      9.916285,
+      76.334089
+     ],
+     [
+      9.915648,
+      76.33509
+     ],
+     [
+      9.913656,
+      76.335903
+     ],
+     [
+      9.913562,
+      76.336723
+     ],
+     [
+      9.913742,
+      76.336998
+     ],
+     [
+      9.914644,
+      76.337548
+     ],
+     [
+      9.914551,
+      76.338186
+     ],
+     [
+      9.915001,
+      76.338644
+     ],
+     [
+      9.916089,
+      76.338101
+     ],
+     [
+      9.916273,
+      76.337281
+     ],
+     [
+      9.917813,
+      76.336558
+     ],
+     [
+      9.918898,
+      76.336562
+     ],
+     [
+      9.920162,
+      76.336932
+     ],
+     [
+      9.920886,
+      76.336844
+     ],
+     [
+      9.921154,
+      76.337575
+     ],
+     [
+      9.920882,
+      76.337847
+     ],
+     [
+      9.92088,
+      76.338303
+     ],
+     [
+      9.920791,
+      76.337938
+     ],
+     [
+      9.92043,
+      76.337845
+     ],
+     [
+      9.920612,
+      76.33739
+     ],
+     [
+      9.920341,
+      76.337389
+     ],
+     [
+      9.919978,
+      76.337844
+     ],
+     [
+      9.92043,
+      76.337845
+     ],
+     [
+      9.920428,
+      76.33821
+     ],
+     [
+      9.920699,
+      76.338485
+     ],
+     [
+      9.920155,
+      76.338756
+     ],
+     [
+      9.919972,
+      76.339212
+     ],
+     [
+      9.92006,
+      76.33985
+     ],
+     [
+      9.919607,
+      76.340213
+     ],
+     [
+      9.919696,
+      76.340578
+     ],
+     [
+      9.919423,
+      76.340942
+     ],
+     [
+      9.919242,
+      76.341033
+     ],
+     [
+      9.918701,
+      76.340574
+     ],
+     [
+      9.917796,
+      76.340753
+     ],
+     [
+      9.917791,
+      76.34203
+     ],
+     [
+      9.916613,
+      76.342572
+     ],
+     [
+      9.915885,
+      76.343755
+     ],
+     [
+      9.914529,
+      76.343658
+     ],
+     [
+      9.913171,
+      76.344109
+     ],
+     [
+      9.91091,
+      76.344099
+     ],
+     [
+      9.910457,
+      76.344371
+     ],
+     [
+      9.910455,
+      76.344827
+     ],
+     [
+      9.911085,
+      76.345742
+     ],
+     [
+      9.910812,
+      76.346014
+     ],
+     [
+      9.911532,
+      76.34702
+     ],
+     [
+      9.911167,
+      76.347657
+     ],
+     [
+      9.911165,
+      76.348204
+     ],
+     [
+      9.911705,
+      76.348936
+     ],
+     [
+      9.911792,
+      76.349757
+     ],
+     [
+      9.912514,
+      76.350216
+     ],
+     [
+      9.912601,
+      76.351037
+     ],
+     [
+      9.913143,
+      76.351131
+     ],
+     [
+      9.913142,
+      76.351313
+     ],
+     [
+      9.912325,
+      76.352039
+     ],
+     [
+      9.911961,
+      76.352767
+     ],
+     [
+      9.911056,
+      76.352946
+     ],
+     [
+      9.910512,
+      76.353308
+     ],
+     [
+      9.910328,
+      76.354037
+     ],
+     [
+      9.911866,
+      76.353861
+     ],
+     [
+      9.912045,
+      76.354227
+     ],
+     [
+      9.912407,
+      76.354228
+     ],
+     [
+      9.912406,
+      76.354411
+     ],
+     [
+      9.913218,
+      76.354779
+     ],
+     [
+      9.913578,
+      76.355419
+     ],
+     [
+      9.914482,
+      76.355422
+     ],
+     [
+      9.915294,
+      76.35579
+     ],
+     [
+      9.915838,
+      76.355337
+     ],
+     [
+      9.916472,
+      76.355157
+     ],
+     [
+      9.916384,
+      76.354701
+     ],
+     [
+      9.916838,
+      76.354064
+     ],
+     [
+      9.917924,
+      76.353977
+     ],
+     [
+      9.917747,
+      76.352973
+     ],
+     [
+      9.918561,
+      76.352886
+     ],
+     [
+      9.918653,
+      76.35243
+     ],
+     [
+      9.91956,
+      76.351886
+     ],
+     [
+      9.919653,
+      76.351157
+     ],
+     [
+      9.920016,
+      76.350794
+     ],
+     [
+      9.919927,
+      76.350429
+     ],
+     [
+      9.9202,
+      76.350065
+     ],
+     [
+      9.920833,
+      76.349976
+     ],
+     [
+      9.921016,
+      76.349612
+     ],
+     [
+      9.922824,
+      76.34962
+     ],
+     [
+      9.92319,
+      76.348527
+     ],
+     [
+      9.923371,
+      76.348528
+     ],
+     [
+      9.923549,
+      76.349167
+     ],
+     [
+      9.924091,
+      76.34926
+     ],
+     [
+      9.924997,
+      76.34899
+     ],
+     [
+      9.925632,
+      76.348537
+     ],
+     [
+      9.926535,
+      76.348723
+     ],
+     [
+      9.926898,
+      76.34836
+     ],
+     [
+      9.92699,
+      76.347904
+     ],
+     [
+      9.927624,
+      76.347633
+     ],
+     [
+      9.927808,
+      76.346904
+     ],
+     [
+      9.926907,
+      76.346171
+     ],
+     [
+      9.92709,
+      76.345533
+     ],
+     [
+      9.927542,
+      76.345718
+     ],
+     [
+      9.927631,
+      76.345992
+     ],
+     [
+      9.928084,
+      76.34572
+     ],
+     [
+      9.928808,
+      76.345723
+     ],
+     [
+      9.928988,
+      76.345906
+     ],
+     [
+      9.928623,
+      76.346543
+     ],
+     [
+      9.928262,
+      76.346541
+     ],
+     [
+      9.92826,
+      76.346997
+     ],
+     [
+      9.928803,
+      76.346817
+     ],
+     [
+      9.928801,
+      76.347273
+     ],
+     [
+      9.929162,
+      76.347639
+     ],
+     [
+      9.930248,
+      76.34737
+     ],
+     [
+      9.930432,
+      76.346641
+     ],
+     [
+      9.930794,
+      76.34646
+     ],
+     [
+      9.930886,
+      76.346096
+     ],
+     [
+      9.931609,
+      76.34619
+     ],
+     [
+      9.931881,
+      76.346009
+     ],
+     [
+      9.932242,
+      76.346193
+     ],
+     [
+      9.932245,
+      76.345463
+     ],
+     [
+      9.932878,
+      76.345375
+     ],
+     [
+      9.933333,
+      76.344647
+     ],
+     [
+      9.934057,
+      76.344559
+     ],
+     [
+      9.93388,
+      76.343646
+     ],
+     [
+      9.934153,
+      76.343008
+     ],
+     [
+      9.934516,
+      76.342828
+     ],
+     [
+      9.934968,
+      76.342921
+     ],
+     [
+      9.93488,
+      76.342099
+     ],
+     [
+      9.93461,
+      76.341825
+     ],
+     [
+      9.934615,
+      76.34073
+     ],
+     [
+      9.934344,
+      76.340547
+     ],
+     [
+      9.934527,
+      76.34
+     ],
+     [
+      9.934256,
+      76.339908
+     ],
+     [
+      9.93453,
+      76.339271
+     ],
+     [
+      9.934442,
+      76.338723
+     ],
+     [
+      9.93408,
+      76.338722
+     ],
+     [
+      9.933715,
+      76.339632
+     ],
+     [
+      9.93254,
+      76.339536
+     ],
+     [
+      9.93227,
+      76.33917
+     ],
+     [
+      9.932274,
+      76.338258
+     ],
+     [
+      9.932546,
+      76.337895
+     ],
+     [
+      9.933089,
+      76.337897
+     ],
+     [
+      9.933539,
+      76.338355
+     ],
+     [
+      9.933812,
+      76.337991
+     ],
+     [
+      9.934717,
+      76.337721
+     ],
+     [
+      9.934898,
+      76.337813
+     ],
+     [
+      9.934895,
+      76.33836
+     ],
+     [
+      9.934532,
+      76.338724
+     ],
+     [
+      9.934984,
+      76.338725
+     ],
+     [
+      9.934989,
+      76.337631
+     ],
+     [
+      9.935535,
+      76.33663
+     ],
+     [
+      9.935537,
+      76.336174
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 444.06,
+    "costLakh": null,
+    "connectivityGain": 5969.54,
+    "connectivityGainAbs": 8.23677490619005e-05,
+    "scoreAfter": null,
+    "confidence": 0.6197,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 0,
+    "linkedPatchIds": [],
+    "componentsBefore": 3,
+    "componentsAfter": 4,
+    "rationale": "Adds 0 link(s) to no patch; recomputed IIC rises by 5969.54%, components 3 -> 4.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C03",
+    "rank": 3,
+    "name": "C03",
+    "patchId": "P4",
+    "location": "C03",
+    "center": [
+     9.790514376592611,
+     76.28412997545234
+    ],
+    "polygon": [
+     [
+      9.808078,
+      76.279591
+     ],
+     [
+      9.807809,
+      76.278952
+     ],
+     [
+      9.806993,
+      76.279496
+     ],
+     [
+      9.806991,
+      76.279952
+     ],
+     [
+      9.80645,
+      76.279585
+     ],
+     [
+      9.806363,
+      76.278764
+     ],
+     [
+      9.806908,
+      76.278219
+     ],
+     [
+      9.806818,
+      76.277945
+     ],
+     [
+      9.806636,
+      76.278309
+     ],
+     [
+      9.806275,
+      76.278217
+     ],
+     [
+      9.805913,
+      76.278306
+     ],
+     [
+      9.805821,
+      76.278579
+     ],
+     [
+      9.80555,
+      76.278487
+     ],
+     [
+      9.805463,
+      76.277575
+     ],
+     [
+      9.805735,
+      76.277394
+     ],
+     [
+      9.805737,
+      76.276938
+     ],
+     [
+      9.805378,
+      76.276207
+     ],
+     [
+      9.805651,
+      76.275844
+     ],
+     [
+      9.805921,
+      76.275936
+     ],
+     [
+      9.805925,
+      76.275024
+     ],
+     [
+      9.805201,
+      76.275204
+     ],
+     [
+      9.805112,
+      76.274839
+     ],
+     [
+      9.80466,
+      76.274746
+     ],
+     [
+      9.804388,
+      76.275018
+     ],
+     [
+      9.804658,
+      76.275293
+     ],
+     [
+      9.804206,
+      76.2752
+     ],
+     [
+      9.804025,
+      76.275382
+     ],
+     [
+      9.803664,
+      76.275016
+     ],
+     [
+      9.803212,
+      76.275014
+     ],
+     [
+      9.802581,
+      76.274647
+     ],
+     [
+      9.801857,
+      76.274644
+     ],
+     [
+      9.801858,
+      76.274462
+     ],
+     [
+      9.800591,
+      76.274639
+     ],
+     [
+      9.79996,
+      76.274272
+     ],
+     [
+      9.799688,
+      76.274271
+     ],
+     [
+      9.799504,
+      76.275091
+     ],
+     [
+      9.799232,
+      76.275363
+     ],
+     [
+      9.798057,
+      76.275359
+     ],
+     [
+      9.797967,
+      76.275085
+     ],
+     [
+      9.797696,
+      76.275084
+     ],
+     [
+      9.797695,
+      76.275358
+     ],
+     [
+      9.798057,
+      76.275359
+     ],
+     [
+      9.798056,
+      76.275541
+     ],
+     [
+      9.797512,
+      76.275904
+     ],
+     [
+      9.797691,
+      76.27636
+     ],
+     [
+      9.797962,
+      76.276453
+     ],
+     [
+      9.797597,
+      76.277454
+     ],
+     [
+      9.798049,
+      76.277456
+     ],
+     [
+      9.798231,
+      76.277183
+     ],
+     [
+      9.798773,
+      76.277276
+     ],
+     [
+      9.799584,
+      76.277917
+     ],
+     [
+      9.79958,
+      76.27892
+     ],
+     [
+      9.799941,
+      76.279195
+     ],
+     [
+      9.800394,
+      76.279015
+     ],
+     [
+      9.800573,
+      76.27938
+     ],
+     [
+      9.800031,
+      76.279378
+     ],
+     [
+      9.799668,
+      76.279741
+     ],
+     [
+      9.798854,
+      76.279738
+     ],
+     [
+      9.798582,
+      76.28001
+     ],
+     [
+      9.798039,
+      76.2801
+     ],
+     [
+      9.798037,
+      76.280464
+     ],
+     [
+      9.797676,
+      76.28028
+     ],
+     [
+      9.797587,
+      76.279915
+     ],
+     [
+      9.797044,
+      76.280096
+     ],
+     [
+      9.796862,
+      76.280369
+     ],
+     [
+      9.797494,
+      76.280644
+     ],
+     [
+      9.797493,
+      76.280918
+     ],
+     [
+      9.797223,
+      76.280735
+     ],
+     [
+      9.797221,
+      76.281099
+     ],
+     [
+      9.796858,
+      76.281463
+     ],
+     [
+      9.796225,
+      76.28146
+     ],
+     [
+      9.795325,
+      76.280363
+     ],
+     [
+      9.794963,
+      76.280361
+     ],
+     [
+      9.794874,
+      76.280179
+     ],
+     [
+      9.794421,
+      76.280268
+     ],
+     [
+      9.794238,
+      76.280814
+     ],
+     [
+      9.793516,
+      76.280538
+     ],
+     [
+      9.793789,
+      76.279992
+     ],
+     [
+      9.7937,
+      76.279718
+     ],
+     [
+      9.793068,
+      76.279533
+     ],
+     [
+      9.792799,
+      76.278894
+     ],
+     [
+      9.792347,
+      76.278801
+     ],
+     [
+      9.792257,
+      76.278528
+     ],
+     [
+      9.791805,
+      76.278526
+     ],
+     [
+      9.791355,
+      76.278068
+     ],
+     [
+      9.790902,
+      76.278249
+     ],
+     [
+      9.790719,
+      76.278977
+     ],
+     [
+      9.789996,
+      76.278701
+     ],
+     [
+      9.789634,
+      76.2787
+     ],
+     [
+      9.789091,
+      76.279062
+     ],
+     [
+      9.788729,
+      76.279061
+     ],
+     [
+      9.788549,
+      76.278787
+     ],
+     [
+      9.788006,
+      76.278876
+     ],
+     [
+      9.787826,
+      76.278602
+     ],
+     [
+      9.788731,
+      76.278605
+     ],
+     [
+      9.788822,
+      76.278423
+     ],
+     [
+      9.78774,
+      76.277599
+     ],
+     [
+      9.787106,
+      76.277779
+     ],
+     [
+      9.786652,
+      76.278233
+     ],
+     [
+      9.785478,
+      76.277863
+     ],
+     [
+      9.785387,
+      76.278045
+     ],
+     [
+      9.78394,
+      76.27804
+     ],
+     [
+      9.782944,
+      76.278401
+     ],
+     [
+      9.78204,
+      76.278306
+     ],
+     [
+      9.781315,
+      76.278668
+     ],
+     [
+      9.780592,
+      76.278665
+     ],
+     [
+      9.779956,
+      76.279392
+     ],
+     [
+      9.779595,
+      76.279391
+     ],
+     [
+      9.779324,
+      76.279116
+     ],
+     [
+      9.778149,
+      76.279112
+     ],
+     [
+      9.777967,
+      76.279385
+     ],
+     [
+      9.777963,
+      76.28057
+     ],
+     [
+      9.778143,
+      76.28057
+     ],
+     [
+      9.778232,
+      76.280935
+     ],
+     [
+      9.779497,
+      76.281396
+     ],
+     [
+      9.779496,
+      76.281669
+     ],
+     [
+      9.779315,
+      76.281669
+     ],
+     [
+      9.77913,
+      76.282762
+     ],
+     [
+      9.778497,
+      76.282668
+     ],
+     [
+      9.777953,
+      76.283031
+     ],
+     [
+      9.777919,
+      76.292056
+     ],
+     [
+      9.778371,
+      76.292149
+     ],
+     [
+      9.778824,
+      76.291786
+     ],
+     [
+      9.779007,
+      76.291331
+     ],
+     [
+      9.779819,
+      76.29179
+     ],
+     [
+      9.780091,
+      76.291517
+     ],
+     [
+      9.780905,
+      76.291612
+     ],
+     [
+      9.780997,
+      76.291065
+     ],
+     [
+      9.78154,
+      76.290976
+     ],
+     [
+      9.78145,
+      76.290793
+     ],
+     [
+      9.781089,
+      76.290792
+     ],
+     [
+      9.78118,
+      76.29061
+     ],
+     [
+      9.781632,
+      76.290612
+     ],
+     [
+      9.781722,
+      76.290794
+     ],
+     [
+      9.782175,
+      76.290614
+     ],
+     [
+      9.782442,
+      76.291526
+     ],
+     [
+      9.782986,
+      76.291346
+     ],
+     [
+      9.783165,
+      76.29162
+     ],
+     [
+      9.783708,
+      76.291714
+     ],
+     [
+      9.783709,
+      76.29144
+     ],
+     [
+      9.78407,
+      76.291441
+     ],
+     [
+      9.784344,
+      76.290895
+     ],
+     [
+      9.784349,
+      76.289528
+     ],
+     [
+      9.785165,
+      76.288984
+     ],
+     [
+      9.785256,
+      76.288711
+     ],
+     [
+      9.785168,
+      76.288164
+     ],
+     [
+      9.784807,
+      76.28798
+     ],
+     [
+      9.784898,
+      76.287707
+     ],
+     [
+      9.786074,
+      76.287803
+     ],
+     [
+      9.786071,
+      76.288532
+     ],
+     [
+      9.785618,
+      76.288621
+     ],
+     [
+      9.785527,
+      76.288894
+     ],
+     [
+      9.786159,
+      76.288988
+     ],
+     [
+      9.786247,
+      76.289809
+     ],
+     [
+      9.786516,
+      76.290266
+     ],
+     [
+      9.786879,
+      76.290085
+     ],
+     [
+      9.787782,
+      76.290271
+     ],
+     [
+      9.787965,
+      76.289724
+     ],
+     [
+      9.788417,
+      76.289726
+     ],
+     [
+      9.788596,
+      76.290183
+     ],
+     [
+      9.788502,
+      76.291185
+     ],
+     [
+      9.788231,
+      76.291184
+     ],
+     [
+      9.7876,
+      76.290635
+     ],
+     [
+      9.787507,
+      76.291181
+     ],
+     [
+      9.787687,
+      76.291455
+     ],
+     [
+      9.787325,
+      76.291545
+     ],
+     [
+      9.787325,
+      76.291727
+     ],
+     [
+      9.787595,
+      76.29182
+     ],
+     [
+      9.788319,
+      76.291822
+     ],
+     [
+      9.78832,
+      76.29164
+     ],
+     [
+      9.788682,
+      76.29155
+     ],
+     [
+      9.788771,
+      76.291915
+     ],
+     [
+      9.789223,
+      76.291826
+     ],
+     [
+      9.789493,
+      76.292192
+     ],
+     [
+      9.790396,
+      76.29256
+     ],
+     [
+      9.791752,
+      76.292565
+     ],
+     [
+      9.792293,
+      76.292932
+     ],
+     [
+      9.792746,
+      76.292842
+     ],
+     [
+      9.792745,
+      76.293116
+     ],
+     [
+      9.792926,
+      76.293117
+     ],
+     [
+      9.793474,
+      76.291569
+     ],
+     [
+      9.793836,
+      76.291479
+     ],
+     [
+      9.794016,
+      76.291845
+     ],
+     [
+      9.794287,
+      76.291846
+     ],
+     [
+      9.794378,
+      76.291664
+     ],
+     [
+      9.795192,
+      76.291667
+     ],
+     [
+      9.795283,
+      76.291485
+     ],
+     [
+      9.795734,
+      76.291851
+     ],
+     [
+      9.796638,
+      76.291946
+     ],
+     [
+      9.796905,
+      76.29295
+     ],
+     [
+      9.79736,
+      76.292131
+     ],
+     [
+      9.797453,
+      76.291493
+     ],
+     [
+      9.797634,
+      76.291494
+     ],
+     [
+      9.797542,
+      76.291949
+     ],
+     [
+      9.797723,
+      76.29195
+     ],
+     [
+      9.797997,
+      76.291222
+     ],
+     [
+      9.798176,
+      76.291496
+     ],
+     [
+      9.798541,
+      76.290677
+     ],
+     [
+      9.798722,
+      76.290678
+     ],
+     [
+      9.798992,
+      76.290952
+     ],
+     [
+      9.798808,
+      76.291863
+     ],
+     [
+      9.799169,
+      76.292138
+     ],
+     [
+      9.799441,
+      76.291866
+     ],
+     [
+      9.799444,
+      76.290954
+     ],
+     [
+      9.799625,
+      76.290955
+     ],
+     [
+      9.79954,
+      76.289587
+     ],
+     [
+      9.79936,
+      76.289404
+     ],
+     [
+      9.798997,
+      76.289676
+     ],
+     [
+      9.79836,
+      76.290858
+     ],
+     [
+      9.798181,
+      76.29022
+     ],
+     [
+      9.79773,
+      76.290036
+     ],
+     [
+      9.797548,
+      76.290217
+     ],
+     [
+      9.797546,
+      76.290947
+     ],
+     [
+      9.796911,
+      76.2914
+     ],
+     [
+      9.796549,
+      76.291398
+     ],
+     [
+      9.79637,
+      76.290851
+     ],
+     [
+      9.796554,
+      76.290213
+     ],
+     [
+      9.797278,
+      76.290034
+     ],
+     [
+      9.797374,
+      76.288393
+     ],
+     [
+      9.797195,
+      76.288028
+     ],
+     [
+      9.796923,
+      76.288118
+     ],
+     [
+      9.796921,
+      76.288756
+     ],
+     [
+      9.796739,
+      76.288938
+     ],
+     [
+      9.795743,
+      76.28939
+     ],
+     [
+      9.794749,
+      76.289204
+     ],
+     [
+      9.793938,
+      76.288471
+     ],
+     [
+      9.79349,
+      76.287375
+     ],
+     [
+      9.793671,
+      76.287376
+     ],
+     [
+      9.793673,
+      76.286738
+     ],
+     [
+      9.794127,
+      76.286375
+     ],
+     [
+      9.794129,
+      76.285828
+     ],
+     [
+      9.794764,
+      76.285375
+     ],
+     [
+      9.794674,
+      76.285192
+     ],
+     [
+      9.794131,
+      76.28519
+     ],
+     [
+      9.794042,
+      76.284916
+     ],
+     [
+      9.794405,
+      76.284553
+     ],
+     [
+      9.794676,
+      76.284554
+     ],
+     [
+      9.794677,
+      76.284371
+     ],
+     [
+      9.795671,
+      76.284466
+     ],
+     [
+      9.796305,
+      76.284287
+     ],
+     [
+      9.797027,
+      76.284745
+     ],
+     [
+      9.797569,
+      76.284656
+     ],
+     [
+      9.797839,
+      76.285204
+     ],
+     [
+      9.798019,
+      76.285205
+     ],
+     [
+      9.798116,
+      76.283473
+     ],
+     [
+      9.798659,
+      76.283475
+     ],
+     [
+      9.799294,
+      76.282839
+     ],
+     [
+      9.799837,
+      76.282841
+     ],
+     [
+      9.799744,
+      76.283479
+     ],
+     [
+      9.799925,
+      76.283571
+     ],
+     [
+      9.800468,
+      76.2833
+     ],
+     [
+      9.801192,
+      76.283302
+     ],
+     [
+      9.801464,
+      76.28303
+     ],
+     [
+      9.80309,
+      76.28331
+     ],
+     [
+      9.804093,
+      76.281126
+     ],
+     [
+      9.80446,
+      76.279851
+     ],
+     [
+      9.804371,
+      76.279577
+     ],
+     [
+      9.804733,
+      76.279487
+     ],
+     [
+      9.804645,
+      76.278757
+     ],
+     [
+      9.804375,
+      76.278392
+     ],
+     [
+      9.804649,
+      76.277754
+     ],
+     [
+      9.805097,
+      76.278668
+     ],
+     [
+      9.804914,
+      76.279214
+     ],
+     [
+      9.805909,
+      76.279309
+     ],
+     [
+      9.806086,
+      76.280222
+     ],
+     [
+      9.806628,
+      76.280497
+     ],
+     [
+      9.806444,
+      76.281135
+     ],
+     [
+      9.806984,
+      76.281866
+     ],
+     [
+      9.807617,
+      76.281868
+     ],
+     [
+      9.807981,
+      76.281414
+     ],
+     [
+      9.807082,
+      76.279861
+     ],
+     [
+      9.807896,
+      76.279864
+     ],
+     [
+      9.808078,
+      76.279591
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 295.36,
+    "costLakh": null,
+    "connectivityGain": 2751.7394,
+    "connectivityGainAbs": 3.796851656695261e-05,
+    "scoreAfter": null,
+    "confidence": 0.6358,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 2,
+    "linkedPatchIds": [
+     "P4",
+     "P6"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 2 link(s) to P4, P6; recomputed IIC rises by 2751.74%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C04",
+    "rank": 4,
+    "name": "C04",
+    "patchId": "P5",
+    "location": "C04",
+    "center": [
+     9.857484360497526,
+     76.28300137049087
+    ],
+    "polygon": [
+     [
+      9.868912,
+      76.285388
+     ],
+     [
+      9.867826,
+      76.285566
+     ],
+     [
+      9.867734,
+      76.28593
+     ],
+     [
+      9.867192,
+      76.285837
+     ],
+     [
+      9.867191,
+      76.286293
+     ],
+     [
+      9.866195,
+      76.286562
+     ],
+     [
+      9.865925,
+      76.286105
+     ],
+     [
+      9.865927,
+      76.285558
+     ],
+     [
+      9.866289,
+      76.285469
+     ],
+     [
+      9.866201,
+      76.284921
+     ],
+     [
+      9.865658,
+      76.28501
+     ],
+     [
+      9.865295,
+      76.285465
+     ],
+     [
+      9.865023,
+      76.285464
+     ],
+     [
+      9.864846,
+      76.284642
+     ],
+     [
+      9.864304,
+      76.284367
+     ],
+     [
+      9.864033,
+      76.284366
+     ],
+     [
+      9.863851,
+      76.284638
+     ],
+     [
+      9.862133,
+      76.284723
+     ],
+     [
+      9.861864,
+      76.283992
+     ],
+     [
+      9.86096,
+      76.283989
+     ],
+     [
+      9.860778,
+      76.284353
+     ],
+     [
+      9.860417,
+      76.284169
+     ],
+     [
+      9.860147,
+      76.283803
+     ],
+     [
+      9.86006,
+      76.2828
+     ],
+     [
+      9.861331,
+      76.281528
+     ],
+     [
+      9.861423,
+      76.281164
+     ],
+     [
+      9.86152,
+      76.279341
+     ],
+     [
+      9.861254,
+      76.277972
+     ],
+     [
+      9.861706,
+      76.277974
+     ],
+     [
+      9.862069,
+      76.27761
+     ],
+     [
+      9.861259,
+      76.276787
+     ],
+     [
+      9.860987,
+      76.276785
+     ],
+     [
+      9.860627,
+      76.276328
+     ],
+     [
+      9.859904,
+      76.276234
+     ],
+     [
+      9.859815,
+      76.27596
+     ],
+     [
+      9.859363,
+      76.275959
+     ],
+     [
+      9.859181,
+      76.276323
+     ],
+     [
+      9.858729,
+      76.276139
+     ],
+     [
+      9.85846,
+      76.275499
+     ],
+     [
+      9.859004,
+      76.275137
+     ],
+     [
+      9.859097,
+      76.27459
+     ],
+     [
+      9.859822,
+      76.274137
+     ],
+     [
+      9.859824,
+      76.27359
+     ],
+     [
+      9.860096,
+      76.273317
+     ],
+     [
+      9.860458,
+      76.273318
+     ],
+     [
+      9.86055,
+      76.272954
+     ],
+     [
+      9.859286,
+      76.272402
+     ],
+     [
+      9.859107,
+      76.271945
+     ],
+     [
+      9.858656,
+      76.27167
+     ],
+     [
+      9.858747,
+      76.271488
+     ],
+     [
+      9.85522,
+      76.271475
+     ],
+     [
+      9.855128,
+      76.271839
+     ],
+     [
+      9.856028,
+      76.273028
+     ],
+     [
+      9.855933,
+      76.274395
+     ],
+     [
+      9.856563,
+      76.275036
+     ],
+     [
+      9.85656,
+      76.275948
+     ],
+     [
+      9.856286,
+      76.276494
+     ],
+     [
+      9.856105,
+      76.276493
+     ],
+     [
+      9.856013,
+      76.27704
+     ],
+     [
+      9.855379,
+      76.277402
+     ],
+     [
+      9.855287,
+      76.277767
+     ],
+     [
+      9.855558,
+      76.277768
+     ],
+     [
+      9.856369,
+      76.278409
+     ],
+     [
+      9.856278,
+      76.278773
+     ],
+     [
+      9.856459,
+      76.278774
+     ],
+     [
+      9.856457,
+      76.279048
+     ],
+     [
+      9.854918,
+      76.27968
+     ],
+     [
+      9.854914,
+      76.280683
+     ],
+     [
+      9.855184,
+      76.281049
+     ],
+     [
+      9.854911,
+      76.281595
+     ],
+     [
+      9.854187,
+      76.281683
+     ],
+     [
+      9.853917,
+      76.281226
+     ],
+     [
+      9.853103,
+      76.281405
+     ],
+     [
+      9.852196,
+      76.28204
+     ],
+     [
+      9.8512,
+      76.28231
+     ],
+     [
+      9.850475,
+      76.282945
+     ],
+     [
+      9.850654,
+      76.28322
+     ],
+     [
+      9.85047,
+      76.284222
+     ],
+     [
+      9.850919,
+      76.284862
+     ],
+     [
+      9.850553,
+      76.286137
+     ],
+     [
+      9.850823,
+      76.286412
+     ],
+     [
+      9.851366,
+      76.286414
+     ],
+     [
+      9.851545,
+      76.28687
+     ],
+     [
+      9.852176,
+      76.287238
+     ],
+     [
+      9.852085,
+      76.28742
+     ],
+     [
+      9.851452,
+      76.287417
+     ],
+     [
+      9.851451,
+      76.287782
+     ],
+     [
+      9.85109,
+      76.287689
+     ],
+     [
+      9.851087,
+      76.288236
+     ],
+     [
+      9.850906,
+      76.288327
+     ],
+     [
+      9.851535,
+      76.289423
+     ],
+     [
+      9.851896,
+      76.289516
+     ],
+     [
+      9.851712,
+      76.290518
+     ],
+     [
+      9.852073,
+      76.290702
+     ],
+     [
+      9.852072,
+      76.290976
+     ],
+     [
+      9.85171,
+      76.290974
+     ],
+     [
+      9.851618,
+      76.29143
+     ],
+     [
+      9.851798,
+      76.291613
+     ],
+     [
+      9.85252,
+      76.291889
+     ],
+     [
+      9.85279,
+      76.292346
+     ],
+     [
+      9.853694,
+      76.292441
+     ],
+     [
+      9.854147,
+      76.29226
+     ],
+     [
+      9.854508,
+      76.292444
+     ],
+     [
+      9.854871,
+      76.291898
+     ],
+     [
+      9.854873,
+      76.291534
+     ],
+     [
+      9.85442,
+      76.291623
+     ],
+     [
+      9.854783,
+      76.29126
+     ],
+     [
+      9.854785,
+      76.290804
+     ],
+     [
+      9.853701,
+      76.290617
+     ],
+     [
+      9.853974,
+      76.28998
+     ],
+     [
+      9.854969,
+      76.289893
+     ],
+     [
+      9.855151,
+      76.289711
+     ],
+     [
+      9.855603,
+      76.289804
+     ],
+     [
+      9.856237,
+      76.289442
+     ],
+     [
+      9.85714,
+      76.289719
+     ],
+     [
+      9.858409,
+      76.288994
+     ],
+     [
+      9.858501,
+      76.288539
+     ],
+     [
+      9.858141,
+      76.288264
+     ],
+     [
+      9.857053,
+      76.288989
+     ],
+     [
+      9.85642,
+      76.288895
+     ],
+     [
+      9.85606,
+      76.288529
+     ],
+     [
+      9.856153,
+      76.287891
+     ],
+     [
+      9.856605,
+      76.287802
+     ],
+     [
+      9.85661,
+      76.286616
+     ],
+     [
+      9.856882,
+      76.286435
+     ],
+     [
+      9.8586,
+      76.286351
+     ],
+     [
+      9.858779,
+      76.286898
+     ],
+     [
+      9.858687,
+      76.287354
+     ],
+     [
+      9.858415,
+      76.287353
+     ],
+     [
+      9.858323,
+      76.2879
+     ],
+     [
+      9.859046,
+      76.287902
+     ],
+     [
+      9.858954,
+      76.288449
+     ],
+     [
+      9.859676,
+      76.288726
+     ],
+     [
+      9.859947,
+      76.288727
+     ],
+     [
+      9.86013,
+      76.28818
+     ],
+     [
+      9.860763,
+      76.288274
+     ],
+     [
+      9.861396,
+      76.288094
+     ],
+     [
+      9.861486,
+      76.288277
+     ],
+     [
+      9.861938,
+      76.288278
+     ],
+     [
+      9.86212,
+      76.288097
+     ],
+     [
+      9.862843,
+      76.2881
+     ],
+     [
+      9.863297,
+      76.287737
+     ],
+     [
+      9.864383,
+      76.287467
+     ],
+     [
+      9.864656,
+      76.287012
+     ],
+     [
+      9.866464,
+      76.287111
+     ],
+     [
+      9.866646,
+      76.286838
+     ],
+     [
+      9.866917,
+      76.28693
+     ],
+     [
+      9.866732,
+      76.287932
+     ],
+     [
+      9.867093,
+      76.288116
+     ],
+     [
+      9.867818,
+      76.287845
+     ],
+     [
+      9.867822,
+      76.286569
+     ],
+     [
+      9.868367,
+      76.286115
+     ],
+     [
+      9.868818,
+      76.286208
+     ],
+     [
+      9.868912,
+      76.285388
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 166.16,
+    "costLakh": null,
+    "connectivityGain": 931.7916,
+    "connectivityGainAbs": 1.2856866797350453e-05,
+    "scoreAfter": null,
+    "confidence": 0.6427,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 2,
+    "linkedPatchIds": [
+     "P5",
+     "P7"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 2 link(s) to P5, P7; recomputed IIC rises by 931.79%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C05",
+    "rank": 5,
+    "name": "C05",
+    "patchId": "P1",
+    "location": "C05",
+    "center": [
+     9.861843351835189,
+     76.35340454660326
+    ],
+    "polygon": [
+     [
+      9.874722,
+      76.349059
+     ],
+     [
+      9.874544,
+      76.348237
+     ],
+     [
+      9.873912,
+      76.34787
+     ],
+     [
+      9.873098,
+      76.34814
+     ],
+     [
+      9.872737,
+      76.347774
+     ],
+     [
+      9.870749,
+      76.347584
+     ],
+     [
+      9.870118,
+      76.347125
+     ],
+     [
+      9.869304,
+      76.347122
+     ],
+     [
+      9.869124,
+      76.346939
+     ],
+     [
+      9.868039,
+      76.346934
+     ],
+     [
+      9.867676,
+      76.347115
+     ],
+     [
+      9.867219,
+      76.34839
+     ],
+     [
+      9.866766,
+      76.348662
+     ],
+     [
+      9.863331,
+      76.348283
+     ],
+     [
+      9.861345,
+      76.347636
+     ],
+     [
+      9.860531,
+      76.347633
+     ],
+     [
+      9.859981,
+      76.349455
+     ],
+     [
+      9.859437,
+      76.349908
+     ],
+     [
+      9.85889,
+      76.350909
+     ],
+     [
+      9.857985,
+      76.351179
+     ],
+     [
+      9.857529,
+      76.351998
+     ],
+     [
+      9.856533,
+      76.352358
+     ],
+     [
+      9.855629,
+      76.352355
+     ],
+     [
+      9.854904,
+      76.352716
+     ],
+     [
+      9.853638,
+      76.352711
+     ],
+     [
+      9.853366,
+      76.352984
+     ],
+     [
+      9.853432,
+      76.359002
+     ],
+     [
+      9.853605,
+      76.360917
+     ],
+     [
+      9.853874,
+      76.361465
+     ],
+     [
+      9.854505,
+      76.362106
+     ],
+     [
+      9.855588,
+      76.362476
+     ],
+     [
+      9.856676,
+      76.361842
+     ],
+     [
+      9.857404,
+      76.360751
+     ],
+     [
+      9.858037,
+      76.360753
+     ],
+     [
+      9.859038,
+      76.359025
+     ],
+     [
+      9.859946,
+      76.358208
+     ],
+     [
+      9.860404,
+      76.356751
+     ],
+     [
+      9.862213,
+      76.356667
+     ],
+     [
+      9.862666,
+      76.356395
+     ],
+     [
+      9.864022,
+      76.356401
+     ],
+     [
+      9.864386,
+      76.355946
+     ],
+     [
+      9.864748,
+      76.355857
+     ],
+     [
+      9.865202,
+      76.35522
+     ],
+     [
+      9.865387,
+      76.3544
+     ],
+     [
+      9.865931,
+      76.353947
+     ],
+     [
+      9.865753,
+      76.353125
+     ],
+     [
+      9.865392,
+      76.352942
+     ],
+     [
+      9.865486,
+      76.352212
+     ],
+     [
+      9.865849,
+      76.351758
+     ],
+     [
+      9.867478,
+      76.351582
+     ],
+     [
+      9.867929,
+      76.351858
+     ],
+     [
+      9.86811,
+      76.351676
+     ],
+     [
+      9.868743,
+      76.351679
+     ],
+     [
+      9.869106,
+      76.351315
+     ],
+     [
+      9.869468,
+      76.351408
+     ],
+     [
+      9.870195,
+      76.350499
+     ],
+     [
+      9.87128,
+      76.350504
+     ],
+     [
+      9.871733,
+      76.350232
+     ],
+     [
+      9.872275,
+      76.350234
+     ],
+     [
+      9.872634,
+      76.351056
+     ],
+     [
+      9.873357,
+      76.351059
+     ],
+     [
+      9.873359,
+      76.350512
+     ],
+     [
+      9.873813,
+      76.350149
+     ],
+     [
+      9.874356,
+      76.35006
+     ],
+     [
+      9.874722,
+      76.349059
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 124.71,
+    "costLakh": null,
+    "connectivityGain": 669.1078,
+    "connectivityGainAbs": 9.232353082572236e-06,
+    "scoreAfter": null,
+    "confidence": 0.653,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P1"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P1; recomputed IIC rises by 669.11%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C06",
+    "rank": 6,
+    "name": "C06",
+    "patchId": "P1",
+    "location": "C06",
+    "center": [
+     9.817630745554881,
+     76.36574289232905
+    ],
+    "polygon": [
+     [
+      9.823661,
+      76.364624
+     ],
+     [
+      9.823391,
+      76.364258
+     ],
+     [
+      9.822758,
+      76.364256
+     ],
+     [
+      9.821579,
+      76.365071
+     ],
+     [
+      9.820586,
+      76.364794
+     ],
+     [
+      9.820419,
+      76.361329
+     ],
+     [
+      9.820239,
+      76.361145
+     ],
+     [
+      9.819424,
+      76.361324
+     ],
+     [
+      9.817617,
+      76.360952
+     ],
+     [
+      9.815264,
+      76.361399
+     ],
+     [
+      9.814807,
+      76.362764
+     ],
+     [
+      9.814173,
+      76.362944
+     ],
+     [
+      9.813718,
+      76.36358
+     ],
+     [
+      9.813176,
+      76.363578
+     ],
+     [
+      9.812903,
+      76.363942
+     ],
+     [
+      9.812271,
+      76.363757
+     ],
+     [
+      9.811547,
+      76.363845
+     ],
+     [
+      9.811273,
+      76.364664
+     ],
+     [
+      9.810911,
+      76.364663
+     ],
+     [
+      9.810822,
+      76.364298
+     ],
+     [
+      9.810279,
+      76.364387
+     ],
+     [
+      9.810005,
+      76.365115
+     ],
+     [
+      9.810094,
+      76.365389
+     ],
+     [
+      9.810816,
+      76.365757
+     ],
+     [
+      9.811086,
+      76.366122
+     ],
+     [
+      9.811084,
+      76.366578
+     ],
+     [
+      9.811627,
+      76.366489
+     ],
+     [
+      9.811626,
+      76.366763
+     ],
+     [
+      9.812167,
+      76.36713
+     ],
+     [
+      9.813071,
+      76.367133
+     ],
+     [
+      9.813344,
+      76.366679
+     ],
+     [
+      9.813888,
+      76.366498
+     ],
+     [
+      9.814251,
+      76.366044
+     ],
+     [
+      9.814254,
+      76.365406
+     ],
+     [
+      9.814617,
+      76.365043
+     ],
+     [
+      9.814974,
+      76.366047
+     ],
+     [
+      9.814971,
+      76.366959
+     ],
+     [
+      9.814697,
+      76.367687
+     ],
+     [
+      9.814243,
+      76.36805
+     ],
+     [
+      9.81424,
+      76.368688
+     ],
+     [
+      9.814421,
+      76.36878
+     ],
+     [
+      9.814327,
+      76.3696
+     ],
+     [
+      9.814689,
+      76.369601
+     ],
+     [
+      9.814868,
+      76.369967
+     ],
+     [
+      9.81559,
+      76.370426
+     ],
+     [
+      9.816856,
+      76.370431
+     ],
+     [
+      9.817577,
+      76.370799
+     ],
+     [
+      9.81821,
+      76.370801
+     ],
+     [
+      9.818482,
+      76.37062
+     ],
+     [
+      9.819025,
+      76.370713
+     ],
+     [
+      9.820472,
+      76.370446
+     ],
+     [
+      9.820926,
+      76.370083
+     ],
+     [
+      9.821649,
+      76.370177
+     ],
+     [
+      9.822193,
+      76.369723
+     ],
+     [
+      9.822739,
+      76.368905
+     ],
+     [
+      9.822651,
+      76.368449
+     ],
+     [
+      9.822923,
+      76.368268
+     ],
+     [
+      9.823561,
+      76.366903
+     ],
+     [
+      9.823661,
+      76.364624
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 76.42,
+    "costLakh": null,
+    "connectivityGain": 313.8921,
+    "connectivityGainAbs": 4.331085496415899e-06,
+    "scoreAfter": null,
+    "confidence": 0.6917,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 2,
+    "linkedPatchIds": [
+     "P1",
+     "P2"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 2 link(s) to P1, P2; recomputed IIC rises by 313.89%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C07",
+    "rank": 7,
+    "name": "C07",
+    "patchId": "P1",
+    "location": "C07",
+    "center": [
+     9.897776659087926,
+     76.33806494460183
+    ],
+    "polygon": [
+     [
+      9.903692,
+      76.340149
+     ],
+     [
+      9.903512,
+      76.339965
+     ],
+     [
+      9.903429,
+      76.338232
+     ],
+     [
+      9.902979,
+      76.337683
+     ],
+     [
+      9.902707,
+      76.337956
+     ],
+     [
+      9.901984,
+      76.337862
+     ],
+     [
+      9.902348,
+      76.337134
+     ],
+     [
+      9.901715,
+      76.337131
+     ],
+     [
+      9.901627,
+      76.336675
+     ],
+     [
+      9.900722,
+      76.336671
+     ],
+     [
+      9.900541,
+      76.336853
+     ],
+     [
+      9.899639,
+      76.336302
+     ],
+     [
+      9.899731,
+      76.335938
+     ],
+     [
+      9.900545,
+      76.33585
+     ],
+     [
+      9.900459,
+      76.334755
+     ],
+     [
+      9.901004,
+      76.333937
+     ],
+     [
+      9.901275,
+      76.334029
+     ],
+     [
+      9.900737,
+      76.332932
+     ],
+     [
+      9.899924,
+      76.332747
+     ],
+     [
+      9.899925,
+      76.332564
+     ],
+     [
+      9.900377,
+      76.332475
+     ],
+     [
+      9.900288,
+      76.332201
+     ],
+     [
+      9.899745,
+      76.332199
+     ],
+     [
+      9.899743,
+      76.332746
+     ],
+     [
+      9.898836,
+      76.333472
+     ],
+     [
+      9.898834,
+      76.334019
+     ],
+     [
+      9.898561,
+      76.334474
+     ],
+     [
+      9.898199,
+      76.334472
+     ],
+     [
+      9.897839,
+      76.334106
+     ],
+     [
+      9.898021,
+      76.333924
+     ],
+     [
+      9.897568,
+      76.334014
+     ],
+     [
+      9.897657,
+      76.334379
+     ],
+     [
+      9.897202,
+      76.335015
+     ],
+     [
+      9.897196,
+      76.336566
+     ],
+     [
+      9.897556,
+      76.336932
+     ],
+     [
+      9.897013,
+      76.337203
+     ],
+     [
+      9.897014,
+      76.337021
+     ],
+     [
+      9.896472,
+      76.336836
+     ],
+     [
+      9.896107,
+      76.337564
+     ],
+     [
+      9.895475,
+      76.33738
+     ],
+     [
+      9.89466,
+      76.337559
+     ],
+     [
+      9.894209,
+      76.337374
+     ],
+     [
+      9.893846,
+      76.337646
+     ],
+     [
+      9.893215,
+      76.337279
+     ],
+     [
+      9.893216,
+      76.337006
+     ],
+     [
+      9.894663,
+      76.33692
+     ],
+     [
+      9.894756,
+      76.336373
+     ],
+     [
+      9.89349,
+      76.336368
+     ],
+     [
+      9.893216,
+      76.336914
+     ],
+     [
+      9.893035,
+      76.336914
+     ],
+     [
+      9.892943,
+      76.337369
+     ],
+     [
+      9.892311,
+      76.337276
+     ],
+     [
+      9.892131,
+      76.33691
+     ],
+     [
+      9.892855,
+      76.336822
+     ],
+     [
+      9.892767,
+      76.336274
+     ],
+     [
+      9.891049,
+      76.336176
+     ],
+     [
+      9.890147,
+      76.335534
+     ],
+     [
+      9.89015,
+      76.334987
+     ],
+     [
+      9.889789,
+      76.334803
+     ],
+     [
+      9.889245,
+      76.335166
+     ],
+     [
+      9.889964,
+      76.336172
+     ],
+     [
+      9.889055,
+      76.337354
+     ],
+     [
+      9.889505,
+      76.337994
+     ],
+     [
+      9.890227,
+      76.338179
+     ],
+     [
+      9.890227,
+      76.338361
+     ],
+     [
+      9.89104,
+      76.338365
+     ],
+     [
+      9.891672,
+      76.338641
+     ],
+     [
+      9.891852,
+      76.338915
+     ],
+     [
+      9.891759,
+      76.339462
+     ],
+     [
+      9.892393,
+      76.339282
+     ],
+     [
+      9.892482,
+      76.339556
+     ],
+     [
+      9.892844,
+      76.339557
+     ],
+     [
+      9.893207,
+      76.339285
+     ],
+     [
+      9.893299,
+      76.338921
+     ],
+     [
+      9.892666,
+      76.338827
+     ],
+     [
+      9.892486,
+      76.338553
+     ],
+     [
+      9.892669,
+      76.338189
+     ],
+     [
+      9.893031,
+      76.338099
+     ],
+     [
+      9.893754,
+      76.338102
+     ],
+     [
+      9.89357,
+      76.338922
+     ],
+     [
+      9.894202,
+      76.339198
+     ],
+     [
+      9.89429,
+      76.339837
+     ],
+     [
+      9.89447,
+      76.339929
+     ],
+     [
+      9.894832,
+      76.339839
+     ],
+     [
+      9.894835,
+      76.339201
+     ],
+     [
+      9.895648,
+      76.339295
+     ],
+     [
+      9.895828,
+      76.33957
+     ],
+     [
+      9.896462,
+      76.33939
+     ],
+     [
+      9.896646,
+      76.33857
+     ],
+     [
+      9.897099,
+      76.338389
+     ],
+     [
+      9.89682,
+      76.340121
+     ],
+     [
+      9.896549,
+      76.34012
+     ],
+     [
+      9.89637,
+      76.339663
+     ],
+     [
+      9.896369,
+      76.340028
+     ],
+     [
+      9.895826,
+      76.340117
+     ],
+     [
+      9.895643,
+      76.340663
+     ],
+     [
+      9.896907,
+      76.341124
+     ],
+     [
+      9.898173,
+      76.341038
+     ],
+     [
+      9.898443,
+      76.341313
+     ],
+     [
+      9.898349,
+      76.342224
+     ],
+     [
+      9.898529,
+      76.342499
+     ],
+     [
+      9.899614,
+      76.342412
+     ],
+     [
+      9.899799,
+      76.34141
+     ],
+     [
+      9.900071,
+      76.341319
+     ],
+     [
+      9.901245,
+      76.341689
+     ],
+     [
+      9.903416,
+      76.341424
+     ],
+     [
+      9.90369,
+      76.340878
+     ],
+     [
+      9.903692,
+      76.340149
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 70.74,
+    "costLakh": null,
+    "connectivityGain": 263.964,
+    "connectivityGainAbs": 3.6421775028511516e-06,
+    "scoreAfter": null,
+    "confidence": 0.5979,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P1"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P1; recomputed IIC rises by 263.96%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C08",
+    "rank": 8,
+    "name": "C08",
+    "patchId": "P2",
+    "location": "C08",
+    "center": [
+     9.810911508802576,
+     76.33274178403066
+    ],
+    "polygon": [
+     [
+      9.817013,
+      76.330864
+     ],
+     [
+      9.816203,
+      76.329949
+     ],
+     [
+      9.813672,
+      76.329665
+     ],
+     [
+      9.813219,
+      76.329937
+     ],
+     [
+      9.812587,
+      76.329843
+     ],
+     [
+      9.812495,
+      76.330025
+     ],
+     [
+      9.811953,
+      76.330023
+     ],
+     [
+      9.811859,
+      76.330843
+     ],
+     [
+      9.811497,
+      76.331024
+     ],
+     [
+      9.810864,
+      76.33093
+     ],
+     [
+      9.810687,
+      76.329927
+     ],
+     [
+      9.809964,
+      76.329833
+     ],
+     [
+      9.809599,
+      76.330652
+     ],
+     [
+      9.809687,
+      76.33129
+     ],
+     [
+      9.808783,
+      76.331378
+     ],
+     [
+      9.808512,
+      76.331194
+     ],
+     [
+      9.808513,
+      76.330921
+     ],
+     [
+      9.807881,
+      76.330827
+     ],
+     [
+      9.807607,
+      76.331373
+     ],
+     [
+      9.807067,
+      76.330824
+     ],
+     [
+      9.806434,
+      76.330822
+     ],
+     [
+      9.80607,
+      76.331367
+     ],
+     [
+      9.8058,
+      76.331001
+     ],
+     [
+      9.805894,
+      76.330272
+     ],
+     [
+      9.804899,
+      76.330268
+     ],
+     [
+      9.804806,
+      76.330815
+     ],
+     [
+      9.804265,
+      76.330631
+     ],
+     [
+      9.80399,
+      76.331359
+     ],
+     [
+      9.804443,
+      76.331269
+     ],
+     [
+      9.804712,
+      76.331909
+     ],
+     [
+      9.805072,
+      76.332184
+     ],
+     [
+      9.805615,
+      76.332186
+     ],
+     [
+      9.805794,
+      76.332551
+     ],
+     [
+      9.806065,
+      76.332552
+     ],
+     [
+      9.806153,
+      76.333191
+     ],
+     [
+      9.806605,
+      76.333284
+     ],
+     [
+      9.806877,
+      76.333102
+     ],
+     [
+      9.807417,
+      76.333743
+     ],
+     [
+      9.807232,
+      76.334836
+     ],
+     [
+      9.807683,
+      76.335111
+     ],
+     [
+      9.807862,
+      76.335568
+     ],
+     [
+      9.808766,
+      76.335754
+     ],
+     [
+      9.808855,
+      76.336028
+     ],
+     [
+      9.808491,
+      76.336665
+     ],
+     [
+      9.809484,
+      76.336942
+     ],
+     [
+      9.809757,
+      76.33667
+     ],
+     [
+      9.810118,
+      76.336853
+     ],
+     [
+      9.81048,
+      76.336764
+     ],
+     [
+      9.812021,
+      76.335585
+     ],
+     [
+      9.81347,
+      76.335226
+     ],
+     [
+      9.814016,
+      76.334316
+     ],
+     [
+      9.813202,
+      76.334313
+     ],
+     [
+      9.813023,
+      76.333948
+     ],
+     [
+      9.813568,
+      76.33322
+     ],
+     [
+      9.815195,
+      76.333318
+     ],
+     [
+      9.816281,
+      76.333049
+     ],
+     [
+      9.816464,
+      76.332594
+     ],
+     [
+      9.816826,
+      76.332413
+     ],
+     [
+      9.81701,
+      76.331775
+     ],
+     [
+      9.816739,
+      76.331683
+     ],
+     [
+      9.816647,
+      76.332048
+     ],
+     [
+      9.816195,
+      76.332137
+     ],
+     [
+      9.816197,
+      76.331499
+     ],
+     [
+      9.817013,
+      76.330864
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 56.66,
+    "costLakh": null,
+    "connectivityGain": 176.5134,
+    "connectivityGainAbs": 2.4355327266325466e-06,
+    "scoreAfter": null,
+    "confidence": 0.5973,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 1,
+    "linkedPatchIds": [
+     "P2"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 1 link(s) to P2; recomputed IIC rises by 176.51%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C09",
+    "rank": 9,
+    "name": "C09",
+    "patchId": "P1",
+    "location": "C09",
+    "center": [
+     9.838445455578942,
+     76.3522945056035
+    ],
+    "polygon": [
+     [
+      9.842152,
+      76.353303
+     ],
+     [
+      9.841701,
+      76.353027
+     ],
+     [
+      9.841703,
+      76.352571
+     ],
+     [
+      9.841433,
+      76.352388
+     ],
+     [
+      9.841618,
+      76.351203
+     ],
+     [
+      9.840897,
+      76.350653
+     ],
+     [
+      9.840812,
+      76.349377
+     ],
+     [
+      9.840091,
+      76.348644
+     ],
+     [
+      9.838917,
+      76.348366
+     ],
+     [
+      9.837829,
+      76.349182
+     ],
+     [
+      9.8371,
+      76.350547
+     ],
+     [
+      9.835104,
+      76.352271
+     ],
+     [
+      9.83446,
+      76.354821
+     ],
+     [
+      9.83473,
+      76.355187
+     ],
+     [
+      9.835092,
+      76.355189
+     ],
+     [
+      9.835728,
+      76.354462
+     ],
+     [
+      9.836361,
+      76.354464
+     ],
+     [
+      9.836721,
+      76.354831
+     ],
+     [
+      9.837263,
+      76.354924
+     ],
+     [
+      9.837623,
+      76.355381
+     ],
+     [
+      9.838346,
+      76.355384
+     ],
+     [
+      9.838526,
+      76.355659
+     ],
+     [
+      9.838978,
+      76.355752
+     ],
+     [
+      9.839613,
+      76.355207
+     ],
+     [
+      9.839705,
+      76.354752
+     ],
+     [
+      9.840341,
+      76.354116
+     ],
+     [
+      9.84188,
+      76.353666
+     ],
+     [
+      9.842152,
+      76.353303
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 39.63,
+    "costLakh": null,
+    "connectivityGain": 118.6408,
+    "connectivityGainAbs": 1.6370062511292128e-06,
+    "scoreAfter": null,
+    "confidence": 0.6088,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 2,
+    "linkedPatchIds": [
+     "P1",
+     "P2"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 2 link(s) to P1, P2; recomputed IIC rises by 118.64%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C12",
+    "rank": 10,
+    "name": "C12",
+    "patchId": "P1",
+    "location": "C12",
+    "center": [
+     9.831416563271391,
+     76.36672396756438
+    ],
+    "polygon": [
+     [
+      9.833679,
+      76.369224
+     ],
+     [
+      9.83332,
+      76.368493
+     ],
+     [
+      9.83296,
+      76.368127
+     ],
+     [
+      9.832689,
+      76.368126
+     ],
+     [
+      9.83242,
+      76.367486
+     ],
+     [
+      9.831969,
+      76.367211
+     ],
+     [
+      9.831885,
+      76.365569
+     ],
+     [
+      9.832158,
+      76.365206
+     ],
+     [
+      9.832429,
+      76.365298
+     ],
+     [
+      9.832074,
+      76.363747
+     ],
+     [
+      9.832622,
+      76.362381
+     ],
+     [
+      9.832716,
+      76.361379
+     ],
+     [
+      9.83145,
+      76.361282
+     ],
+     [
+      9.831452,
+      76.361009
+     ],
+     [
+      9.831181,
+      76.360917
+     ],
+     [
+      9.83127,
+      76.361191
+     ],
+     [
+      9.830908,
+      76.361371
+     ],
+     [
+      9.830906,
+      76.361645
+     ],
+     [
+      9.830634,
+      76.361826
+     ],
+     [
+      9.830364,
+      76.361552
+     ],
+     [
+      9.830363,
+      76.361916
+     ],
+     [
+      9.830814,
+      76.362192
+     ],
+     [
+      9.831353,
+      76.363106
+     ],
+     [
+      9.830358,
+      76.363193
+     ],
+     [
+      9.830356,
+      76.363557
+     ],
+     [
+      9.829994,
+      76.363738
+     ],
+     [
+      9.829898,
+      76.365197
+     ],
+     [
+      9.829716,
+      76.365287
+     ],
+     [
+      9.830063,
+      76.369026
+     ],
+     [
+      9.830957,
+      76.371583
+     ],
+     [
+      9.831227,
+      76.371858
+     ],
+     [
+      9.832041,
+      76.37177
+     ],
+     [
+      9.832044,
+      76.371132
+     ],
+     [
+      9.832406,
+      76.371042
+     ],
+     [
+      9.832769,
+      76.370588
+     ],
+     [
+      9.833131,
+      76.370589
+     ],
+     [
+      9.833676,
+      76.370044
+     ],
+     [
+      9.833679,
+      76.369224
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 27.96,
+    "costLakh": null,
+    "connectivityGain": 73.8262,
+    "connectivityGainAbs": 1.0186550393569945e-06,
+    "scoreAfter": null,
+    "confidence": 0.6752,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 2,
+    "linkedPatchIds": [
+     "P1",
+     "P2"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 2 link(s) to P1, P2; recomputed IIC rises by 73.83%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C10",
+    "rank": 11,
+    "name": "C10",
+    "patchId": "P3",
+    "location": "C10",
+    "center": [
+     9.870065392993089,
+     76.2824662871529
+    ],
+    "polygon": [
+     [
+      9.875524,
+      76.282404
+     ],
+     [
+      9.874983,
+      76.28222
+     ],
+     [
+      9.87471,
+      76.282492
+     ],
+     [
+      9.874713,
+      76.281854
+     ],
+     [
+      9.872452,
+      76.281754
+     ],
+     [
+      9.872454,
+      76.281389
+     ],
+     [
+      9.872635,
+      76.281299
+     ],
+     [
+      9.872636,
+      76.281116
+     ],
+     [
+      9.872817,
+      76.280934
+     ],
+     [
+      9.871461,
+      76.280838
+     ],
+     [
+      9.870651,
+      76.279923
+     ],
+     [
+      9.870564,
+      76.279102
+     ],
+     [
+      9.870023,
+      76.278644
+     ],
+     [
+      9.86957,
+      76.278916
+     ],
+     [
+      9.869296,
+      76.279462
+     ],
+     [
+      9.869111,
+      76.280555
+     ],
+     [
+      9.86893,
+      76.280646
+     ],
+     [
+      9.868931,
+      76.280372
+     ],
+     [
+      9.86866,
+      76.280371
+     ],
+     [
+      9.868659,
+      76.280645
+     ],
+     [
+      9.86884,
+      76.280646
+     ],
+     [
+      9.868747,
+      76.281192
+     ],
+     [
+      9.868024,
+      76.281007
+     ],
+     [
+      9.867574,
+      76.280458
+     ],
+     [
+      9.866489,
+      76.280454
+     ],
+     [
+      9.865764,
+      76.28109
+     ],
+     [
+      9.86594,
+      76.282276
+     ],
+     [
+      9.866389,
+      76.283098
+     ],
+     [
+      9.866841,
+      76.283009
+     ],
+     [
+      9.866933,
+      76.282644
+     ],
+     [
+      9.867476,
+      76.282555
+     ],
+     [
+      9.867382,
+      76.283558
+     ],
+     [
+      9.866657,
+      76.28392
+     ],
+     [
+      9.866834,
+      76.284924
+     ],
+     [
+      9.867106,
+      76.284742
+     ],
+     [
+      9.867286,
+      76.284925
+     ],
+     [
+      9.868281,
+      76.284929
+     ],
+     [
+      9.868553,
+      76.284748
+     ],
+     [
+      9.869185,
+      76.285024
+     ],
+     [
+      9.869728,
+      76.284935
+     ],
+     [
+      9.870178,
+      76.285301
+     ],
+     [
+      9.87054,
+      76.285211
+     ],
+     [
+      9.870811,
+      76.285395
+     ],
+     [
+      9.871809,
+      76.284578
+     ],
+     [
+      9.87181,
+      76.284213
+     ],
+     [
+      9.872174,
+      76.283759
+     ],
+     [
+      9.873077,
+      76.283854
+     ],
+     [
+      9.874164,
+      76.283402
+     ],
+     [
+      9.874706,
+      76.283586
+     ],
+     [
+      9.87516,
+      76.283223
+     ],
+     [
+      9.875524,
+      76.282404
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 38.48,
+    "costLakh": null,
+    "connectivityGain": 73.6806,
+    "connectivityGainAbs": 1.0166453575575436e-06,
+    "scoreAfter": null,
+    "confidence": 0.554,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 3,
+    "linkedPatchIds": [
+     "P3",
+     "P5",
+     "P7"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 3 link(s) to P3, P5, P7; recomputed IIC rises by 73.68%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   },
+   {
+    "id": "C11",
+    "rank": 12,
+    "name": "C11",
+    "patchId": "P3",
+    "location": "C11",
+    "center": [
+     9.90292210959582,
+     76.2753027440608
+    ],
+    "polygon": [
+     [
+      9.907214,
+      76.271674
+     ],
+     [
+      9.903597,
+      76.27166
+     ],
+     [
+      9.90358,
+      76.276038
+     ],
+     [
+      9.902764,
+      76.276764
+     ],
+     [
+      9.901588,
+      76.27676
+     ],
+     [
+      9.901318,
+      76.276485
+     ],
+     [
+      9.900779,
+      76.27548
+     ],
+     [
+      9.900604,
+      76.27402
+     ],
+     [
+      9.900244,
+      76.273563
+     ],
+     [
+      9.900521,
+      76.272105
+     ],
+     [
+      9.901064,
+      76.271833
+     ],
+     [
+      9.902512,
+      76.271656
+     ],
+     [
+      9.89989,
+      76.271646
+     ],
+     [
+      9.899797,
+      76.272102
+     ],
+     [
+      9.899526,
+      76.272101
+     ],
+     [
+      9.899162,
+      76.272647
+     ],
+     [
+      9.898888,
+      76.273375
+     ],
+     [
+      9.898975,
+      76.274379
+     ],
+     [
+      9.899514,
+      76.275201
+     ],
+     [
+      9.899966,
+      76.275385
+     ],
+     [
+      9.901044,
+      76.277214
+     ],
+     [
+      9.901122,
+      76.280406
+     ],
+     [
+      9.901573,
+      76.280772
+     ],
+     [
+      9.901571,
+      76.281319
+     ],
+     [
+      9.902022,
+      76.281595
+     ],
+     [
+      9.902109,
+      76.282598
+     ],
+     [
+      9.90247,
+      76.2826
+     ],
+     [
+      9.902743,
+      76.282327
+     ],
+     [
+      9.902656,
+      76.281232
+     ],
+     [
+      9.903109,
+      76.281143
+     ],
+     [
+      9.90311,
+      76.280961
+     ],
+     [
+      9.902748,
+      76.280959
+     ],
+     [
+      9.902658,
+      76.280685
+     ],
+     [
+      9.902571,
+      76.279955
+     ],
+     [
+      9.902754,
+      76.279318
+     ],
+     [
+      9.902575,
+      76.27877
+     ],
+     [
+      9.901855,
+      76.278037
+     ],
+     [
+      9.90231,
+      76.27731
+     ],
+     [
+      9.903215,
+      76.276948
+     ],
+     [
+      9.903307,
+      76.276584
+     ],
+     [
+      9.904305,
+      76.275676
+     ],
+     [
+      9.904488,
+      76.275129
+     ],
+     [
+      9.905392,
+      76.275224
+     ],
+     [
+      9.905304,
+      76.274677
+     ],
+     [
+      9.906298,
+      76.274772
+     ],
+     [
+      9.906299,
+      76.274407
+     ],
+     [
+      9.907119,
+      76.272951
+     ],
+     [
+      9.907214,
+      76.271674
+     ]
+    ],
+    "interventionType": "habitat restoration (candidate site)",
+    "areaHa": 30.68,
+    "costLakh": null,
+    "connectivityGain": 50.7052,
+    "connectivityGainAbs": 6.996306963633742e-07,
+    "scoreAfter": null,
+    "confidence": 0.7093,
+    "timeToImpactMonths": null,
+    "carbonSequestrationTonnes": null,
+    "speciesBenefited": null,
+    "costEffectiveness": null,
+    "newLinks": 2,
+    "linkedPatchIds": [
+     "P3",
+     "P5"
+    ],
+    "componentsBefore": 3,
+    "componentsAfter": 3,
+    "rationale": "Adds 2 link(s) to P3, P5; recomputed IIC rises by 50.71%.",
+    "risks": null,
+    "rankingBasis": "raw_gain"
+   }
+  ],
+  "rankingBasis": "raw_gain"
+ },
+ "criticality": [
+  {
+   "rank": 1,
+   "patch_id": "P1",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 39.0400000000008,
+   "area_pct": 40.48952499481486,
+   "degree": 1,
+   "confidence": 0.9904796307082059,
+   "quality": 0.9904796307082059,
+   "c_before": 1.379800606385188e-06,
+   "c_after": 4.1342636636271017e-07,
+   "delta_connectivity": 9.663742400224778e-07,
+   "criticality_score": 0.7003723839158126,
+   "delta_pct": 70.03723839158125,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 1,
+   "neighbour_ids": [
+    "P2"
+   ],
+   "neighbour_distances_km": [
+    4.957
+   ]
+  },
+  {
+   "rank": 2,
+   "patch_id": "P2",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 20.22000000000036,
+   "area_pct": 20.9707529558185,
+   "degree": 1,
+   "confidence": 0.9870074014930178,
+   "quality": 0.9870074014930178,
+   "c_before": 1.379800606385188e-06,
+   "c_after": 8.792860794063343e-07,
+   "delta_connectivity": 5.005145269788537e-07,
+   "criticality_score": 0.3627440984318056,
+   "delta_pct": 36.27440984318056,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 2,
+   "neighbour_ids": [
+    "P1"
+   ],
+   "neighbour_distances_km": [
+    4.957
+   ]
+  },
+  {
+   "rank": 3,
+   "patch_id": "P3",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 17.06999999999987,
+   "area_pct": 17.70379589296798,
+   "degree": 1,
+   "confidence": 0.9954863519227218,
+   "quality": 0.9954863519227218,
+   "c_before": 1.379800606385188e-06,
+   "c_after": 1.2092915200194224e-06,
+   "delta_connectivity": 1.7050908636576558e-07,
+   "criticality_score": 0.12357516410466478,
+   "delta_pct": 12.357516410466477,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 3,
+   "neighbour_ids": [
+    "P5"
+   ],
+   "neighbour_distances_km": [
+    1.242
+   ]
+  },
+  {
+   "rank": 4,
+   "patch_id": "P5",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 5.129999999999935,
+   "area_pct": 5.3204729309270835,
+   "degree": 2,
+   "confidence": 0.9843990978209364,
+   "quality": 0.9843990978209364,
+   "c_before": 1.379800606385188e-06,
+   "c_after": 1.3145057055430253e-06,
+   "delta_connectivity": 6.529490084216268e-08,
+   "criticality_score": 0.04732198300247363,
+   "delta_pct": 4.732198300247363,
+   "component_count_before": 3,
+   "component_count_after": 4,
+   "is_cut_vertex": true,
+   "rank_by_area": 5,
+   "neighbour_ids": [
+    "P3",
+    "P7"
+   ],
+   "neighbour_distances_km": [
+    1.242,
+    4.626
+   ]
+  },
+  {
+   "rank": 5,
+   "patch_id": "P4",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 9.57999999999984,
+   "area_pct": 9.935697987969053,
+   "degree": 1,
+   "confidence": 0.9849226063502358,
+   "quality": 0.9849226063502358,
+   "c_before": 1.379800606385188e-06,
+   "c_after": 1.3302201289995888e-06,
+   "delta_connectivity": 4.9580477385599184e-08,
+   "criticality_score": 0.03593307406603516,
+   "delta_pct": 3.593307406603516,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 4,
+   "neighbour_ids": [
+    "P6"
+   ],
+   "neighbour_distances_km": [
+    0.583
+   ]
+  },
+  {
+   "rank": 6,
+   "patch_id": "P7",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 2.569999999999989,
+   "area_pct": 2.665422111595072,
+   "degree": 1,
+   "confidence": 0.9824138005419928,
+   "quality": 0.9824138005419928,
+   "c_before": 1.379800606385188e-06,
+   "c_after": 1.3593179923091747e-06,
+   "delta_connectivity": 2.0482614076013254e-08,
+   "criticality_score": 0.014844618839292846,
+   "delta_pct": 1.4844618839292847,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 7,
+   "neighbour_ids": [
+    "P5"
+   ],
+   "neighbour_distances_km": [
+    4.626
+   ]
+  },
+  {
+   "rank": 7,
+   "patch_id": "P6",
+   "name": null,
+   "habitat_class": "mangrove",
+   "area_ha": 2.809999999999984,
+   "area_pct": 2.914333125907448,
+   "degree": 1,
+   "confidence": 0.9801983761193489,
+   "quality": 0.9801983761193489,
+   "c_before": 1.379800606385188e-06,
+   "c_after": 1.3652576897407689e-06,
+   "delta_connectivity": 1.4542916644419132e-08,
+   "criticality_score": 0.010539868280329847,
+   "delta_pct": 1.0539868280329847,
+   "component_count_before": 3,
+   "component_count_after": 3,
+   "is_cut_vertex": false,
+   "rank_by_area": 6,
+   "neighbour_ids": [
+    "P4"
+   ],
+   "neighbour_distances_km": [
+    0.583
+   ]
+  }
+ ],
+ "explanations": {
+  "P1": {
+   "patch_id": "P1",
+   "text": "P1 ranks #1 of 7 by criticality (S = 0.700): removing it lowers IIC by 70.0%. It holds 39.0 ha, 40.5% of mapped habitat (#1 by area). It maintains 1 link to P2 (5.0 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 99%.",
+   "evidence": {
+    "area_ha": 39.0400000000008,
+    "area_pct": 40.48952499481486,
+    "rank_by_area": 1,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P2",
+      "distance_km": 4.956576782897559,
+      "weight": 0.3669105418809206
+     }
+    ],
+    "confidence": 0.9904796307082059,
+    "quality": 0.9904796307082059,
+    "c_before": 1.379800606385188e-06,
+    "c_after": 4.1342636636271017e-07,
+    "delta_connectivity": 9.663742400224778e-07,
+    "criticality_score": 0.7003723839158126,
+    "delta_pct": 70.03723839158125,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "critical"
+  },
+  "P2": {
+   "patch_id": "P2",
+   "text": "P2 ranks #2 of 7 by criticality (S = 0.363): removing it lowers IIC by 36.3%. It holds 20.2 ha, 21.0% of mapped habitat (#2 by area). It maintains 1 link to P1 (5.0 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 99%.",
+   "evidence": {
+    "area_ha": 20.22000000000036,
+    "area_pct": 20.9707529558185,
+    "rank_by_area": 2,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P1",
+      "distance_km": 4.956576782897559,
+      "weight": 0.3669105418809206
+     }
+    ],
+    "confidence": 0.9870074014930178,
+    "quality": 0.9870074014930178,
+    "c_before": 1.379800606385188e-06,
+    "c_after": 8.792860794063343e-07,
+    "delta_connectivity": 5.005145269788537e-07,
+    "criticality_score": 0.3627440984318056,
+    "delta_pct": 36.27440984318056,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "critical"
+  },
+  "P3": {
+   "patch_id": "P3",
+   "text": "P3 ranks #3 of 7 by criticality (S = 0.124): removing it lowers IIC by 12.4%. It holds 17.1 ha, 17.7% of mapped habitat (#3 by area). It maintains 1 link to P5 (1.2 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 100%.",
+   "evidence": {
+    "area_ha": 17.06999999999987,
+    "area_pct": 17.70379589296798,
+    "rank_by_area": 3,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P5",
+      "distance_km": 1.2417227061913214,
+      "weight": 0.772233423679332
+     }
+    ],
+    "confidence": 0.9954863519227218,
+    "quality": 0.9954863519227218,
+    "c_before": 1.379800606385188e-06,
+    "c_after": 1.2092915200194224e-06,
+    "delta_connectivity": 1.7050908636576558e-07,
+    "criticality_score": 0.12357516410466478,
+    "delta_pct": 12.357516410466477,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "high"
+  },
+  "P5": {
+   "patch_id": "P5",
+   "text": "P5 ranks #4 of 7 by criticality (S = 0.047): removing it lowers IIC by 4.7%. It holds 5.1 ha, 5.3% of mapped habitat (#5 by area). Its structural importance exceeds what its size alone would suggest. It maintains 2 links to P3 (1.2 km), P7 (4.6 km). It is a cut vertex (bridge patch): its removal splits the network from 3 to 4 components. Segmentation confidence for this patch is 98%.",
+   "evidence": {
+    "area_ha": 5.129999999999935,
+    "area_pct": 5.3204729309270835,
+    "rank_by_area": 5,
+    "degree": 2,
+    "is_cut_vertex": true,
+    "neighbours": [
+     {
+      "id": "P3",
+      "distance_km": 1.2417227061913214,
+      "weight": 0.772233423679332
+     },
+     {
+      "id": "P7",
+      "distance_km": 4.626109748366173,
+      "weight": 0.3898648161915945
+     }
+    ],
+    "confidence": 0.9843990978209364,
+    "quality": 0.9843990978209364,
+    "c_before": 1.379800606385188e-06,
+    "c_after": 1.3145057055430253e-06,
+    "delta_connectivity": 6.529490084216268e-08,
+    "criticality_score": 0.04732198300247363,
+    "delta_pct": 4.732198300247363,
+    "components_before": 3,
+    "components_after": 4,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "medium"
+  },
+  "P4": {
+   "patch_id": "P4",
+   "text": "P4 ranks #5 of 7 by criticality (S = 0.036): removing it lowers IIC by 3.6%. It holds 9.6 ha, 9.9% of mapped habitat (#4 by area). It maintains 1 link to P6 (0.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+   "evidence": {
+    "area_ha": 9.57999999999984,
+    "area_pct": 9.935697987969053,
+    "rank_by_area": 4,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P6",
+      "distance_km": 0.5833976297864826,
+      "weight": 0.874348899810038
+     }
+    ],
+    "confidence": 0.9849226063502358,
+    "quality": 0.9849226063502358,
+    "c_before": 1.379800606385188e-06,
+    "c_after": 1.3302201289995888e-06,
+    "delta_connectivity": 4.9580477385599184e-08,
+    "criticality_score": 0.03593307406603516,
+    "delta_pct": 3.593307406603516,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "medium"
+  },
+  "P7": {
+   "patch_id": "P7",
+   "text": "P7 ranks #6 of 7 by criticality (S = 0.015): removing it lowers IIC by 1.5%. It holds 2.6 ha, 2.7% of mapped habitat (#7 by area). Its structural importance exceeds what its size alone would suggest. It maintains 1 link to P5 (4.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+   "evidence": {
+    "area_ha": 2.569999999999989,
+    "area_pct": 2.665422111595072,
+    "rank_by_area": 7,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P5",
+      "distance_km": 4.626109748366173,
+      "weight": 0.3898648161915945
+     }
+    ],
+    "confidence": 0.9824138005419928,
+    "quality": 0.9824138005419928,
+    "c_before": 1.379800606385188e-06,
+    "c_after": 1.3593179923091747e-06,
+    "delta_connectivity": 2.0482614076013254e-08,
+    "criticality_score": 0.014844618839292846,
+    "delta_pct": 1.4844618839292847,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "low"
+  },
+  "P6": {
+   "patch_id": "P6",
+   "text": "P6 ranks #7 of 7 by criticality (S = 0.011): removing it lowers IIC by 1.1%. It holds 2.8 ha, 2.9% of mapped habitat (#6 by area). It maintains 1 link to P4 (0.6 km). Alternative routes exist around it; the network stays in 3 components. Segmentation confidence for this patch is 98%.",
+   "evidence": {
+    "area_ha": 2.809999999999984,
+    "area_pct": 2.914333125907448,
+    "rank_by_area": 6,
+    "degree": 1,
+    "is_cut_vertex": false,
+    "neighbours": [
+     {
+      "id": "P4",
+      "distance_km": 0.5833976297864826,
+      "weight": 0.874348899810038
+     }
+    ],
+    "confidence": 0.9801983761193489,
+    "quality": 0.9801983761193489,
+    "c_before": 1.379800606385188e-06,
+    "c_after": 1.3652576897407689e-06,
+    "delta_connectivity": 1.4542916644419132e-08,
+    "criticality_score": 0.010539868280329847,
+    "delta_pct": 1.0539868280329847,
+    "components_before": 3,
+    "components_after": 3,
+    "metric": "IIC",
+    "habitat_class": "mangrove"
+   },
+   "level": "low"
+  }
+ },
+ "whatIfExample": {
+  "removed_patch_ids": [
+   "P1"
+  ],
+  "metric": "iic",
+  "c_before": 1.379800606385188e-06,
+  "c_after": 4.1342636636271017e-07,
+  "delta_connectivity": 9.663742400224778e-07,
+  "loss_fraction": 0.7003723839158126,
+  "loss_pct": 70.03723839158125,
+  "habitat_area_before_ha": 96.42000000000078,
+  "habitat_area_removed_ha": 39.0400000000008,
+  "habitat_area_removed_pct": 40.48952499481486,
+  "components_before": 3,
+  "components_after": 3,
+  "edges_before": 4,
+  "edges_after": 3,
+  "severed_edges": [
+   {
+    "source": "P1",
+    "target": "P2",
+    "distance_km": 4.956576782897559,
+    "weight": 0.3669105418809206
+   }
+  ],
+  "newly_isolated_patch_ids": [
+   "P2"
+  ],
+  "affected_patch_ids": [
+   "P2"
+  ],
+  "interface_score_before": 56.31743586684297,
+  "interface_score_after": 53.36113683233541,
+  "notes": []
+ }
+}

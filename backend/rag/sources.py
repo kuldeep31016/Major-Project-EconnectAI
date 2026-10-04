@@ -28,7 +28,15 @@ from ecoconnect.pipeline.restoration_rules import annotate
 
 DOCS = REPO_ROOT / "docs"
 FRONTEND = REPO_ROOT / "frontend"
-SKIP_DOCS = {"PRODUCT_REQUIREMENTS.md", "CHAT_EVAL.md", "EVAL_RESULTS.md", "EVALUATION.md"}   # wish-list / test reports (quote test questions)
+# Content policy: every indexed source has a content_type; only knowledge types are indexed. Evaluation material (golden
+# questions, eval reports, grader output, transcripts) quotes the test questions verbatim - indexing it lets any test
+# question, even gibberish, "retrieve" its own report and skip abstention. Files written by scripts/rag_eval.py carry an
+# explicit `content_type: evaluation_artifact` marker; known non-knowledge files are also listed by name.
+NOT_KNOWLEDGE = {"evaluation_artifact", "test_data", "planning"}
+CONTENT_TYPE_BY_NAME = {"PRODUCT_REQUIREMENTS.md": "planning", "CHAT_EVAL.md": "evaluation_artifact",
+                        "EVALUATION.md": "evaluation_artifact"}
+_CT_MARKER = re.compile(r"content_type:\s*([a-z_]+)")
+_EVAL_NAME = re.compile(r"(^|_)(EVAL|EVALS|GOLDEN|BENCHMARK|TRANSCRIPT)S?(_|\.|$)|eval_history", re.I)
 DOC_CATEGORY = {
     "ML.md": "MODEL_DOCS", "MODEL_CARD.md": "MODEL_DOCS", "TRAINING.md": "MODEL_DOCS", "INFERENCE.md": "MODEL_DOCS",
     "EXPERIMENTS.md": "MODEL_DOCS", "RESULTS_PROVENANCE.md": "MODEL_DOCS",
@@ -62,7 +70,7 @@ class Document:
     @property
     def content_hash(self) -> str:
         h = hashlib.sha256()
-        h.update(f"{self.source_type}|{self.title}|{self.visibility}|".encode())
+        h.update(f"{self.source_type}|{self.title}|{self.visibility}|{self.meta.get('content_type', '')}|".encode())
         h.update(self.text.encode())
         for r in self.records:
             h.update(f"\x1e{r.title}\x1f{r.object_id}\x1f{r.text}".encode())
@@ -197,27 +205,58 @@ def latex_to_markdown_inline(s: str) -> str:
     return re.sub(r"\\[a-zA-Z]+\*?", " ", s).replace("{", "").replace("}", "")
 
 
+def doc_content_type(name: str, text: str = "") -> str:
+    """Explicit marker in the first lines > known file name > evaluation-like name > documentation."""
+    m = _CT_MARKER.search(text[:400])
+    if m:
+        return m.group(1)
+    if name in CONTENT_TYPE_BY_NAME:
+        return CONTENT_TYPE_BY_NAME[name]
+    if _EVAL_NAME.search(name.rsplit(".", 1)[0]) or name.startswith("eval_"):
+        return "evaluation_artifact"
+    return "documentation"
+
+
+_CT_BY_SOURCE = {"PAPER": "paper", "STUDY_AREA_DOCS": "study_area", "RUN_RESULTS": "run_record", "PATCH_RESULTS": "run_record",
+                 "UPLOAD": "upload", "MODEL_DOCS": "model_card"}
+
+
+def _with_content_type(d: "Document") -> "Document":
+    if "content_type" not in d.meta:
+        m = _CT_MARKER.search(d.text[:400]) if d.source_type == "UPLOAD" else None    # an uploaded eval report stays out too
+        d.meta["content_type"] = m.group(1) if m else ("glossary" if d.source_key == "help:glossary" else "page_help" if d.source_key == "help:pages"
+                                  else _CT_BY_SOURCE.get(d.source_type, "documentation"))
+    return d
+
+
+def indexable(d: "Document") -> bool:
+    return d.meta.get("content_type") not in NOT_KNOWLEDGE
+
+
 # --------------------------------------------------------------------------- loaders
 def _doc_files() -> Iterable[Document]:
     files = [REPO_ROOT / "README.md"] + sorted(DOCS.glob("*.md")) + sorted((DOCS / "rag").glob("*.md"))
     for f in files:
-        if f.name in SKIP_DOCS or not f.exists():
+        if not f.exists():
             continue
         text = f.read_text(errors="ignore")
         if "**Superseded (" in text[:600]:
             continue
         rel = f.relative_to(REPO_ROOT).as_posix()
+        ct = doc_content_type(f.name, text)
+        if ct in NOT_KNOWLEDGE:
+            continue
         if f.name == "ASSISTANT_FAQ.md":
             recs = []
             for block in re.split(r"\n(?=### )", text):
-                m = re.match(r"### (.+?\?)\s*\n(.*)", block, flags=re.S)
+                m = re.match(r"### ([^\n]+?)\s*\n(.*)", block, flags=re.S)       # any heading (a "?" is not required)
                 if m:
                     recs.append(Record(m.group(1).strip(), " ".join(m.group(2).split()), meta={"faq": True}))
-            yield Document(f"doc:{rel}", "PROJECT_DOCS", "Project FAQ", records=recs, uri=rel, meta={"faq": True})
+            yield Document(f"doc:{rel}", "PROJECT_DOCS", "Project FAQ", records=recs, uri=rel, meta={"faq": True, "content_type": "faq"})
             continue
         title = next((ln.lstrip("# ").strip() for ln in text.splitlines() if ln.startswith("# ")), f.stem)
         cat = "RAG_DOCS" if "/rag/" in rel else DOC_CATEGORY.get(f.name, "PROJECT_DOCS")
-        yield Document(f"doc:{rel}", cat, title, text=normalise(text), uri=rel)
+        yield Document(f"doc:{rel}", cat, title, text=normalise(text), uri=rel, meta={"content_type": ct})
 
 
 def _paper() -> Iterable[Document]:
@@ -341,4 +380,5 @@ def _uploads(db) -> Iterable[Document]:
 def collect(db=None, runs_dir: Optional[Path] = None) -> list[Document]:
     from ..paths import RUNS_DIR
     rd = runs_dir or RUNS_DIR
-    return [*_doc_files(), *_paper(), *_help(), *_study_areas(rd), *_runs(rd), *_models(db), *_uploads(db)]
+    docs = [_with_content_type(d) for d in (*_doc_files(), *_paper(), *_help(), *_study_areas(rd), *_runs(rd), *_models(db), *_uploads(db))]
+    return [d for d in docs if indexable(d)]

@@ -22,10 +22,13 @@ def main():
     ap.add_argument("--tta", action="store_true")
     ap.add_argument("--rgb-bands", default=None, help="comma-separated 0-based band indices for display, e.g. 2,1,0")
     a = ap.parse_args()
-    model, _, ck, device = load_checkpoint(a.checkpoint)
+    model, ck_norm, ck, device = load_checkpoint(a.checkpoint)
     exp_dir = Path(a.checkpoint).parent
     tcfg, dcfg = resolve_training_config(exp_dir / "config.yaml")
     datasets, loaders, info = prepare_data(dcfg, ck["mode"])
+    if ck_norm is not None:                 # score with the normaliser the model was trained with (audit bug 23)
+        for d in datasets.values():
+            d.normalizer = ck_norm
     thr = a.threshold if a.threshold is not None else tcfg["training"].get("threshold", 0.5)
     rgb = tuple(int(i) for i in a.rgb_bands.split(",")) if a.rgb_bands else None
     ds, loader = datasets["test"], loaders["test"]
@@ -37,8 +40,10 @@ def main():
         for x, y, ids in loader:
             x, y = x.to(device), y.to(device)
             logits = model(x)
-            acc.update(logits, y)
             p = predict_proba(model, x, tta=a.tta)
+            if a.tta and p.ndim == 3:       # score the TTA probabilities that are recorded as used (audit bug 23)
+                logits = torch.logit(p.clamp(1e-6, 1 - 1e-6)).unsqueeze(1)
+            acc.update(logits, y)
             if p.ndim == 4:
                 p = p[:, 1]
             for i, tid in enumerate(ids):

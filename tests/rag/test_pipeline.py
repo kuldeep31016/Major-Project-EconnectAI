@@ -249,7 +249,9 @@ def test_long_conversation_is_windowed_and_bounded(client):
     from backend.rag.classify import classify
     hist = [{"role": "user" if i % 2 == 0 else "assistant", "text": f"Question {i} about P0{i % 9 + 1} and Sundarbans " * 20} for i in range(40)]
     plan = classify("and what about Kerala?", hist)
-    assert plan.qtype == "follow_up" and len(plan.memory) <= 300 and len(plan.rewritten or "") <= 300
+    # memory = summary of older turns + the last exchanges (trimmed): bounded, never the whole transcript
+    assert plan.qtype == "follow_up" and len(plan.memory) <= 1200 and len(plan.rewritten or "") <= 300
+    assert plan.memory.count("User:") + plan.memory.count("Assistant:") <= 4 and "Question 0 " not in plan.memory
     too_long = [{"role": "user", "text": "x"}] * 21
     assert client.post("/api/chat", json={"question": "hi", "history": too_long}).status_code == 422
 

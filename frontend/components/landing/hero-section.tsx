@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { WatchDemoButton } from "@/components/landing/demo-video-modal";
+import { HeroNetworkOverlay } from "@/components/landing/hero-network-overlay";
 
 export function HeroSection() {
   const [timeSec, setTimeSec] = useState(0);
@@ -41,7 +42,10 @@ export function HeroSection() {
             backgroundPosition: "72% center",
             transform: `scale(${1 + (timeSec / 6) * 0.015 * zoomLevel})`,
           }}
-        />
+        >
+          {/* travelling links, blinking critical hub, breathing patches — aligned to the artwork */}
+          <HeroNetworkOverlay />
+        </div>
 
         {/* Smooth gradient blend: pure solid deep navy on the left, fading cleanly over the land on the right */}
         <div

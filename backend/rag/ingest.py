@@ -12,7 +12,7 @@ from __future__ import annotations
 import time
 from typing import Callable, Optional
 
-from sqlalchemy import func, inspect, text
+from sqlalchemy import func, text
 from sqlalchemy.orm import Session
 
 from ..db import RagChunk, RagDocument, RagEmbeddingCache, utcnow
@@ -29,7 +29,10 @@ def pgvector_enabled(db: Session) -> bool:
     global _pgvector
     if _pgvector is None:
         try:
-            _pgvector = db.bind.dialect.name == "postgresql" and any(c["name"] == "embedding_vec" for c in inspect(db.bind).get_columns("rag_chunks"))
+            # look the column up by name: reflecting it (inspect().get_columns) makes SQLAlchemy warn about the unknown 'vector' type
+            _pgvector = db.bind.dialect.name == "postgresql" and db.execute(text(
+                "SELECT 1 FROM information_schema.columns WHERE table_schema = current_schema() "
+                "AND table_name = 'rag_chunks' AND column_name = 'embedding_vec'")).first() is not None
         except Exception:  # noqa: BLE001
             _pgvector = False
     return _pgvector
@@ -63,7 +66,8 @@ def _index_document(db: Session, row: RagDocument, doc: Document) -> int:
     for c, v in zip(chunks, vecs):
         rc = RagChunk(document_id=row.id, chunk_index=c.index, section=(c.section or "")[:300] or None, page=c.page, text=c.text,
                       content_hash=c.content_hash, token_count=c.tokens, visibility=doc.visibility, study_area_id=doc.study_area,
-                      object_id=c.object_id, meta={**c.meta, "title": doc.title, "uri": doc.uri, "run_id": doc.run_id},
+                      object_id=c.object_id, meta={**c.meta, "title": doc.title, "uri": doc.uri, "run_id": doc.run_id,
+                                                  "content_type": doc.meta.get("content_type")},
                       embedding=v, embedding_model=mv if v is not None else None)
         db.add(rc)
         added.append((rc, v))
@@ -126,10 +130,30 @@ def ingest(db: Session, *, force: bool = False, only_keys: Optional[set] = None,
                 row.status, row.chunk_count, row.updated_at = "DELETED", 0, utcnow()
                 st["deleted"] += 1
         db.commit()
+    st["vectors_backfilled"] = backfill_vectors(db)
     from .retrieval import invalidate
     invalidate()
     st["seconds"] = round(time.perf_counter() - t0, 2)
     return st
+
+
+def backfill_vectors(db: Session) -> int:
+    """Copy stored embeddings into the pgvector column where it is still empty (e.g. pgvector installed after the
+    chunks were indexed). Uses the JSON embedding already stored - no re-embedding."""
+    if not pgvector_enabled(db):
+        return 0
+    n = 0
+    while True:
+        rows = db.execute(text("SELECT id, embedding FROM rag_chunks WHERE embedding_vec IS NULL AND embedding IS NOT NULL LIMIT 500")).all()
+        rows = [(cid, v) for cid, v in rows if isinstance(v, list) and len(v) == EMBED_DIM]
+        if not rows:
+            break
+        for cid, v in rows:
+            db.execute(text("UPDATE rag_chunks SET embedding_vec = CAST(:v AS vector) WHERE id = :id"),
+                       {"v": "[" + ",".join(f"{x:.6f}" for x in v) + "]", "id": cid})
+        db.commit()
+        n += len(rows)
+    return n
 
 
 def delete_document(db: Session, row: RagDocument) -> None:

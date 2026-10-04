@@ -31,6 +31,8 @@ COPY frontend/lib/plain-language.ts ./frontend/lib/plain-language.ts
 COPY frontend/components/shared/term.tsx ./frontend/components/shared/term.tsx
 
 ENV PYTHONUNBUFFERED=1
+# 512 MB instances: fewer glibc malloc arenas (less fragmentation); embed one chunk at a time (see backend/rag/embeddings.py)
+ENV MALLOC_ARENA_MAX=2 EMBEDDING_BATCH_SIZE=1
 ENV PORT=8000
 
 EXPOSE 8000

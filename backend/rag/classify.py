@@ -21,6 +21,11 @@ CASUAL = re.compile(r"^\s*(hi+|hey+|hel+o+|hiya|yo|namaste|thanks?|thank you( so
 SECRETS = re.compile(r"\b(api[\s_-]?key|secret key|password|credential|token|env(ironment)? variables?|system prompt|hidden (prompt|instructions))\b", re.I)
 FOLLOW = re.compile(r"^\s*(and|what about|how about|and what about|same for|also|then)\b|\b(which one|that one|the other one|those|them|it|its|this one)\b", re.I)
 ANALYTICAL = re.compile(r"\b(why|what makes|how come|reason|explain|compare|difference|versus|vs\.?|how does|how do|what if|impact|implication|trade[- ]?off|interpret)\b", re.I)
+# attempts to get around access control: refused before retrieval (permissions are enforced by the server, not the LLM)
+ACCESS = re.compile(r"\b(another|other|someone else'?s?|all)\s+(user|users|people|person|officer|account)s?'?\s*(data|chats?|messages?|history|tasks?|account|evidence|questions?|details)?"
+                    r"|\b(ignore|bypass|skip|override|disable|turn off)\s+(the\s+|my\s+|all\s+)?(permissions?|access control|authori[sz]ation|acl|roles?|restrictions?|security)"
+                    r"|\b(give|grant|make)\s+me\s+(admin|administrator|root|full)\s+(access|rights|role|permissions?)"
+                    r"|\b(show|give|list|reveal)\s+(me\s+)?(the\s+)?(staff|admin|restricted|private|internal|hidden)\s+(documents?|files?|data)", re.I)
 AREA_WORDS = ("kerala", "sundarbans", "mannar", "gulf of mannar", "odisha", "bhitarkanika", "vembanad")
 
 
@@ -46,6 +51,20 @@ def _entities(text: str) -> list[str]:
     return ents
 
 
+def conversation_memory(full: list[dict], recent: int = 4) -> str:
+    """What the LLM sees of the conversation: a deterministic summary of older turns + the last exchanges (trimmed).
+    Bounded (~1.2k chars); instruction-like text is neutralised. Current project data always outranks it (system prompt)."""
+    older, last = full[:-recent], full[-recent:]
+    parts = []
+    s = memory_summary(older)
+    if s:
+        parts.append(s)
+    for h in last:
+        t = INJECTION.sub("[removed]", " ".join(h["text"].split()))
+        parts.append(f"{'User' if h['role'] == 'user' else 'Assistant'}: {t[:260]}{'…' if len(t) > 260 else ''}")
+    return "\n".join(parts)[:1200]
+
+
 def memory_summary(history: list[dict]) -> str:
     """Bounded, deterministic summary of earlier turns (topics + entities), never their raw text."""
     if not history:
@@ -64,10 +83,13 @@ def memory_summary(history: list[dict]) -> str:
 def classify(question: str, history: Optional[list[dict]] = None, selected: Optional[str] = None) -> QueryPlan:
     q = " ".join(question.split())
     norm = " ".join(tokens(q))
-    hist = [h for h in (history or []) if h.get("role") in ("user", "assistant") and h.get("text")][-S.history_turns:]
-    mem = memory_summary(hist)
+    full = [h for h in (history or []) if h.get("role") in ("user", "assistant") and h.get("text")][-20:]
+    hist = full[-S.history_turns:]
+    mem = conversation_memory(full)
     if INJECTION.search(q) or (SECRETS.search(q) and re.search(r"\b(show|reveal|print|give|what is|tell|leak|dump)\b", q, re.I)):
         return QueryPlan(q, norm, None, "unsafe", "instruction-override or secret-extraction attempt", mem)
+    if ACCESS.search(q):
+        return QueryPlan(q, norm, None, "unsafe", "access-control bypass attempt", mem)
     if CASUAL.match(q):
         return QueryPlan(q, norm, None, "casual", "greeting / small talk", mem)
     ents = _entities(q)

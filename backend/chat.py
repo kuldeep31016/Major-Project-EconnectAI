@@ -23,7 +23,7 @@ from typing import Callable, Optional
 
 from sqlalchemy.orm import Session
 
-from ecoconnect.pipeline.config import load_study_areas
+from ecoconnect.pipeline.config import REPO_ROOT, load_study_areas
 from ecoconnect.pipeline.restoration_rules import annotate
 
 from .db import Alert, ChatCache, ChatEvent, FieldTask, Model, Report, User, utcnow
@@ -137,6 +137,9 @@ _AREA_NAMES = [("sundarbans", "sundarbans"), ("gulf of mannar", "gulf-of-mannar"
                ("bhitarkanika", "odisha-coast"), ("odisha", "odisha-coast"), ("kerala", "kerala-coast"),
                ("vembanad", "kerala-coast")]
 _THIS = re.compile(r"\b(this|it|that|selected|current) (patch|candidate|one|site|area)\b|\b(this|it)\b(?=[ ?.!]|$)", re.I)
+# "this app / this project / this model ..." is about the product, never about the patch selected on the map
+_THIS_PRODUCT = re.compile(r"\b(this|that|the|your|our)\s+(app|application|project|platform|product|tool|system|website|web ?site|"
+                           r"page|dashboard|chat ?bot|assistant|bot|model|software|team|study|research|work|data|map|prototype)\b", re.I)
 _WHY = re.compile(r"\b(why|explain|reason|how come|what makes|justify|interpret|mean|meaning|significan)", re.I)
 
 
@@ -145,7 +148,7 @@ def resolve(question: str, ctx: ChatContext) -> tuple[str, str]:
     q = question.strip()
     ql = q.lower()
     area = next((sid for name, sid in _AREA_NAMES if name in ql), None) or ctx.study_area or DEFAULT_AREA
-    if not re.search(r"\b[PC]\d{1,3}\b", q, re.I) and _THIS.search(q):
+    if not re.search(r"\b[PC]\d{1,3}\b", q, re.I) and _THIS.search(q) and not _THIS_PRODUCT.search(q):
         obj = ctx.selected_patch or ctx.selected_candidate
         if obj:
             q = f"{q} ({obj})"
@@ -183,6 +186,174 @@ def _num(x, d=1):
 
 
 # --------------------------------------------------------------------------- tier 1: structured intents
+# --------------------------------------------------------------------------- authoritative tools (no LLM, no vector search)
+_ACQ = Path(__file__).resolve().parents[1] / "configs" / "acquisition.yaml"
+_DSET = Path(__file__).resolve().parents[1] / "configs" / "dataset.yaml"
+
+
+def _yaml(p: Path) -> dict:
+    try:
+        import yaml
+        return yaml.safe_load(p.read_text()) or {}
+    except Exception:  # noqa: BLE001
+        return {}
+
+
+def tool_satellite_latest(db: Session, area: str) -> Optional[Answer]:
+    """Latest Copernicus observation + latest near-real-time analysis for the area, from the database (no network)."""
+    from .db import SatelliteAnalysis, SatelliteObservation
+    from .satellite.service import area_reliability
+    obs = db.query(SatelliteObservation).filter(SatelliteObservation.study_area_id == area, SatelliteObservation.aoi_coverage >= 0.9,
+                                                SatelliteObservation.polarisation.like("%VH%")) \
+        .order_by(SatelliteObservation.acquisition_start.desc()).first()
+    an = db.query(SatelliteAnalysis).filter(SatelliteAnalysis.study_area_id == area, SatelliteAnalysis.status == "COMPLETED") \
+        .order_by(SatelliteAnalysis.created_at.desc()).first()
+    if obs is None and an is None:
+        return None
+    lines = []
+    if obs is not None:
+        lines.append(f"The latest Sentinel-1 observation seen for this area was taken by **{obs.platform or 'Sentinel-1'}** on "
+                     f"**{obs.acquisition_start:%d %b %Y, %H:%M} UTC** (VV + VH, {obs.timeliness or 'timeliness n/a'}, "
+                     f"{round((obs.aoi_coverage or 0) * 100)} % of the study area).")
+    if an is not None:
+        run = (an.summary or {}).get("run") or {}
+        rel = area_reliability(area) or {}
+        lines.append(f"The latest near-real-time analysis ({an.id}) used a median of **{an.composite_scenes} acquisitions** up to "
+                     f"{an.acquisition_time:%d %b %Y}: {run.get('nPatches', '—')} habitat patches, "
+                     f"{_num(run.get('habitatAreaHa') or 0)} ha.")
+        if rel:
+            lines.append(f"Model reliability here: **{rel['level']}** (IoU {rel['iou']} against Global Mangrove Watch 2020)"
+                         + (" - treat this map as a demonstration only." if rel["level"] == "unreliable" else "."))
+    lines.append("This is near-real-time satellite imagery (new passes every few days), not live video; "
+                 "open the Satellite Monitor to check for newer passes.")
+    src = [{"label": "Satellite Monitor · Copernicus catalogue", "type": "satellite", "id": area}]
+    return Answer("\n".join(lines), "structured", "satellite_latest", src, action={"label": "Open Satellite Monitor", "href": "/satellite"})
+
+
+def tool_model_reliability(area: str) -> Optional[Answer]:
+    """Measured reliability of the selected model in this area (scripts/area_reliability.py) + overall held-out test."""
+    from .satellite import preprocessing
+    from .satellite.service import area_reliability
+    rel = area_reliability(area)
+    if not rel:
+        return None
+    exp = preprocessing.model_experiment(REPO_ROOT)
+    cal_p = REPO_ROOT / "outputs" / "segmentation" / exp / "threshold_calibration.json"
+    cal = json.loads(cal_p.read_text()) if cal_p.exists() else {}
+    t = cal.get("test_at_selected") or {}
+    verdict = {"reliable": "works well here", "moderate": "works moderately here",
+               "unreliable": "is **not reliable** here"}[rel["level"]]
+    txt = (f"The mangrove model ({exp}) {verdict}: on 2020 data it agrees with the Global Mangrove Watch map at "
+           f"**IoU {rel['iou']}** in this study area (reference: {_num(rel['reference_habitat_ha'], 0)} ha of mangrove).")
+    if rel["level"] == "unreliable":
+        txt += " The mangroves here are thin fringes that this 10 m radar model cannot map; treat its maps of this area as a demonstration."
+    if t:
+        txt += (f"\nAcross all four areas, the held-out test score is IoU {t['iou']:.3f} (F1 {t['f1']:.3f}) at threshold "
+                f"{cal.get('selected_threshold')}.")
+    txt += "\nThese scores measure agreement with an existing map, not field accuracy; nothing is field-validated yet."
+    return Answer(txt, "structured", "model_reliability", [{"label": f"Model reliability · {exp}", "type": "model", "id": exp}])
+
+
+def tool_datasets(db: Session) -> Answer:
+    """The source datasets the pipeline is configured to use (configs/acquisition.yaml) + registered scenes."""
+    acq, ds = _yaml(_ACQ), _yaml(_DSET)
+    s1, s2, lab = acq.get("sentinel1") or {}, acq.get("sentinel2") or {}, acq.get("labels") or {}
+    yr = (acq.get("acquisition") or {}).get("date_range") or []
+    rows = [
+        f"1. **Sentinel-1 RTC radar** ({', '.join(b.upper() for b in s1.get('bands') or [])}) - Microsoft Planetary Computer, "
+        f"collection `{s1.get('collection', 'sentinel-1-rtc')}`. Input of the reported model.",
+        f"2. **Sentinel-2 L2A optical** - Earth Search, collection `{s2.get('collection', 'sentinel-2-l2a')}`. Visual context and ablation experiments.",
+        f"3. **Global Mangrove Watch v3 ({lab.get('gmw_year', 2020)})** - Zenodo record {lab.get('gmw_zenodo_record', '')}. "
+        "Weak reference labels for training and scoring - an existing map, not field ground truth.",
+    ]
+    extra = []
+    try:
+        from .db import Scene
+        n_sc = db.query(Scene).count()
+        n_ar = db.query(Scene.study_area_id).distinct().count()
+        if n_sc:
+            extra.append(f"{n_sc} downloaded scene composite(s) are registered across {n_ar} study area(s).")
+    except Exception:  # noqa: BLE001
+        pass
+    tile = (ds.get("dataset") or {}).get("name")
+    if tile:
+        extra.append(f"From these, the training set `{tile}` is built as {(ds.get('dataset') or {}).get('image_size', 256)}-pixel tiles with spatial-block train/val/test splits.")
+    if len(yr) == 2:
+        extra.append(f"Acquisition period: {yr[0]} to {yr[1]} (matches the GMW label year).")
+    return Answer("EcoConnectAI uses **3 source datasets**:\n" + "\n".join(rows) + ("\n\n" + " ".join(extra) if extra else ""),
+                  "structured", "datasets", [{"label": "Data acquisition configuration", "type": "config", "id": "acquisition"}],
+                  action={"label": "Open Data & Models", "href": "/experiments"})
+
+
+def tool_parameters(run: RunData) -> Answer:
+    m, dsrc = run.manifest, run.manifest.get("data_source") or {}
+    g = (m.get("config") or {}).get("graph") or {}
+    r = (m.get("config") or {}).get("restoration") or {}
+    model = Path(str(dsrc.get("model") or "")).parent.name or "—"
+    lines = [
+        f"- Model: **{model}** (development model), scene year {dsrc.get('scene_year', '—')}",
+        f"- Habitat threshold: probability ≥ **{dsrc.get('threshold', '—')}**; minimum patch size **{dsrc.get('mmu_ha', '—')} ha**; pixel connectivity {dsrc.get('connectivity', '—')}",
+        f"- Network: **{g.get('k_neighbors', '—')} nearest neighbours** within **{g.get('tau_km', '—')} km**; sensitivity tested at {', '.join(str(x) for x in g.get('tau_sensitivity_km') or [])} km",
+        f"- Connectivity metric: {((m.get('config') or {}).get('connectivity') or {}).get('research_metric', 'iic').upper()}",
+        f"- Restoration candidates: probability ≥ {r.get('candidate_threshold', dsrc.get('candidate_threshold', '—'))} (below the habitat threshold), at least {r.get('candidate_min_area_ha', dsrc.get('candidate_min_area_ha', '—'))} ha",
+    ]
+    return Answer(f"Parameters of the current {run.name} analysis (run {run.run_id}):\n" + "\n".join(lines),
+                  "structured", "parameters", [run.src("run manifest")])
+
+
+def tool_provenance(run: RunData) -> Answer:
+    m, dsrc = run.manifest, run.manifest.get("data_source") or {}
+    model = Path(str(dsrc.get("model") or "")).parent.name or "—"
+    return Answer(f"The current {run.name} result (run **{run.run_id}**) was produced from:\n"
+                  f"- Input: Sentinel-1 radar composite of {dsrc.get('scene_year', '—')} for the {m.get('study_area', {}).get('name', run.name)} study area\n"
+                  f"- Model: **{model}** - its probability map ({dsrc.get('width', '—')} × {dsrc.get('height', '—')} pixels at 10 m) was thresholded at {dsrc.get('threshold', '—')}\n"
+                  "- Training labels: Global Mangrove Watch v3 (2020) - weak reference labels, not field ground truth\n"
+                  f"- Label: {m.get('result_label', 'development result')} · computed {str(m.get('timestamp_utc', ''))[:10]}\n"
+                  "Every stored run keeps its manifest (inputs, parameters, file hashes) so it can be reproduced.",
+                  "structured", "provenance", [run.src("run manifest")], action={"label": "Open lineage", "href": "/analysis"})
+
+
+def tool_compare_areas(a: str, b: str) -> Optional[Answer]:
+    ra, rb = RunData(a, "latest"), RunData(b, "latest")
+    if ra.dir is None or rb.dir is None:
+        return None
+    def row(r: RunData) -> dict:
+        x = r.metrics
+        return {"name": r.name, "p": x.get("n_patches"), "ha": x.get("habitat_area_ha"), "e": x.get("n_edges"),
+                "c": x.get("n_components"), "eca": x.get("eca_pct_of_habitat"), "year": (r.manifest.get("data_source") or {}).get("scene_year")}
+    A, B = row(ra), row(rb)
+    f = lambda v, d=1: "—" if v is None else (f"{v:,.{d}f}" if isinstance(v, float) else str(v))  # noqa: E731
+    table = ("| | " + A["name"] + " | " + B["name"] + " |\n|---|---|---|\n"
+             f"| Habitat patches | {f(A['p'])} | {f(B['p'])} |\n| Mangrove area (ha) | {f(A['ha'])} | {f(B['ha'])} |\n"
+             f"| Links | {f(A['e'])} | {f(B['e'])} |\n| Separate groups | {f(A['c'])} | {f(B['c'])} |\n"
+             f"| Well-connected share (ECA % of habitat) | {f(A['eca'])} % | {f(B['eca'])} % |\n| Image year | {f(A['year'])} | {f(B['year'])} |")
+    better = A["name"] if (A["eca"] or 0) > (B["eca"] or 0) else B["name"]
+    return Answer(f"Latest stored runs side by side. **{better}** keeps a larger share of its habitat well connected.\n\n{table}\n\n"
+                  "Compare shares and counts, not raw IIC/PC values - those scale with the size of each study area. The two runs may use "
+                  "different models or thresholds, and both are development results, not field-validated.",
+                  "structured", "compare_areas", [ra.src("run metrics"), rb.src("run metrics")])
+
+
+def tool_documents(db: Session, q: str, ctx: "ChatContext") -> Optional[Answer]:
+    """'Which documents describe X?' - the documents (not passages) that best cover the topic, from the index."""
+    from .rag.retrieval import retrieve
+    topic = re.sub(r"\b(which|what|documents?|docs?|files?|describe|describes|explain|explains|cover|covers|about|the|is|are|in|where|can i read|read|find)\b", " ", q, flags=re.I)
+    rr = retrieve(db, topic.strip() or q, scope=_role_scope(ctx), study_area=ctx.study_area)
+    # document-level relevance: sum of the fused scores of each document's retrieved passages (not just its best one)
+    agg: dict[str, list] = {}
+    for c in rr.cands:
+        if c.source_type == "RUN_RESULTS":
+            continue
+        agg.setdefault(c.title.split(" › ")[0], []).append(c)
+    ranked = sorted(agg.values(), key=lambda cs: -sum(x.fused for x in cs))
+    docs = [cs[0] for cs in ranked[:5]]
+    if not docs:
+        return None
+    lines = [f"{i}. **{c.title.split(' › ')[0]}**" + (f" - {c.uri}" if getattr(c, "uri", None) else "") for i, c in enumerate(docs, 1)]
+    return Answer("These documents cover it best (most relevant first):\n" + "\n".join(lines),
+                  "structured", "documents", [{"label": c.title, "type": "document", "id": str(c.chunk_id)} for c in docs[:3]])
+
+
 def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[Answer]:
     ql = q.lower()
     why = bool(_WHY.search(ql))
@@ -200,6 +371,31 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
                       "structured", "study_areas", [{"label": "Study-area configuration", "type": "config", "id": "study_areas"}],
                       action={"label": "Open Command Center", "href": "/command"})
 
+    if re.search(r"\b(latest|newest|recent|current|last)\b.*\b(satellite|sentinel|observation|image|imagery|scene|pass|acquisition)\b"
+                 r"|\bnear[- ]real[- ]time\b|\bsatellite monitor\b|\bwhen was\b.*\b(imaged|observed|captured|acquired)\b", ql):
+        a = tool_satellite_latest(db, run.study_area)
+        if a:
+            return a
+    if re.search(r"\b(reliab\w*|trust\w*|accura\w*|how good|how well)\b", ql) and re.search(r"\b(model|map|ai|prediction|result)", ql) \
+            and not ids and not re.search(r"rebuil|retrain|\btrain", ql):
+        a = tool_model_reliability(run.study_area)
+        if a:
+            return a
+
+    if re.search(r"\bdata ?sets?\b|\bdata sources?\b|\bsatellite data\b|\bwhat data\b", ql) and not re.search(r"\b(produced|generate[ds]?|this result|which run)\b", ql) \
+            and re.search(r"\b(how many|which|what|list|available|used|using|use|source)\b", ql):
+        return tool_datasets(db)
+    if re.search(r"\b(which|what)\s+(documents?|docs|files|papers?)\b|\bwhere can i read\b", ql):
+        d = tool_documents(db, q, ctx)
+        if d:
+            return d
+    areas_named = [sid for _, sid in sorted(((ql.find(name), sid) for name, sid in _AREA_NAMES if name in ql))]
+    areas_named = list(dict.fromkeys(areas_named))                    # in the order the user named them
+    if len(areas_named) >= 2 and re.search(r"\b(compare|comparison|versus|vs\.?|difference|differ|better|more connected|between)\b", ql):
+        cmp_ = tool_compare_areas(areas_named[0], areas_named[1])
+        if cmp_:
+            return cmp_
+
     if re.search(r"\b(who am i|my role|current user|logged in as|signed in as)\b", ql):
         if not ctx.user:
             return Answer("You are not signed in; you are using the public demo (read-only analysis).", "structured", "user")
@@ -213,6 +409,10 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
 
     m, rm, crit = run.manifest, run.metrics, run.crit
     rid, ds = run.run_id, m.get("data_source") or {}
+    if not ids and re.search(r"\b(parameters?|settings?|configuration|thresholds? used|what values)\b", ql) and not re.search(r"\bwhy\b", ql):
+        return tool_parameters(run)
+    if not ids and re.search(r"\b(which|what) (data ?set|data|model|run|inputs?)\b.*\b(produced?|generated?|created|behind|made)\b|\bprovenance\b|\bwhere (does|did) (this|the) result come from\b", ql):
+        return tool_provenance(run)
 
     # --- named objects -----------------------------------------------------------------
     pid = next((i for i in ids if i.startswith("P")), None)
@@ -317,7 +517,8 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
                       f"- {len(sites)} potential restoration site(s)\n- {len(unc)} large uncertain area(s) that need a field check first\n"
                       "All of them still need field and legal assessment.",
                       "structured", "n_candidates", [run.src("restoration")])
-    if re.search(r"\bwhere\b.*\brestor|\brestor\w*\b.*\b(where|help|best|top|recommend|priorit)|\b(best|top) (restoration|candidates?|sites?)\b", ql):
+    if re.search(r"\bwhere\b.*\brestor|\brestor\w*\b.*\b(where|help|best|top|recommend|priorit|first|start|look at|focus)"
+                 r"|\b(best|top) (restoration|candidates?|sites?)\b|\bwhich (restoration )?(sites?|candidates?)\b", ql):
         sites = [c for c in run.cands if c["category"] != "uncertain_habitat"][:3]
         unc = [c["candidate_id"] for c in run.cands if c["category"] == "uncertain_habitat"]
         if not sites:
@@ -330,6 +531,14 @@ def structured(q: str, run: RunData, ctx: ChatContext, db: Session) -> Optional[
                       + (f"\n{', '.join(unc)} are large uncertain areas - they need a field check, not planting." if unc else "")
                       + "\nThese are suggestions from the model; ownership, legal status, water and cost still need field assessment.",
                       "structured", "restoration_where", [run.src("restoration")], action={"label": "Open Restoration Planner", "href": "/restoration"})
+    if re.search(r"\b(most critical|most important|top) patch\b", ql) and re.search(r"\b(lost|lose|loss|removed?|destroyed|gone|disappear\w*|cleared|what happens)\b", ql):
+        t = crit[0]
+        return Answer(f"If **{t['patch_id']}** (the most critical patch, {_num(t['area_ha'])} ha) were lost, connectivity (IIC) would drop by "
+                      f"**{_num(t['delta_pct'])} %**"
+                      + (f" and the network would split from {t['component_count_before']} into {t['component_count_after']} groups."
+                         if t["is_cut_vertex"] else f"; the network would stay in {t['component_count_after']} group(s).")
+                      + "\nThis is a simulation under the current assumptions, not a forecast. Try it on the map in the Scenario Lab.",
+                      "structured", "patch_loss", [run.src("criticality")], action={"label": "Open Scenario Lab", "href": "/scenario"})
     if re.search(r"\b(most critical|most important|highest criticality|top (\d+|five|three) (critical )?patch|critical patches)\b", ql):
         top = crit[:5]
         small = next((r for r in top if r["rank_by_area"] - r["rank"] >= 3), None)
@@ -498,6 +707,9 @@ def _suggest(ans: Answer, ctx: ChatContext) -> list[str]:
     return ["Which patch is most critical?", f"Why is {obj} important?", "Where could restoration help?", "How many study areas are there?"]
 
 
+REFUSE_ACCESS = ("I can't do that. What you can see is decided by your role and enforced by the server for every search - "
+                 "I cannot change or bypass it, and I never show other users' data. Ask me about the analyses and documents "
+                 "your role can access.")
 REFUSE_UNSAFE = ("I can't help with that. I answer questions about EcoConnectAI's data and documentation, and I never "
                  "reveal configuration, credentials or internal instructions.")
 CASUAL = ("Hi! I'm the EcoConnectAI Assistant. I can tell you which mangrove patches matter most, what would happen if one were lost, "
@@ -523,7 +735,7 @@ def ask(db: Session, question: str, ctx: ChatContext, *, debug: bool = False, au
         if not q:
             ans = Answer("Please type a question.", "refused", "empty")
         elif plan.qtype == "unsafe":
-            ans = Answer(REFUSE_UNSAFE, "refused", "unsafe")
+            ans = Answer(REFUSE_ACCESS if "access" in plan.reason else REFUSE_UNSAFE, "refused", "unsafe")
         elif plan.qtype == "casual":
             ans = Answer(CASUAL, "conversation", "casual")
         elif plan.qtype == "ambiguous":
@@ -532,7 +744,10 @@ def ask(db: Session, question: str, ctx: ChatContext, *, debug: bool = False, au
             ans = structured(q, run, ctx, db)
             if ans is None:
                 model = route(plan.qtype)
-                scope, canon = _scope(ctx, area, run, q, index_version(db), model), canonical(q)
+                llm_block = _llm_budget(db, ctx)
+                # answers made without the LLM (disabled, signed out, capped) never stand in for LLM answers, or vice versa
+                scope = _scope(ctx, area, run, q, index_version(db), model if llm_block is None else f"{model}|extractive")
+                canon = canonical(q)
                 cached = cache_get(db, scope, canon)
                 if cached:
                     sim = cached.pop("_similarity", None)
@@ -542,7 +757,7 @@ def ask(db: Session, question: str, ctx: ChatContext, *, debug: bool = False, au
                     plan.rewritten = q if q != plan.original else plan.rewritten
                     k = service.answer(db, plan, scope=_role_scope(ctx), study_area=area,
                                        selected=ctx.selected_patch or ctx.selected_candidate, app_data=app_data(run, q),
-                                       llm_block=_llm_budget(db, ctx), robustness=lambda pid: _robustness(run, pid), caveat=CAVEAT,
+                                       llm_block=llm_block, robustness=lambda pid: _robustness(run, pid), caveat=CAVEAT,
                                        on_delta=on_delta)
                     g = k.gen
                     ans = Answer(k.text, k.tier, plan.qtype, k.citations, note=k.note, retrieved=k.trace.get("retrieved", []),

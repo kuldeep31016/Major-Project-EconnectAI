@@ -555,4 +555,11 @@ export interface RunSummary {
   model?: string | null;
   threshold?: number | null;
   criticalPatches?: number | null;
+  /** True when the run's probability raster is on this server (needed by the Thresholds scenario). */
+  probabilityRaster?: boolean;
+  /** Near-real-time runs (Satellite Monitor): Copernicus source + model reliability in the area; null for stored runs. */
+  satellite?: {
+    source: string | null; acquisitionTime: string | null; compositeScenes: number | null; analysisId: string | null;
+    reliability: "reliable" | "moderate" | "unreliable" | null; reliabilityIou: number | null; reviewRecommended: boolean;
+  } | null;
 }

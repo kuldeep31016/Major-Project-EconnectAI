@@ -1,0 +1,72 @@
+{
+ "experiment": "multi_E1_s1_b0_dev_r2",
+ "threshold": 0.97,
+ "reference": "Global Mangrove Watch v3 2020 (weak label)",
+ "scope": "whole study area incl. training tiles (optimistic); not field accuracy",
+ "areas": {
+  "kerala-coast": {
+   "reference_habitat_ha": 102.1,
+   "t0.97": {
+    "iou": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "predicted_ha": 0.0
+   },
+   "t0.50": {
+    "iou": 0.078,
+    "precision": 0.085,
+    "recall": 0.488,
+    "predicted_ha": 586.6
+   },
+   "level": "unreliable"
+  },
+  "sundarbans": {
+   "reference_habitat_ha": 58903.4,
+   "t0.97": {
+    "iou": 0.913,
+    "precision": 0.955,
+    "recall": 0.954,
+    "predicted_ha": 58790.0
+   },
+   "t0.50": {
+    "iou": 0.872,
+    "precision": 0.877,
+    "recall": 0.994,
+    "predicted_ha": 66782.8
+   },
+   "level": "reliable"
+  },
+  "gulf-of-mannar": {
+   "reference_habitat_ha": 44.0,
+   "t0.97": {
+    "iou": 0.008,
+    "precision": 0.11,
+    "recall": 0.009,
+    "predicted_ha": 3.6
+   },
+   "t0.50": {
+    "iou": 0.099,
+    "precision": 0.1,
+    "recall": 0.937,
+    "predicted_ha": 413.0
+   },
+   "level": "unreliable"
+  },
+  "odisha-coast": {
+   "reference_habitat_ha": 10793.2,
+   "t0.97": {
+    "iou": 0.724,
+    "precision": 0.88,
+    "recall": 0.803,
+    "predicted_ha": 9855.4
+   },
+   "t0.50": {
+    "iou": 0.614,
+    "precision": 0.617,
+    "recall": 0.991,
+    "predicted_ha": 17321.8
+   },
+   "level": "reliable"
+  }
+ }
+}

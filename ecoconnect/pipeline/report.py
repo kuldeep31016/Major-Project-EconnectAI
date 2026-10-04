@@ -32,6 +32,24 @@ def build_report(run_dir: Path, study_area: dict) -> dict:
     top = crit[0]
     n = len(crit)
 
+    # -- near-real-time satellite input (backend/satellite): input, model reliability in this area, result check
+    sat = ds.get("satellite") or {}
+    sat_bullets: list[str] = []
+    if sat:
+        n_sc = sat.get("composite_scenes") or len(sat.get("products") or []) or 1
+        when = f"{str(sat.get('first_acquisition') or '')[:10]} to {str(sat.get('acquisition_time') or '')[:10]}" if n_sc > 1 \
+            else str(sat.get("acquisition_time") or "")[:10]
+        sat_bullets.append(f"Input: latest available Copernicus Sentinel-1 GRD observation(s) - {'median of ' + str(n_sc) + ' acquisitions' if n_sc > 1 else 'one acquisition'} "
+                           f"({when}), near-real-time; the model was trained on 2020 imagery.")
+        rel = sat.get("reliability") or {}
+        if rel:
+            sat_bullets.append(f"Model reliability in this study area: {str(rel.get('level')).upper()} (IoU {rel.get('iou')} against GMW 2020 "
+                               f"on 2020 data)." + (" This map is a demonstration and must not be used for decisions." if rel.get("level") == "unreliable" else ""))
+        pl = sat.get("plausibility") or {}
+        if pl.get("review_recommended"):
+            sat_bullets.append("Result check: " + str(pl.get("note")))
+        sat_bullets.append("Differences from earlier runs are model-output differences, not confirmed habitat change.")
+
     # -- data provenance sentence
     if ds.get("type") == "probability_raster":
         er = ds.get("extraction_report", {})
@@ -99,7 +117,7 @@ def build_report(run_dir: Path, study_area: dict) -> dict:
                      f"classed as uncertain habitat, not restoration sites: {UNCERTAIN_NOTE}" if n_uncertain else "")],
          "table": {"columns": ["Rank", "Candidate", "Area (ha)", "R_i (% of C(G))", "New links", "Cost", "Gain per cost", "Class"], "rows": rest_rows}},
         {"id": "limits", "heading": "7. Provenance and limitations",
-         "bullets": [f"Result label: {label}.",
+         "bullets": sat_bullets + [f"Result label: {label}.",
                      "Segmentation labels are Global Mangrove Watch (an existing map): metrics against them measure agreement with that map, not field-truth accuracy." if ds.get("type") == "probability_raster" else "Patch geometry is synthetic.",
                      "The class-probability threshold and 2 ha minimum mapping unit are design parameters; the threshold was selected by a sweep against GMW where a calibration file exists.",
                      "The interface score (Eq. 7) is a heuristic for the dashboard and is not monotone under patch removal; decisions should rest on IIC/PC/ECA.",
@@ -119,7 +137,8 @@ def build_report(run_dir: Path, study_area: dict) -> dict:
         "version": m.get("ecoconnect_version", "0.1.0"),
         "pages": len(sections),
         "keywords": ["habitat connectivity", metric, "criticality", "what-if", "restoration", m["result_kind"]],
-        "abstract": (f"{label}. {rm['n_patches']} habitat patches over {rm['habitat_area_ha']:.0f} ha form {rm['n_components']} component(s) with "
+        "abstract": (("Near-real-time satellite input; " + ("model UNRELIABLE in this area - demonstration only. " if (sat.get("reliability") or {}).get("level") == "unreliable" else "")
+                      if sat else "") + f"{label}. {rm['n_patches']} habitat patches over {rm['habitat_area_ha']:.0f} ha form {rm['n_components']} component(s) with "
                      f"ECA = {rm['eca_pct_of_habitat']:.1f} % of habitat area. The most critical patch ({top['patch_id']}, {top['area_pct']:.1f} % of habitat, "
                      f"area rank {top['rank_by_area']}) accounts for {top['delta_pct']:.1f} % of {metric}. ρ(area, criticality) = {rho:.2f}."),
         "sections": sections,

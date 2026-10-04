@@ -16,7 +16,8 @@ from .context import build_context, render
 from .generation import SYSTEM_PROMPT, GenResult, LLMUnavailable, generate_with_fallback, route, stream_with_fallback
 from .rerank import confidence, coverage, rerank
 from .retrieval import Cand, retrieve
-from .text import object_ids, tokens
+from .config import S
+from .text import OBJECT_ID, object_ids, strip_style, tokens
 
 ABSTAIN = "I couldn't find enough information in the available project data to answer that reliably."
 LOW_CONF = ("I couldn't find a reliable answer to that in EcoConnectAI's data or documents, so I won't guess. "
@@ -27,7 +28,11 @@ _CITE = re.compile(r"\[(S\d+)\]")
 # words that only point at the object ("why this location?", "is this site good?") - not information requests
 GENERIC_ABOUT_OBJECT = frozenset({"why", "location", "site", "place", "area", "patch", "candidate", "good", "bad", "important",
                                   "critical", "matter", "chosen", "selected", "one", "here", "there", "tell", "explain", "more",
-                                  "about", "detail", "describe", "summary", "information", "info"})
+                                  "about", "detail", "describe", "summary", "information", "info",
+                                  # comparison / decision wording: answered from the objects' records by reasoning over them
+                                  "compare", "comparison", "versus", "v", "which", "should", "protect", "protected", "protection",
+                                  "first", "priority", "prioritise", "prioritize", "better", "worse", "difference", "rank",
+                                  "ranking", "lose", "lost", "losing", "remove", "removed", "happen", "happens", "if"})
 
 
 @dataclass
@@ -120,29 +125,81 @@ def extractive(q: str, items, robustness: Optional[Callable[[str], str]] = None,
     return " ".join(best[1]), [citation(best_src.cand, best_src.sid)]
 
 
+# --------------------------------------------------------------------------- query decomposition (bounded)
+_DOC_REF = re.compile(r"\b(according to|methodology|method|document|paper|what does .{0,40} say|in general|explain how)\b", re.I)
+_COMPARE_WORDS = re.compile(r"\b(compare|comparison|versus|vs\.?|which (one )?(has|is)|better|worse|more|less|than|and|both|between)\b", re.I)
+
+
+def decompose(q: str, qtype: str) -> Optional[list[str]]:
+    """Split a multi-part question into bounded sub-retrievals: one per named patch/candidate (its stored record) plus the
+    remaining knowledge part. Only for questions that need several sources; simple questions are never decomposed."""
+    named = object_ids(q)
+    if not (len(named) >= 2 or (named and _DOC_REF.search(q))):
+        return None
+    subs = [f"{n} criticality restoration" for n in named]
+    residual = _COMPARE_WORDS.sub(" ", OBJECT_ID.sub(" ", q))
+    if len(tokens(residual)) >= 2:
+        subs.append(residual.strip())
+    return subs[: S.max_tool_calls]
+
+
+def _retrieve_decomposed(db: Session, q: str, subs: list[str], *, scope: str, study_area: str, selected: Optional[str]):
+    merged: dict[int, Cand] = {}
+    method, n = "", 0
+    for sq in subs:
+        rr = retrieve(db, sq, scope=scope, study_area=study_area, selected=selected)
+        method, n = rr.method, n + rr.candidate_count
+        for c in rr.cands:
+            if c.chunk_id not in merged or c.fused > merged[c.chunk_id].fused:
+                merged[c.chunk_id] = c
+    cands = sorted(merged.values(), key=lambda c: -c.fused)
+    top, reranker, ms = rerank(q, cands)
+    for oid in object_ids(q):                          # every named object's own record must reach the context
+        if not any(c.object_id == oid for c in top):
+            rec = next((c for c in cands if c.object_id == oid), None)
+            if rec is not None:
+                top = top[:-1] + [rec] if len(top) >= S.rerank_top_k else top + [rec]
+    return top, reranker, ms, method, n
+
+
 # --------------------------------------------------------------------------- main entry
 def answer(db: Session, plan: QueryPlan, *, scope: str, study_area: str, selected: Optional[str], app_data: str,
            llm_block: Optional[str], robustness: Optional[Callable[[str], str]] = None, caveat: str = "",
            on_delta: Optional[Callable[[str], None]] = None) -> KnowledgeAnswer:
     q = plan.effective
-    rr = retrieve(db, q, scope=scope, study_area=study_area, selected=selected)
-    top, reranker, rerank_ms = rerank(q, rr.cands)
-    conf, abstain = confidence(q, top)
-    trace = {"retrieval_method": rr.method, "candidate_count": rr.candidate_count, "retrieval_ms": round(rr.retrieval_ms, 1),
-             "reranker": reranker, "rerank_ms": round(rerank_ms, 1), "index_version": rr.index_version, "errors": rr.errors,
+    qs = strip_style(q)          # search query: without "in simple words" / "for a forest officer" (the prompt keeps them)
+    import time as _t
+    t_r = _t.perf_counter()
+    subs = decompose(qs, plan.qtype)
+    if subs:
+        top, reranker, rerank_ms, method, n_cands = _retrieve_decomposed(db, qs, subs, scope=scope, study_area=study_area, selected=selected)
+        rr = None
+        conf, abstain = confidence(qs, top)
+        named = object_ids(qs)
+        if abstain and named and set(named) <= {c.object_id for c in top if c.object_id} and conf >= S.min_confidence:
+            abstain = None                              # every part has evidence: the records + the knowledge passages
+    else:
+        rr = retrieve(db, qs, scope=scope, study_area=study_area, selected=selected)
+        top, reranker, rerank_ms = rerank(qs, rr.cands)
+        method, n_cands = rr.method, rr.candidate_count
+        conf, abstain = confidence(qs, top)
+    retrieval_ms = (_t.perf_counter() - t_r) * 1000 - rerank_ms
+    trace = {"retrieval_method": method, "candidate_count": n_cands, "retrieval_ms": round(retrieval_ms, 1),
+             "decomposition": subs, "stage_ms": (rr.timings if rr else {}), "reranker": reranker, "rerank_ms": round(rerank_ms, 1),
+             "index_version": rr.index_version if rr else None, "errors": rr.errors if rr else [],
              "retrieved": [{"source": c.label, "category": c.source_type, "score": round(c.rerank or c.fused, 4), "chunk_id": c.chunk_id} for c in top],
              "confidence": conf, "abstain_reason": abstain}
     if abstain:
         return KnowledgeAnswer(LOW_CONF, "refused", [], conf, trace=trace)
-    named = set(object_ids(q))
+    named = set(object_ids(qs))
     rec = next((c for c in top if c.object_id and c.object_id in named), None)
-    specific = {t for t in tokens(q) if t not in GENERIC_ABOUT_OBJECT} - {i.lower() for i in named}
+    specific = {t for t in tokens(qs) if t not in GENERIC_ABOUT_OBJECT} - {i.lower() for i in named}
     covered_elsewhere = 0.0
     if rec is not None and specific:
         for c in top[:3]:                                   # one passage must cover it - not words pooled across passages
             seen = set(tokens(f"{c.section or ''} {c.text}"))
             covered_elsewhere = max(covered_elsewhere, sum(1 for t in specific if t in seen) / len(specific))
-    if rec is not None and specific and coverage(" ".join(specific), rec) < 0.5 and covered_elsewhere < 0.9:
+    if not subs and rec is not None and specific and coverage(" ".join(specific), rec) < 0.5 and covered_elsewhere < 0.9:
         # asks about the object something neither its record nor the documentation holds (e.g. species in P07)
         trace["abstain_reason"] = "named object's stored record does not cover the question"
         return KnowledgeAnswer(f"The stored results for {rec.object_id} do not include that information. They cover its area, "
@@ -152,6 +209,13 @@ def answer(db: Session, plan: QueryPlan, *, scope: str, study_area: str, selecte
     trace["selected_chunks"] = [it.cand.chunk_id for it in items]
     trace["context_tokens"] = sum(it.tokens for it in items)
     trace["sanitized_sources"] = sum(it.sanitized for it in items)
+    # the exact evidence given to the model (as rendered, after neutralisation) - returned only in debug output, never
+    # persisted (ChatEvent keeps chunk ids) or cached; used by the groundedness grader in scripts/rag_eval.py
+    trace["evidence"] = [{"id": it.sid, "chunk_id": it.cand.chunk_id, "source_key": it.cand.source_key, "title": it.cand.title,
+                          "label": it.cand.label, "section": it.cand.section, "object_id": it.cand.object_id,
+                          "content_type": (it.cand.meta or {}).get("content_type"), "fused": round(it.cand.fused or 0.0, 4),
+                          "text": it.content} for it in items]
+    trace["app_data"] = app_data or ""
 
     if llm_block is None:
         user = (f"<app_data>\n{app_data}\n</app_data>\n\n" if app_data else "") + render(items) \

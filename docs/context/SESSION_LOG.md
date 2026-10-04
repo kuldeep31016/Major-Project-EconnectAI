@@ -14,6 +14,41 @@ Next step:
 
 ---
 
+## 2026-10-04 — near-real-time Copernicus layer, model rebuild, production RAG, full-flow verification
+
+Goal: (1) production RAG assistant; (2) near-real-time satellite analysis (Copernicus) end to end without breaking the
+stored-data flow; (3) rebuild the lost model; (4) verify every page for all four study areas; (5) cost/ROI of LLM calls.
+Changed:
+- Satellite layer (new): backend/satellite/{copernicus,catalog,processing,preprocessing,service,api}.py, migration
+  0009 (satellite_observations, satellite_analyses), frontend app/satellite + components/satellite/satellite-map.tsx,
+  docs/satellite/COPERNICUS_INTEGRATION.md, scripts/check_copernicus.py, scripts/area_reliability.py. Public OData
+  catalogue; OAuth Processing API (COPERNICUS_CLIENT_ID/SECRET in .env); 8-acquisition same-orbit median by default
+  (single date over-predicted 30-100x); per-area reliability + post-inference area check; NRT runs written with
+  --no-latest (stored runs stay the dashboard default); provenance record + manifest satellite block.
+- Model rebuild: original multi_E1_s1_b0_dev checkpoint lost (folder deleted, Trash emptied). Re-acquired 2020 data,
+  identical recipe -> multi_E1_s1_b0_dev_r2 (outputs/rebuild/*.sh, docs/MODEL_REBUILD_2026-10-04.md). Audit bugs 20, 22,
+  23 fixed (normaliser cache fingerprint, threshold on validation + extended grid, evaluate uses checkpoint normaliser
+  and real TTA). torch 2.13.0 installed in .venv (tests now 0 skipped).
+- RAG: production pipeline (hybrid BM25 + pgvector RRF, decomposition, memory, diagnostics, eval with ablation/NDCG/
+  judge), eval-artifact content policy, live-eval observability + deadlines, OOM fix (embedding batch 1), new data tools
+  (satellite_latest, model_reliability), restoration/patch-loss routing, style-phrase stripping, FAQ updates,
+  Haiku 4.5 (knowledge) + Opus 5.5 (analytical) routing.
+- Fixes found by testing: CORS hid X-Bounds (map overlays never showed); Reports opened the newest run; satellite page
+  races; API frozen during compositing; Thresholds scenario disabled when a run's raster is missing; New Analysis
+  default scene; scenes list skips orphan sidecars; tests/conftest forces a temp DB (it had used the dev DB once) and
+  removes its temp dir.
+- docs/STATUS_AND_NEXT_STEPS_2026-10-04.md: honest status, weaknesses, plain-language glossary, next-phase prompt.
+Tests: .venv/bin/python -m pytest -q -> 197 passed; ruff F clean; frontend tsc / eslint (0 errors) / next build ok;
+scripts/check_all_flows.py -> 200/200 (4 stored-run Thresholds checks skipped by design); 24/24 dashboard tabs.
+Results: r2 held-out test IoU 0.873 / F1 0.932 @0.97 (0.788 @0.5 vs 0.842 original). Per-area IoU vs GMW 2020 (incl.
+training tiles): Sundarbans 0.913, Odisha 0.724, Kerala 0.000, Gulf 0.008. NRT 8-pass median vs GMW 2020: Sundarbans
+0.884, Odisha 0.651. Assistant 12-question probe: 12/12 correct, $0.105; Haiku $0.0035 vs Opus $0.026 per answer.
+Decisions: stored runs remain default; Kerala/Gulf declared unreliable for this model (not hidden); LLM mix Haiku+Opus.
+Open: model checkpoint not backed up off this machine (needs the user's choice of location); Render (512 MB, no torch)
+cannot run NRT inference; audit bug 21 (tile leakage) open; Copernicus secret was pasted in chat -> rotate later;
+per-area thresholds, field validation, automatic monitoring (see STATUS_AND_NEXT_STEPS).
+Next step: Phase 1 of the prompt in docs/STATUS_AND_NEXT_STEPS_2026-10-04.md (honest per-area baseline).
+
 ## 2026-10-02 — hero background artwork
 
 Goal: user supplied "Neon Habitat Network Over Coastal Delta.png" as the hero background.
