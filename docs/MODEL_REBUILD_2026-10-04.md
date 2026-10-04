@@ -46,5 +46,13 @@ large Sundarbans and Bhitarkanika mangroves well and cannot map the thin Kerala 
 
 ## Keep it safe
 
-The checkpoint (`outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth`, 72 MB) is still git-ignored. Keep a copy
-outside this folder (e.g. a GitHub release asset or cloud drive); losing it again means repeating this rebuild.
+The checkpoint (`outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth`, 72 MB) is git-ignored. It is backed up as
+the GitHub release **`model-multi_E1_s1_b0_dev_r2`** (public; with calibration, config, metrics, reliability and
+`SHA256SUMS.txt`). SHA-256 `ed97c3612a94b293207c2473e1d648d0d5d25df6ca4076388d6563b01621a2b8`; restore tested 2026-10-04.
+
+```
+gh release download model-multi_E1_s1_b0_dev_r2 -R kuldeep31016/Major-Project-EconnectAI -p best_model.pth \
+    -D outputs/segmentation/multi_E1_s1_b0_dev_r2
+shasum -a 256 outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth
+```
+Back up every future checkpoint the same way before deleting or retraining anything.

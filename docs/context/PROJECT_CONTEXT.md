@@ -210,7 +210,9 @@ needing TIFFs, and timeline mask-diff won't work; precomputed runs/JSON do.
 - Local `.env` also holds COPERNICUS_CLIENT_ID / COPERNICUS_CLIENT_SECRET (Copernicus Data Space OAuth client; the
   secret was pasted in chat on 2026-10-04 → rotate it). Render needs them too (dashboard, not render.yaml) and cannot
   run NRT inference anyway (512 MB, no torch) — a PyTorch worker is required for that in deployment.
-- Model checkpoint `outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth` (72 MB) is git-ignored and NOT backed up.
+- Model checkpoint `outputs/segmentation/multi_E1_s1_b0_dev_r2/best_model.pth` (72 MB) is git-ignored; backed up as GitHub
+  release `model-multi_E1_s1_b0_dev_r2` (sha256 ed97c361…a2b8, restore tested). Fresh clone: `gh release download` it
+  (docs/MODEL_REBUILD_2026-10-04.md). Back up every new checkpoint before retraining/deleting.
 - Local `.env` (gitignored, chmod 600) holds ANTHROPIC_API_KEY (user-provided; user asked not to spend it — no test
   calls made). Never commit it; in deployment it goes into the Render dashboard (render.yaml `sync: false`).
 - Local dev DB: PostgreSQL 18 cluster in data/postgres (gitignored) on 127.0.0.1:5433, db `ecoconnect`, user `eco`

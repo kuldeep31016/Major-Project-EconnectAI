@@ -14,6 +14,14 @@ Next step:
 
 ---
 
+## 2026-10-04 — model checkpoint backed up
+
+Goal: protect the rebuilt model (the original was lost with no backup).
+Changed: GitHub release `model-multi_E1_s1_b0_dev_r2` (public, user's choice) with best_model.pth, threshold_calibration,
+config, metrics, experiment, area_reliability and SHA256SUMS.txt; restore tested (download sha256 matches
+ed97c361…a2b8). docs/MODEL_REBUILD_2026-10-04.md, PROJECT_CONTEXT, ROADMAP updated.
+Open: Copernicus OAuth secret still to rotate (pasted in chat); Phase 1 of docs/STATUS_AND_NEXT_STEPS_2026-10-04.md.
+
 ## 2026-10-04 — near-real-time Copernicus layer, model rebuild, production RAG, full-flow verification
 
 Goal: (1) production RAG assistant; (2) near-real-time satellite analysis (Copernicus) end to end without breaking the
@@ -44,7 +52,7 @@ Results: r2 held-out test IoU 0.873 / F1 0.932 @0.97 (0.788 @0.5 vs 0.842 origin
 training tiles): Sundarbans 0.913, Odisha 0.724, Kerala 0.000, Gulf 0.008. NRT 8-pass median vs GMW 2020: Sundarbans
 0.884, Odisha 0.651. Assistant 12-question probe: 12/12 correct, $0.105; Haiku $0.0035 vs Opus $0.026 per answer.
 Decisions: stored runs remain default; Kerala/Gulf declared unreliable for this model (not hidden); LLM mix Haiku+Opus.
-Open: model checkpoint not backed up off this machine (needs the user's choice of location); Render (512 MB, no torch)
+Open: Render (512 MB, no torch)
 cannot run NRT inference; audit bug 21 (tile leakage) open; Copernicus secret was pasted in chat -> rotate later;
 per-area thresholds, field validation, automatic monitoring (see STATUS_AND_NEXT_STEPS).
 Next step: Phase 1 of the prompt in docs/STATUS_AND_NEXT_STEPS_2026-10-04.md (honest per-area baseline).
